@@ -1,5 +1,9 @@
 apply plugin: 'com.android.application'
 
+def releaseTime() {
+    return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))
+}
+
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
@@ -10,17 +14,102 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+        // dex突破65535的限制
+        multiDexEnabled true
+        // umeng的渠道
+        manifestPlaceholders = [UMENG_CHANNEL_VALUE: "umeng"]
     }
-    buildTypes {
+
+    lintOptions {
+        abortOnError false
+    }
+
+    signingConfigs {
         release {
+            keyAlias 'SmartLife'
+            keyPassword 'tallty1234'
+            storeFile file('/Users/kang/Documents/Android jks/smart_life_android.jks')
+            storePassword 'tallty1234'
+        }
+        debug {
+            keyAlias 'SmartLife'
+            keyPassword 'tallty1234'
+            storeFile file('/Users/kang/Documents/Android jks/smart_life_android.jks')
+            storePassword 'tallty1234'
+        }
+    }
+
+    buildTypes {
+        debug {
+            // 显示Log
+            buildConfigField "boolean", "LOG_DEBUG", "true"
+            versionNameSuffix "-debug"
             minifyEnabled false
+            zipAlignEnabled false
+            shrinkResources false
+            signingConfig signingConfigs.debug
+        }
+        release {
+            // 不显示Log
+            buildConfigField "boolean", "LOG_DEBUG", "false"
+            minifyEnabled false
+            zipAlignEnabled true
+            // 移除无用的resource文件
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+
+            applicationVariants.all { variant ->
+                variant.outputs.each { output ->
+                    def outputFile = output.outputFile
+                    if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                        // 输出apk名称为smart_life_android_v1.0_2016-04-1.apk
+                        def fileName = "smart_life_android_v${defaultConfig.versionName}_${releaseTime()}.apk"
+                        output.outputFile = new File(outputFile.parent, fileName)
+                    }
+                }
+            }
+        }
+    }
+
+//    // 友盟多渠道打包
+//    productFlavors {
+//        wandoujia {}
+//        _360 {}
+//        baidu {}
+//        xiaomi {}
+//        tencent {}
+//        taobao {}
+//    }
+//
+//    productFlavors.all { flavor ->
+//        flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
+//    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
         }
     }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.3.0'
+    compile 'com.android.support:support-v4:23.3.0'
+    compile 'com.android.support:recyclerview-v7:23.3.0'
+    // 网络通信
+    compile 'com.squareup.okio:okio:1.6.0'
+    compile 'com.squareup.okhttp3:okhttp:3.0.0-RC1'
+    compile 'com.google.code.gson:gson:2.5'
+    // retrofit 和 converter-gson 版本要保持一致
+    compile 'com.squareup.retrofit2:retrofit:2.0.0-beta3'
+    compile 'com.squareup.retrofit2:retrofit:2.0.0-SNAPSHOT'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta3'
+    compile 'org.glassfish:javax.annotation:10.0-b28'
+    // 日志
+    compile 'com.github.orhanobut:logger:1.12'
+    // 图片加载
+    compile 'com.facebook.fresco:fresco:0.10.0'
 }
