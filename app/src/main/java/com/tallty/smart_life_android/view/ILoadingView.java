@@ -6,4 +6,6 @@ package com.tallty.smart_life_android.view;
  */
 public interface ILoadingView {
     void showImage(String uri);
+
+    void changeAty();
 }

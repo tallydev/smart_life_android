@@ -2,18 +2,15 @@ package com.tallty.smart_life_android.base;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
-import com.orhanobut.logger.Logger;
 import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.util.ToastUtil;
 
@@ -30,6 +27,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         // 设置样式为无actionBar样式
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         // 基础数据

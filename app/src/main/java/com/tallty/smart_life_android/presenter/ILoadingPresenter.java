@@ -5,5 +5,5 @@ package com.tallty.smart_life_android.presenter;
  *
  */
 public interface ILoadingPresenter {
-    void onShowImage();
+    void onLoading();
 }
