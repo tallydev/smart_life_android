@@ -18,7 +18,6 @@ public class LoadingPresenter implements ILoadingPresenter {
     @Override
     public void onShowImage() {
         String uri = "res:///"+R.drawable.loading;
-        Logger.d(uri);
         iLoadingView.showImage(uri);
     }
 }

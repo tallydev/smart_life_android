@@ -16,9 +16,12 @@ public class LoginActivity extends BaseActivity implements ILoginView {
     Button button;
 
     @Override
-    protected void initView(Bundle savedInstanceState) {
+    protected void initLayout() {
         setContentView(R.layout.activity_login);
+    }
 
+    @Override
+    protected void initView(Bundle savedInstanceState) {
         button = getViewById(R.id.button);
     }
 
@@ -29,7 +32,6 @@ public class LoginActivity extends BaseActivity implements ILoginView {
 
     @Override
     protected void processLogic(Bundle savedInstanceState) {
-        showActionBar(false);
         // 获取presenter的引用,执行后续操作
         iLoginPresenter = new LoginPresenter(this);
     }

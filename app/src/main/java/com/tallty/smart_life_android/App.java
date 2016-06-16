@@ -23,7 +23,6 @@ public class App extends Application{
         super.onCreate();
         sInstance = this;
         context = getApplicationContext();
-
         Logger.init();
     }
 

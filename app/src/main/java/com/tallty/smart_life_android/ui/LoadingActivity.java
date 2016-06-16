@@ -15,8 +15,12 @@ public class LoadingActivity extends BaseActivity implements ILoadingView {
     private SimpleDraweeView loadingImage;
 
     @Override
-    protected void initView(Bundle savedInstanceState) {
+    protected void initLayout() {
         setContentView(R.layout.activity_loading);
+    }
+
+    @Override
+    protected void initView(Bundle savedInstanceState) {
         loadingImage = getViewById(R.id.loading_image);
     }
 
@@ -27,7 +31,6 @@ public class LoadingActivity extends BaseActivity implements ILoadingView {
 
     @Override
     protected void processLogic(Bundle savedInstanceState) {
-        showActionBar(false);
         iLoadingPresenter = new LoadingPresenter(this);
         iLoadingPresenter.onShowImage();
     }

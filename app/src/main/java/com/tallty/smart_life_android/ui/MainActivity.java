@@ -8,9 +8,12 @@ import com.tallty.smart_life_android.base.BaseActivity;
 public class MainActivity extends BaseActivity {
 
     @Override
-    protected void initView(Bundle savedInstanceState) {
+    protected void initLayout() {
         setContentView(R.layout.activity_main);
+    }
 
+    @Override
+    protected void initView(Bundle savedInstanceState) {
     }
 
     @Override
@@ -20,6 +23,5 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void processLogic(Bundle savedInstanceState) {
-        showActionBar(false);
     }
 }

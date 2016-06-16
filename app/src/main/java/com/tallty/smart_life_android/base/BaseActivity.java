@@ -2,14 +2,18 @@ package com.tallty.smart_life_android.base;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
+import com.orhanobut.logger.Logger;
 import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.util.ToastUtil;
 
@@ -26,18 +30,21 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        // 设置样式为无actionBar样式
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
+        // 基础数据
         TAG = this.getClass().getSimpleName();
         mApp = App.getInstance();
+        sp = getSharedPreferences("SmartLife", Activity.MODE_PRIVATE);
 
         // 初始化Fresco
         ImagePipelineConfig config = ImagePipelineConfig.newBuilder(this)
                 .setDownsampleEnabled(true)
                 .build();
         Fresco.initialize(this, config);
-        // 数据存储
-        sp = getSharedPreferences("SmartLife", Activity.MODE_PRIVATE);
 
+        // 设置布局
+        initLayout();
         // 引用组件
         initView(savedInstanceState);
         // 设置监听器
@@ -45,6 +52,11 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         // 添加业务逻辑
         processLogic(savedInstanceState);
     }
+
+    /**
+     * 返回当前Activity布局文件的id
+     */
+    protected abstract void initLayout();
 
     /**
      * 初始化布局以及View控件
@@ -84,11 +96,11 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     /**
      * 显示/隐藏actionbar
      */
-    public void showActionBar(Boolean isShow) {
-        if (!isShow) {
-            actionBar = getSupportActionBar();
-            assert actionBar != null;
-            actionBar.hide();
-        }
-    }
+//    public void showActionBar(Boolean isShow) {
+//        if (!isShow) {
+//            actionBar = getSupportActionBar();
+//            assert actionBar != null;
+//            actionBar.hide();
+//        }
+//    }
 }
