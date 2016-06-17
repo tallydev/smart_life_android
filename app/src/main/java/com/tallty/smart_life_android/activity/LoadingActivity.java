@@ -1,4 +1,4 @@
-package com.tallty.smart_life_android.ui;
+package com.tallty.smart_life_android.activity;
 
 import android.content.Intent;
 import android.net.Uri;

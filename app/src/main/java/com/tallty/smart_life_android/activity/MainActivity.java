@@ -1,9 +1,8 @@
-package com.tallty.smart_life_android.ui;
+package com.tallty.smart_life_android.activity;
 
 import android.os.Bundle;
-
-import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseActivity;
+import com.tallty.smart_life_android.R;
 
 public class MainActivity extends BaseActivity {
 
@@ -24,4 +23,5 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void processLogic(Bundle savedInstanceState) {
     }
+
 }
