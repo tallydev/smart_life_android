@@ -6,7 +6,15 @@
 
     <color name="black_overlay">#66000000</color>
 
-    <!--systembar 背景-->
+    <!--systemBar 背景-->
     <color name="systemBarColor">#ffffff</color>
     <color name="white">#ffffff</color>
+
+    <!--tab menu 颜色-->
+    <color name="text_green">#45C01A</color>
+    <color name="text_gray">#333333</color>
+    <color name="transparent">@android:color/transparent</color>
+    <color name="bg_topbar">#FFFFFF</color>
+    <color name="text_topbar">#333333</color>
+    <color name="gray">#eeeeee</color>
 </resources>
