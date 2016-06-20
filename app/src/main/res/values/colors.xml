@@ -4,17 +4,24 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
+    <!--自定义颜色-->
     <color name="black_overlay">#66000000</color>
+    <color name="gray">#eeeeee</color>
+    <color name="transparent">@android:color/transparent</color>
+
 
     <!--systemBar 背景-->
     <color name="systemBarColor">#ffffff</color>
     <color name="white">#ffffff</color>
 
+    <!--自定义顶部topBar-->
+    <color name="topBar_bg">#FFFFFF</color>
+    <color name="topBar_text">#333333</color>
+
     <!--tab menu 颜色-->
-    <color name="text_green">#45C01A</color>
-    <color name="text_gray">#333333</color>
-    <color name="transparent">@android:color/transparent</color>
-    <color name="bg_topbar">#FFFFFF</color>
-    <color name="text_topbar">#333333</color>
-    <color name="gray">#eeeeee</color>
+    <color name="tab_text_selected">#FF8000</color>
+    <color name="tab_text_normal">#666666</color>
+    <color name="tab_num_color">#FFFFFF</color>
+    <color name="tab_menu_bg">#FFFFFF</color>
+    <color name="tab_divider_bg">#A1A1A1</color>
 </resources>

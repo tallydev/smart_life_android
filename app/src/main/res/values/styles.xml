@@ -31,4 +31,23 @@
         <item name="android:windowTranslucentNavigation" tools:targetApi="kitkat">true</item>
         <item name="android:statusBarColor" tools:targetApi="lollipop">@color/systemBarColor</item>
     </style>
+
+    <!--tab menu文字公用样式(if it has)-->
+    <style name="tab_menu_icon">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">32dp</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <!--tab menu角标公用样式-->
+    <style name="tab_menu_num">
+        <item name="android:layout_width">20dp</item>
+        <item name="android:layout_height">20dp</item>
+        <item name="android:background">@mipmap/num_bg</item>
+        <item name="android:layout_marginLeft">-10dp</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/tab_num_color</item>
+    </style>
+
 </resources>
