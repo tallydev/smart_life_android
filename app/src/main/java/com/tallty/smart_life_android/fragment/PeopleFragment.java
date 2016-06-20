@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.orhanobut.logger.Logger;
 import com.tallty.smart_life_android.R;
 
 /**
@@ -16,6 +17,7 @@ import com.tallty.smart_life_android.R;
 public class PeopleFragment extends Fragment implements View.OnClickListener{
 
     public PeopleFragment() {
+        Logger.d("群组Fragment");
     }
 
     @Nullable

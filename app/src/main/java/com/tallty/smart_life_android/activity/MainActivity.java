@@ -4,7 +4,6 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.tallty.smart_life_android.base.BaseActivity;
@@ -22,8 +21,6 @@ public class MainActivity extends BaseActivity {
     private ImageView tab_cart;
     private ImageView tab_me;
 
-    // fragment注入容器
-    private FrameLayout ly_content;
     // fragment管理器
     private FragmentManager fragmentManager;
     // 声明五个fragment
@@ -47,8 +44,6 @@ public class MainActivity extends BaseActivity {
         tab_people = getViewById(R.id.tab_menu_people);
         tab_cart = getViewById(R.id.tab_menu_cart);
         tab_me = getViewById(R.id.tab_menu_me);
-
-        ly_content = getViewById(R.id.ly_content);
     }
 
     @Override
@@ -66,6 +61,24 @@ public class MainActivity extends BaseActivity {
         tab_home.performClick();
     }
 
+    // 点击tab时,先把所有tab按钮置为未选中状态,然后把点击的状态置为选中
+    private void setTabUnselected() {
+        tab_home.setSelected(false);
+        tab_healthy.setSelected(false);
+        tab_people.setSelected(false);
+        tab_cart.setSelected(false);
+        tab_me.setSelected(false);
+    }
+
+    // 点击tab时,先把所有fragment隐藏,然后显示点击的fragment
+    private void hideAllFragment(FragmentTransaction f) {
+        if (homeFragment != null) f.hide(homeFragment);
+        if (healthyFragment != null) f.hide(healthyFragment);
+        if (peopleFragment != null) f.hide(peopleFragment);
+        if (cartFragment != null) f.hide(cartFragment);
+        if (meFragment != null) f.hide(meFragment);
+    }
+
     @Override
     public void onClick(View v) {
         super.onClick(v);
@@ -78,7 +91,7 @@ public class MainActivity extends BaseActivity {
                 setTabUnselected();
                 tab_home.setSelected(true);
                 if (homeFragment == null) {
-                    homeFragment = new HomeFragment();
+                    homeFragment = new HomeFragment("首页");
                     fTransaction.add(R.id.ly_content, homeFragment);
                 } else {
                     fTransaction.show(homeFragment);
@@ -125,23 +138,5 @@ public class MainActivity extends BaseActivity {
                 }
                 break;
         }
-    }
-
-    // 点击tab时,先把所有tab按钮置为未选中状态,然后把点击的状态置为选中
-    private void setTabUnselected() {
-        tab_home.setSelected(false);
-        tab_healthy.setSelected(false);
-        tab_people.setSelected(false);
-        tab_cart.setSelected(false);
-        tab_me.setSelected(false);
-    }
-
-    // 点击tab时,先把所有fragment隐藏,然后显示点击的fragment
-    private void hideAllFragment(FragmentTransaction f) {
-        if (homeFragment != null) f.hide(homeFragment);
-        if (healthyFragment != null) f.hide(healthyFragment);
-        if (peopleFragment != null) f.hide(peopleFragment);
-        if (cartFragment != null) f.hide(cartFragment);
-        if (meFragment != null) f.hide(meFragment);
     }
 }

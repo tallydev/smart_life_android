@@ -6,9 +6,8 @@
 
     <!--自定义颜色-->
     <color name="black_overlay">#66000000</color>
-    <color name="gray">#eeeeee</color>
+    <color name="gray_bg">#E7E7E7</color>
     <color name="transparent">@android:color/transparent</color>
-
 
     <!--systemBar 背景-->
     <color name="systemBarColor">#ffffff</color>
@@ -16,7 +15,7 @@
 
     <!--自定义顶部topBar-->
     <color name="topBar_bg">#FFFFFF</color>
-    <color name="topBar_text">#333333</color>
+    <color name="topBar_text">#666666</color>
 
     <!--tab menu 颜色-->
     <color name="tab_text_selected">#FF8000</color>
