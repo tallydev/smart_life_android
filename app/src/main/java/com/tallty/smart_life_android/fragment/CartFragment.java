@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.orhanobut.logger.Logger;
 import com.tallty.smart_life_android.R;
 
 /**
@@ -17,13 +16,12 @@ import com.tallty.smart_life_android.R;
 public class CartFragment extends Fragment implements View.OnClickListener {
 
     public CartFragment() {
-        Logger.d("购物车Fragment");
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.home_fragment, container, false);
+        View view = inflater.inflate(R.layout.cart_fragment, container, false);
 
         return view;
     }

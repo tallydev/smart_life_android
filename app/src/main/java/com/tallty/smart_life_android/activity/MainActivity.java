@@ -91,7 +91,7 @@ public class MainActivity extends BaseActivity {
                 setTabUnselected();
                 tab_home.setSelected(true);
                 if (homeFragment == null) {
-                    homeFragment = new HomeFragment("首页");
+                    homeFragment = new HomeFragment();
                     fTransaction.add(R.id.ly_content, homeFragment);
                 } else {
                     fTransaction.show(homeFragment);
@@ -138,5 +138,6 @@ public class MainActivity extends BaseActivity {
                 }
                 break;
         }
+        fTransaction.commit();
     }
 }
