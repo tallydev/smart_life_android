@@ -1,29 +1,37 @@
 package com.tallty.smart_life_android.fragment;
 
-import android.app.Fragment;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.tallty.smart_life_android.R;
+import com.tallty.smart_life_android.base.BaseFragment;
 
 /**
  * Created by kang on 16/6/20.
  * 群组
  */
-public class PeopleFragment extends Fragment implements View.OnClickListener{
+public class PeopleFragment extends BaseFragment{
 
     public PeopleFragment() {
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.people_fragment, container, false);
+    public int getFragmentLayout() {
+        return R.layout.people_fragment;
+    }
 
-        return view;
+    @Override
+    protected void initView(View view) {
+
+    }
+
+    @Override
+    protected void setListener() {
+
+    }
+
+    @Override
+    protected void processLogic() {
+
     }
 
     @Override
