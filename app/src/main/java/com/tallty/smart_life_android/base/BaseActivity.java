@@ -9,8 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.util.ToastUtil;
 
@@ -34,13 +32,6 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         TAG = this.getClass().getSimpleName();
         mApp = App.getInstance();
         sp = getSharedPreferences("SmartLife", Activity.MODE_PRIVATE);
-
-        // 初始化Fresco
-        ImagePipelineConfig config = ImagePipelineConfig.newBuilder(this)
-                .setDownsampleEnabled(true)
-                .build();
-        Fresco.initialize(this, config);
-
         // 设置布局
         initLayout();
         // 引用组件

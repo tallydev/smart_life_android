@@ -98,18 +98,23 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'com.android.support:support-v4:23.3.0'
-    compile 'com.android.support:recyclerview-v7:23.3.0'
+    compile 'com.nineoldandroids:library:2.4.0'
+    compile 'com.android.support:design:23.3.0'
     // 网络通信
-    compile 'com.squareup.okio:okio:1.6.0'
-    compile 'com.squareup.okhttp3:okhttp:3.0.0-RC1'
-    compile 'com.google.code.gson:gson:2.5'
+    // An HTTP+HTTP/2 client for Android and Java applications
+    compile 'com.squareup.okhttp3:okhttp:3.3.1'
+    // google出品的json解析库
+    compile 'com.google.code.gson:gson:2.7'
+    // 网络通信
+    compile 'com.squareup.okhttp3:okhttp:3.3.1'
+    compile 'com.google.code.gson:gson:2.7'
     // retrofit 和 converter-gson 版本要保持一致
-    compile 'com.squareup.retrofit2:retrofit:2.0.0-beta3'
-    compile 'com.squareup.retrofit2:retrofit:2.0.0-SNAPSHOT'
-    compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta3'
-    compile 'org.glassfish:javax.annotation:10.0-b28'
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     // 日志
     compile 'com.github.orhanobut:logger:1.12'
     // 图片加载
-    compile 'com.facebook.fresco:fresco:0.10.0'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    // Banner
+    compile 'com.bigkoo:convenientbanner:2.0.5'
 }

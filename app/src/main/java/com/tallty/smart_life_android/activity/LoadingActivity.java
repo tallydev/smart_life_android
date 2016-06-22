@@ -1,13 +1,14 @@
 package com.tallty.smart_life_android.activity;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.facebook.drawee.view.SimpleDraweeView;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.Picasso;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseActivity;
 import com.tallty.smart_life_android.presenter.ILoadingPresenter;
@@ -16,9 +17,8 @@ import com.tallty.smart_life_android.view.ILoadingView;
 
 public class LoadingActivity extends BaseActivity implements ILoadingView {
     private ILoadingPresenter iLoadingPresenter;
-    private SimpleDraweeView loadingImage;
+    private ImageView loadingImage;
     private TextView timeText;
-
     private CountDownTimer timer;
 
     @Override
@@ -49,13 +49,15 @@ public class LoadingActivity extends BaseActivity implements ILoadingView {
 
     @Override
     public void showImage(String uri) {
-        Uri imageUri = Uri.parse(uri);
-        loadingImage.setImageURI(imageUri);
+        Picasso.with(this)
+                .load(R.drawable.loading)
+                .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
+                .into(loadingImage);
     }
 
     @Override
     public void changeAty() {
-        timer = new CountDownTimer(3000, 1000) {
+        timer = new CountDownTimer(4000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 timeText.setText(millisUntilFinished/1000 + "秒");
