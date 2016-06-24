@@ -7,8 +7,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseActivity;
 import com.tallty.smart_life_android.presenter.ILoadingPresenter;
@@ -49,9 +48,9 @@ public class LoadingActivity extends BaseActivity implements ILoadingView {
 
     @Override
     public void showImage(String uri) {
-        Picasso.with(this)
+        Glide.with(this)
                 .load(R.drawable.loading)
-                .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
+                .centerCrop()
                 .into(loadingImage);
     }
 
@@ -75,6 +74,7 @@ public class LoadingActivity extends BaseActivity implements ILoadingView {
     @Override
     protected void onDestroy() {
         timer.cancel();
+        loadingImage.setImageDrawable(null);
         super.onDestroy();
     }
 }

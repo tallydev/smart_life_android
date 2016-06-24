@@ -16,11 +16,11 @@ public class PeopleFragment extends BaseFragment{
 
     @Override
     public int getFragmentLayout() {
-        return R.layout.people_fragment;
+        return R.layout.fragment_people;
     }
 
     @Override
-    protected void initView(View view) {
+    protected void initView() {
 
     }
 

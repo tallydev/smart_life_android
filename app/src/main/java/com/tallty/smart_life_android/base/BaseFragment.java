@@ -1,6 +1,7 @@
 package com.tallty.smart_life_android.base;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
@@ -16,14 +17,16 @@ import com.tallty.smart_life_android.util.ToastUtil;
  */
 public abstract class BaseFragment extends Fragment implements View.OnClickListener {
     private View view;
+    protected Context context;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         int layout_id = getFragmentLayout();
         view = inflater.inflate(layout_id, container, false);
+        context = getActivity().getApplicationContext();
         // 引用组件
-        initView(view);
+        initView();
         // 设置监听器
         setListener();
         // 添加业务逻辑
@@ -34,7 +37,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
 
     public abstract int getFragmentLayout();
 
-    protected abstract void initView(View view);
+    protected abstract void initView();
 
     protected abstract void setListener();
 

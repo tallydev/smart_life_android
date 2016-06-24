@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/home_item_gridView_ly"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="36dp"
+    android:background="@color/white"
+    android:padding="8dp">
+    <ImageView
+        android:id="@+id/home_item_girdView_icon"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@mipmap/smart_healthy_three"/>
+    <TextView
+        android:id="@+id/home_item_girdView_text"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:textColor="@color/home_button_color"
+        android:textSize="@dimen/text_small"
+        android:text="健康报告"/>
+</LinearLayout>

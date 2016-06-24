@@ -23,4 +23,6 @@
     <color name="tab_num_color">#FFFFFF</color>
     <color name="tab_menu_bg">#FFFFFF</color>
     <color name="tab_divider_bg">#A1A1A1</color>
+    <color name="black">#000000</color>
+    <color name="home_button_color">#333333</color>
 </resources>

@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.bigkoo.convenientbanner.holder.Holder;
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 import com.tallty.smart_life_android.R;
 
 /**
@@ -20,12 +20,13 @@ public class HomeBannerHolderView implements Holder<String> {
     public View createView(Context context) {
         imageView = new ImageView(context);
         imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+
         return imageView;
     }
 
     @Override
     public void UpdateUI(Context context, int position, String data) {
-        Picasso.with(context)
+        Glide.with(context)
                 .load(data)
                 .error(R.drawable.default_banner)
                 .into(imageView);

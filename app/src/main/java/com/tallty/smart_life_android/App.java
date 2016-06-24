@@ -4,8 +4,6 @@ import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 
-import com.orhanobut.logger.AndroidLogTool;
-import com.orhanobut.logger.LogLevel;
 import com.orhanobut.logger.Logger;
 
 import java.util.List;

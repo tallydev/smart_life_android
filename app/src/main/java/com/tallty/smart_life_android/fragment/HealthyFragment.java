@@ -16,11 +16,11 @@ public class HealthyFragment extends BaseFragment {
 
     @Override
     public int getFragmentLayout() {
-        return R.layout.healthy_fragment;
+        return R.layout.fragment_healthy;
     }
 
     @Override
-    protected void initView(View view) {
+    protected void initView() {
 
     }
 

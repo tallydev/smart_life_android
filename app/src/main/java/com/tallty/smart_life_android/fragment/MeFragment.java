@@ -16,11 +16,11 @@ public class MeFragment extends BaseFragment {
 
     @Override
     public int getFragmentLayout() {
-        return R.layout.me_fragment;
+        return R.layout.fragment_me;
     }
 
     @Override
-    protected void initView(View view) {
+    protected void initView() {
 
     }
 

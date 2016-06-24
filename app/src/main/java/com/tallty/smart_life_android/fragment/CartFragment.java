@@ -16,11 +16,11 @@ public class CartFragment extends BaseFragment {
 
     @Override
     public int getFragmentLayout() {
-        return R.layout.cart_fragment;
+        return R.layout.fragment_cart;
     }
 
     @Override
-    protected void initView(View view) {
+    protected void initView() {
 
     }
 
