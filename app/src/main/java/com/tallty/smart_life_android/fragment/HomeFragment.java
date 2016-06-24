@@ -34,12 +34,12 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener{
         R.drawable.new_product, R.drawable.on_sail
     };
     private String[][] itemButtons = {
-        {"预约体检", "健康报告", "预约专家", "..."},
+        {"预约体检", "健康报告", "预约专家", "• • •"},
         {"更多数据"},
         {"天气查询", "违章查询", "公积金", "医保卡", "预约办证", "更多查询"},
         {"活动详情"},
         {"远程控制", "电子猫眼"},
-        {"IT学堂", "在线冲印", "IT服务", "..."},
+        {"IT学堂", "在线冲印", "IT服务", "• • •"},
         {"我要预约"},
         {"更多臻品"}
     };

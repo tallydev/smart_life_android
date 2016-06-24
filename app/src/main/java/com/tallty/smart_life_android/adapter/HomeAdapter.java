@@ -5,20 +5,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.custom.MyGridView;
 import com.tallty.smart_life_android.util.ToastUtil;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by kang on 16/6/22.
@@ -43,7 +36,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        View itemView = LayoutInflater.from(context).inflate(R.layout.item_home_one_btn,
+        View itemView = LayoutInflater.from(context).inflate(R.layout.item_home_main,
                 viewGroup, false);
 
         return new ViewHolder(itemView);

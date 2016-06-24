@@ -33,17 +33,7 @@ public class HomeItemGridViewAdapter extends BaseAdapter {
     }
     @Override
     public int getCount() {
-        int count = icons.length;
-        int remainder = count % 2;
-        int value = 0;
-        if (count <= 2) {
-            value = 2;
-        } else if (count>2 && remainder == 0) {
-            value = count;
-        } else if (count>2 && remainder != 0) {
-            value = 2 - remainder + count;
-        }
-        return value;
+        return texts.length;
     }
 
     @Override
@@ -60,22 +50,20 @@ public class HomeItemGridViewAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.item_home_grid_view, parent, false);
-//            height = convertView.getHeight();
-//            int col_num = icons.length / 2 + icons.length % 2;
-//            gridView.setMinimumHeight(col_num*height);
         }
         // 找到组件
         ImageView icon = BaseViewHolder.get(convertView, R.id.home_item_girdView_icon);
         TextView text = BaseViewHolder.get(convertView, R.id.home_item_girdView_text);
         // 赋值
-        if (position+1 <= icons.length) {
+        text.setText(texts[position]);
+        if (position <= icons.length - 1 ) {
             Glide.with(context).load(icons[position]).centerCrop().into(icon);
-            text.setText(texts[position]);
         } else {
-            Glide.with(context).load(R.mipmap.ic_launcher).centerCrop().into(icon);
-            text.setText("...");
+            icon.setVisibility(View.GONE);
         }
 
         return convertView;
     }
 }
+
+
