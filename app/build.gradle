@@ -100,13 +100,9 @@ dependencies {
     compile 'com.android.support:support-v4:23.3.0'
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.android.support:design:23.3.0'
-    // 网络通信
     // An HTTP+HTTP/2 client for Android and Java applications
     compile 'com.squareup.okhttp3:okhttp:3.3.1'
     // google出品的json解析库
-    compile 'com.google.code.gson:gson:2.7'
-    // 网络通信
-    compile 'com.squareup.okhttp3:okhttp:3.3.1'
     compile 'com.google.code.gson:gson:2.7'
     // retrofit 和 converter-gson 版本要保持一致
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
@@ -117,4 +113,6 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.7.0'
     // Banner
     compile 'com.bigkoo:convenientbanner:2.0.5'
+    // 数据库操作
+    compile files('libs/lite-orm-1.7.0.jar')
 }

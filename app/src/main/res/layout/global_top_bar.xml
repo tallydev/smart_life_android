@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:layout_alignParentTop="true"
+    android:background="@color/white">
+    
+    <Button
+        android:id="@+id/topBar_back"
+        android:layout_width="48dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:textColor="@color/global_text"
+        android:background="@drawable/top_bar_bg"
+        android:layout_alignParentLeft="true"
+        android:text="返回"/>
+
+    <TextView
+        android:id="@+id/topBar_title"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:layout_centerInParent="true"
+        android:textColor="@color/global_text"
+        android:text="我"/>
+
+    <FrameLayout
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentRight="true"
+        android:visibility="visible"
+        android:background="@drawable/top_bar_bg">
+
+        <ImageView
+            android:id="@+id/topBar_cart"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:src="@mipmap/cart_normal"/>
+
+        <ImageView
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:src="@mipmap/num_bg"
+            android:layout_gravity="right"
+            android:layout_marginTop="12dp"
+            android:layout_marginRight="6dp"/>
+    </FrameLayout>
+
+
+</RelativeLayout>

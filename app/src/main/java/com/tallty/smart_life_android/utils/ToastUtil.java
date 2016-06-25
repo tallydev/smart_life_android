@@ -1,4 +1,4 @@
-package com.tallty.smart_life_android.util;
+package com.tallty.smart_life_android.utils;
 
 import android.support.annotation.StringRes;
 import android.widget.Toast;

@@ -23,8 +23,6 @@ public class HomeItemGridViewAdapter extends BaseAdapter {
     private String[] texts;
     private GridView gridView;
 
-    private int height;
-
     public HomeItemGridViewAdapter(Context context, GridView gridView, Integer[] icons, String[] texts) {
         this.context = context;
         this.icons = icons;

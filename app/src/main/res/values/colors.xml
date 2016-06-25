@@ -8,6 +8,7 @@
     <color name="black_overlay">#66000000</color>
     <color name="gray_bg">#E7E7E7</color>
     <color name="transparent">@android:color/transparent</color>
+    <color name="global_text">#666666</color>
 
     <!--systemBar 背景-->
     <color name="systemBarColor">#ffffff</color>

@@ -5,18 +5,15 @@ import android.view.View;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseFragment;
 
-/**
- * Created by kang on 16/6/20.
- * 健康
- */
-public class HealthyFragment extends BaseFragment {
+public class TermsFragment extends BaseFragment {
 
-    public HealthyFragment() {
+    public TermsFragment() {
+
     }
 
     @Override
     public int getFragmentLayout() {
-        return R.layout.fragment_healthy;
+        return R.layout.fragment_terms;
     }
 
     @Override
@@ -31,6 +28,7 @@ public class HealthyFragment extends BaseFragment {
 
     @Override
     protected void processLogic() {
+
     }
 
     @Override

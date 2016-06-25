@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.Window;
 
 import com.tallty.smart_life_android.App;
-import com.tallty.smart_life_android.util.ToastUtil;
+import com.tallty.smart_life_android.utils.ToastUtil;
 
 /**
  * Created by kang on 16/6/15.

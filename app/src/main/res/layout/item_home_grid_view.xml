@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="36dp"
     android:background="@color/white"
-    android:padding="8dp">
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp">
     <ImageView
         android:id="@+id/home_item_girdView_icon"
         android:layout_width="20dp"
