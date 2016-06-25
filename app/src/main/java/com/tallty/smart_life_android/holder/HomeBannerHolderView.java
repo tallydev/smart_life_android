@@ -13,7 +13,7 @@ import com.tallty.smart_life_android.R;
  * 首页banner图HolderView
  * 使用Picasso来显示网络图片
  */
-public class HomeBannerHolderView implements Holder<String> {
+public class HomeBannerHolderView implements Holder<Integer> {
     private ImageView imageView;
 
     @Override
@@ -25,7 +25,7 @@ public class HomeBannerHolderView implements Holder<String> {
     }
 
     @Override
-    public void UpdateUI(Context context, int position, String data) {
+    public void UpdateUI(Context context, int position, Integer data) {
         Glide.with(context)
                 .load(data)
                 .error(R.drawable.default_banner)

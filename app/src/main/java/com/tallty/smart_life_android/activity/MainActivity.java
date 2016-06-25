@@ -15,10 +15,9 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.tallty.smart_life_android.base.BaseActivity;
 import com.tallty.smart_life_android.R;
+import com.tallty.smart_life_android.base.BaseActivity;
 import com.tallty.smart_life_android.custom.Constant;
 import com.tallty.smart_life_android.fragment.CartFragment;
 import com.tallty.smart_life_android.fragment.HealthyFragment;

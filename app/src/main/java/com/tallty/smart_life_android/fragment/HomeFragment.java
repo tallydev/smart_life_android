@@ -35,7 +35,7 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener{
     };
     private String[][] itemButtons = {
         {"预约体检", "健康报告", "预约专家", "• • •"},
-        {"更多数据"},
+        {"更多数据", ""},
         {"天气查询", "违章查询", "公积金", "医保卡", "预约办证", "更多查询"},
         {"活动详情"},
         {"远程控制", "电子猫眼"},
@@ -55,11 +55,8 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener{
 
     };
     // banner图数据
-    private String[] imagesUrl = {
-        "http://d.3987.com/sqmy_131219/001.jpg",
-        "http://img2.3lian.com/2014/f2/37/d/39.jpg",
-        "http://www.8kmm.com/UploadFiles/2012/8/201208140920132659.jpg",
-        "http://f.hiphotos.baidu.com/image/h%3D200/sign=1478eb74d5a20cf45990f9df460b4b0c/d058ccbf6c81800a5422e5fdb43533fa838b4779.jpg"
+    private Integer[] imagesUrl = {
+        R.drawable.banner_one, R.drawable.community_activity
     };
 
     public HomeFragment() {
@@ -105,14 +102,14 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener{
     }
 
     private void setBannerImages() {
-        List<String> networkImages = Arrays.asList(imagesUrl);
+        List<Integer> networkImages = Arrays.asList(imagesUrl);
         banner.setPages(new CBViewHolderCreator() {
             @Override
             public Object createHolder() {
                 return new HomeBannerHolderView();
             }
         }, networkImages)
-        .setPageIndicator(new int[] {R.drawable.banner_indicator, R.drawable.banner_indicator_focused})
+        .setPageIndicator(new int[] {R.mipmap.banner_indicator, R.mipmap.banner_indicator_focused})
         .setOnItemClickListener(this);
     }
 
