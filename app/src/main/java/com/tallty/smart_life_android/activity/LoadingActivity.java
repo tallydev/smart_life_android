@@ -56,7 +56,7 @@ public class LoadingActivity extends BaseActivity implements ILoadingView {
 
     @Override
     public void changeAty() {
-        timer = new CountDownTimer(4000, 1000) {
+        timer = new CountDownTimer(1000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 timeText.setText(millisUntilFinished/1000 + "秒");

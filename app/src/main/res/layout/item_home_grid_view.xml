@@ -6,18 +6,18 @@
     android:layout_width="match_parent"
     android:layout_height="36dp"
     android:background="@color/white"
-    android:paddingTop="8dp"
-    android:paddingBottom="8dp">
+    android:paddingTop="9dp"
+    android:paddingBottom="9dp"
+    android:paddingLeft="4dp">
     <ImageView
         android:id="@+id/home_item_girdView_icon"
-        android:layout_width="20dp"
-        android:layout_height="20dp"/>
+        android:layout_width="18dp"
+        android:layout_height="18dp"/>
     <TextView
         android:id="@+id/home_item_girdView_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
         android:textColor="@color/home_button_color"
-        android:textSize="@dimen/text_small"
-        android:text="健康报告"/>
+        android:textSize="@dimen/text_small"/>
 </LinearLayout>

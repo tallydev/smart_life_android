@@ -25,7 +25,7 @@ import android.util.Log;
 
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.activity.MainActivity;
-import com.tallty.smart_life_android.custom.Constant;
+import com.tallty.smart_life_android.custom.PedometerConstant;
 import com.tallty.smart_life_android.model.Step;
 import com.tallty.smart_life_android.utils.CountDownTimer;
 import com.tallty.smart_life_android.utils.DbUtils;
@@ -58,10 +58,10 @@ public class StepService extends Service implements SensorEventListener {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case Constant.MSG_FROM_CLIENT:
+                case PedometerConstant.MSG_FROM_CLIENT:
                     try {
                         Messenger messenger = msg.replyTo;
-                        Message replyMsg = Message.obtain(null, Constant.MSG_FROM_SERVER);
+                        Message replyMsg = Message.obtain(null, PedometerConstant.MSG_FROM_SERVER);
                         Bundle bundle = new Bundle();
                         bundle.putInt("step", StepCreator.CURRENT_SETP);
                         replyMsg.setData(bundle);

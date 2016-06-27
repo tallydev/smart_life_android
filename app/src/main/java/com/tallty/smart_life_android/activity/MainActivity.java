@@ -18,7 +18,7 @@ import android.widget.ImageView;
 
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseActivity;
-import com.tallty.smart_life_android.custom.Constant;
+import com.tallty.smart_life_android.custom.PedometerConstant;
 import com.tallty.smart_life_android.fragment.CartFragment;
 import com.tallty.smart_life_android.fragment.HealthyFragment;
 import com.tallty.smart_life_android.fragment.HomeFragment;
@@ -55,7 +55,7 @@ public class MainActivity extends BaseActivity implements Handler.Callback {
         public void onServiceConnected(ComponentName name, IBinder service) {
             try {
                 messenger = new Messenger(service);
-                Message msg = Message.obtain(null, Constant.MSG_FROM_CLIENT);
+                Message msg = Message.obtain(null, PedometerConstant.MSG_FROM_CLIENT);
                 msg.replyTo = mGetReplyMessenger;
                 messenger.send(msg);
             } catch (RemoteException e) {
@@ -205,13 +205,13 @@ public class MainActivity extends BaseActivity implements Handler.Callback {
     @Override
     public boolean handleMessage(Message msg) {
         switch (msg.what) {
-            case Constant.MSG_FROM_SERVER:
+            case PedometerConstant.MSG_FROM_SERVER:
                 // 计步器数据: msg.getData().getInt("step")
-                delayHandler.sendEmptyMessageDelayed(Constant.REQUEST_SERVER,TIME_INTERVAL);
+                delayHandler.sendEmptyMessageDelayed(PedometerConstant.REQUEST_SERVER,TIME_INTERVAL);
                 break;
-            case Constant.REQUEST_SERVER:
+            case PedometerConstant.REQUEST_SERVER:
                 try {
-                    Message msg1 = Message.obtain(null, Constant.MSG_FROM_CLIENT);
+                    Message msg1 = Message.obtain(null, PedometerConstant.MSG_FROM_CLIENT);
                     msg1.replyTo = mGetReplyMessenger;
                     messenger.send(msg1);
                 } catch (RemoteException e) {

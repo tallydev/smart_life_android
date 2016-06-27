@@ -4,17 +4,11 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 
-import com.bigkoo.convenientbanner.ConvenientBanner;
-import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
-import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.HomeAdapter;
 import com.tallty.smart_life_android.base.BaseFragment;
-import com.tallty.smart_life_android.custom.RecyclerVIewItemTouchListener;
-import com.tallty.smart_life_android.holder.HomeBannerHolderView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -50,12 +44,12 @@ public class HomeFragment extends BaseFragment{
         }
     };
     private String[][] itemButtons = {
-        {"预约体检", "健康报告", "预约专家", "• • •"},
+        {"预约体检", "健康报告", "预约专家", "更多"},
         {"更多数据"},
         {"天气查询", "违章查询", "公积金", "医保卡", "预约办证", "更多查询"},
         {"活动详情"},
         {"远程控制", "电子猫眼"},
-        {"IT学堂", "在线冲印", "IT服务", "• • •"},
+        {"IT学堂", "在线冲印", "IT服务", "更多"},
         {"我要预约"},
         {"更多臻品"}
     };
@@ -70,6 +64,7 @@ public class HomeFragment extends BaseFragment{
         {R.mipmap.on_sail_one}
     };
 
+    // 构造函数
     public HomeFragment() {
 
     }
@@ -100,26 +95,10 @@ public class HomeFragment extends BaseFragment{
     }
 
 
-    // ========================逻辑方法=========================
+    // ========================业务逻辑=========================
     private void setList() {
         recyclerView.setLayoutManager(layoutManager);
-        // 初始化adapter
-
         HomeAdapter homeAdapter = new HomeAdapter(context, titles, images, itemButtons, itemIcons);
         recyclerView.setAdapter(homeAdapter);
-        // 交互事件
-//        setRecycleViewListener();
     }
-
-    /**
-     * RecycleView点击事件
-     */
-//    private void setRecycleViewListener() {
-//        recyclerView.addOnItemTouchListener(new RecyclerVIewItemTouchListener(recyclerView) {
-//            @Override
-//            public void onItemClick(RecyclerView.HomeViewHolder vh) {
-//                showToast("您点击了第"+vh.getAdapterPosition()+"个");
-//            }
-//        });
-//    }
 }

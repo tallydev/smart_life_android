@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.tallty.smart_life_android.R;
+import com.tallty.smart_life_android.custom.MyGridView;
 import com.tallty.smart_life_android.holder.BaseViewHolder;
 
 /**
@@ -21,9 +22,9 @@ public class HomeItemGridViewAdapter extends BaseAdapter {
     private Context context;
     private Integer[] icons;
     private String[] texts;
-    private GridView gridView;
+    private MyGridView gridView;
 
-    public HomeItemGridViewAdapter(Context context, GridView gridView, Integer[] icons, String[] texts) {
+    public HomeItemGridViewAdapter(Context context, MyGridView gridView, Integer[] icons, String[] texts) {
         this.context = context;
         this.icons = icons;
         this.texts = texts;
@@ -31,7 +32,12 @@ public class HomeItemGridViewAdapter extends BaseAdapter {
     }
     @Override
     public int getCount() {
-        return texts.length;
+        int count = texts.length;
+        if (count % 2 == 0) {
+            return count;
+        } else {
+            return count + 1;
+        }
     }
 
     @Override
@@ -53,11 +59,13 @@ public class HomeItemGridViewAdapter extends BaseAdapter {
         ImageView icon = BaseViewHolder.get(convertView, R.id.home_item_girdView_icon);
         TextView text = BaseViewHolder.get(convertView, R.id.home_item_girdView_text);
         // 赋值
-        text.setText(texts[position]);
-        if (position <= icons.length - 1 ) {
-            Glide.with(context).load(icons[position]).centerCrop().into(icon);
-        } else {
-            icon.setVisibility(View.GONE);
+        if (position <= texts.length - 1) {
+            text.setText(texts[position].equals("更多") ? "• • •" : texts[position]);
+            if (position <= icons.length - 1 ) {
+                Glide.with(context).load(icons[position]).centerCrop().into(icon);
+            } else {
+                icon.setVisibility(View.GONE);
+            }
         }
 
         return convertView;
