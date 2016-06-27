@@ -13,6 +13,7 @@ import com.tallty.smart_life_android.base.BaseFragment;
 import com.tallty.smart_life_android.custom.RecyclerVIewItemTouchListener;
 import com.tallty.smart_life_android.holder.HomeBannerHolderView;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -20,22 +21,37 @@ import java.util.List;
  * Created by kang on 16/6/20.
  * 首页
  */
-public class HomeFragment extends BaseFragment implements OnItemClickListener{
-    private ConvenientBanner banner;
+public class HomeFragment extends BaseFragment{
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     // 列表数据
-    private String[] itemTitles = {
-            "智慧健康", "健身达人", "市政大厅", "社区活动", "智慧家居", "社区IT", "新品上市", "限量发售"
+    private List<String> titles = new ArrayList<String>() {
+        {
+            add("智慧健康");
+            add("健身达人");
+            add("市政大厅");
+            add("社区活动");
+            add("智慧家居");
+            add("社区IT");
+            add("新品上市");
+            add("限量发售");
+        }
     };
-    private Integer[] itemImages = {
-        R.drawable.smart_healthy, R.drawable.fitness_people, R.drawable.community_activity,
-        R.drawable.government, R.drawable.smart_home, R.drawable.community_it,
-        R.drawable.new_product, R.drawable.on_sail
+    private List<Integer> images = new ArrayList<Integer>() {
+        {
+            add(R.drawable.smart_healthy);
+            add(R.drawable.fitness_people);
+            add(R.drawable.government);
+            add(R.drawable.community_activity);
+            add(R.drawable.smart_home);
+            add(R.drawable.community_it);
+            add(R.drawable.new_product);
+            add(R.drawable.on_sail);
+        }
     };
     private String[][] itemButtons = {
         {"预约体检", "健康报告", "预约专家", "• • •"},
-        {"更多数据", ""},
+        {"更多数据"},
         {"天气查询", "违章查询", "公积金", "医保卡", "预约办证", "更多查询"},
         {"活动详情"},
         {"远程控制", "电子猫眼"},
@@ -52,11 +68,6 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener{
         {R.mipmap.community_it_one, R.mipmap.community_it_two, R.mipmap.community_it_three},
         {R.mipmap.new_product_one},
         {R.mipmap.on_sail_one}
-
-    };
-    // banner图数据
-    private Integer[] imagesUrl = {
-        R.drawable.banner_one, R.drawable.community_activity
     };
 
     public HomeFragment() {
@@ -70,7 +81,6 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener{
 
     @Override
     protected void initView() {
-        banner = getViewById(R.id.homeBanner);
         recyclerView = getViewById(R.id.home_list);
         layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
     }
@@ -81,7 +91,6 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener{
 
     @Override
     protected void processLogic() {
-        setBannerImages();
         setList();
     }
 
@@ -95,56 +104,22 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener{
     private void setList() {
         recyclerView.setLayoutManager(layoutManager);
         // 初始化adapter
-        HomeAdapter homeAdapter = new HomeAdapter(context, itemTitles, itemImages, itemButtons, itemIcons);
+
+        HomeAdapter homeAdapter = new HomeAdapter(context, titles, images, itemButtons, itemIcons);
         recyclerView.setAdapter(homeAdapter);
         // 交互事件
-        setRecycleViewListener();
-    }
-
-    private void setBannerImages() {
-        List<Integer> networkImages = Arrays.asList(imagesUrl);
-        banner.setPages(new CBViewHolderCreator() {
-            @Override
-            public Object createHolder() {
-                return new HomeBannerHolderView();
-            }
-        }, networkImages)
-        .setPageIndicator(new int[] {R.mipmap.banner_indicator, R.mipmap.banner_indicator_focused})
-        .setOnItemClickListener(this);
-    }
-
-    @Override
-    public void onResume() {
-        super.onPause();
-        // 开始自动翻页
-        banner.startTurning(3000);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        // 暂停翻页
-        banner.stopTurning();
-    }
-
-    /**
-     * banner点击事件
-     * @param position
-     */
-    @Override
-    public void onItemClick(int position) {
-        showToast("点击了第"+position+"个");
+//        setRecycleViewListener();
     }
 
     /**
      * RecycleView点击事件
      */
-    private void setRecycleViewListener() {
-        recyclerView.addOnItemTouchListener(new RecyclerVIewItemTouchListener(recyclerView) {
-            @Override
-            public void onItemClick(RecyclerView.ViewHolder vh) {
-                showToast("您点击了第"+vh.getAdapterPosition()+"个");
-            }
-        });
-    }
+//    private void setRecycleViewListener() {
+//        recyclerView.addOnItemTouchListener(new RecyclerVIewItemTouchListener(recyclerView) {
+//            @Override
+//            public void onItemClick(RecyclerView.HomeViewHolder vh) {
+//                showToast("您点击了第"+vh.getAdapterPosition()+"个");
+//            }
+//        });
+//    }
 }
