@@ -37,10 +37,9 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
     private String[][] buttons;
     private Integer[][] icons;
     // 模板类型
-    private static final int IS_HEADER = 0;
-    private static final int IS_NORMAL = 1;
-    private static final int IS_STEPS = 2;
-    private static final int IS_PRODUCT = 3;
+    private static final int IS_NORMAL = 0;
+    private static final int IS_STEPS = 1;
+    private static final int IS_PRODUCT = 2;
     // banner图数据
     private Integer[] imagesUrl = { R.drawable.banner_one, R.drawable.community_activity };
 
@@ -63,11 +62,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
     @Override
     public HomeViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         HomeViewHolder holder;
-        if (viewType == IS_HEADER) {
-            View itemView = LayoutInflater.from(context).inflate(R.layout.item_home_main_header, viewGroup, false);
-            holder = new HomeViewHolder(itemView, IS_HEADER);
-            return holder;
-        } else if (viewType == IS_NORMAL) {
+        if (viewType == IS_NORMAL) {
             View itemView = LayoutInflater.from(context).inflate(R.layout.item_home_main, viewGroup, false);
             holder = new HomeViewHolder(itemView, IS_NORMAL);
             return holder;
@@ -77,22 +72,15 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
 
     @Override
     public void onBindViewHolder(HomeViewHolder viewHolder, int position) {
-        if (position == 0 && viewHolder.viewType == IS_HEADER) {
-            List<Integer> networkImages = Arrays.asList(imagesUrl);
-            viewHolder.banner.setPages(new CBViewHolderCreator() {
-                @Override
-                public Object createHolder() {
-                    return new HomeBannerHolderView();
-                }
-            }, networkImages)
-                    .setPageIndicator(new int[] {R.mipmap.banner_indicator, R.mipmap.banner_indicator_focused})
-                    .setOnItemClickListener(this);
-        } else if (position != 0 && viewHolder.viewType == IS_NORMAL) {
-            int i = position - 1;
+        if (viewHolder.viewType == IS_NORMAL) {
+            int i = position;
             viewHolder.textView.setText("— "+titles.get(i)+" —");
             Glide.with(context).load(images.get(i)).into(viewHolder.imageView);
             // 设置item里面的GridView
-            viewHolder.gridView.setAdapter(new HomeItemGridViewAdapter(context, viewHolder.gridView, icons[i], buttons[i]));
+            if (buttons[i].length == 1) {
+                viewHolder.gridView.setHorizontalSpacing(0);
+            }
+            viewHolder.gridView.setAdapter(new HomeItemGridViewAdapter(context, icons[i], buttons[i]));
             viewHolder.gridView.setTag(i);
             gridItemClickListener(viewHolder);
         }
@@ -100,9 +88,6 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
 
     @Override
     public int getItemViewType(int position) {
-        if (position == 0) {
-            return IS_HEADER;
-        }
 //        else if (position == 1){
 //            return IS_NORMAL;
 //        }
@@ -111,28 +96,13 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
 //        } else if (position == 3) {
 //            return IS_PRODUCT;
 //        }
-        else {
-            return IS_NORMAL;
-        }
+
+        return IS_NORMAL;
     }
 
     @Override
     public int getItemCount() {
-        return titles.size() + 1;
-    }
-
-    /**
-     * 这是header的布局
-     * @param holder
-     */
-    @Override
-    public void onViewAttachedToWindow(HomeViewHolder holder) {
-        super.onViewAttachedToWindow(holder);
-        ViewGroup.LayoutParams lp = holder.itemView.getLayoutParams();
-        if (lp != null && lp instanceof StaggeredGridLayoutManager.LayoutParams) {
-            StaggeredGridLayoutManager.LayoutParams p = (StaggeredGridLayoutManager.LayoutParams) lp;
-            p.setFullSpan(holder.getLayoutPosition() == 0);
-        }
+        return titles.size();
     }
 
     /**
@@ -236,19 +206,12 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
         TextView textView;
         ImageView imageView;
         MyGridView gridView;
-        LinearLayout recyclerItemLayout;
-
-        ConvenientBanner banner;
-
         int viewType;
 
         public HomeViewHolder(View itemView, int viewType) {
             super(itemView);
             this.viewType = viewType;
-            if (viewType == IS_HEADER) {
-                banner = (ConvenientBanner) itemView.findViewById(R.id.homeBanner);
-            } else if (viewType == IS_NORMAL) {
-                recyclerItemLayout = (LinearLayout) itemView.findViewById(R.id.home_item_list_ly);
+            if (viewType == IS_NORMAL) {
                 textView = (TextView) itemView.findViewById(R.id.item_home_list_title);
                 imageView = (ImageView) itemView.findViewById(R.id.item_home_list_image);
                 gridView = (MyGridView) itemView.findViewById(R.id.item_home_list_gridView);

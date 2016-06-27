@@ -4,20 +4,28 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 
+import com.bigkoo.convenientbanner.ConvenientBanner;
+import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
+import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.HomeAdapter;
 import com.tallty.smart_life_android.base.BaseFragment;
+import com.tallty.smart_life_android.holder.HomeBannerHolderView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
  * Created by kang on 16/6/20.
  * 首页
  */
-public class HomeFragment extends BaseFragment{
+public class HomeFragment extends BaseFragment implements OnItemClickListener{
+    private ConvenientBanner banner;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
+    // banner图数据
+    private Integer[] imagesUrl = { R.drawable.banner_one, R.drawable.community_activity };
     // 列表数据
     private List<String> titles = new ArrayList<String>() {
         {
@@ -76,7 +84,8 @@ public class HomeFragment extends BaseFragment{
 
     @Override
     protected void initView() {
-        recyclerView = getViewById(R.id.home_list);
+        banner = getViewById(R.id.home_banner);
+        recyclerView = getViewById(R.id.home_recycler);
         layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
     }
 
@@ -86,6 +95,7 @@ public class HomeFragment extends BaseFragment{
 
     @Override
     protected void processLogic() {
+        setBanner();
         setList();
     }
 
@@ -96,9 +106,33 @@ public class HomeFragment extends BaseFragment{
 
 
     // ========================业务逻辑=========================
+    private void setBanner() {
+        List<Integer> networkImages = Arrays.asList(imagesUrl);
+        banner.setPages(new CBViewHolderCreator() {
+            @Override
+            public Object createHolder() {
+                return new HomeBannerHolderView();
+            }
+        }, networkImages)
+                .setPageIndicator(new int[] {R.mipmap.banner_indicator, R.mipmap.banner_indicator_focused})
+                .setOnItemClickListener(this);
+    }
+
     private void setList() {
         recyclerView.setLayoutManager(layoutManager);
         HomeAdapter homeAdapter = new HomeAdapter(context, titles, images, itemButtons, itemIcons);
         recyclerView.setAdapter(homeAdapter);
+        // ScrollView嵌套RecyclerView,设置屏幕从顶部开始
+        recyclerView.setFocusable(false);
+    }
+
+    @Override
+    public void onItemClick(int position) {
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 }

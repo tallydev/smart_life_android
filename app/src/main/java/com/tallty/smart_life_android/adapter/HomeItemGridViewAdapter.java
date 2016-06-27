@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,11 +23,10 @@ public class HomeItemGridViewAdapter extends BaseAdapter {
     private String[] texts;
     private MyGridView gridView;
 
-    public HomeItemGridViewAdapter(Context context, MyGridView gridView, Integer[] icons, String[] texts) {
+    public HomeItemGridViewAdapter(Context context, Integer[] icons, String[] texts) {
         this.context = context;
         this.icons = icons;
         this.texts = texts;
-        this.gridView = gridView;
     }
     @Override
     public int getCount() {
