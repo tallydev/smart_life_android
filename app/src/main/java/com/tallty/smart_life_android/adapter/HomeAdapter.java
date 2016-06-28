@@ -2,40 +2,33 @@ package com.tallty.smart_life_android.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bigkoo.convenientbanner.ConvenientBanner;
-import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
-import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.bumptech.glide.Glide;
-import com.orhanobut.logger.Logger;
 import com.tallty.smart_life_android.R;
-import com.tallty.smart_life_android.custom.MyGridView;
-import com.tallty.smart_life_android.holder.HomeBannerHolderView;
-import com.tallty.smart_life_android.utils.DpUtil;
+import com.tallty.smart_life_android.holder.HomeViewHolder;
 import com.tallty.smart_life_android.utils.ToastUtil;
 
-import java.util.Arrays;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
  * Created by kang on 16/6/22.
  * 首页瀑布流RecyclerView适配器
  */
-public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder> implements OnItemClickListener {
+public class HomeAdapter extends RecyclerView.Adapter<HomeViewHolder> {
     private Context context;
     // 数据源
     private List<String> titles;
     private List<Integer> images;
     private String[][] buttons;
     private Integer[][] icons;
+    private Integer step;
     // 模板类型
     private static final int IS_NORMAL = 0;
     private static final int IS_STEPS = 1;
@@ -51,67 +44,76 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
      * @param buttons
      * @param icons
      */
-    public HomeAdapter(Context context, List<String> titles, List<Integer> images, String[][] buttons, Integer[][] icons) {
+    public HomeAdapter(Context context, List<String> titles, List<Integer> images,
+                       String[][] buttons, Integer[][] icons, Integer step) {
         this.context = context;
         this.titles = titles;
         this.buttons = buttons;
         this.icons = icons;
         this.images = images;
+        this.step = step;
     }
 
     @Override
     public HomeViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         HomeViewHolder holder;
-        if (viewType == IS_NORMAL) {
+        // "健身达人"布局
+        if (viewType == IS_STEPS) {
+            View itemView = LayoutInflater.from(context).inflate(R.layout.item_home_steps, viewGroup, false);
+            holder = new HomeViewHolder(itemView, IS_STEPS);
+            return holder;
+        }
+        // 正常布局
+        else if (viewType == IS_NORMAL) {
             View itemView = LayoutInflater.from(context).inflate(R.layout.item_home_main, viewGroup, false);
             holder = new HomeViewHolder(itemView, IS_NORMAL);
             return holder;
         }
+
         return null;
     }
 
     @Override
     public void onBindViewHolder(HomeViewHolder viewHolder, int position) {
+        // 设置item里面的GridView
+        if (buttons[position].length == 1) {
+            viewHolder.gridView.setHorizontalSpacing(0);
+        }
+        viewHolder.gridView.setAdapter(new HomeItemGridViewAdapter(context, icons[position], buttons[position]));
+        viewHolder.gridView.setTag(position);
+        gridItemClickListener(viewHolder);
+        // 正常布局
         if (viewHolder.viewType == IS_NORMAL) {
-            int i = position;
-            viewHolder.textView.setText("— "+titles.get(i)+" —");
-            Glide.with(context).load(images.get(i)).into(viewHolder.imageView);
-            // 设置item里面的GridView
-            if (buttons[i].length == 1) {
-                viewHolder.gridView.setHorizontalSpacing(0);
-            }
-            viewHolder.gridView.setAdapter(new HomeItemGridViewAdapter(context, icons[i], buttons[i]));
-            viewHolder.gridView.setTag(i);
-            gridItemClickListener(viewHolder);
+            viewHolder.textView.setText("— "+titles.get(position)+" —");
+            Glide.with(context).load(images.get(position)).into(viewHolder.imageView);
+        }
+        // "健身达人"布局
+        else if (titles.get(position).equals("健身达人") && viewHolder.viewType == IS_STEPS) {
+            viewHolder.steps_title.setText("— "+titles.get(position)+" —");
+            Glide.with(context).load(images.get(position)).into(viewHolder.steps_image);
+            Glide.with(context).load(R.drawable.step_weather).into(viewHolder.weather);
+            // 当前日期
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd");
+            Date date = new Date(System.currentTimeMillis());
+            String str = simpleDateFormat.format(date);
+            viewHolder.date.setText(str);
+            viewHolder.rank.setText("1");
+            viewHolder.steps.setText(String.valueOf(step));
         }
     }
 
     @Override
     public int getItemViewType(int position) {
-//        else if (position == 1){
-//            return IS_NORMAL;
-//        }
-//        else if (position == 2) {
-//            return IS_STEPS;
-//        } else if (position == 3) {
-//            return IS_PRODUCT;
-//        }
-
-        return IS_NORMAL;
+        if (titles.get(position).equals("健身达人")) {
+            return IS_STEPS;
+        } else {
+            return IS_NORMAL;
+        }
     }
 
     @Override
     public int getItemCount() {
         return titles.size();
-    }
-
-    /**
-     * banner点击事件
-     * @param position
-     */
-    @Override
-    public void onItemClick(int position) {
-        ToastUtil.show("点击了第"+position+"个");
     }
 
     /**
@@ -197,25 +199,5 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
                 }
             }
         });
-    }
-
-    /**
-     * ViewHolder
-     */
-    class HomeViewHolder extends RecyclerView.ViewHolder {
-        TextView textView;
-        ImageView imageView;
-        MyGridView gridView;
-        int viewType;
-
-        public HomeViewHolder(View itemView, int viewType) {
-            super(itemView);
-            this.viewType = viewType;
-            if (viewType == IS_NORMAL) {
-                textView = (TextView) itemView.findViewById(R.id.item_home_list_title);
-                imageView = (ImageView) itemView.findViewById(R.id.item_home_list_image);
-                gridView = (MyGridView) itemView.findViewById(R.id.item_home_list_gridView);
-            }
-        }
     }
 }

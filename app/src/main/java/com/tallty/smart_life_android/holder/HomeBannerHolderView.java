@@ -11,7 +11,7 @@ import com.tallty.smart_life_android.R;
 /**
  * Created by kang on 16/6/22.
  * 首页banner图HolderView
- * 使用Picasso来显示网络图片
+ * 使用Glide来显示网络图片
  */
 public class HomeBannerHolderView implements Holder<Integer> {
     private ImageView imageView;

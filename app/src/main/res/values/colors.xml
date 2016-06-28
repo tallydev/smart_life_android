@@ -9,10 +9,12 @@
     <color name="gray_bg">#E7E7E7</color>
     <color name="transparent">@android:color/transparent</color>
     <color name="global_text">#666666</color>
+    <color name="white">#ffffff</color>
+    <color name="alpha_white">#a0ffffff</color>
+    <color name="black">#000000</color>
 
     <!--systemBar 背景-->
     <color name="systemBarColor">#ffffff</color>
-    <color name="white">#ffffff</color>
 
     <!--自定义顶部topBar-->
     <color name="topBar_bg">#FFFFFF</color>
@@ -24,6 +26,9 @@
     <color name="tab_num_color">#FFFFFF</color>
     <color name="tab_menu_bg">#FFFFFF</color>
     <color name="tab_divider_bg">#A1A1A1</color>
-    <color name="black">#000000</color>
+
+    <!--首页-->
     <color name="home_button_color">#333333</color>
+    <color name="home_steps_bg">#a0000000</color>
+    <color name="home_steps_text">#FEDD34</color>
 </resources>
