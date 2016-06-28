@@ -115,4 +115,6 @@ dependencies {
     compile 'com.bigkoo:convenientbanner:2.0.5'
     // 数据库操作
     compile files('libs/lite-orm-1.7.0.jar')
+    // 倒计时控件
+    compile 'com.github.iwgang:countdownview:2.0'
 }

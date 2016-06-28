@@ -17,6 +17,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import cn.iwgang.countdownview.CountdownView;
+
 /**
  * Created by kang on 16/6/22.
  * 首页瀑布流RecyclerView适配器
@@ -55,24 +57,33 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeViewHolder> {
     @Override
     public HomeViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         HomeViewHolder holder;
-        // "健身达人"布局
-        if (viewType == IS_STEPS) {
-            View itemView = LayoutInflater.from(context).inflate(R.layout.item_home_steps, viewGroup, false);
-            holder = new HomeViewHolder(itemView, IS_STEPS);
-            return holder;
-        }
+        View itemView;
         // 正常布局
-        else if (viewType == IS_NORMAL) {
-            View itemView = LayoutInflater.from(context).inflate(R.layout.item_home_main, viewGroup, false);
+        if (viewType == IS_NORMAL) {
+            itemView = LayoutInflater.from(context).inflate(R.layout.item_home_main, viewGroup, false);
             holder = new HomeViewHolder(itemView, IS_NORMAL);
             return holder;
         }
-
+        // "健身达人"布局
+        else if (viewType == IS_STEPS) {
+            itemView = LayoutInflater.from(context).inflate(R.layout.item_home_steps, viewGroup, false);
+            holder = new HomeViewHolder(itemView, IS_STEPS);
+            return holder;
+        }
+        // "新品上市"布局
+        else if (viewType == IS_PRODUCT) {
+            itemView = LayoutInflater.from(context).inflate(R.layout.item_home_timer, viewGroup, false);
+            holder = new HomeViewHolder(itemView, IS_PRODUCT);
+            return holder;
+        }
         return null;
     }
 
     @Override
     public void onBindViewHolder(HomeViewHolder viewHolder, int position) {
+        // 公用布局: 标题图片按钮
+        viewHolder.textView.setText("— "+titles.get(position)+" —");
+        Glide.with(context).load(images.get(position)).into(viewHolder.imageView);
         // 设置item里面的GridView
         if (buttons[position].length == 1) {
             viewHolder.gridView.setHorizontalSpacing(0);
@@ -80,23 +91,25 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeViewHolder> {
         viewHolder.gridView.setAdapter(new HomeItemGridViewAdapter(context, icons[position], buttons[position]));
         viewHolder.gridView.setTag(position);
         gridItemClickListener(viewHolder);
-        // 正常布局
-        if (viewHolder.viewType == IS_NORMAL) {
-            viewHolder.textView.setText("— "+titles.get(position)+" —");
-            Glide.with(context).load(images.get(position)).into(viewHolder.imageView);
-        }
+
         // "健身达人"布局
-        else if (titles.get(position).equals("健身达人") && viewHolder.viewType == IS_STEPS) {
-            viewHolder.steps_title.setText("— "+titles.get(position)+" —");
-            Glide.with(context).load(images.get(position)).into(viewHolder.steps_image);
+        if (titles.get(position).equals("健身达人") && viewHolder.viewType == IS_STEPS) {
             Glide.with(context).load(R.drawable.step_weather).into(viewHolder.weather);
+            viewHolder.rank.setText("1");
+            viewHolder.steps.setText("0");
             // 当前日期
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd");
             Date date = new Date(System.currentTimeMillis());
             String str = simpleDateFormat.format(date);
             viewHolder.date.setText(str);
-            viewHolder.rank.setText("1");
-            viewHolder.steps.setText("0");
+        } else if (titles.get(position).equals("新品上市") && viewHolder.viewType == IS_PRODUCT) {
+            viewHolder.countdownView.start(15550000);
+            viewHolder.countdownView.setOnCountdownEndListener(new CountdownView.OnCountdownEndListener() {
+                @Override
+                public void onEnd(CountdownView cv) {
+                    cv.start(95000000);
+                }
+            });
         }
     }
 
@@ -104,6 +117,8 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeViewHolder> {
     public int getItemViewType(int position) {
         if (titles.get(position).equals("健身达人")) {
             return IS_STEPS;
+        } else if (titles.get(position).equals("新品上市")) {
+            return IS_PRODUCT;
         } else {
             return IS_NORMAL;
         }

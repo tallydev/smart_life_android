@@ -31,4 +31,5 @@
     <color name="home_button_color">#333333</color>
     <color name="home_steps_bg">#a0000000</color>
     <color name="home_steps_text">#FEDD34</color>
+    <color name="timer_color">#FD8023</color>
 </resources>
