@@ -28,7 +28,6 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeViewHolder> {
     private List<Integer> images;
     private String[][] buttons;
     private Integer[][] icons;
-    private Integer step;
     // 模板类型
     private static final int IS_NORMAL = 0;
     private static final int IS_STEPS = 1;
@@ -45,13 +44,12 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeViewHolder> {
      * @param icons
      */
     public HomeAdapter(Context context, List<String> titles, List<Integer> images,
-                       String[][] buttons, Integer[][] icons, Integer step) {
+                       String[][] buttons, Integer[][] icons) {
         this.context = context;
         this.titles = titles;
         this.buttons = buttons;
         this.icons = icons;
         this.images = images;
-        this.step = step;
     }
 
     @Override
@@ -98,7 +96,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeViewHolder> {
             String str = simpleDateFormat.format(date);
             viewHolder.date.setText(str);
             viewHolder.rank.setText("1");
-            viewHolder.steps.setText(String.valueOf(step));
+            viewHolder.steps.setText("0");
         }
     }
 

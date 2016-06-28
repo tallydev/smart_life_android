@@ -16,6 +16,7 @@ import android.view.View;
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
+import com.bumptech.glide.Glide;
 import com.orhanobut.logger.Logger;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.HomeAdapter;
@@ -167,7 +168,7 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, H
 
     private void setList() {
         recyclerView.setLayoutManager(layoutManager);
-        HomeAdapter homeAdapter = new HomeAdapter(context, titles, images, itemButtons, itemIcons, step);
+        HomeAdapter homeAdapter = new HomeAdapter(context, titles, images, itemButtons, itemIcons);
         recyclerView.setAdapter(homeAdapter);
         // ScrollView嵌套RecyclerView,设置屏幕从顶部开始
         recyclerView.setFocusable(false);
@@ -190,10 +191,12 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, H
             case PedometerConstant.MSG_FROM_SERVER:
                 // 更新首页视图
                 step = msg.getData().getInt("step");
-                homeViewHolder = (HomeViewHolder) recyclerView.findViewHolderForAdapterPosition(1);
-                if (homeViewHolder != null) {
+                if (homeViewHolder == null) {
+                    homeViewHolder = (HomeViewHolder) recyclerView.findViewHolderForAdapterPosition(1);
+                } else {
                     homeViewHolder.steps.setText(String.valueOf(step));
                 }
+
                 // 计步器数据: msg.getData().getInt("step")
                 delayHandler.sendEmptyMessageDelayed(PedometerConstant.REQUEST_SERVER,TIME_INTERVAL);
                 break;
