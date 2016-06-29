@@ -8,26 +8,28 @@ import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseFragment;
 
 /**
- * Created by kang on 16/6/20.
- * 健康
+ * Created by kang on 16/6/29.
+ * 首页二级页面
  */
-public class HealthyFragment extends BaseFragment {
+public class HomeShowFragment extends BaseFragment {
 
-    public HealthyFragment() {
+    public HomeShowFragment() {
+
     }
 
     @Override
     public int getFragmentLayout() {
-        return R.layout.fragment_healthy;
+        return R.layout.fragment_home_show;
     }
 
     @Override
     protected void initToolBar(Toolbar toolbar, TextView title) {
-        title.setText("智慧健康");
+        title.setText("home show");
     }
 
     @Override
     protected void initView() {
+
     }
 
     @Override
@@ -37,6 +39,7 @@ public class HealthyFragment extends BaseFragment {
 
     @Override
     protected void processLogic() {
+
     }
 
     @Override

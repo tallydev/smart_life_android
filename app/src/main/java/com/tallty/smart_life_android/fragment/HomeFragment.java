@@ -11,16 +11,17 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.TextView;
 
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
-import com.bumptech.glide.Glide;
-import com.orhanobut.logger.Logger;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.HomeAdapter;
 import com.tallty.smart_life_android.base.BaseFragment;
+import com.tallty.smart_life_android.custom.MyRecyclerView;
 import com.tallty.smart_life_android.custom.PedometerConstant;
 import com.tallty.smart_life_android.holder.HomeBannerHolderView;
 import com.tallty.smart_life_android.holder.HomeViewHolder;
@@ -43,7 +44,7 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, H
     private Handler delayHandler;
     // 组件
     private ConvenientBanner banner;
-    private RecyclerView recyclerView;
+    private MyRecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     // banner图数据
     private Integer[] imagesUrl = { R.drawable.banner_one, R.drawable.community_activity };
@@ -125,6 +126,11 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, H
     @Override
     public int getFragmentLayout() {
         return R.layout.fragment_home;
+    }
+
+    @Override
+    protected void initToolBar(Toolbar toolbar, TextView title) {
+
     }
 
     @Override

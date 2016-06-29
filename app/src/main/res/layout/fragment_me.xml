@@ -6,13 +6,5 @@
     android:layout_height="match_parent"
     android:background="@color/gray_bg">
 
-    <TextView
-        android:id="@+id/txt_content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="个人中心"
-        android:textColor="@color/tab_text_normal"
-        android:textSize="20sp"/>
-
+    <include layout="@layout/toolbar"/>
 </LinearLayout>

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
@@ -20,12 +19,10 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     protected String TAG;
     protected App mApp;
     protected SharedPreferences sp;
-    protected ActionBar actionBar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         // 设置样式为无actionBar样式
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         // 基础数据
@@ -81,15 +78,4 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     public void showToast(String text) {
         ToastUtil.show(text);
     }
-
-    /**
-     * 显示/隐藏actionbar
-     */
-//    public void showActionBar(Boolean isShow) {
-//        if (!isShow) {
-//            actionBar = getSupportActionBar();
-//            assert actionBar != null;
-//            actionBar.hide();
-//        }
-//    }
 }

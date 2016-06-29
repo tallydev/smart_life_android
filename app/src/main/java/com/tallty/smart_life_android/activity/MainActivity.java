@@ -9,16 +9,16 @@ import android.widget.ImageView;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseActivity;
 import com.tallty.smart_life_android.fragment.CartFragment;
+import com.tallty.smart_life_android.fragment.CommunityFragment;
 import com.tallty.smart_life_android.fragment.HealthyFragment;
 import com.tallty.smart_life_android.fragment.HomeFragment;
 import com.tallty.smart_life_android.fragment.MeFragment;
-import com.tallty.smart_life_android.fragment.PeopleFragment;
 
 public class MainActivity extends BaseActivity {
     // tab
     private ImageView tab_home;
     private ImageView tab_healthy;
-    private ImageView tab_people;
+    private ImageView tab_community;
     private ImageView tab_cart;
     private ImageView tab_me;
     // fragment管理器
@@ -26,7 +26,7 @@ public class MainActivity extends BaseActivity {
     // 声明五个fragment
     private HomeFragment homeFragment;
     private HealthyFragment healthyFragment;
-    private PeopleFragment peopleFragment;
+    private CommunityFragment communityFragment;
     private CartFragment cartFragment;
     private MeFragment meFragment;
 
@@ -41,7 +41,7 @@ public class MainActivity extends BaseActivity {
     protected void initView(Bundle savedInstanceState) {
         tab_home = getViewById(R.id.tab_menu_home);
         tab_healthy = getViewById(R.id.tab_menu_healthy);
-        tab_people = getViewById(R.id.tab_menu_people);
+        tab_community = getViewById(R.id.tab_menu_community);
         tab_cart = getViewById(R.id.tab_menu_cart);
         tab_me = getViewById(R.id.tab_menu_me);
     }
@@ -50,7 +50,7 @@ public class MainActivity extends BaseActivity {
     protected void setListener() {
         tab_home.setOnClickListener(this);
         tab_healthy.setOnClickListener(this);
-        tab_people.setOnClickListener(this);
+        tab_community.setOnClickListener(this);
         tab_cart.setOnClickListener(this);
         tab_me.setOnClickListener(this);
     }
@@ -65,7 +65,7 @@ public class MainActivity extends BaseActivity {
     private void setTabUnselected() {
         tab_home.setSelected(false);
         tab_healthy.setSelected(false);
-        tab_people.setSelected(false);
+        tab_community.setSelected(false);
         tab_cart.setSelected(false);
         tab_me.setSelected(false);
     }
@@ -74,7 +74,7 @@ public class MainActivity extends BaseActivity {
     private void hideAllFragment(FragmentTransaction f) {
         if (homeFragment != null) f.hide(homeFragment);
         if (healthyFragment != null) f.hide(healthyFragment);
-        if (peopleFragment != null) f.hide(peopleFragment);
+        if (communityFragment != null) f.hide(communityFragment);
         if (cartFragment != null) f.hide(cartFragment);
         if (meFragment != null) f.hide(meFragment);
     }
@@ -107,14 +107,14 @@ public class MainActivity extends BaseActivity {
                     fTransaction.show(healthyFragment);
                 }
                 break;
-            case R.id.tab_menu_people:
+            case R.id.tab_menu_community:
                 setTabUnselected();
-                tab_people.setSelected(true);
-                if (peopleFragment == null) {
-                    peopleFragment = new PeopleFragment();
-                    fTransaction.add(R.id.ly_content, peopleFragment);
+                tab_community.setSelected(true);
+                if (communityFragment == null) {
+                    communityFragment = new CommunityFragment();
+                    fTransaction.add(R.id.ly_content, communityFragment);
                 } else {
-                    fTransaction.show(peopleFragment);
+                    fTransaction.show(communityFragment);
                 }
                 break;
             case R.id.tab_menu_cart:

@@ -5,10 +5,13 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.utils.ToastUtil;
 
 /**
@@ -25,6 +28,10 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
         int layout_id = getFragmentLayout();
         view = inflater.inflate(layout_id, container, false);
         context = getActivity().getApplicationContext();
+        // 初始化ToolBar
+        Toolbar toolbar = getViewById(R.id.toolbar);
+        TextView toolbar_title = getViewById(R.id.toolbar_title);
+        initToolBar(toolbar, toolbar_title);
         // 引用组件
         initView();
         // 设置监听器
@@ -36,6 +43,8 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     }
 
     public abstract int getFragmentLayout();
+
+    protected abstract void initToolBar(Toolbar toolbar, TextView title);
 
     protected abstract void initView();
 
