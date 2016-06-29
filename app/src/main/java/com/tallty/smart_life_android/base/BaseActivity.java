@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
 
+import com.joanzapata.iconify.Iconify;
+import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.utils.ToastUtil;
 
@@ -29,6 +31,8 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         TAG = this.getClass().getSimpleName();
         mApp = App.getInstance();
         sp = getSharedPreferences("SmartLife", Activity.MODE_PRIVATE);
+        // 加载图标
+        Iconify.with(new FontAwesomeModule());
         // 设置布局
         initLayout();
         // 引用组件

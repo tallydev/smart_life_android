@@ -11,19 +11,17 @@
 
     <!--主体内容-->
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="4dp"
-        android:orientation="vertical"
-        android:background="@color/gray_bg">
+        android:layout_margin="4dp"
+        android:background="@color/white"
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:background="@color/white"
             android:text="健康数据收集中，敬请期待..."/>
     </LinearLayout>
 

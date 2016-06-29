@@ -119,4 +119,6 @@ dependencies {
     compile 'com.github.iwgang:countdownview:2.0'
     // 图表控件
     compile 'com.diogobernardino:williamchart:2.2'
+    // 图标
+    compile 'com.joanzapata.iconify:android-iconify-fontawesome:2.2.2'
 }
