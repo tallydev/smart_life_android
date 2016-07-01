@@ -4,15 +4,17 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/white"
     android:padding="10dp">
     <ImageView
         android:id="@+id/cell_icon"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
         android:layout_centerVertical="true"
         android:scaleType="fitCenter"
         android:layout_alignParentLeft="true"
-        android:src="@drawable/community_one"/>
+        android:src="@drawable/me_order"/>
+
     <TextView
         android:id="@+id/cell_text"
         android:layout_width="wrap_content"
@@ -25,8 +27,9 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:text="text"/>
+
     <com.joanzapata.iconify.widget.IconTextView
-        android:id="@+id/cell_right_icon"
+        android:id="@+id/indicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
@@ -35,22 +38,14 @@
         android:text="{fa-angle-right}"
         android:textSize="24sp"/>
 
-    <ImageView
-        android:id="@+id/cell_image"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_centerVertical="true"
-        android:layout_toLeftOf="@id/cell_right_icon"
-        android:visibility="gone"
-        android:src="@drawable/community_one"/>
     <TextView
-        android:id="@+id/cell_right_text"
+        android:id="@+id/cell_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toLeftOf="@id/cell_right_icon"
+        android:layout_toLeftOf="@id/indicator"
         android:layout_marginRight="16dp"
-        android:visibility="visible"
+        android:visibility="gone"
         android:singleLine="true"
         android:ellipsize="end"
         android:maxLines="1"
