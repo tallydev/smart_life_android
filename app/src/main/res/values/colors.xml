@@ -3,7 +3,7 @@
     <!--toolbar-->
     <color name="colorPrimary">#FFFFFF</color>
     <!--状态条-->
-    <color name="colorPrimaryDark">#333333</color>
+    <color name="colorPrimaryDark">#000000</color>
     <!--强调-->
     <color name="colorAccent">#333333</color>
     <!--toolbar文字颜色-->
@@ -30,11 +30,12 @@
     <color name="tab_text_normal">#666666</color>
     <color name="tab_num_color">#FFFFFF</color>
     <color name="tab_menu_bg">#FFFFFF</color>
-    <color name="tab_divider_bg">#A1A1A1</color>
+    <color name="tab_divider_bg">#AAAAAA</color>
 
     <!--首页-->
     <color name="home_button_color">#333333</color>
     <color name="home_steps_bg">#a0000000</color>
     <color name="home_steps_text">#FEDD34</color>
     <color name="timer_color">#FD8023</color>
+    <color name="angle_right_color">#CCCCCC</color>
 </resources>

@@ -24,6 +24,6 @@
             android:layout_centerInParent="true"
             android:textColor="@color/textColorPrimary"
             android:layout_gravity="center"
-            android:textSize="@dimen/text_normal"/>
+            android:textSize="@dimen/text_large"/>
     </android.support.v7.widget.Toolbar>
 </android.support.design.widget.AppBarLayout>

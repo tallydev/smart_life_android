@@ -116,7 +116,7 @@ dependencies {
     // 数据库操作
     compile files('libs/lite-orm-1.7.0.jar')
     // 倒计时控件
-    compile 'com.github.iwgang:countdownview:2.0'
+    compile 'com.github.iwgang:countdownview:2.1'
     // 图表控件
     compile 'com.diogobernardino:williamchart:2.2'
     // 图标

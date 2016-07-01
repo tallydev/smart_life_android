@@ -25,7 +25,7 @@
     <LinearLayout
         android:id="@+id/timer_ly"
         android:layout_width="match_parent"
-        android:layout_height="74dp"
+        android:layout_height="73dp"
         android:padding="5dp"
         android:orientation="vertical">
         <TextView
@@ -41,7 +41,7 @@
             android:layout_gravity="center"
             app:isHideTimeBackground="false"
             app:timeBgSize="36dp"
-            app:timeBgColor="@android:color/transparent"
+            app:timeBgColor="@color/white"
             app:isShowTimeBgDivisionLine="true"
             app:isShowHour="true"
             app:isShowMinute="true"
@@ -53,8 +53,12 @@
             app:suffixTextColor="@color/timer_color"
             app:suffixTextSize="@dimen/text_normal"
             app:isSuffixTextBold="true"
-            app:suffixHour=" : "
-            app:suffixMinute=" : "/>
+            app:suffixHour=":"
+            app:suffixMinute=":"
+            app:isShowTimeBgBorder="true"
+            app:timeBgBorderColor="@color/gray_bg"
+            app:timeBgBorderSize="1dp"
+            app:timeBgBorderRadius="3dp"/>
     </LinearLayout>
 
     <com.tallty.smart_life_android.custom.MyGridView
