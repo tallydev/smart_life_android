@@ -96,6 +96,7 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, H
     };
     HomeViewHolder homeViewHolder;
 
+
     // 构造函数
     public HomeFragment() {
 
