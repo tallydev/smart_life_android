@@ -1,5 +1,6 @@
 package com.tallty.smart_life_android.base;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
@@ -51,6 +52,13 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     protected abstract void setListener();
 
     protected abstract void processLogic();
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        // 防止getActivity空指针
+        this.context = context;
+    }
 
     /**
      * 全局查找View
