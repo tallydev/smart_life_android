@@ -10,8 +10,13 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.tallty.smart_life_android.R;
+import com.tallty.smart_life_android.event.StartBrotherEvent;
+import com.tallty.smart_life_android.fragment.CycleFragment;
+import com.tallty.smart_life_android.fragment.home.OrderCheckFragment;
 import com.tallty.smart_life_android.holder.HomeViewHolder;
 import com.tallty.smart_life_android.utils.ToastUtil;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -141,9 +146,9 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeViewHolder> {
                 // 智慧健康
                 if (tag == 0) {
                     if (position == 0) {
-                        ToastUtil.show(text.getText());
+                        EventBus.getDefault().post(new StartBrotherEvent(OrderCheckFragment.newInstance()));
                     } else if (position == 1) {
-                        ToastUtil.show(text.getText());
+                        EventBus.getDefault().post(new StartBrotherEvent(CycleFragment.newInstance(1)));
                     } else if (position == 2) {
                         ToastUtil.show(text.getText());
                     } else if (position == 3) {

@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.utils.ToastUtil;
 
+import me.yokeyword.fragmentation.SwipeBackLayout;
 import me.yokeyword.fragmentation_swipeback.SwipeBackFragment;
 
 /**
@@ -33,14 +34,12 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
         int layout_id = getFragmentLayout();
         view = inflater.inflate(layout_id, container, false);
         context = getActivity().getApplicationContext();
-        // 初始化ToolBar
-        Toolbar toolbar = getViewById(R.id.toolbar);
-        TextView toolbar_title = getViewById(R.id.toolbar_title);
-        initToolbarNav(toolbar);
-        initToolBar(toolbar, toolbar_title);
         // 引用组件
         initView();
-
+        // 设置监听器
+        setListener();
+        // 添加业务逻辑
+        processLogic();
         return attachToSwipeBack(view);
     }
 
@@ -48,23 +47,19 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
     protected void onEnterAnimationEnd(Bundle savedInstanceState) {
         super.onEnterAnimationEnd(savedInstanceState);
         // 入场动画结束后执行  优化,防动画卡顿
-        _mActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-
-        // 设置监听器
-        setListener();
-        // 添加业务逻辑
-        processLogic();
+        afterAnimationLogic();
     }
 
+    // 获取布局文件id
     public abstract int getFragmentLayout();
-
-    protected abstract void initToolBar(Toolbar toolbar, TextView title);
-
+    // find UI
     protected abstract void initView();
-
+    // 设置监听
     protected abstract void setListener();
-
+    // 处理视图逻辑
     protected abstract void processLogic();
+    // 转场动画完成后执行(可选)
+    protected abstract void afterAnimationLogic();
 
 
     /**
@@ -100,13 +95,6 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
         });
     }
 
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        // 防止getActivity空指针
-        this.context = context;
-    }
 
     /**
      * 全局查找View

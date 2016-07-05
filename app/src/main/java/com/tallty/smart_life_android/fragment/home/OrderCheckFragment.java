@@ -12,11 +12,15 @@ import android.widget.TextView;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 
+import me.yokeyword.fragmentation.SwipeBackLayout;
+
 /**
  * Created by kang on 16/7/5.
  * 首页->预约体检
  */
 public class OrderCheckFragment extends BaseBackFragment {
+    private Toolbar toolbar;
+    private TextView toolbar_title;
 
     public static OrderCheckFragment newInstance() {
         Bundle args = new Bundle();
@@ -38,13 +42,9 @@ public class OrderCheckFragment extends BaseBackFragment {
     }
 
     @Override
-    protected void initToolBar(Toolbar toolbar, TextView title) {
-        title.setText("预约体检");
-    }
-
-    @Override
     protected void initView() {
-
+        toolbar = getViewById(R.id.toolbar);
+        toolbar_title = getViewById(R.id.toolbar_title);
     }
 
     @Override
@@ -54,6 +54,12 @@ public class OrderCheckFragment extends BaseBackFragment {
 
     @Override
     protected void processLogic() {
+        initToolbarNav(toolbar);
+        toolbar_title.setText("预约体检");
+    }
+
+    @Override
+    protected void afterAnimationLogic() {
 
     }
 
@@ -65,6 +71,5 @@ public class OrderCheckFragment extends BaseBackFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        _mActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
     }
 }

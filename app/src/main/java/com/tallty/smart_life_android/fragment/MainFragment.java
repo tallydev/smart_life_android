@@ -124,7 +124,7 @@ public class MainFragment extends BaseFragment {
     }
 
     /**
-     * start other BrotherFragment
+     * 接收事件, 启动一个同级的Fragment
      */
     @Subscribe
     public void startBrother(StartBrotherEvent event) {
