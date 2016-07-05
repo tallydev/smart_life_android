@@ -1,19 +1,28 @@
-package com.tallty.smart_life_android.fragment;
+package com.tallty.smart_life_android.fragment.healthy;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseFragment;
+import com.tallty.smart_life_android.base.BaseLazyMainFragment;
 
 /**
  * Created by kang on 16/6/20.
  * 健康
  */
-public class HealthyFragment extends BaseFragment {
+public class HealthyFragment extends BaseLazyMainFragment {
 
-    public HealthyFragment() {
+
+    public static HealthyFragment newInstance() {
+        Bundle args = new Bundle();
+
+        HealthyFragment fragment = new HealthyFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
@@ -31,12 +40,8 @@ public class HealthyFragment extends BaseFragment {
     }
 
     @Override
-    protected void setListener() {
+    protected void initLazyView(@Nullable Bundle savedInstanceState) {
 
-    }
-
-    @Override
-    protected void processLogic() {
     }
 
     @Override

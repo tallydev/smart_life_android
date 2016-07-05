@@ -11,4 +11,7 @@
     <dimen name="text_large">18sp</dimen>
     <dimen name="text_xlarge">20sp</dimen>
     <dimen name="text_timer">24sp</dimen>
+
+    <!--tab-->
+    <dimen name="tab_bar_height">46dp</dimen>
 </resources>

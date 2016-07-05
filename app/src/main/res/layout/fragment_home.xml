@@ -10,6 +10,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/gray_bg">
+
+        <include layout="@layout/toolbar"/>
+
         <com.bigkoo.convenientbanner.ConvenientBanner
             android:id="@+id/home_banner"
             android:layout_width="match_parent"

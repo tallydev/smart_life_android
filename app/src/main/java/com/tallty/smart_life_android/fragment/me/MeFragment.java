@@ -1,5 +1,7 @@
-package com.tallty.smart_life_android.fragment;
+package com.tallty.smart_life_android.fragment.me;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
@@ -10,13 +12,14 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseFragment;
+import com.tallty.smart_life_android.base.BaseLazyMainFragment;
 import com.tallty.smart_life_android.custom.GlideCircleTransform;
 
 /**
  * Created by kang on 16/6/20.
  * 个人中心
  */
-public class MeFragment extends BaseFragment {
+public class MeFragment extends BaseLazyMainFragment {
     private RelativeLayout profile;
     private ImageView photo;
     private TextView name;
@@ -44,7 +47,14 @@ public class MeFragment extends BaseFragment {
     private ImageView service_icon;
     private TextView service_text;
 
-    public MeFragment() {
+
+    public static MeFragment newInstance() {
+        Bundle args = new Bundle();
+
+        MeFragment fragment = new MeFragment();
+        fragment.setArguments(args);
+
+        return fragment;
     }
 
     @Override
@@ -88,7 +98,12 @@ public class MeFragment extends BaseFragment {
     }
 
     @Override
-    protected void setListener() {
+    protected void initLazyView(@Nullable Bundle savedInstanceState) {
+        setListener();
+        setView();
+    }
+
+    private void setListener() {
         profile.setOnClickListener(this);
         order.setOnClickListener(this);
         wait_pay.setOnClickListener(this);
@@ -97,11 +112,6 @@ public class MeFragment extends BaseFragment {
         sport.setOnClickListener(this);
         appointment.setOnClickListener(this);
         service.setOnClickListener(this);
-    }
-
-    @Override
-    protected void processLogic() {
-        setView();
     }
 
     private void setView() {

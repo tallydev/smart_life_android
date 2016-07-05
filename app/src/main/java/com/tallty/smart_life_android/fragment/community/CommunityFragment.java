@@ -1,5 +1,7 @@
-package com.tallty.smart_life_android.fragment;
+package com.tallty.smart_life_android.fragment.community;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
@@ -11,6 +13,7 @@ import android.widget.TextView;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.CommunityGridViewAdapter;
 import com.tallty.smart_life_android.base.BaseFragment;
+import com.tallty.smart_life_android.base.BaseLazyMainFragment;
 import com.tallty.smart_life_android.custom.MyGridView;
 
 import java.util.ArrayList;
@@ -20,7 +23,7 @@ import java.util.List;
  * Created by kang on 16/6/20.
  * 群组
  */
-public class CommunityFragment extends BaseFragment{
+public class CommunityFragment extends BaseLazyMainFragment{
     private ImageView government;
     private ImageView best_tone;
     private RelativeLayout service;
@@ -43,7 +46,15 @@ public class CommunityFragment extends BaseFragment{
         }
     };
 
-    public CommunityFragment() {
+
+
+    public static CommunityFragment newInstance() {
+        Bundle args = new Bundle();
+
+        CommunityFragment fragment = new CommunityFragment();
+        fragment.setArguments(args);
+
+        return fragment;
     }
 
     @Override
@@ -65,15 +76,15 @@ public class CommunityFragment extends BaseFragment{
     }
 
     @Override
-    protected void setListener() {
+    protected void initLazyView(@Nullable Bundle savedInstanceState) {
+        setListener();
+        initGridView();
+    }
+
+    private void setListener() {
         government.setOnClickListener(this);
         best_tone.setOnClickListener(this);
         service.setOnClickListener(this);
-    }
-
-    @Override
-    protected void processLogic() {
-        initGridView();
     }
 
     private void initGridView() {

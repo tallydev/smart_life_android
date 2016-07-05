@@ -1,14 +1,16 @@
-package com.tallty.smart_life_android.fragment;
+package com.tallty.smart_life_android.fragment.home;
 
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -20,7 +22,7 @@ import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.HomeAdapter;
-import com.tallty.smart_life_android.base.BaseFragment;
+import com.tallty.smart_life_android.base.BaseLazyMainFragment;
 import com.tallty.smart_life_android.custom.MyRecyclerView;
 import com.tallty.smart_life_android.custom.PedometerConstant;
 import com.tallty.smart_life_android.holder.HomeBannerHolderView;
@@ -36,7 +38,7 @@ import java.util.List;
  * Created by kang on 16/6/20.
  * 首页
  */
-public class HomeFragment extends BaseFragment implements OnItemClickListener, Handler.Callback{
+public class HomeFragment extends BaseLazyMainFragment implements OnItemClickListener, Handler.Callback{
     // 计步器相关
     private long TIME_INTERVAL = 500;
     private Messenger messenger;
@@ -97,9 +99,13 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, H
     HomeViewHolder homeViewHolder;
 
 
-    // 构造函数
-    public HomeFragment() {
 
+    public static HomeFragment newInstance() {
+        Bundle args = new Bundle();
+
+        HomeFragment fragment = new HomeFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     /**
@@ -131,7 +137,7 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, H
 
     @Override
     protected void initToolBar(Toolbar toolbar, TextView title) {
-
+        toolbar.setVisibility(View.GONE);
     }
 
     @Override
@@ -144,20 +150,11 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, H
     }
 
     @Override
-    protected void setListener() {
-    }
-
-    @Override
-    protected void processLogic() {
+    protected void initLazyView(@Nullable Bundle savedInstanceState) {
         setBanner();
         setList();
         // 设置计步服务
         setupService();
-    }
-
-    @Override
-    public void onClick(View v) {
-
     }
 
     // ========================业务逻辑=========================
@@ -185,6 +182,11 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, H
         Intent intent = new Intent(context, StepService.class);
         context.bindService(intent, conn, Context.BIND_AUTO_CREATE);
         context.startService(intent);
+    }
+
+    @Override
+    public void onClick(View v) {
+
     }
 
     /**
