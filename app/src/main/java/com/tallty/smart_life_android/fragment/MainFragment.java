@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.tallty.smart_life_android.R;
-import com.tallty.smart_life_android.base.BaseSupportFragment;
+import com.tallty.smart_life_android.base.BaseFragment;
 import com.tallty.smart_life_android.custom.TabBar;
 import com.tallty.smart_life_android.custom.TabBarTab;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
@@ -27,7 +27,7 @@ import me.yokeyword.fragmentation.SupportFragment;
  * Created by kang on 16/7/5.
  * MainActivity 五个tab页面的父节点
  */
-public class MainFragment extends BaseSupportFragment {
+public class MainFragment extends BaseFragment {
     private static final int REQ_MSG = 10;
 
     public static final int HOME = 0;
@@ -84,6 +84,7 @@ public class MainFragment extends BaseSupportFragment {
 
     private void initView(View view) {
         EventBus.getDefault().register(this);
+
         mTabBar = (TabBar) view.findViewById(R.id.bottomBar);
 
         mTabBar

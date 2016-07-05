@@ -101,7 +101,7 @@
         android:id="@+id/item_home_main_gridView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/gray_bg"
+        android:background="@color/app_bg"
         android:gravity="center"
         android:scrollbars="none"
         android:clickable="true"

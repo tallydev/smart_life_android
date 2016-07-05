@@ -11,6 +11,6 @@
         android:color="@color/white">
     </stroke>
     <solid
-        android:color="@color/gray_bg">
+        android:color="@color/app_bg">
     </solid>
 </shape>

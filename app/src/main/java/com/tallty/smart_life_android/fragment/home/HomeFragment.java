@@ -25,10 +25,15 @@ import com.tallty.smart_life_android.adapter.HomeAdapter;
 import com.tallty.smart_life_android.base.BaseLazyMainFragment;
 import com.tallty.smart_life_android.custom.MyRecyclerView;
 import com.tallty.smart_life_android.custom.PedometerConstant;
+import com.tallty.smart_life_android.event.TabSelectedEvent;
+import com.tallty.smart_life_android.fragment.MainFragment;
 import com.tallty.smart_life_android.holder.HomeBannerHolderView;
 import com.tallty.smart_life_android.holder.HomeViewHolder;
 import com.tallty.smart_life_android.service.StepService;
 import com.tallty.smart_life_android.utils.ToastUtil;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,7 +54,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
     private MyRecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     // banner图数据
-    private Integer[] imagesUrl = { R.drawable.banner_one, R.drawable.community_activity };
+    private Integer[] imagesUrl = { R.drawable.banner_one, R.drawable.banner_two };
     // 列表数据
     private Integer step = 0;
     private List<String> titles = new ArrayList<String>() {
@@ -147,6 +152,8 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
         layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         // 计步器相关
         delayHandler = new Handler(this);
+
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -228,6 +235,15 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
         ToastUtil.show("点击了第"+position+"个banner");
     }
 
+    /**
+     * Reselected Tab
+     */
+    @Subscribe
+    public void onTabSelectedEvent(TabSelectedEvent event) {
+        if (event.position != MainFragment.HOME) return;
+        // tab按钮被重复点击是执行的操作
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -244,5 +260,11 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
     public void onDestroy() {
         super.onDestroy();
         context.unbindService(conn);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        EventBus.getDefault().unregister(this);
     }
 }

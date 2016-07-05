@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.tallty.smart_life_android.R;
-import com.tallty.smart_life_android.base.BaseFragment;
 import com.tallty.smart_life_android.base.BaseLazyMainFragment;
 
 /**

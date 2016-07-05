@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/app_bg"
@@ -11,18 +10,14 @@
 
     <!--主体内容-->
     <LinearLayout
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="4dp"
-        android:background="@color/white"
-        android:orientation="vertical">
-
+        android:layout_height="match_parent">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="健康数据收集中，敬请期待..."/>
+            android:text="hello"
+            android:textColor="@color/global_text"/>
     </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -6,13 +6,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.CommunityGridViewAdapter;
-import com.tallty.smart_life_android.base.BaseFragment;
 import com.tallty.smart_life_android.base.BaseLazyMainFragment;
 import com.tallty.smart_life_android.custom.MyGridView;
 

@@ -1,76 +1,33 @@
 package com.tallty.smart_life_android.base;
 
-import android.app.Activity;
-import android.app.Fragment;
-import android.content.Context;
-import android.os.Bundle;
-import android.support.annotation.IdRes;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+import android.view.MenuItem;
 
 import com.tallty.smart_life_android.R;
-import com.tallty.smart_life_android.utils.ToastUtil;
+
+import me.yokeyword.fragmentation.SupportFragment;
 
 /**
- * Created by kang on 16/6/21.
- * base fragment
+ * Created by kang on 16/7/5.
+ * 自定义Fragment基类
+ * 使用Fragmentation开源库
  */
-public abstract class BaseFragment extends Fragment implements View.OnClickListener {
-    private View view;
-    protected Context context;
+public class BaseFragment extends SupportFragment {
+    private static final String TAG = "Fragmentation";
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        int layout_id = getFragmentLayout();
-        view = inflater.inflate(layout_id, container, false);
-        context = getActivity().getApplicationContext();
-        // 初始化ToolBar
-        Toolbar toolbar = getViewById(R.id.toolbar);
-        TextView toolbar_title = getViewById(R.id.toolbar_title);
-        initToolBar(toolbar, toolbar_title);
-        // 引用组件
-        initView();
-        // 设置监听器
-        setListener();
-        // 添加业务逻辑
-        processLogic();
-
-        return view;
-    }
-
-    public abstract int getFragmentLayout();
-
-    protected abstract void initToolBar(Toolbar toolbar, TextView title);
-
-    protected abstract void initView();
-
-    protected abstract void setListener();
-
-    protected abstract void processLogic();
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        // 防止getActivity空指针
-        this.context = context;
-    }
-
-    /**
-     * 全局查找View
-     */
-    protected <VT extends View> VT getViewById(@IdRes int id) {
-        return (VT) view.findViewById(id);
-    }
-
-    /**
-     * 显示Toast
-     */
-    public void showToast(String text) {
-        ToastUtil.show(text);
+    protected void initToolbarMenu(Toolbar toolbar) {
+        toolbar.inflateMenu(R.menu.hierarchy);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.action_hierarchy:
+                        _mActivity.showFragmentStackHierarchyView();
+                        _mActivity.logFragmentStackHierarchy(TAG);
+                        break;
+                }
+                return true;
+            }
+        });
     }
 }

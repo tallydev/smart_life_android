@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/gray_bg"
+    android:background="@color/app_bg"
     android:fitsSystemWindows="false">
 
     <include layout="@layout/toolbar"/>
@@ -59,7 +59,7 @@
                     android:id="@+id/line"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/gray_bg"
+                    android:background="@color/app_bg"
                     android:layout_below="@+id/textView"/>
                 <com.tallty.smart_life_android.custom.MyGridView
                     android:id="@+id/tab_community_gridView"

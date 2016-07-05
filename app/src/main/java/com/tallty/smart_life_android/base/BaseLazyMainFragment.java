@@ -17,9 +17,10 @@ import com.tallty.smart_life_android.utils.ToastUtil;
 /**
  * Created by kang on 16/7/5.
  * 基本逻辑fragment
- * 懒加载, 交互才执行操作
+ * 懒加载, 交互时才执行操作
+ * 使用时, 直接继承此类即可
  */
-public abstract class BaseLazyMainFragment extends BaseSupportFragment implements View.OnClickListener {
+public abstract class BaseLazyMainFragment extends BaseFragment implements View.OnClickListener {
     // 再点一次退出程序时间设置
     private static final long WAIT_TIME = 2000L;
     private long TOUCH_TIME = 0;
