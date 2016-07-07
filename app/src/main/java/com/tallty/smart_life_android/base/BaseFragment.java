@@ -22,8 +22,8 @@ public class BaseFragment extends SupportFragment {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.action_hierarchy:
-                        _mActivity.showFragmentStackHierarchyView();
-                        _mActivity.logFragmentStackHierarchy(TAG);
+//                        _mActivity.showFragmentStackHierarchyView();
+//                        _mActivity.logFragmentStackHierarchy(TAG);
                         break;
                 }
                 return true;

@@ -148,71 +148,71 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeViewHolder> {
                     if (position == 0) {
                         EventBus.getDefault().post(new StartBrotherEvent(OrderCheckFragment.newInstance()));
                     } else if (position == 1) {
-                        EventBus.getDefault().post(new StartBrotherEvent(CycleFragment.newInstance(1)));
+                        EventBus.getDefault().post(new StartBrotherEvent(CycleFragment.newInstance(1, "健康报告")));
                     } else if (position == 2) {
-                        ToastUtil.show(text.getText());
+                        EventBus.getDefault().post(new StartBrotherEvent(CycleFragment.newInstance(1, "预约专家")));
                     } else if (position == 3) {
-                        ToastUtil.show(text.getText());
+                        EventBus.getDefault().post(new StartBrotherEvent(CycleFragment.newInstance(1, "智慧健康-更多")));
                     }
                 }
                 // 健身达人
                 else if (tag == 1) {
                     if (position == 0) {
-                        ToastUtil.show(text.getText());
+                        EventBus.getDefault().post(new StartBrotherEvent(CycleFragment.newInstance(1, "更多数据")));
                     }
                 }
                 // 市政大厅
                 else if (tag == 2) {
                     if (position == 0) {
-                        ToastUtil.show(text.getText());
+                        EventBus.getDefault().post(new StartBrotherEvent(CycleFragment.newInstance(1, "天气查询")));
                     } else if (position == 1) {
-                        ToastUtil.show(text.getText());
+                        EventBus.getDefault().post(new StartBrotherEvent(CycleFragment.newInstance(1, "违章查询")));
                     } else if (position == 2) {
-                        ToastUtil.show(text.getText());
+                        EventBus.getDefault().post(new StartBrotherEvent(CycleFragment.newInstance(1, "公积金")));
                     } else if (position == 3) {
-                        ToastUtil.show(text.getText());
+                        EventBus.getDefault().post(new StartBrotherEvent(CycleFragment.newInstance(1, "医保卡")));
                     } else if (position == 4) {
-                        ToastUtil.show(text.getText());
+                        EventBus.getDefault().post(new StartBrotherEvent(CycleFragment.newInstance(1, "预约办证")));
                     } else if (position == 5){
-                        ToastUtil.show(text.getText());
+                        EventBus.getDefault().post(new StartBrotherEvent(CycleFragment.newInstance(1, "更多查询")));
                     }
                 }
                 // 社区活动
                 else if (tag == 3) {
                     if (position == 0) {
-                        ToastUtil.show(text.getText());
+                        EventBus.getDefault().post(new StartBrotherEvent(CycleFragment.newInstance(1, "活动详情")));
                     }
                 }
                 // 智慧家居
                 else if (tag == 4) {
                     if (position == 0) {
-                        ToastUtil.show(text.getText());
+                        EventBus.getDefault().post(new StartBrotherEvent(CycleFragment.newInstance(1, "远程控制")));
                     } else if (position == 1) {
-                        ToastUtil.show(text.getText());
+                        EventBus.getDefault().post(new StartBrotherEvent(CycleFragment.newInstance(1, "电子猫眼")));
                     }
                 }
                 // 社区IT
                 else if (tag == 5) {
                     if (position == 0) {
-                        ToastUtil.show(text.getText());
+                        EventBus.getDefault().post(new StartBrotherEvent(CycleFragment.newInstance(1, "IT学堂")));
                     } else if (position == 1) {
-                        ToastUtil.show(text.getText());
+                        EventBus.getDefault().post(new StartBrotherEvent(CycleFragment.newInstance(1, "在线冲印")));
                     } else if (position == 2) {
-                        ToastUtil.show(text.getText());
+                        EventBus.getDefault().post(new StartBrotherEvent(CycleFragment.newInstance(1, "IT服务")));
                     } else if (position == 3) {
-                        ToastUtil.show(text.getText());
+                        EventBus.getDefault().post(new StartBrotherEvent(CycleFragment.newInstance(1, "社区IT-更多")));
                     }
                 }
                 // 新品上市
                 else if (tag == 6) {
                     if (position == 0) {
-                        ToastUtil.show(text.getText());
+                        EventBus.getDefault().post(new StartBrotherEvent(CycleFragment.newInstance(1, "我要预约")));
                     }
                 }
                 // 限量发售
                 else if (tag == 7) {
                     if (position == 0) {
-                        ToastUtil.show(text.getText());
+                        EventBus.getDefault().post(new StartBrotherEvent(CycleFragment.newInstance(1, "更多臻品")));
                     }
                 }
             }

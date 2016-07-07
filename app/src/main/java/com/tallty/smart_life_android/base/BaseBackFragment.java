@@ -70,7 +70,7 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                _mActivity.onBackPressed();
+                _mActivity.onBackPressed();
                 pop();
             }
         });
@@ -88,8 +88,8 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.action_hierarchy:
-                        _mActivity.showFragmentStackHierarchyView();
-                        _mActivity.logFragmentStackHierarchy(TAG);
+//                        _mActivity.showFragmentStackHierarchyView();
+//                        _mActivity.logFragmentStackHierarchy(TAG);
                 }
                 return true;
             }
