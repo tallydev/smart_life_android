@@ -242,7 +242,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
     @Subscribe
     public void onTabSelectedEvent(TabSelectedEvent event) {
         if (event.position != MainFragment.HOME) return;
-        // tab按钮被重复点击是执行的操作
+        // tab按钮被重复点击时执行的操作
     }
 
     @Override

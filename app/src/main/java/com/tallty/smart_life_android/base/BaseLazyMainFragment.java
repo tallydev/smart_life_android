@@ -21,10 +21,6 @@ import com.tallty.smart_life_android.utils.ToastUtil;
  * 使用时, 直接继承此类即可
  */
 public abstract class BaseLazyMainFragment extends BaseFragment implements View.OnClickListener {
-    // 再点一次退出程序时间设置
-    private static final long WAIT_TIME = 2000L;
-    private long TOUCH_TIME = 0;
-
     private boolean mInited = false;
     private Bundle mSavedInstanceState;
 
@@ -94,17 +90,9 @@ public abstract class BaseLazyMainFragment extends BaseFragment implements View.
 
     /**
      * 处理回退事件
-     *
-     * @return
      */
     @Override
     public boolean onBackPressedSupport() {
-        if (System.currentTimeMillis() - TOUCH_TIME < WAIT_TIME) {
-            _mActivity.finish();
-        } else {
-            TOUCH_TIME = System.currentTimeMillis();
-            Toast.makeText(_mActivity, R.string.press_again_exit, Toast.LENGTH_SHORT).show();
-        }
         return true;
     }
 
