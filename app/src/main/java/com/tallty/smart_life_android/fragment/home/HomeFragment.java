@@ -11,7 +11,6 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -22,7 +21,7 @@ import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.tallty.smart_life_android.R;
-import com.tallty.smart_life_android.adapter.HomeAdapter;
+import com.tallty.smart_life_android.adapter.HomeRecyclerAdapter;
 import com.tallty.smart_life_android.base.BaseLazyMainFragment;
 import com.tallty.smart_life_android.custom.MyRecyclerView;
 import com.tallty.smart_life_android.custom.PedometerConstant;
@@ -60,26 +59,15 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
     private Integer step = 0;
     private List<String> titles = new ArrayList<String>() {
         {
-            add("智慧健康");
-            add("健身达人");
-            add("市政大厅");
-            add("社区活动");
-            add("智慧家居");
-            add("社区IT");
-            add("新品上市");
-            add("限量发售");
+            add("智慧健康");add("健身达人");add("市政大厅");add("社区活动");
+            add("智慧家居");add("社区IT");add("新品上市");add("限量发售");
         }
     };
     private List<Integer> images = new ArrayList<Integer>() {
         {
-            add(R.drawable.smart_healthy);
-            add(R.drawable.fitness_people);
-            add(R.drawable.government);
-            add(R.drawable.community_activity);
-            add(R.drawable.smart_home);
-            add(R.drawable.community_it);
-            add(R.drawable.new_product);
-            add(R.drawable.on_sail);
+            add(R.drawable.smart_healthy);add(R.drawable.fitness_people);add(R.drawable.government);
+            add(R.drawable.community_activity);add(R.drawable.smart_home);add(R.drawable.community_it);
+            add(R.drawable.new_product);add(R.drawable.on_sail);
         }
     };
     private String[][] itemButtons = {
@@ -102,9 +90,8 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
         {R.mipmap.new_product_one},
         {R.mipmap.on_sail_one}
     };
+    // ViewHolder
     HomeViewHolder homeViewHolder;
-
-
 
     public static HomeFragment newInstance() {
         Bundle args = new Bundle();
@@ -180,8 +167,8 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
 
     private void setList() {
         recyclerView.setLayoutManager(layoutManager);
-        HomeAdapter homeAdapter = new HomeAdapter(context, titles, images, itemButtons, itemIcons);
-        recyclerView.setAdapter(homeAdapter);
+        HomeRecyclerAdapter homeRecyclerAdapter = new HomeRecyclerAdapter(context, titles, images, itemButtons, itemIcons);
+        recyclerView.setAdapter(homeRecyclerAdapter);
         // ScrollView嵌套RecyclerView,设置屏幕从顶部开始
         recyclerView.setFocusable(false);
     }

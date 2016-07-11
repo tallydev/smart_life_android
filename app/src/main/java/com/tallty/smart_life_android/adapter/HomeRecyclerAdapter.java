@@ -28,7 +28,7 @@ import cn.iwgang.countdownview.CountdownView;
  * Created by kang on 16/6/22.
  * 首页瀑布流RecyclerView适配器
  */
-public class HomeAdapter extends RecyclerView.Adapter<HomeViewHolder> {
+public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
     private Context context;
     // 数据源
     private List<String> titles;
@@ -50,8 +50,8 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeViewHolder> {
      * @param buttons
      * @param icons
      */
-    public HomeAdapter(Context context, List<String> titles, List<Integer> images,
-                       String[][] buttons, Integer[][] icons) {
+    public HomeRecyclerAdapter(Context context, List<String> titles, List<Integer> images,
+                               String[][] buttons, Integer[][] icons) {
         this.context = context;
         this.titles = titles;
         this.buttons = buttons;

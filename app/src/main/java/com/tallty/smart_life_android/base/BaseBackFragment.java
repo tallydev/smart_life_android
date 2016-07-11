@@ -56,9 +56,9 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
     protected abstract void initView();
     // 设置监听
     protected abstract void setListener();
-    // 处理视图逻辑
+    // 处理视图逻辑(简单的逻辑)
     protected abstract void processLogic();
-    // 转场动画完成后执行(可选)
+    // 转场动画完成后执行(可选)(耗时的逻辑)
     protected abstract void afterAnimationLogic();
 
 
@@ -66,7 +66,7 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
      * 设置toolbar的返回按钮
      */
     protected void initToolbarNav(Toolbar toolbar) {
-        toolbar.setNavigationIcon(R.mipmap.ic_arrow_back);
+        toolbar.setNavigationIcon(R.mipmap.ic_navbar_back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

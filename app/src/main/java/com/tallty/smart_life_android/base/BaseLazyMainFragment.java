@@ -14,6 +14,8 @@ import android.widget.Toast;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.utils.ToastUtil;
 
+import me.yokeyword.fragmentation.helper.OnEnterAnimEndListener;
+
 /**
  * Created by kang on 16/7/5.
  * 基本逻辑fragment

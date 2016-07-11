@@ -7,7 +7,7 @@
     <!--强调-->
     <color name="colorAccent">#333333</color>
     <!--toolbar文字颜色-->
-    <color name="textColorPrimary">#666666</color>
+    <color name="textColorPrimary">#333333</color>
     <color name="app_bg">#E7E7E7</color>
 
     <!--自定义颜色-->
