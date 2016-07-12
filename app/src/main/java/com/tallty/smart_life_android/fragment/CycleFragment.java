@@ -63,7 +63,7 @@ public class CycleFragment extends BaseBackFragment{
     }
 
     @Override
-    protected void processLogic() {
+    protected void afterAnimationLogic() {
 //        String title = "循环Fragment" + mNumber;
 //
         mToolbar.setTitle(mName);
@@ -82,11 +82,6 @@ public class CycleFragment extends BaseBackFragment{
 //                startWithPop(CycleFragment.newInstance(mNumber + 1));
 //            }
 //        });
-    }
-
-    @Override
-    protected void afterAnimationLogic() {
-
     }
 
     @Override

@@ -36,31 +36,17 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
         context = getActivity().getApplicationContext();
         // 引用组件
         initView();
-        // 设置监听器
-        setListener();
-        // 添加业务逻辑
-        processLogic();
         return attachToSwipeBack(view);
     }
 
     @Override
     protected void onEnterAnimationEnd(Bundle savedInstanceState) {
         super.onEnterAnimationEnd(savedInstanceState);
+        // 设置监听器
+        setListener();
         // 入场动画结束后执行  优化,防动画卡顿
         afterAnimationLogic();
     }
-
-    // 获取布局文件id
-    public abstract int getFragmentLayout();
-    // find UI
-    protected abstract void initView();
-    // 设置监听
-    protected abstract void setListener();
-    // 处理视图逻辑(简单的逻辑)
-    protected abstract void processLogic();
-    // 转场动画完成后执行(可选)(耗时的逻辑)
-    protected abstract void afterAnimationLogic();
-
 
     /**
      * 设置toolbar的返回按钮
@@ -74,7 +60,7 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
                 pop();
             }
         });
-
+        // 调试Fragment时使用,添加fragment栈层级菜单
         initToolbarMenu(toolbar);
     }
 
@@ -97,6 +83,23 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
         });
     }
 
+    // 获取布局文件id
+    public abstract int getFragmentLayout();
+    // find UI
+    protected abstract void initView();
+    // 设置监听
+    protected abstract void setListener();
+    // 转场动画完成后执行(可选)(耗时的逻辑)
+    protected abstract void afterAnimationLogic();
+
+    /**
+     * 处理物理返回键功能
+     */
+    @Override
+    public boolean onBackPressedSupport() {
+        pop();
+        return true;
+    }
 
     /**
      * 全局查找View

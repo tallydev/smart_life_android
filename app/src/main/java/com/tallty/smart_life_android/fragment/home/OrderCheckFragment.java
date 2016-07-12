@@ -7,8 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 
@@ -21,6 +23,8 @@ import me.yokeyword.fragmentation.SwipeBackLayout;
 public class OrderCheckFragment extends BaseBackFragment {
     private Toolbar toolbar;
     private TextView toolbar_title;
+    private ImageView banner;
+    private ImageView text;
 
     public static OrderCheckFragment newInstance() {
         Bundle args = new Bundle();
@@ -45,6 +49,8 @@ public class OrderCheckFragment extends BaseBackFragment {
     protected void initView() {
         toolbar = getViewById(R.id.toolbar);
         toolbar_title = getViewById(R.id.toolbar_title);
+        banner = getViewById(R.id.order_check_banner);
+        text = getViewById(R.id.order_check_text);
     }
 
     @Override
@@ -53,14 +59,12 @@ public class OrderCheckFragment extends BaseBackFragment {
     }
 
     @Override
-    protected void processLogic() {
+    protected void afterAnimationLogic() {
         initToolbarNav(toolbar);
         toolbar_title.setText("预约体检");
-    }
-
-    @Override
-    protected void afterAnimationLogic() {
-
+        // 加载图片
+        Glide.with(context).load(R.drawable.order_check_top).into(banner);
+        Glide.with(context).load(R.drawable.order_check_text).into(text);
     }
 
     @Override

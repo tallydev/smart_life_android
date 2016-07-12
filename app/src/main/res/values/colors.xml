@@ -6,8 +6,9 @@
     <color name="colorPrimaryDark">#000000</color>
     <!--强调-->
     <color name="colorAccent">#333333</color>
-    <!--toolbar文字颜色-->
+    <!--Toolbar文字颜色-->
     <color name="textColorPrimary">#333333</color>
+    <!--通用背景色-->
     <color name="app_bg">#E7E7E7</color>
 
     <!--自定义颜色-->
@@ -17,6 +18,7 @@
     <color name="white">#ffffff</color>
     <color name="alpha_white">#60ffffff</color>
     <color name="black">#000000</color>
+    <color name="orange">#FF8000</color>
 
     <!--systemBar 背景-->
     <color name="systemBarColor">#ffffff</color>
@@ -27,10 +29,8 @@
 
     <!--tab menu 颜色-->
     <color name="tab_num_color">#FFFFFF</color>
-    <color name="tab_divider_bg">#AAAAAA</color>
     <color name="tab_normal">#666666</color>
     <color name="tab_active">#FF8000</color>
-
 
     <!--首页-->
     <color name="home_button_color">#333333</color>

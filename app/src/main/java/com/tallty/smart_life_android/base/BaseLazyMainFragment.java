@@ -19,7 +19,7 @@ import me.yokeyword.fragmentation.helper.OnEnterAnimEndListener;
 /**
  * Created by kang on 16/7/5.
  * 基本逻辑fragment
- * 懒加载, 交互时才执行操作
+ * 懒加载, (耗时操作)
  * 使用时, 直接继承此类即可
  */
 public abstract class BaseLazyMainFragment extends BaseFragment implements View.OnClickListener {
@@ -51,12 +51,6 @@ public abstract class BaseLazyMainFragment extends BaseFragment implements View.
 
         return view;
     }
-
-    public abstract int getFragmentLayout();
-
-    protected abstract void initToolBar(Toolbar toolbar, TextView title);
-
-    protected abstract void initView();
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -90,11 +84,20 @@ public abstract class BaseLazyMainFragment extends BaseFragment implements View.
      */
     protected abstract void initLazyView(@Nullable Bundle savedInstanceState);
 
+    // 获取布局文件
+    public abstract int getFragmentLayout();
+    // 初始化toolbar
+    protected abstract void initToolBar(Toolbar toolbar, TextView title);
+    // 初始化视图组件
+    protected abstract void initView();
+
     /**
      * 处理回退事件
      */
     @Override
     public boolean onBackPressedSupport() {
+        // 任务移到后台执行
+        _mActivity.moveTaskToBack(true);
         return true;
     }
 

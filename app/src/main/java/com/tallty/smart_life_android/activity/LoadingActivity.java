@@ -50,6 +50,7 @@ public class LoadingActivity extends BaseActivity implements ILoadingView {
     public void showImage(String uri) {
         Glide.with(this)
                 .load(R.drawable.loading)
+                .skipMemoryCache(true)
                 .centerCrop()
                 .into(loadingImage);
     }
