@@ -30,6 +30,8 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
     private View view;
     protected Context context;
 
+    protected static final String TOOLBAR_TITLE = "BackFragmentTitle";
+
 
     @Nullable
     @Override
@@ -54,7 +56,7 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
     /**
      * 设置toolbar的返回按钮
      */
-    protected void initToolbarNav(Toolbar toolbar) {
+    protected void initBackToolbar(Toolbar toolbar) {
         toolbar.setNavigationIcon(R.mipmap.ic_navbar_back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

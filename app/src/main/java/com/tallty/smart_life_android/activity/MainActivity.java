@@ -1,10 +1,10 @@
 package com.tallty.smart_life_android.activity;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
-import com.orhanobut.logger.Logger;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.fragment.MainFragment;
 

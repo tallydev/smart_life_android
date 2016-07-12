@@ -5,7 +5,11 @@
     <string name="terms_of_service">服务条款</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="timer_text">距离结束时间:</string>
     <string name="press_again_exit">再按一次退出</string>
+
+    <!--健康报告-->
+    <string name="check_report_one">检查项目</string>
+    <string name="check_report_two">检查结果</string>
+    <string name="check_report_three">参考范围</string>
 </resources>

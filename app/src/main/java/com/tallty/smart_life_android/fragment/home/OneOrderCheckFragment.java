@@ -3,7 +3,6 @@ package com.tallty.smart_life_android.fragment.home;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
@@ -12,25 +11,25 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
-import com.tallty.smart_life_android.utils.SnackbarUtil;
 
 /**
  * Created by kang on 16/7/5.
- * 首页->预约体检
+ * 首页->智慧健康-预约体检
  */
-public class OrderCheckFragment extends BaseBackFragment {
+public class OneOrderCheckFragment extends BaseBackFragment {
+    private String mName;
+
     private CoordinatorLayout order_layout;
     private Toolbar toolbar;
     private TextView toolbar_title;
     private ImageView banner;
     private ImageView tips;
     private TextView order;
-    private Snackbar snackbar;
 
-    public static OrderCheckFragment newInstance() {
+    public static OneOrderCheckFragment newInstance(String title) {
         Bundle args = new Bundle();
-        // 添加数据到args
-        OrderCheckFragment fragment = new OrderCheckFragment();
+        args.putString(TOOLBAR_TITLE, title);
+        OneOrderCheckFragment fragment = new OneOrderCheckFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -39,11 +38,15 @@ public class OrderCheckFragment extends BaseBackFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // 获取数据:getArguments()
+        Bundle args = getArguments();
+        if (args != null) {
+            mName = args.getString(TOOLBAR_TITLE);
+        }
     }
 
     @Override
     public int getFragmentLayout() {
-        return R.layout.fragment_order_check;
+        return R.layout.fragment_one_order_check;
     }
 
     @Override
@@ -63,8 +66,8 @@ public class OrderCheckFragment extends BaseBackFragment {
 
     @Override
     protected void afterAnimationLogic() {
-        initToolbarNav(toolbar);
-        toolbar_title.setText("预约体检");
+        initBackToolbar(toolbar);
+        toolbar_title.setText(mName);
         // 加载图片
         Glide.with(context).load(R.drawable.order_check_top).into(banner);
         Glide.with(context).load(R.drawable.order_check_text).into(tips);

@@ -2,7 +2,6 @@ package com.tallty.smart_life_android.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
@@ -67,7 +66,7 @@ public class CycleFragment extends BaseBackFragment{
 //        String title = "循环Fragment" + mNumber;
 //
         mToolbar.setTitle(mName);
-        initToolbarNav(mToolbar);
+        initBackToolbar(mToolbar);
 //
 //        mTvName.setText(title + "\n可滑动返回");
 //        mBtnNext.setOnClickListener(new View.OnClickListener() {

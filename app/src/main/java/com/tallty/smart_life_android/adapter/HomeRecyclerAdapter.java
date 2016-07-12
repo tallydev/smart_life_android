@@ -12,9 +12,9 @@ import com.bumptech.glide.Glide;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.fragment.CycleFragment;
-import com.tallty.smart_life_android.fragment.home.OrderCheckFragment;
+import com.tallty.smart_life_android.fragment.home.OneCheckReport;
+import com.tallty.smart_life_android.fragment.home.OneOrderCheckFragment;
 import com.tallty.smart_life_android.holder.HomeViewHolder;
-import com.tallty.smart_life_android.utils.ToastUtil;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -146,9 +146,9 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
                 // 智慧健康
                 if (tag == 0) {
                     if (position == 0) {
-                        EventBus.getDefault().post(new StartBrotherEvent(OrderCheckFragment.newInstance()));
+                        EventBus.getDefault().post(new StartBrotherEvent(OneOrderCheckFragment.newInstance("预约体检")));
                     } else if (position == 1) {
-                        EventBus.getDefault().post(new StartBrotherEvent(CycleFragment.newInstance(1, "健康报告")));
+                        EventBus.getDefault().post(new StartBrotherEvent(OneCheckReport.newInstance("健康报告")));
                     } else if (position == 2) {
                         EventBus.getDefault().post(new StartBrotherEvent(CycleFragment.newInstance(1, "预约专家")));
                     } else if (position == 3) {

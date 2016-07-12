@@ -12,11 +12,6 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
     <!--toolbar 相关-->
     <style name="ActionBarPopupThemeOverlay" parent="ThemeOverlay.AppCompat.Dark"/>
     <style name="ActionBar.TitleText" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">

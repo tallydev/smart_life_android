@@ -19,6 +19,7 @@
     <color name="alpha_white">#60ffffff</color>
     <color name="black">#000000</color>
     <color name="orange">#FF8000</color>
+    <color name="gray">#eeeeee</color>
 
     <!--systemBar 背景-->
     <color name="systemBarColor">#ffffff</color>
@@ -38,4 +39,6 @@
     <color name="home_steps_text">#FEDD34</color>
     <color name="timer_color">#FD8023</color>
     <color name="angle_right_color">#CCCCCC</color>
+
+    <color name="item_gray_bg">#F3F4F5</color>
 </resources>
