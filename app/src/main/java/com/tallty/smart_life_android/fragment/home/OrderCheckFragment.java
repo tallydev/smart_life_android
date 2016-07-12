@@ -2,29 +2,30 @@ package com.tallty.smart_life_android.fragment.home;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
-
-import me.yokeyword.fragmentation.SwipeBackLayout;
+import com.tallty.smart_life_android.utils.SnackbarUtil;
 
 /**
  * Created by kang on 16/7/5.
  * 首页->预约体检
  */
 public class OrderCheckFragment extends BaseBackFragment {
+    private CoordinatorLayout order_layout;
     private Toolbar toolbar;
     private TextView toolbar_title;
     private ImageView banner;
-    private ImageView text;
+    private ImageView tips;
+    private TextView order;
+    private Snackbar snackbar;
 
     public static OrderCheckFragment newInstance() {
         Bundle args = new Bundle();
@@ -47,15 +48,17 @@ public class OrderCheckFragment extends BaseBackFragment {
 
     @Override
     protected void initView() {
+        order_layout = getViewById(R.id.order_layout);
         toolbar = getViewById(R.id.toolbar);
         toolbar_title = getViewById(R.id.toolbar_title);
         banner = getViewById(R.id.order_check_banner);
-        text = getViewById(R.id.order_check_text);
+        tips = getViewById(R.id.order_check_text);
+        order = getViewById(R.id.order_btn);
     }
 
     @Override
     protected void setListener() {
-
+        order.setOnClickListener(this);
     }
 
     @Override
@@ -64,12 +67,24 @@ public class OrderCheckFragment extends BaseBackFragment {
         toolbar_title.setText("预约体检");
         // 加载图片
         Glide.with(context).load(R.drawable.order_check_top).into(banner);
-        Glide.with(context).load(R.drawable.order_check_text).into(text);
+        Glide.with(context).load(R.drawable.order_check_text).into(tips);
     }
 
     @Override
     public void onClick(View v) {
-
+        switch (v.getId()) {
+            case R.id.order_btn:
+                setSnackBar(order_layout,
+                        "预约后由<慧生活>服务专员和您电话确认体检日期和体检项目,请保持手机畅通.",
+                        100000, R.layout.snackbar_icon, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                order.setText("预约成功");
+                                order.setClickable(false);
+                            }
+                        });
+                break;
+        }
     }
 
     @Override

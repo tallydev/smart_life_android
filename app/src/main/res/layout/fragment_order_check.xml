@@ -2,6 +2,7 @@
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/order_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -10,26 +11,39 @@
     <include layout="@layout/toolbar"/>
 
     <!--主体内容-->
-    <LinearLayout
+    <RelativeLayout
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
         <ImageView
             android:id="@+id/order_check_banner"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:scaleType="fitXY"
-            android:layout_marginBottom="20dp"/>
+            android:layout_alignParentTop="true"
+            android:scaleType="fitXY"/>
+
+        <TextView
+            android:id="@+id/order_btn"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/orange"
+            android:gravity="center"
+            android:text="我要预约"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_large"/>
+
         <ImageView
             android:id="@+id/order_check_text"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_above="@id/order_btn"
+            android:layout_below="@id/order_check_banner"
             android:paddingLeft="32dp"
             android:paddingRight="32dp"
             android:scaleType="fitCenter"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>
