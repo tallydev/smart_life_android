@@ -126,8 +126,11 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
         Snackbar snackbar = SnackbarUtil.IndefiniteSnackbar(
                 layout, text, duration,
                 getResources().getColor(R.color.white), getResources().getColor(R.color.orange))
-                .setAction("确定", listener)
                 .setActionTextColor(getResources().getColor(R.color.white));
+
+        if (listener != null) {
+            snackbar.setAction("确定", listener);
+        }
 
         TextView textView = (TextView) snackbar.getView().findViewById(R.id.snackbar_text);
         textView.setMaxLines(3);

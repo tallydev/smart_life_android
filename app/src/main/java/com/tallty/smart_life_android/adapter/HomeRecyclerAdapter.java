@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.tallty.smart_life_android.R;
+import com.tallty.smart_life_android.event.ShowSnackbarEvent;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.fragment.CycleFragment;
 import com.tallty.smart_life_android.fragment.home.OneCheckReport;
@@ -151,9 +152,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
                     } else if (position == 1) {
                         EventBus.getDefault().post(new StartBrotherEvent(OneCheckReport.newInstance("健康报告")));
                     } else if (position == 2) {
-                        EventBus.getDefault().post(new StartBrotherEvent(CycleFragment.newInstance(1, "预约专家")));
-                    } else if (position == 3) {
-                        EventBus.getDefault().post(new StartBrotherEvent(CycleFragment.newInstance(1, "智慧健康-更多")));
+                        EventBus.getDefault().post(new ShowSnackbarEvent("待确认"));
                     }
                 }
                 // 健身达人

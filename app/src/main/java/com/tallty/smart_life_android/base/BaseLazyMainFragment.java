@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.tallty.smart_life_android.R;
+import com.tallty.smart_life_android.utils.SnackbarUtil;
 import com.tallty.smart_life_android.utils.ToastUtil;
 
 /**
@@ -110,5 +112,31 @@ public abstract class BaseLazyMainFragment extends BaseFragment implements View.
      */
     public void showToast(String text) {
         ToastUtil.show(text);
+    }
+
+    /**
+     * 初始化显示Snackbar
+     * 调用
+     */
+    public void setSnackBar(View layout, String text, int duration, int layoutId, final View.OnClickListener listener) {
+        Snackbar snackbar = SnackbarUtil.IndefiniteSnackbar(
+                layout, text, duration,
+                getResources().getColor(R.color.white), getResources().getColor(R.color.orange))
+                .setActionTextColor(getResources().getColor(R.color.white));
+
+        if (listener != null) {
+            snackbar.setAction("确定", listener);
+        }
+
+        TextView textView = (TextView) snackbar.getView().findViewById(R.id.snackbar_text);
+        textView.setMaxLines(3);
+        textView.setTextSize(12);
+        textView.setLineSpacing(18, 1);
+
+        if (layoutId != 0) {
+            SnackbarUtil.SnackbarAddView(snackbar, layoutId, 0);
+        }
+
+        snackbar.show();
     }
 }

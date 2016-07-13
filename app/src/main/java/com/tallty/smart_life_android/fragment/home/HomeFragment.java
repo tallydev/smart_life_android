@@ -25,6 +25,7 @@ import com.tallty.smart_life_android.adapter.HomeRecyclerAdapter;
 import com.tallty.smart_life_android.base.BaseLazyMainFragment;
 import com.tallty.smart_life_android.custom.MyRecyclerView;
 import com.tallty.smart_life_android.custom.PedometerConstant;
+import com.tallty.smart_life_android.event.ShowSnackbarEvent;
 import com.tallty.smart_life_android.event.TabSelectedEvent;
 import com.tallty.smart_life_android.fragment.MainFragment;
 import com.tallty.smart_life_android.holder.HomeBannerHolderView;
@@ -71,7 +72,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
         }
     };
     private String[][] itemButtons = {
-        {"预约体检", "健康报告", "预约专家", "更多"},
+        {"预约体检", "健康报告", "预约专家"},
         {"更多数据"},
         {"天气查询", "违章查询", "公积金", "医保卡", "预约办证", "更多查询"},
         {"活动详情"},
@@ -224,16 +225,6 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
     }
 
 
-
-    /**
-     * 订阅事件
-     */
-    @Subscribe
-    public void onTabSelectedEvent(TabSelectedEvent event) {
-        if (event.position != MainFragment.HOME) return;
-        // tab按钮被重复点击时执行的操作
-    }
-
     @Override
     public void onResume() {
         super.onResume();
@@ -256,5 +247,24 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
     public void onDestroyView() {
         super.onDestroyView();
         EventBus.getDefault().unregister(this);
+    }
+
+    /**
+     * 订阅事件
+     */
+    @Subscribe
+    public void onTabSelectedEvent(TabSelectedEvent event) {
+        if (event.position != MainFragment.HOME) return;
+        // tab按钮被重复点击时执行的操作
+    }
+
+    @Subscribe
+    public void onShowSnackbar(ShowSnackbarEvent event) {
+        setSnackBar(recyclerView, "暂未开通", 100000, R.layout.snackbar_icon, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 }
