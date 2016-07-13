@@ -13,12 +13,13 @@ import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.event.ShowSnackbarEvent;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.fragment.CycleFragment;
-import com.tallty.smart_life_android.fragment.home.FiveCatEye;
-import com.tallty.smart_life_android.fragment.home.FiveRemoteControl;
-import com.tallty.smart_life_android.fragment.home.FourDetail;
-import com.tallty.smart_life_android.fragment.home.OneCheckReport;
-import com.tallty.smart_life_android.fragment.home.OneOrderCheck;
-import com.tallty.smart_life_android.fragment.home.TwoMoreData;
+import com.tallty.smart_life_android.fragment.home.HouseCatEye;
+import com.tallty.smart_life_android.fragment.home.HouseRemoteControl;
+import com.tallty.smart_life_android.fragment.home.CountOrder;
+import com.tallty.smart_life_android.fragment.home.HealthyCheckReport;
+import com.tallty.smart_life_android.fragment.home.HealthyOrderCheck;
+import com.tallty.smart_life_android.fragment.home.CommunityIt;
+import com.tallty.smart_life_android.fragment.home.SportMoreData;
 import com.tallty.smart_life_android.holder.HomeViewHolder;
 
 import org.greenrobot.eventbus.EventBus;
@@ -151,9 +152,9 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
                 // 智慧健康
                 if (tag == 0) {
                     if (position == 0) {
-                        EventBus.getDefault().post(new StartBrotherEvent(OneOrderCheck.newInstance("预约体检")));
+                        EventBus.getDefault().post(new StartBrotherEvent(HealthyOrderCheck.newInstance("预约体检")));
                     } else if (position == 1) {
-                        EventBus.getDefault().post(new StartBrotherEvent(OneCheckReport.newInstance("健康报告")));
+                        EventBus.getDefault().post(new StartBrotherEvent(HealthyCheckReport.newInstance("健康报告")));
                     } else if (position == 2) {
                         EventBus.getDefault().post(new ShowSnackbarEvent("待确认"));
                     }
@@ -161,7 +162,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
                 // 健身达人
                 else if (tag == 1) {
                     if (position == 0) {
-                        EventBus.getDefault().post(new StartBrotherEvent(TwoMoreData.newInstance("健身达人")));
+                        EventBus.getDefault().post(new StartBrotherEvent(SportMoreData.newInstance("健身达人")));
                     }
                 }
                 // 市政大厅
@@ -183,33 +184,33 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
                 // 社区活动
                 else if (tag == 3) {
                     if (position == 0) {
-                        EventBus.getDefault().post(new StartBrotherEvent(FourDetail.newInstance("社区活动")));
+                        EventBus.getDefault().post(new StartBrotherEvent(CountOrder.newInstance("社区活动", R.drawable.four_detail)));
                     }
                 }
                 // 智慧家居
                 else if (tag == 4) {
                     if (position == 0) {
-                        EventBus.getDefault().post(new StartBrotherEvent(FiveRemoteControl.newInstance("施耐德智能家居")));
+                        EventBus.getDefault().post(new StartBrotherEvent(HouseRemoteControl.newInstance("施耐德智能家居")));
                     } else if (position == 1) {
-                        EventBus.getDefault().post(new StartBrotherEvent(FiveCatEye.newInstance("电子猫眼")));
+                        EventBus.getDefault().post(new StartBrotherEvent(HouseCatEye.newInstance("电子猫眼")));
                     }
                 }
                 // 社区IT
                 else if (tag == 5) {
                     if (position == 0) {
-                        EventBus.getDefault().post(new StartBrotherEvent(CycleFragment.newInstance(1, "IT学堂")));
+                        EventBus.getDefault().post(new StartBrotherEvent(CommunityIt.newInstance("IT学堂")));
                     } else if (position == 1) {
-                        EventBus.getDefault().post(new StartBrotherEvent(CycleFragment.newInstance(1, "在线冲印")));
+                        EventBus.getDefault().post(new StartBrotherEvent(CommunityIt.newInstance("在线冲印")));
                     } else if (position == 2) {
-                        EventBus.getDefault().post(new StartBrotherEvent(CycleFragment.newInstance(1, "IT服务")));
+                        EventBus.getDefault().post(new StartBrotherEvent(CommunityIt.newInstance("IT服务")));
                     } else if (position == 3) {
-                        EventBus.getDefault().post(new StartBrotherEvent(CycleFragment.newInstance(1, "社区IT-更多")));
+                        EventBus.getDefault().post(new StartBrotherEvent(CommunityIt.newInstance("更多服务")));
                     }
                 }
                 // 新品上市
                 else if (tag == 6) {
                     if (position == 0) {
-                        EventBus.getDefault().post(new StartBrotherEvent(CycleFragment.newInstance(1, "我要预约")));
+                        EventBus.getDefault().post(new StartBrotherEvent(CountOrder.newInstance("新品上市", R.drawable.new_product_detail)));
                     }
                 }
                 // 限量发售

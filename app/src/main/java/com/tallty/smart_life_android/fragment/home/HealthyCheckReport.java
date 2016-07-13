@@ -21,7 +21,7 @@ import java.util.ArrayList;
  * Created by kang on 16/7/12.
  * 首页-智慧健康-健康报告
  */
-public class OneCheckReport extends BaseBackFragment {
+public class HealthyCheckReport extends BaseBackFragment {
     private String mName;
     // UI
     private Toolbar toolbar;
@@ -50,10 +50,10 @@ public class OneCheckReport extends BaseBackFragment {
         }
     };
 
-    public static OneCheckReport newInstance(String title) {
+    public static HealthyCheckReport newInstance(String title) {
         Bundle args = new Bundle();
         args.putString(TOOLBAR_TITLE, title);
-        OneCheckReport fragment = new OneCheckReport();
+        HealthyCheckReport fragment = new HealthyCheckReport();
         fragment.setArguments(args);
         return fragment;
     }
@@ -70,7 +70,7 @@ public class OneCheckReport extends BaseBackFragment {
 
     @Override
     public int getFragmentLayout() {
-        return R.layout.fragment_one_check_report;
+        return R.layout.fragment_healthy_check_report;
     }
 
     @Override
@@ -97,7 +97,7 @@ public class OneCheckReport extends BaseBackFragment {
         myRecyclerView.addOnItemTouchListener(new RecyclerVIewItemTouchListener(myRecyclerView) {
             @Override
             public void onItemClick(RecyclerView.ViewHolder vh) {
-                start(OneCheckReportShow.newInstance(vh.itemView.getTag().toString()));
+                start(HealthyCheckReportShow.newInstance(vh.itemView.getTag().toString()));
             }
         });
     }

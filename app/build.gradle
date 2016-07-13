@@ -96,35 +96,32 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    // An HTTP+HTTP/2 client for Android and Java applications
-    // google出品的json解析库
-    // retrofit 和 converter-gson 版本要保持一致
-    // 事件总线
-    // fragment管理库
-    // 滑动边缘退出Fragment/Activity功能
-    // 日志
-    // 图片加载
-    // Banner
     // 数据库操作
     compile files('libs/lite-orm-1.7.0.jar')
-    // 倒计时控件
-    // 图表控件
-    // 图标
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'com.android.support:support-v4:23.3.0'
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.android.support:design:23.3.0'
     compile 'com.squareup.okhttp3:okhttp:3.3.1'
     compile 'com.google.code.gson:gson:2.7'
+    // retrofit 和 converter-gson 版本要保持一致
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     compile 'org.greenrobot:eventbus:3.0.0'
+    // fragment管理库
     compile 'me.yokeyword:fragmentation:0.7.7'
+    // 滑动边缘退出Fragment/Activity功能
     compile 'me.yokeyword:fragmentation-swipeback:0.3.1'
+    // 日志
     compile 'com.github.orhanobut:logger:1.12'
+    // 图片加载
     compile 'com.github.bumptech.glide:glide:3.7.0'
+    // Banner
     compile 'com.bigkoo:convenientbanner:2.0.5'
+    // 倒计时控件
     compile 'com.github.iwgang:countdownview:2.1'
+    // 图表控件
     compile 'com.diogobernardino:williamchart:2.2'
+    // 图标
     compile 'com.joanzapata.iconify:android-iconify-fontawesome:2.2.2'
 }

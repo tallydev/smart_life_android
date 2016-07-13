@@ -16,7 +16,7 @@ import com.tallty.smart_life_android.base.BaseBackFragment;
  * Created by kang on 16/7/5.
  * 首页->智慧健康-预约体检
  */
-public class OneOrderCheck extends BaseBackFragment {
+public class HealthyOrderCheck extends BaseBackFragment {
     private String mName;
 
     private CoordinatorLayout order_layout;
@@ -26,10 +26,10 @@ public class OneOrderCheck extends BaseBackFragment {
     private ImageView tips;
     private TextView order;
 
-    public static OneOrderCheck newInstance(String title) {
+    public static HealthyOrderCheck newInstance(String title) {
         Bundle args = new Bundle();
         args.putString(TOOLBAR_TITLE, title);
-        OneOrderCheck fragment = new OneOrderCheck();
+        HealthyOrderCheck fragment = new HealthyOrderCheck();
         fragment.setArguments(args);
         return fragment;
     }
@@ -46,7 +46,7 @@ public class OneOrderCheck extends BaseBackFragment {
 
     @Override
     public int getFragmentLayout() {
-        return R.layout.fragment_one_order_check;
+        return R.layout.fragment_healthy_order_check;
     }
 
     @Override

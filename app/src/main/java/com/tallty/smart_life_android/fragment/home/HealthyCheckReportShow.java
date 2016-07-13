@@ -1,7 +1,5 @@
 package com.tallty.smart_life_android.fragment.home;
 
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,22 +11,19 @@ import android.widget.TextView;
 import com.db.chart.Tools;
 import com.db.chart.model.LineSet;
 import com.db.chart.view.AxisController;
-import com.db.chart.view.ChartView;
 import com.db.chart.view.LineChartView;
-import com.db.chart.view.Tooltip;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.HomeCheckReportShowAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.custom.MyRecyclerView;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
  * Created by kang on 16/7/13.
  * 首页-智慧健康-健康报告-详细数据
  */
-public class OneCheckReportShow extends BaseBackFragment {
+public class HealthyCheckReportShow extends BaseBackFragment {
     private String mName;
 
     private Toolbar toolbar;
@@ -59,10 +54,10 @@ public class OneCheckReportShow extends BaseBackFragment {
         }
     };
 
-    public static OneCheckReportShow newInstance(String title) {
+    public static HealthyCheckReportShow newInstance(String title) {
         Bundle args = new Bundle();
         args.putString(TOOLBAR_TITLE, title);
-        OneCheckReportShow fragment = new OneCheckReportShow();
+        HealthyCheckReportShow fragment = new HealthyCheckReportShow();
         fragment.setArguments(args);
         return fragment;
     }
@@ -78,7 +73,7 @@ public class OneCheckReportShow extends BaseBackFragment {
 
     @Override
     public int getFragmentLayout() {
-        return R.layout.fragment_one_check_report_show;
+        return R.layout.fragment_healthy_check_report_show;
     }
 
     @Override

@@ -3,11 +3,8 @@ package com.tallty.smart_life_android.fragment.home;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,17 +15,17 @@ import com.tallty.smart_life_android.base.BaseBackFragment;
 /**
  * 首页-智慧家居-远程控制
  */
-public class FiveRemoteControl extends BaseBackFragment {
+public class HouseRemoteControl extends BaseBackFragment {
     private String mName;
 
     private Toolbar toolbar;
     private TextView toolbar_title;
     private ImageView detail_image;
 
-    public static FiveRemoteControl newInstance(String title) {
+    public static HouseRemoteControl newInstance(String title) {
         Bundle args = new Bundle();
         args.putString(TOOLBAR_TITLE, title);
-        FiveRemoteControl fragment = new FiveRemoteControl();
+        HouseRemoteControl fragment = new HouseRemoteControl();
         fragment.setArguments(args);
         return fragment;
     }
@@ -44,7 +41,7 @@ public class FiveRemoteControl extends BaseBackFragment {
 
     @Override
     public int getFragmentLayout() {
-        return R.layout.fragment_five_remote_control;
+        return R.layout.fragment_house_remote_control;
     }
 
     @Override

@@ -15,22 +15,25 @@ import com.tallty.smart_life_android.base.BaseBackFragment;
 /**
  * 首页-社区活动-活动详情
  */
-public class FourDetail extends BaseBackFragment {
+public class CountOrder extends BaseBackFragment {
     private String mName;
+    private int imageId;
     private int count = 1;
 
     private Toolbar toolbar;
     private TextView toolbar_title;
     private ImageView detail_image;
+    private TextView count_text;
     private TextView add;
     private TextView reduce;
     private TextView number;
     private TextView apply;
 
-    public static FourDetail newInstance(String title) {
+    public static CountOrder newInstance(String title, int imageId) {
         Bundle args = new Bundle();
         args.putString(TOOLBAR_TITLE, title);
-        FourDetail fragment = new FourDetail();
+        args.putInt("image", imageId);
+        CountOrder fragment = new CountOrder();
         fragment.setArguments(args);
         return fragment;
     }
@@ -41,12 +44,13 @@ public class FourDetail extends BaseBackFragment {
         Bundle args = getArguments();
         if (args != null) {
             mName = args.getString(TOOLBAR_TITLE);
+            imageId = args.getInt("image");
         }
     }
 
     @Override
     public int getFragmentLayout() {
-        return R.layout.fragment_four_detail;
+        return R.layout.fragment_count_order;
     }
 
     @Override
@@ -54,6 +58,7 @@ public class FourDetail extends BaseBackFragment {
         toolbar = getViewById(R.id.toolbar);
         toolbar_title = getViewById(R.id.toolbar_title);
         detail_image = getViewById(R.id.detail_image);
+        count_text = getViewById(R.id.count_text);
         add = getViewById(R.id.add);
         reduce = getViewById(R.id.reduce);
         number = getViewById(R.id.number);
@@ -71,7 +76,11 @@ public class FourDetail extends BaseBackFragment {
     protected void afterAnimationLogic() {
         initBackToolbar(toolbar);
         toolbar_title.setText(mName);
-        Glide.with(context).load(R.drawable.four_detail).skipMemoryCache(true).into(detail_image);
+        if (mName.equals("新品上市")) {
+            count_text.setText("预约人数: ");
+            apply.setText("我要预约");
+        }
+        Glide.with(context).load(imageId).into(detail_image);
     }
 
     @Override
@@ -89,11 +98,11 @@ public class FourDetail extends BaseBackFragment {
                 break;
             case R.id.apply:
                 setSnackBar(apply,
-                        "报名后由<慧生活>服务专员和您电话联系,请保持手机畅通.",
+                        "申请后由<慧生活>服务专员和您电话联系,请保持手机畅通.",
                         100000, R.layout.snackbar_icon, new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                apply.setText("报名成功");
+                                apply.setText("申请成功");
                                 apply.setClickable(false);
                             }
                         });

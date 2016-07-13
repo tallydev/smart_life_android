@@ -3,7 +3,6 @@ package com.tallty.smart_life_android.fragment.home;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
@@ -20,7 +19,7 @@ import com.tallty.smart_life_android.base.BaseBackFragment;
 /**
  * 首页-健身达人-更多数据
  */
-public class TwoMoreData extends BaseBackFragment {
+public class SportMoreData extends BaseBackFragment {
     private String mName;
 
     private Toolbar toolbar;
@@ -42,10 +41,10 @@ public class TwoMoreData extends BaseBackFragment {
     private float[] data_four = {60f,100f,50f};
 
 
-    public static TwoMoreData newInstance(String title) {
+    public static SportMoreData newInstance(String title) {
         Bundle args = new Bundle();
         args.putString(TOOLBAR_TITLE, title);
-        TwoMoreData fragment = new TwoMoreData();
+        SportMoreData fragment = new SportMoreData();
         fragment.setArguments(args);
         return fragment;
     }
@@ -59,7 +58,7 @@ public class TwoMoreData extends BaseBackFragment {
 
     @Override
     public int getFragmentLayout() {
-        return R.layout.fragment_two_more_data;
+        return R.layout.fragment_sport_more_data;
     }
 
     @Override
