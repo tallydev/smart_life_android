@@ -19,6 +19,7 @@ import com.tallty.smart_life_android.fragment.home.CountOrder;
 import com.tallty.smart_life_android.fragment.home.HealthyCheckReport;
 import com.tallty.smart_life_android.fragment.home.HealthyOrderCheck;
 import com.tallty.smart_life_android.fragment.home.CommunityIt;
+import com.tallty.smart_life_android.fragment.home.LimitSail;
 import com.tallty.smart_life_android.fragment.home.SportMoreData;
 import com.tallty.smart_life_android.holder.HomeViewHolder;
 
@@ -216,7 +217,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
                 // 限量发售
                 else if (tag == 7) {
                     if (position == 0) {
-                        EventBus.getDefault().post(new StartBrotherEvent(CycleFragment.newInstance(1, "更多臻品")));
+                        EventBus.getDefault().post(new StartBrotherEvent(LimitSail.newInstance("限量销售")));
                     }
                 }
             }

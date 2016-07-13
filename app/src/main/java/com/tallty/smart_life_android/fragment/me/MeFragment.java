@@ -13,6 +13,10 @@ import com.bumptech.glide.Glide;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseLazyMainFragment;
 import com.tallty.smart_life_android.custom.GlideCircleTransform;
+import com.tallty.smart_life_android.event.StartBrotherEvent;
+import com.tallty.smart_life_android.fragment.home.HealthyOrderCheck;
+
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * Created by kang on 16/6/20.
@@ -137,10 +141,10 @@ public class MeFragment extends BaseLazyMainFragment {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.me_profile:
-                showToast("个人资料");
+                EventBus.getDefault().post(new StartBrotherEvent(Profile.newInstance("账户管理")));
                 break;
             case R.id.me_order:
-                showToast("我的订单");
+                EventBus.getDefault().post(new StartBrotherEvent(MyOrders.newInstance("我的订单")));
                 break;
             case R.id.wait_pay:
                 showToast("待付款");
@@ -155,11 +159,16 @@ public class MeFragment extends BaseLazyMainFragment {
                 showToast("我的运动");
                 break;
             case R.id.me_appointment:
-                showToast("我的预约");
+                EventBus.getDefault().post(new StartBrotherEvent(MyAppointments.newInstance("我的预约")));
                 break;
             case R.id.contact_service:
                 showToast("联系客服");
                 break;
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
     }
 }

@@ -13,6 +13,9 @@ import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.CommunityGridViewAdapter;
 import com.tallty.smart_life_android.base.BaseLazyMainFragment;
 import com.tallty.smart_life_android.custom.MyGridView;
+import com.tallty.smart_life_android.event.StartBrotherEvent;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -113,7 +116,7 @@ public class CommunityFragment extends BaseLazyMainFragment{
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.community_service:
-                showToast("上门服务");
+                EventBus.getDefault().post(new StartBrotherEvent(ComeService.newInstance("上门服务")));
                 break;
             case R.id.community_government:
                 showToast("政府信息平台(暂未开放)");
