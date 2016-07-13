@@ -1,19 +1,23 @@
 package com.tallty.smart_life_android.fragment.home;
 
 
+import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.db.chart.Tools;
 import com.db.chart.model.LineSet;
 import com.db.chart.view.AxisController;
 import com.db.chart.view.LineChartView;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
+import com.tallty.smart_life_android.utils.DpUtil;
 
 import java.util.ArrayList;
 
@@ -30,6 +34,7 @@ public class TwoMoreData extends BaseBackFragment {
     private TextView tab_month;
     private TextView tab_year;
     private LineChartView chart;
+    private ImageView rank_image;
 
     private String[] label_one = {"8:00","9:00","10:00","11:00","12:00","13:00"};
     private float[] data_one = {123f,160f,90f,100f,140f,100f};
@@ -39,6 +44,7 @@ public class TwoMoreData extends BaseBackFragment {
     private float[] data_three = {10f,15f,9f,13f,14f,8f};
     private String[] label_four = {"2014年","2015年","2016年"};
     private float[] data_four = {60f,100f,50f};
+
 
     public static TwoMoreData newInstance(String title) {
         Bundle args = new Bundle();
@@ -71,6 +77,7 @@ public class TwoMoreData extends BaseBackFragment {
         tab_year = getViewById(R.id.tab_year);
 
         chart = getViewById(R.id.chart_one);
+        rank_image = getViewById(R.id.step_rank_image);
     }
 
     @Override
@@ -84,6 +91,7 @@ public class TwoMoreData extends BaseBackFragment {
     @Override
     protected void afterAnimationLogic() {
         initBackToolbar(toolbar);
+        Glide.with(context).load(R.drawable.step_rank).into(rank_image);
         toolbar_title.setText(mName);
         tab_day.performClick();
     }
