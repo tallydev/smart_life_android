@@ -13,6 +13,8 @@ import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.event.ShowSnackbarEvent;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.fragment.CycleFragment;
+import com.tallty.smart_life_android.fragment.home.FiveCatEye;
+import com.tallty.smart_life_android.fragment.home.FiveRemoteControl;
 import com.tallty.smart_life_android.fragment.home.FourDetail;
 import com.tallty.smart_life_android.fragment.home.OneCheckReport;
 import com.tallty.smart_life_android.fragment.home.OneOrderCheck;
@@ -187,9 +189,9 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
                 // 智慧家居
                 else if (tag == 4) {
                     if (position == 0) {
-                        EventBus.getDefault().post(new StartBrotherEvent(CycleFragment.newInstance(1, "远程控制")));
+                        EventBus.getDefault().post(new StartBrotherEvent(FiveRemoteControl.newInstance("施耐德智能家居")));
                     } else if (position == 1) {
-                        EventBus.getDefault().post(new StartBrotherEvent(CycleFragment.newInstance(1, "电子猫眼")));
+                        EventBus.getDefault().post(new StartBrotherEvent(FiveCatEye.newInstance("电子猫眼")));
                     }
                 }
                 // 社区IT
