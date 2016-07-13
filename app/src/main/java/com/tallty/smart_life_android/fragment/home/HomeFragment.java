@@ -260,7 +260,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
 
     @Subscribe
     public void onShowSnackbar(ShowSnackbarEvent event) {
-        setSnackBar(recyclerView, "暂未开通", 100000, R.layout.snackbar_icon, new View.OnClickListener() {
+        setSnackBar(recyclerView, event.text, 100000, R.layout.snackbar_icon, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 

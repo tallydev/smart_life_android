@@ -165,17 +165,17 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
                 // 市政大厅
                 else if (tag == 2) {
                     if (position == 0) {
-                        EventBus.getDefault().post(new StartBrotherEvent(CycleFragment.newInstance(1, "天气查询")));
+                        EventBus.getDefault().post(new ShowSnackbarEvent("即将上线，敬请期待"));
                     } else if (position == 1) {
-                        EventBus.getDefault().post(new StartBrotherEvent(CycleFragment.newInstance(1, "违章查询")));
+                        EventBus.getDefault().post(new ShowSnackbarEvent("即将上线，敬请期待"));
                     } else if (position == 2) {
-                        EventBus.getDefault().post(new StartBrotherEvent(CycleFragment.newInstance(1, "公积金")));
+                        EventBus.getDefault().post(new ShowSnackbarEvent("即将上线，敬请期待"));
                     } else if (position == 3) {
-                        EventBus.getDefault().post(new StartBrotherEvent(CycleFragment.newInstance(1, "医保卡")));
+                        EventBus.getDefault().post(new ShowSnackbarEvent("即将上线，敬请期待"));
                     } else if (position == 4) {
-                        EventBus.getDefault().post(new StartBrotherEvent(CycleFragment.newInstance(1, "预约办证")));
+                        EventBus.getDefault().post(new ShowSnackbarEvent("即将上线，敬请期待"));
                     } else if (position == 5){
-                        EventBus.getDefault().post(new StartBrotherEvent(CycleFragment.newInstance(1, "更多查询")));
+                        EventBus.getDefault().post(new ShowSnackbarEvent("即将上线，敬请期待"));
                     }
                 }
                 // 社区活动
