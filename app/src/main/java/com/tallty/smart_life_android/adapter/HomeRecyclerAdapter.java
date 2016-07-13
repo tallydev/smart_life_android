@@ -14,6 +14,7 @@ import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.fragment.CycleFragment;
 import com.tallty.smart_life_android.fragment.home.OneCheckReport;
 import com.tallty.smart_life_android.fragment.home.OneOrderCheck;
+import com.tallty.smart_life_android.fragment.home.TwoMoreData;
 import com.tallty.smart_life_android.holder.HomeViewHolder;
 
 import org.greenrobot.eventbus.EventBus;
@@ -158,7 +159,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
                 // 健身达人
                 else if (tag == 1) {
                     if (position == 0) {
-                        EventBus.getDefault().post(new StartBrotherEvent(CycleFragment.newInstance(1, "更多数据")));
+                        EventBus.getDefault().post(new StartBrotherEvent(TwoMoreData.newInstance("健身达人")));
                     }
                 }
                 // 市政大厅

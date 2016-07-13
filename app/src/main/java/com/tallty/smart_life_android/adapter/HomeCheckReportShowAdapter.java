@@ -20,11 +20,11 @@ import java.util.ArrayList;
 public class HomeCheckReportShowAdapter extends RecyclerView.Adapter<HomeCheckReportShowAdapter.CheckReportShowViewHolder> {
     private Context context;
     private ArrayList<String> dates;
-    private ArrayList<String> results;
+    private ArrayList<Float> results;
     private ArrayList<Integer> status;
 
     public HomeCheckReportShowAdapter(Context context, ArrayList<String> dates,
-                                  ArrayList<String> results, ArrayList<Integer> status) {
+                                  ArrayList<Float> results, ArrayList<Integer> status) {
         this.context = context;
         this.dates = dates;
         this.results = results;
@@ -40,7 +40,7 @@ public class HomeCheckReportShowAdapter extends RecyclerView.Adapter<HomeCheckRe
     @Override
     public void onBindViewHolder(CheckReportShowViewHolder holder, int position) {
         holder.date.setText(dates.get(position));
-        holder.result.setText(results.get(position));
+        holder.result.setText(results.get(position).toString());
         if (status.get(position) == -1) {
             holder.status.setText("{fa-caret-down}");
         } else if (status.get(position) == 1) {

@@ -21,6 +21,33 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="@drawable/chart_bg">
+                <com.db.chart.view.LineChartView
+                    xmlns:chart="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/check_line_chart"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="10dp"
+                    chart:chart_shadowDy="1dp"
+                    chart:chart_shadowRadius="1dp"
+                    chart:chart_shadowColor="@android:color/transparent"
+                    chart:chart_axisColor="@color/orange"
+                    chart:chart_fontSize="@dimen/text_tiny"
+                    chart:chart_axisBorderSpacing="1dp" />
+                <TextView
+                    android:id="@+id/chart_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:textSize="@dimen/text_large"
+                    android:textColor="@color/white"
+                    android:text="BMI"/>
+            </FrameLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="36dp"

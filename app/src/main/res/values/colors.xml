@@ -19,6 +19,7 @@
     <color name="alpha_white">#60ffffff</color>
     <color name="black">#000000</color>
     <color name="orange">#FF8000</color>
+    <color name="yellow">#F8EA42</color>
     <color name="gray">#eeeeee</color>
 
     <!--systemBar 背景-->
