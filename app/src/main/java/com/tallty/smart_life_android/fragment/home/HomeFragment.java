@@ -223,8 +223,10 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
         ToastUtil.show("点击了第"+position+"个banner");
     }
 
+
+
     /**
-     * Reselected Tab
+     * 订阅事件
      */
     @Subscribe
     public void onTabSelectedEvent(TabSelectedEvent event) {

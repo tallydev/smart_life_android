@@ -1,6 +1,5 @@
 package com.tallty.smart_life_android.activity;
 
-import android.content.Context;
 import android.os.Bundle;
 
 import com.joanzapata.iconify.Iconify;

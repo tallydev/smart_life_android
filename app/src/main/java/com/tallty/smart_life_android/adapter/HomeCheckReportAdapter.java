@@ -42,6 +42,8 @@ public class HomeCheckReportAdapter extends RecyclerView.Adapter<HomeCheckReport
 
     @Override
     public void onBindViewHolder(CheckReportViewHolder holder, int position) {
+        //  设置标签,方便点击时获取
+        holder.itemView.setTag(projects.get(position));
         holder.project.setText(projects.get(position));
         holder.result.setText(results.get(position));
         holder.range.setText(ranges.get(position));

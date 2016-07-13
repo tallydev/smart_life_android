@@ -9,6 +9,7 @@ import android.view.View;
 /**
  * Created by kang on 16/6/23.
  * 实现RecycleView 的点击事件
+ * RecyclerView实例调用addOnItemTouchListener(new 本类)即可
  */
 public abstract class RecyclerVIewItemTouchListener implements RecyclerView.OnItemTouchListener{
     private GestureDetectorCompat gestureDetectorCompat;

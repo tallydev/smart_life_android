@@ -135,7 +135,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
     }
 
     /**
-     * RecyclerView 点击事件
+     * 点击事件
      */
     private void gridItemClickListener(HomeViewHolder viewHolder) {
         viewHolder.gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
