@@ -13,6 +13,7 @@ import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.event.ShowSnackbarEvent;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.fragment.CycleFragment;
+import com.tallty.smart_life_android.fragment.home.FourDetail;
 import com.tallty.smart_life_android.fragment.home.OneCheckReport;
 import com.tallty.smart_life_android.fragment.home.OneOrderCheck;
 import com.tallty.smart_life_android.fragment.home.TwoMoreData;
@@ -180,7 +181,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
                 // 社区活动
                 else if (tag == 3) {
                     if (position == 0) {
-                        EventBus.getDefault().post(new StartBrotherEvent(CycleFragment.newInstance(1, "活动详情")));
+                        EventBus.getDefault().post(new StartBrotherEvent(FourDetail.newInstance("社区活动")));
                     }
                 }
                 // 智慧家居

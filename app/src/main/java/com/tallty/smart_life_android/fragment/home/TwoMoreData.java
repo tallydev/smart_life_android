@@ -1,7 +1,6 @@
 package com.tallty.smart_life_android.fragment.home;
 
 
-import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,12 +16,9 @@ import com.db.chart.view.AxisController;
 import com.db.chart.view.LineChartView;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
-import com.tallty.smart_life_android.utils.DpUtil;
-
-import java.util.ArrayList;
 
 /**
- * A simple {@link Fragment} subclass.
+ * 首页-健身达人-更多数据
  */
 public class TwoMoreData extends BaseBackFragment {
     private String mName;

@@ -71,7 +71,9 @@ public class OneCheckReportShow extends BaseBackFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
-        mName = args.getString(TOOLBAR_TITLE);
+        if (args != null) {
+            mName = args.getString(TOOLBAR_TITLE);
+        }
     }
 
     @Override
