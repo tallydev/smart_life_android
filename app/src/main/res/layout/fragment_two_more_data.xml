@@ -18,43 +18,110 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="1px"
             android:orientation="vertical">
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="28dp"
-                android:orientation="horizontal">
+                android:layout_height="32dp"
+                android:orientation="horizontal"
+                android:background="@color/orange">
                 <TextView
+                    android:id="@+id/tab_day"
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:background="@color/orange"
-                    android:textColor="@color/white"
+                    android:background="@drawable/chart_tab_bg"
+                    android:textColor="@drawable/chart_tab_text"
                     android:gravity="center"
                     android:text="日"/>
                 <TextView
+                    android:id="@+id/tab_week"
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:background="@color/orange"
-                    android:textColor="@color/white"
+                    android:background="@drawable/chart_tab_bg"
+                    android:textColor="@drawable/chart_tab_text"
                     android:gravity="center"
                     android:text="周"/>
                 <TextView
+                    android:id="@+id/tab_month"
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:background="@color/orange"
-                    android:textColor="@color/white"
+                    android:background="@drawable/chart_tab_bg"
+                    android:textColor="@drawable/chart_tab_text"
                     android:gravity="center"
                     android:text="月"/>
                 <TextView
+                    android:id="@+id/tab_year"
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:background="@color/orange"
-                    android:textColor="@color/white"
+                    android:background="@drawable/chart_tab_bg"
+                    android:textColor="@drawable/chart_tab_text"
                     android:gravity="center"
                     android:text="年"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="220dp"
+                android:background="@drawable/chart_bg"
+                android:orientation="vertical">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp">
+                    <TextView
+                        android:id="@+id/step_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:text="步数"/>
+                    <TextView
+                        android:id="@+id/step_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:textColor="@color/white"
+                        android:text="3467步"/>
+                    <TextView
+                        android:id="@+id/ave_step_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/step_text"
+                        android:textColor="@color/white"
+                        android:text="平均步数: 6503"/>
+                    <TextView
+                        android:id="@+id/step_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_below="@id/step_number"
+                        android:textColor="@color/white"
+                        android:text="今天: 15:20"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:layout_alignParentBottom="true"
+                        android:background="@color/alpha_white"/>
+                </RelativeLayout>
+                <com.db.chart.view.LineChartView
+                    xmlns:chart="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/chart_one"
+                    android:layout_width="match_parent"
+                    android:layout_height="160dp"
+                    android:padding="10dp"
+                    chart:chart_shadowDy="1dp"
+                    chart:chart_shadowRadius="1dp"
+                    chart:chart_shadowColor="@android:color/transparent"
+                    chart:chart_axisColor="@color/orange"
+                    chart:chart_fontSize="@dimen/text_tiny"
+                    chart:chart_axisBorderSpacing="1dp" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

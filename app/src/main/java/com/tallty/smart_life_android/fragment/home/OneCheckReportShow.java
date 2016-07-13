@@ -140,6 +140,5 @@ public class OneCheckReportShow extends BaseBackFragment {
 
         chart.addData(dataSet);
         chart.show();
-
     }
 }
