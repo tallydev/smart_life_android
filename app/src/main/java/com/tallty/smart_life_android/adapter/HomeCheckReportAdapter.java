@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 /**
  * Created by kang on 16/7/12.
- * 健康报告列表适配器
+ * 首页-智慧健康-健康报告 适配器
  */
 public class HomeCheckReportAdapter extends RecyclerView.Adapter<HomeCheckReportAdapter.CheckReportViewHolder> {
     private Context context;

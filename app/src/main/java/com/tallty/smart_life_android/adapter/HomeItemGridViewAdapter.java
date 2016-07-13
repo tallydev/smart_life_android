@@ -15,7 +15,7 @@ import com.tallty.smart_life_android.holder.BaseViewHolder;
 
 /**
  * Created by kang on 16/6/23.
- * 首页item中的GridView适配器
+ * 首页itemView中的GridView适配器
  */
 public class HomeItemGridViewAdapter extends BaseAdapter {
     private Context context;

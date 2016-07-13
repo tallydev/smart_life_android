@@ -16,7 +16,7 @@ import java.util.List;
 
 /**
  * Created by kang on 16/6/29.
- * 社区网上缴费模块
+ * 社区-网上缴费
  */
 public class CommunityGridViewAdapter extends BaseAdapter {
     private Context context;

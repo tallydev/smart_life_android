@@ -53,7 +53,7 @@
             </LinearLayout>
 
             <com.tallty.smart_life_android.custom.MyRecyclerView
-                android:id="@+id/check_report"
+                android:id="@+id/check_report_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:scrollbars="none"

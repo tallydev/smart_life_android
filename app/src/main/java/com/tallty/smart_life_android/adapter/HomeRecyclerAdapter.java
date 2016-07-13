@@ -13,7 +13,7 @@ import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.fragment.CycleFragment;
 import com.tallty.smart_life_android.fragment.home.OneCheckReport;
-import com.tallty.smart_life_android.fragment.home.OneOrderCheckFragment;
+import com.tallty.smart_life_android.fragment.home.OneOrderCheck;
 import com.tallty.smart_life_android.holder.HomeViewHolder;
 
 import org.greenrobot.eventbus.EventBus;
@@ -146,7 +146,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
                 // 智慧健康
                 if (tag == 0) {
                     if (position == 0) {
-                        EventBus.getDefault().post(new StartBrotherEvent(OneOrderCheckFragment.newInstance("预约体检")));
+                        EventBus.getDefault().post(new StartBrotherEvent(OneOrderCheck.newInstance("预约体检")));
                     } else if (position == 1) {
                         EventBus.getDefault().post(new StartBrotherEvent(OneCheckReport.newInstance("健康报告")));
                     } else if (position == 2) {

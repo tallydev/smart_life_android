@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:id="@+id/item_report_show_layout"
+    android:background="@color/white"
+    android:layout_height="36dp">
+    <TextView
+        android:id="@+id/report_show_date"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:textColor="@color/global_text"
+        android:gravity="center"
+        android:textSize="@dimen/text_tiny"
+        android:text="2016-05-05"/>
+    <RelativeLayout
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/report_show_result"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textColor="@color/global_text"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="5dp"
+            android:textSize="@dimen/text_tiny"
+            android:gravity="center"
+            android:layout_centerInParent="true"
+            android:text="26.00"/>
+        <com.joanzapata.iconify.widget.IconTextView
+            android:id="@+id/report_show_status"
+            android:layout_width="32dp"
+            android:layout_height="match_parent"
+            android:textColor="@color/orange"
+            android:gravity="center_vertical|left"
+            android:layout_alignParentRight="true"/>
+    </RelativeLayout>
+</LinearLayout>

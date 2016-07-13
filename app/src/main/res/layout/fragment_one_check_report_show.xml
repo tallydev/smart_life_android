@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/check_report_show_layout"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:background="@color/app_bg"
+    android:fitsSystemWindows="false">
+
+    <include layout="@layout/toolbar"/>
+
+    <!--主体部分-->
+
+    <ScrollView
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:background="@color/orange"
+                    android:textColor="@color/white"
+                    android:text="@string/report_show_one"/>
+                <TextView
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:layout_marginLeft="1px"
+                    android:background="@color/orange"
+                    android:textColor="@color/white"
+                    android:text="@string/report_show_two"/>
+            </LinearLayout>
+
+            <com.tallty.smart_life_android.custom.MyRecyclerView
+                android:id="@+id/check_report_show_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none"
+                android:clickable="true"/>
+        </LinearLayout>
+    </ScrollView>
+
+
+</android.support.design.widget.CoordinatorLayout>

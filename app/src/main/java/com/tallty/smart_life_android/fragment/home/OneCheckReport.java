@@ -13,7 +13,6 @@ import com.tallty.smart_life_android.adapter.HomeCheckReportAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.custom.MyRecyclerView;
 import com.tallty.smart_life_android.custom.RecyclerVIewItemTouchListener;
-import com.tallty.smart_life_android.fragment.CycleFragment;
 
 import java.util.ArrayList;
 
@@ -78,7 +77,7 @@ public class OneCheckReport extends BaseBackFragment {
     protected void initView() {
         toolbar = getViewById(R.id.toolbar);
         toolbar_title = getViewById(R.id.toolbar_title);
-        myRecyclerView = getViewById(R.id.check_report);
+        myRecyclerView = getViewById(R.id.check_report_list);
         layoutManager = new LinearLayoutManager(context);
     }
 
@@ -98,7 +97,7 @@ public class OneCheckReport extends BaseBackFragment {
         myRecyclerView.addOnItemTouchListener(new RecyclerVIewItemTouchListener(myRecyclerView) {
             @Override
             public void onItemClick(RecyclerView.ViewHolder vh) {
-                start(CycleFragment.newInstance(1, (String) vh.itemView.getTag()));
+                start(OneCheckReportShow.newInstance(vh.itemView.getTag().toString()));
             }
         });
     }
