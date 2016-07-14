@@ -42,7 +42,7 @@ public class CommunityIt extends BaseBackFragment {
 
     @Override
     public int getFragmentLayout() {
-        return R.layout.fragment_six_it_class;
+        return R.layout.fragment_community_it;
     }
 
     @Override
@@ -86,14 +86,16 @@ public class CommunityIt extends BaseBackFragment {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.do_event:
-                setSnackBar(do_event,
-                        "敬请期待",
-                        100000, R.layout.snackbar_icon, new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
+                if (!mName.equals("在线冲印")) {
+                    setSnackBar(do_event,
+                            "预约后由<慧生活>服务专员和您电话联系,请保持手机畅通.",
+                            100000, R.layout.snackbar_icon, new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
 
-                            }
-                        });
+                                }
+                            });
+                }
                 break;
         }
     }

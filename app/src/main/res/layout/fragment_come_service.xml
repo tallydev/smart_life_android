@@ -1,24 +1,49 @@
-<android.support.design.widget.CoordinatorLayout
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:fitsSystemWindows="false"
-    android:background="@color/app_bg">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/app_bg"
+    android:orientation="vertical"
+    android:fitsSystemWindows="false">
 
     <include layout="@layout/toolbar"/>
 
-    <!--主体部分-->
-    <ScrollView
+    <!--主体内容-->
+    <RelativeLayout
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <LinearLayout
+            android:id="@+id/cart_buy_layout"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/come_service_appointment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/orange"
+                android:gravity="center"
+                android:textSize="@dimen/text_large"
+                android:text="我要预约"
+                android:textColor="@color/white"/>
+        </LinearLayout>
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-        </LinearLayout>
-    </ScrollView>
-
-</android.support.design.widget.CoordinatorLayout>
+            android:layout_alignParentTop="true"
+            android:layout_above="@id/cart_buy_layout"
+            android:paddingBottom="4dp"
+            android:fillViewport="false">
+            <ImageView
+                android:id="@+id/come_service_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"/>
+        </ScrollView>
+    </RelativeLayout>
+</LinearLayout>

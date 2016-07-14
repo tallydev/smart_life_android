@@ -43,7 +43,8 @@ public abstract class BaseLazyMainFragment extends BaseFragment implements View.
         // 初始化ToolBar
         Toolbar toolbar = getViewById(R.id.toolbar);
         TextView toolbar_title = getViewById(R.id.toolbar_title);
-        initToolbarMenu(toolbar);
+//        调试使用
+//        initToolbarMenu(toolbar);
         initToolBar(toolbar, toolbar_title);
         // 引用组件
         initView();

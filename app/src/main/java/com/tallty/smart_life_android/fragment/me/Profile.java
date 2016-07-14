@@ -8,8 +8,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 
@@ -21,6 +23,7 @@ public class Profile extends BaseBackFragment {
 
     private Toolbar toolbar;
     private TextView toolbar_title;
+    private ImageView profile_image;
 
     public static Profile newInstance(String title) {
         Bundle args = new Bundle();
@@ -48,17 +51,18 @@ public class Profile extends BaseBackFragment {
     protected void initView() {
         toolbar = getViewById(R.id.toolbar);
         toolbar_title = getViewById(R.id.toolbar_title);
+        profile_image = getViewById(R.id.profile_image);
     }
 
     @Override
     protected void setListener() {
-
     }
 
     @Override
     protected void afterAnimationLogic() {
         initBackToolbar(toolbar);
         toolbar_title.setText(mName);
+        Glide.with(context).load(R.drawable.profile).into(profile_image);
     }
 
     @Override

@@ -30,18 +30,18 @@ public class LimitSail extends BaseBackFragment {
 
     private ArrayList<String> names = new ArrayList<String>() {
         {
-            add("蜂蜜");add("蜂蜜");
+            add("西双版纳生态无眼凤梨新鲜直达");add("蜂蜜");
             add("蜂蜜");add("蜂蜜");
         }
     };
     private ArrayList<String> prices = new ArrayList<String>() {
         {
-            add(" 今日价: 40.00");add(" 今日价: 40.00");add(" 今日价: 40.00");add(" 今日价: 40.00");
+            add(" 今日价: 66.00");add(" 今日价: 40.00");add(" 今日价: 40.00");add(" 今日价: 40.00");
         }
     };
     private ArrayList<Integer> photos = new ArrayList<Integer>() {
         {
-            add(R.drawable.on_sail);add(R.drawable.on_sail);add(R.drawable.on_sail);
+            add(R.drawable.limi_sail_one);add(R.drawable.on_sail);add(R.drawable.on_sail);
             add(R.drawable.on_sail);
         }
     };

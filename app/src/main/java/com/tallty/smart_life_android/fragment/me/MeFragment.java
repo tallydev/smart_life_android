@@ -1,5 +1,7 @@
 package com.tallty.smart_life_android.fragment.me;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
@@ -14,7 +16,6 @@ import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseLazyMainFragment;
 import com.tallty.smart_life_android.custom.GlideCircleTransform;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
-import com.tallty.smart_life_android.fragment.home.HealthyOrderCheck;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -118,7 +119,7 @@ public class MeFragment extends BaseLazyMainFragment {
     }
 
     private void setView() {
-        Glide.with(context).load(R.drawable.me_order).transform(new GlideCircleTransform(context)).into(photo);
+        Glide.with(context).load(R.drawable.user_photo).transform(new GlideCircleTransform(context)).into(photo);
         name.setText("Loda");
 
         order_icon.setImageResource(R.drawable.me_order);
@@ -162,7 +163,10 @@ public class MeFragment extends BaseLazyMainFragment {
                 EventBus.getDefault().post(new StartBrotherEvent(MyAppointments.newInstance("我的预约")));
                 break;
             case R.id.contact_service:
-                showToast("联系客服");
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_CALL);
+                intent.setData(Uri.parse("tel:"+"087164589208"));
+                startActivity(intent);
                 break;
         }
     }

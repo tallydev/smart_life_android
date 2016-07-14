@@ -11,6 +11,10 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
+import com.tallty.smart_life_android.custom.LargeImageView;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * 首页-智慧家居-电子猫眼
@@ -20,7 +24,9 @@ public class HouseCatEye extends BaseBackFragment {
 
     private Toolbar toolbar;
     private TextView toolbar_title;
-    private ImageView detail_image;
+    private ImageView detail_image1;
+    private ImageView detail_image2;
+    private ImageView detail_image3;
 
     public static HouseCatEye newInstance(String title) {
         Bundle args = new Bundle();
@@ -48,7 +54,16 @@ public class HouseCatEye extends BaseBackFragment {
     protected void initView() {
         toolbar = getViewById(R.id.toolbar);
         toolbar_title = getViewById(R.id.toolbar_title);
-        detail_image = getViewById(R.id.cat_eye_image);
+        detail_image1 = getViewById(R.id.cat_eye_image1);
+        detail_image2 = getViewById(R.id.cat_eye_image2);
+        detail_image3 = getViewById(R.id.cat_eye_image3);
+
+//        try{
+//            InputStream inputStream = context.getAssets().open("cat_eye.jpg");
+//            detail_image.setInputStream(inputStream);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     @Override
@@ -60,7 +75,9 @@ public class HouseCatEye extends BaseBackFragment {
     protected void afterAnimationLogic() {
         initBackToolbar(toolbar);
         toolbar_title.setText(mName);
-        Glide.with(context).load(R.drawable.cat_eye).into(detail_image);
+        Glide.with(context).load(R.drawable.cat_eye_01).into(detail_image1);
+        Glide.with(context).load(R.drawable.cat_eye_02).into(detail_image2);
+        Glide.with(context).load(R.drawable.cat_eye_03).into(detail_image3);
     }
 
     @Override

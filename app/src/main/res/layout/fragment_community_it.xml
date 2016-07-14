@@ -26,7 +26,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_above="@id/do_event">
+            android:layout_above="@id/do_event"
+            android:padding="4dp">
             <ImageView
                 android:id="@+id/it_image"
                 android:layout_width="match_parent"

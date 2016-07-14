@@ -64,7 +64,7 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
             }
         });
         // 调试Fragment时使用,添加fragment栈层级菜单
-        initToolbarMenu(toolbar);
+//        initToolbarMenu(toolbar);
     }
 
     /**
@@ -134,7 +134,7 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
 
         TextView textView = (TextView) snackbar.getView().findViewById(R.id.snackbar_text);
         textView.setMaxLines(3);
-        textView.setTextSize(12);
+        textView.setTextSize(14);
         textView.setLineSpacing(18, 1);
 
         if (layoutId != 0) {

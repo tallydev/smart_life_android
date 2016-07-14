@@ -12,13 +12,15 @@
     <ScrollView
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <LinearLayout
+        android:layout_height="wrap_content"
+        android:padding="4dp">
+        <ImageView
+            android:id="@+id/profile_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-        </LinearLayout>
+            android:background="@color/white"
+            android:scaleType="fitXY"
+            android:adjustViewBounds="true"/>
     </ScrollView>
 
 </android.support.design.widget.CoordinatorLayout>
