@@ -20,7 +20,7 @@
     <color name="black">#000000</color>
     <color name="orange">#FD8023</color>
     <color name="yellow">#F8EA42</color>
-    <color name="gray">#eeeeee</color>
+    <color name="gray">#dddddd</color>
 
     <!--systemBar 背景-->
     <color name="systemBarColor">#ffffff</color>

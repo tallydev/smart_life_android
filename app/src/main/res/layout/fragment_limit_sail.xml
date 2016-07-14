@@ -9,16 +9,18 @@
     <include layout="@layout/toolbar"/>
 
     <!--主体部分-->
-    <ScrollView
+    <LinearLayout
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <LinearLayout
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/limit_sail_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-        </LinearLayout>
-    </ScrollView>
+            android:scrollbars="vertical"/>
+    </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>
