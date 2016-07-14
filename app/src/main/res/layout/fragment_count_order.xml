@@ -76,6 +76,7 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
             android:layout_above="@id/order_layout">
             <ImageView
                 android:id="@+id/detail_image"

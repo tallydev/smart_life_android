@@ -9,16 +9,81 @@
     <include layout="@layout/toolbar"/>
 
     <!--主体部分-->
-    <ScrollView
+    <RelativeLayout
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <LinearLayout
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:id="@+id/product_detail_layout"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal"
+            android:background="@color/white"
+            android:layout_alignParentBottom="true">
+            <LinearLayout
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:orientation="horizontal"
+                android:layout_height="match_parent">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/global_text"
+                    android:textSize="@dimen/text_large"
+                    android:text="数量: "/>
+                <TextView
+                    android:id="@+id/add"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textColor="@color/global_text"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="@dimen/text_large"
+                    android:text="＋"/>
+                <TextView
+                    android:id="@+id/number"
+                    android:layout_width="40dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textColor="@color/orange"
+                    android:textSize="@dimen/text_xlarge"
+                    android:textStyle="bold"
+                    android:text="1"/>
+                <TextView
+                    android:id="@+id/reduce"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textColor="@color/global_text"
+                    android:textSize="@dimen/text_large"
+                    android:text="—"/>
+            </LinearLayout>
+            <TextView
+                android:id="@+id/add_to_cart"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@color/orange"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:text="加入购物车"/>
+        </LinearLayout>
+        <ScrollView
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-        </LinearLayout>
-    </ScrollView>
+            android:layout_alignParentTop="true"
+            android:layout_above="@id/product_detail_layout">
+            <ImageView
+                android:id="@+id/product_detail_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"/>
+        </ScrollView>
+    </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

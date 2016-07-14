@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 
@@ -15,9 +17,15 @@ import com.tallty.smart_life_android.base.BaseBackFragment;
  */
 public class LimitSailShow extends BaseBackFragment {
     private String mName;
+    private int count = 1;
 
     private Toolbar toolbar;
     private TextView toolbar_title;
+    private TextView add;
+    private TextView reduce;
+    private TextView number;
+    private TextView add_to_cart;
+    private ImageView product_detail;
 
     public static LimitSailShow newInstance(String title) {
         Bundle args = new Bundle();
@@ -45,21 +53,51 @@ public class LimitSailShow extends BaseBackFragment {
     protected void initView() {
         toolbar = getViewById(R.id.toolbar);
         toolbar_title = getViewById(R.id.toolbar_title);
+        add = getViewById(R.id.add);
+        reduce = getViewById(R.id.reduce);
+        number = getViewById(R.id.number);
+        add_to_cart = getViewById(R.id.add_to_cart);
+        product_detail = getViewById(R.id.product_detail_image);
     }
 
     @Override
     protected void setListener() {
-
+        add.setOnClickListener(this);
+        reduce.setOnClickListener(this);
+        add_to_cart.setOnClickListener(this);
     }
 
     @Override
     protected void afterAnimationLogic() {
         initBackToolbar(toolbar);
         toolbar_title.setText(mName);
+        Glide.with(context).load(R.drawable.product_detail).into(product_detail);
     }
 
     @Override
     public void onClick(View v) {
-
+        switch (v.getId()){
+            case R.id.add:
+                number.setText(String.valueOf(++count));
+                break;
+            case R.id.reduce:
+                if (count > 1){
+                    number.setText(String.valueOf(--count));
+                }else{
+                    number.setText(String.valueOf(count));
+                }
+                break;
+            case R.id.add_to_cart:
+                setSnackBar(add_to_cart,
+                        "添加成功",
+                        100000, R.layout.snackbar_icon, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                add_to_cart.setText("添加成功");
+                                add_to_cart.setClickable(false);
+                            }
+                        });
+                break;
+        }
     }
 }

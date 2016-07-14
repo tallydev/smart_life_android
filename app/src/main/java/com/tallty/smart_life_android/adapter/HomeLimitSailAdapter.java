@@ -11,6 +11,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.tallty.smart_life_android.R;
+import com.tallty.smart_life_android.event.StartBrotherEvent;
+import com.tallty.smart_life_android.fragment.home.LimitSailShow;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 
@@ -46,6 +50,12 @@ public class HomeLimitSailAdapter extends RecyclerView.Adapter<HomeLimitSailAdap
         if (position == getItemCount()-1) {
             holder.line.setVisibility(View.GONE);
         }
+        holder.detail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EventBus.getDefault().post(new StartBrotherEvent(LimitSailShow.newInstance("商品详情")));
+            }
+        });
     }
 
     @Override

@@ -36,7 +36,7 @@ public class LimitSail extends BaseBackFragment {
     };
     private ArrayList<String> prices = new ArrayList<String>() {
         {
-            add("今日价: 40.00");add("今日价: 40.00");add("今日价: 40.00");add("今日价: 40.00");
+            add(" 今日价: 40.00");add(" 今日价: 40.00");add(" 今日价: 40.00");add(" 今日价: 40.00");
         }
     };
     private ArrayList<Integer> photos = new ArrayList<Integer>() {
