@@ -22,13 +22,13 @@
             android:layout_alignParentBottom="true"
             android:orientation="horizontal">
             <TextView
-                android:id="@+id/pay"
+                android:id="@+id/submit_order"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/orange"
                 android:gravity="center"
                 android:textSize="@dimen/text_large"
-                android:text="结 算"
+                android:text="提交订单"
                 android:textColor="@color/white"/>
         </LinearLayout>
 
@@ -43,7 +43,45 @@
                 android:layout_height="wrap_content"
                 android:padding="4dp"
                 android:orientation="vertical">
-
+                <RelativeLayout
+                    android:id="@+id/link_to_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/item_bg"
+                    android:layout_marginBottom="4dp"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp"
+                    android:paddingLeft="24dp"
+                    android:paddingRight="16dp">
+                    <ImageView
+                        android:id="@+id/address_icon"
+                        android:layout_width="16dp"
+                        android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
+                        android:layout_marginRight="10dp"
+                        android:scaleType="fitCenter"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/address_icon"/>
+                    <com.joanzapata.iconify.widget.IconTextView
+                        android:id="@+id/address_indicator"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:textColor="@color/angle_right_color"
+                        android:text="{fa-angle-right}"
+                        android:textSize="24sp"/>
+                    <TextView
+                        android:id="@+id/address"
+                        android:layout_width="160dp"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/global_text"
+                        android:layout_toRightOf="@id/address_icon"
+                        android:layout_toLeftOf="@id/address_indicator"
+                        android:textSize="@dimen/text_small"
+                        android:text="XX区XX街道XX (小区名称) XX栋XX单元XXX室"/>
+                </RelativeLayout>
                 <ImageView
                     android:id="@+id/cart_item_image"
                     android:layout_width="match_parent"

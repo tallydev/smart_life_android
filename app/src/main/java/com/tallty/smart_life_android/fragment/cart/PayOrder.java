@@ -14,18 +14,18 @@ import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 
 /**
- * 购物车-确认订单-收货地址
+ * A simple {@link Fragment} subclass.
  */
-public class MyAddress extends BaseBackFragment {
+public class PayOrder extends BaseBackFragment {
     private String mName;
 
     private Toolbar toolbar;
     private TextView toolbar_title;
 
-    public static MyAddress newInstance(String title) {
+    public static PayOrder newInstance(String title) {
         Bundle args = new Bundle();
         args.putString(TOOLBAR_TITLE, title);
-        MyAddress fragment = new MyAddress();
+        PayOrder fragment = new PayOrder();
         fragment.setArguments(args);
         return fragment;
     }
@@ -41,7 +41,7 @@ public class MyAddress extends BaseBackFragment {
 
     @Override
     public int getFragmentLayout() {
-        return R.layout.fragment_my_address;
+        return R.layout.fragment_pay_order;
     }
 
     @Override
