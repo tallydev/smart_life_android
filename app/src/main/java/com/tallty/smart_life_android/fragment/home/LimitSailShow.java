@@ -4,6 +4,7 @@ package com.tallty.smart_life_android.fragment.home;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -71,6 +72,7 @@ public class LimitSailShow extends BaseBackFragment {
     protected void afterAnimationLogic() {
         initBackToolbar(toolbar);
         toolbar_title.setText(mName);
+        setToolbarMenu(toolbar);
         Glide.with(context).load(R.drawable.product_detail).into(product_detail);
     }
 
@@ -99,5 +101,23 @@ public class LimitSailShow extends BaseBackFragment {
                         });
                 break;
         }
+    }
+
+    /**
+     * 设置toolbar的菜单按钮
+     */
+    private void setToolbarMenu(Toolbar toolbar) {
+        toolbar.inflateMenu(R.menu.cart);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.toolbar_cart:
+                        // 进入购物车
+
+                }
+                return true;
+            }
+        });
     }
 }
