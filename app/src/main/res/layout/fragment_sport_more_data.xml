@@ -126,55 +126,11 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="160dp"
+                android:layout_height="80dp"
                 android:background="@color/orange"
                 android:padding="15dp"
                 android:layout_marginTop="4dp"
                 android:layout_marginBottom="4dp">
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_centerInParent="true"
-                    android:background="@color/white"
-                    android:id="@+id/view"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="28dp"
-                    android:gravity="center_vertical"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_small"
-                    android:text="本周运动时间"
-                    android:id="@+id/sport_time_text"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="28dp"
-                    android:gravity="center_vertical"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_small"
-                    android:text="本周能量消耗"
-                    android:id="@+id/energy_spent_text"
-                    android:layout_below="@+id/view"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="28dp"
-                    android:gravity="center_vertical"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_small"
-                    android:text="走路22.6小时"
-                    android:id="@+id/textView2"
-                    android:layout_below="@+id/sport_time_text"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"/>
 
                 <TextView
                     android:layout_width="90dp"
@@ -184,9 +140,9 @@
                     android:textSize="@dimen/text_small"
                     android:text="运动步数"
                     android:id="@+id/textView3"
-                    android:layout_above="@+id/textView2"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"/>
+                    android:layout_above="@+id/rank_percent"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -201,17 +157,6 @@
                     android:layout_alignLeft="@+id/textView3"
                     android:layout_alignStart="@+id/textView3"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="28dp"
-                    android:gravity="center_vertical"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_small"
-                    android:text="走路83千卡"
-                    android:id="@+id/energy_spent"
-                    android:layout_below="@+id/energy_spent_text"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -221,9 +166,9 @@
                     android:textSize="@dimen/text_small"
                     android:text="高于社区用户"
                     android:id="@+id/textView6"
-                    android:layout_alignTop="@+id/energy_spent_text"
-                    android:layout_alignLeft="@+id/textView4"
-                    android:layout_alignStart="@+id/textView4"/>
+                    android:layout_alignParentTop="true"
+                    android:layout_alignLeft="@+id/rank_percent"
+                    android:layout_alignStart="@+id/rank_percent"/>
 
                 <TextView
                     android:layout_width="90dp"
@@ -234,7 +179,7 @@
                     android:text="90%"
                     android:textStyle="bold"
                     android:id="@+id/rank_percent"
-                    android:layout_alignTop="@+id/energy_spent"
+                    android:layout_alignParentBottom="true"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true"/>
             </RelativeLayout>
@@ -248,7 +193,8 @@
                 android:id="@+id/step_rank_image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:adjustViewBounds="true"/>
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"/>
 
         </LinearLayout>
     </ScrollView>

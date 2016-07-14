@@ -34,7 +34,7 @@ public class SportMoreData extends BaseBackFragment {
     private String[] label_one = {"8:00","9:00","10:00","11:00","12:00","13:00"};
     private float[] data_one = {123f,160f,90f,100f,140f,100f};
     private String[] label_two = {"周一","周二","周三","周四","周五","周六"};
-    private float[] data_two = {3232f,6409f,4560f,7809f,5600f,9045f};
+    private float[] data_two = {32f,64f,45f,78f,56f,90f};
     private String[] label_three = {"一月","二月","三月","四月","五月","六月"};
     private float[] data_three = {10f,15f,9f,13f,14f,8f};
     private String[] label_four = {"2014年","2015年","2016年"};
@@ -103,7 +103,7 @@ public class SportMoreData extends BaseBackFragment {
             case R.id.tab_week:
                 chartTabReset();
                 tab_week.setSelected(true);
-                initChart(chart, label_two, data_two, 0, 12000);
+                initChart(chart, label_two, data_two, 0, 120);
                 break;
             case R.id.tab_month:
                 chartTabReset();

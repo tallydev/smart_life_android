@@ -6,8 +6,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.HomeCheckReportAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
@@ -28,6 +30,7 @@ public class HealthyCheckReport extends BaseBackFragment {
     private TextView toolbar_title;
     private MyRecyclerView myRecyclerView;
     private RecyclerView.LayoutManager layoutManager;
+    private ImageView suggest_image;
     // Data
     private ArrayList<String> projects = new ArrayList<String>(){
         {
@@ -79,6 +82,7 @@ public class HealthyCheckReport extends BaseBackFragment {
         toolbar_title = getViewById(R.id.toolbar_title);
         myRecyclerView = getViewById(R.id.check_report_list);
         layoutManager = new LinearLayoutManager(context);
+        suggest_image = getViewById(R.id.suggest_image);
     }
 
     @Override
@@ -100,6 +104,8 @@ public class HealthyCheckReport extends BaseBackFragment {
                 start(HealthyCheckReportShow.newInstance(vh.itemView.getTag().toString()));
             }
         });
+
+        Glide.with(context).load(R.drawable.check_report_suggest).into(suggest_image);
     }
 
     @Override

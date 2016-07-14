@@ -55,7 +55,7 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
      * 设置toolbar的返回按钮
      */
     protected void initBackToolbar(Toolbar toolbar) {
-        toolbar.setNavigationIcon(R.mipmap.ic_navbar_back);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_28dp);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

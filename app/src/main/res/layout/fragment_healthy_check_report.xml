@@ -83,10 +83,11 @@
                     android:layout_marginBottom="10dp"/>
 
                 <ImageView
+                    android:id="@+id/suggest_image"
                     android:layout_width="match_parent"
-                    android:layout_height="300dp"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/check_report_suggest"/>
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitXY"/>
             </LinearLayout>
 
         </LinearLayout>
