@@ -1,6 +1,7 @@
 package com.tallty.smart_life_android.fragment.me;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,6 +17,8 @@ import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseLazyMainFragment;
 import com.tallty.smart_life_android.custom.GlideCircleTransform;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
+import com.tallty.smart_life_android.fragment.home.HealthyCheckReport;
+import com.tallty.smart_life_android.fragment.home.SportMoreData;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -154,19 +157,31 @@ public class MeFragment extends BaseLazyMainFragment {
                 showToast("待配送");
                 break;
             case R.id.me_healthy:
-                showToast("我的健康");
+                EventBus.getDefault().post(new StartBrotherEvent(HealthyCheckReport.newInstance("健康报告")));
                 break;
             case R.id.me_sport:
-                showToast("我的运动");
+                EventBus.getDefault().post(new StartBrotherEvent(SportMoreData.newInstance("健身达人")));
                 break;
             case R.id.me_appointment:
                 EventBus.getDefault().post(new StartBrotherEvent(MyAppointments.newInstance("我的预约")));
                 break;
             case R.id.contact_service:
-                Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_CALL);
-                intent.setData(Uri.parse("tel:"+"087164589208"));
-                startActivity(intent);
+                PackageManager pm = context.getPackageManager();
+                boolean permission = (PackageManager.PERMISSION_GRANTED == pm.checkPermission("android.permission.CALL_PHONE","com.tallty.smart_life_android"));
+                if (permission) {
+                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+"087164589208"));
+                    startActivity(intent);
+                } else {
+                    setSnackBar(service,
+                            "应用无拨打电话权限,请设置应用权限后尝试",
+                            100000, R.layout.snackbar_icon, new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                }
+                            });
+                }
+
                 break;
         }
     }

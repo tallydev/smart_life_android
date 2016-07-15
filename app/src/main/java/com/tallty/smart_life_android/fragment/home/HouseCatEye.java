@@ -24,6 +24,7 @@ public class HouseCatEye extends BaseBackFragment {
 
     private Toolbar toolbar;
     private TextView toolbar_title;
+    private TextView experience;
     private ImageView detail_image1;
     private ImageView detail_image2;
     private ImageView detail_image3;
@@ -54,6 +55,7 @@ public class HouseCatEye extends BaseBackFragment {
     protected void initView() {
         toolbar = getViewById(R.id.toolbar);
         toolbar_title = getViewById(R.id.toolbar_title);
+        experience = getViewById(R.id.appointment_experience);
         detail_image1 = getViewById(R.id.cat_eye_image1);
         detail_image2 = getViewById(R.id.cat_eye_image2);
         detail_image3 = getViewById(R.id.cat_eye_image3);
@@ -68,7 +70,7 @@ public class HouseCatEye extends BaseBackFragment {
 
     @Override
     protected void setListener() {
-
+        experience.setOnClickListener(this);
     }
 
     @Override
@@ -82,6 +84,18 @@ public class HouseCatEye extends BaseBackFragment {
 
     @Override
     public void onClick(View v) {
-
+        switch (v.getId()){
+            case R.id.appointment_experience:
+                setSnackBar(experience,
+                        "预约后由<慧生活>服务专员和您电话联系,请保持手机畅通.",
+                        100000, R.layout.snackbar_icon, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                experience.setText("申请成功");
+                                experience.setClickable(false);
+                            }
+                        });
+                break;
+        }
     }
 }

@@ -23,6 +23,7 @@ public class HouseRemoteControl extends BaseBackFragment {
 
     private Toolbar toolbar;
     private TextView toolbar_title;
+    private TextView experience;
     private ImageView detail_image1;
     private ImageView detail_image2;
 
@@ -52,6 +53,7 @@ public class HouseRemoteControl extends BaseBackFragment {
     protected void initView() {
         toolbar = getViewById(R.id.toolbar);
         toolbar_title = getViewById(R.id.toolbar_title);
+        experience = getViewById(R.id.appointment_experience);
         detail_image1 = getViewById(R.id.remote_control_image1);
         detail_image2 = getViewById(R.id.remote_control_image2);
 
@@ -65,19 +67,32 @@ public class HouseRemoteControl extends BaseBackFragment {
 
     @Override
     protected void setListener() {
-
+        experience.setOnClickListener(this);
     }
 
     @Override
     protected void afterAnimationLogic() {
         initBackToolbar(toolbar);
         toolbar_title.setText(mName);
+
         Glide.with(context).load(R.drawable.remote_control_01).into(detail_image1);
         Glide.with(context).load(R.drawable.remote_control_02).into(detail_image2);
     }
 
     @Override
     public void onClick(View v) {
-
+        switch (v.getId()){
+            case R.id.appointment_experience:
+                setSnackBar(experience,
+                        "预约后由<慧生活>服务专员和您电话联系,请保持手机畅通.",
+                        100000, R.layout.snackbar_icon, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                experience.setText("预约成功");
+                                experience.setClickable(false);
+                            }
+                        });
+                break;
+        }
     }
 }

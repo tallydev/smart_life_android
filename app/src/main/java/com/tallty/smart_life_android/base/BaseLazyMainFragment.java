@@ -130,7 +130,7 @@ public abstract class BaseLazyMainFragment extends BaseFragment implements View.
         }
 
         TextView textView = (TextView) snackbar.getView().findViewById(R.id.snackbar_text);
-        textView.setMaxLines(3);
+        textView.setMaxLines(4);
         textView.setTextSize(12);
         textView.setLineSpacing(18, 1);
 

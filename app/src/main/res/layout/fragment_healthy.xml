@@ -16,13 +16,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="4dp"
-        android:background="@color/white"
+        android:background="@color/orange"
         android:orientation="vertical">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
+            android:textSize="@dimen/text_xlarge"
+            android:textColor="@color/white"
             android:text="健康数据收集中，敬请期待..."/>
     </LinearLayout>
 
