@@ -3,9 +3,10 @@ package com.tallty.smart_life_android.fragment.home;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -14,14 +15,18 @@ import com.db.chart.model.LineSet;
 import com.db.chart.view.AxisController;
 import com.db.chart.view.LineChartView;
 import com.tallty.smart_life_android.R;
+import com.tallty.smart_life_android.adapter.HomeSportRankAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
+import com.tallty.smart_life_android.custom.MyRecyclerView;
+
+import java.util.ArrayList;
 
 /**
  * 首页-健身达人-更多数据
  */
 public class SportMoreData extends BaseBackFragment {
     private String mName;
-
+    // 组件
     private Toolbar toolbar;
     private TextView toolbar_title;
     private TextView tab_day;
@@ -29,8 +34,8 @@ public class SportMoreData extends BaseBackFragment {
     private TextView tab_month;
     private TextView tab_year;
     private LineChartView chart;
-    private ImageView rank_image;
-
+    private MyRecyclerView recyclerView;
+    // 图表数据
     private String[] label_one = {"8:00","9:00","10:00","11:00","12:00","13:00"};
     private float[] data_one = {123f,160f,90f,100f,140f,100f};
     private String[] label_two = {"周一","周二","周三","周四","周五","周六"};
@@ -39,7 +44,35 @@ public class SportMoreData extends BaseBackFragment {
     private float[] data_three = {10f,15f,9f,13f,14f,8f};
     private String[] label_four = {"2014年","2015年","2016年"};
     private float[] data_four = {60f,100f,50f};
-
+    // 列表数据
+    private ArrayList<String> urls = new ArrayList<String>() {
+        {
+            add("http://img0.pconline.com.cn/pconline/1312/27/4072897_01_thumb.gif");
+            add("http://img0.pconline.com.cn/pconline/1312/27/4072897_02_thumb.gif");
+            add("http://img0.pconline.com.cn/pconline/1312/27/4072897_03_thumb.gif");
+            add("http://img0.pconline.com.cn/pconline/1312/27/4072897_04_thumb.gif");
+        }
+    };
+    private ArrayList<String> names = new ArrayList<String>(){
+        {
+            add("Mr.chen");add("Mr.zhang");add("Mr.wang");add("Mr.sun");
+        }
+    };
+    private ArrayList<Integer> numbers = new ArrayList<Integer>() {
+        {
+            add(8000);add(4000);add(8320);add(6500);
+        }
+    };
+    private ArrayList<Integer> states = new ArrayList<Integer>() {
+        {
+            add(2);add(1);add(0);add(1);
+        }
+    };
+    private ArrayList<Integer> praise_counts = new ArrayList<Integer>() {
+        {
+            add(15);add(11);add(0);add(4);
+        }
+    };
 
     public static SportMoreData newInstance(String title) {
         Bundle args = new Bundle();
@@ -72,7 +105,7 @@ public class SportMoreData extends BaseBackFragment {
         tab_year = getViewById(R.id.tab_year);
 
         chart = getViewById(R.id.chart_one);
-        rank_image = getViewById(R.id.step_rank_image);
+        recyclerView = getViewById(R.id.step_rank);
     }
 
     @Override
@@ -86,9 +119,13 @@ public class SportMoreData extends BaseBackFragment {
     @Override
     protected void afterAnimationLogic() {
         initBackToolbar(toolbar);
-        Glide.with(context).load(R.drawable.step_rank).into(rank_image);
         toolbar_title.setText(mName);
         tab_day.performClick();
+        // 初始化rank列表
+        RecyclerView.LayoutManager manager = new LinearLayoutManager(context);
+        recyclerView.setLayoutManager(manager);
+        HomeSportRankAdapter adapter = new HomeSportRankAdapter(context, urls, names, numbers, states, praise_counts);
+        recyclerView.setAdapter(adapter);
     }
 
     @Override

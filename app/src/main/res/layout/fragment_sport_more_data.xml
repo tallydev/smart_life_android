@@ -184,17 +184,11 @@
                     android:layout_alignParentEnd="true"/>
             </RelativeLayout>
             <!--步数排名-->
-            <!--<com.tallty.smart_life_android.custom.MyRecyclerView-->
-                <!--android:id="@+id/step_rank"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:scrollbars="none"/>-->
-            <ImageView
-                android:id="@+id/step_rank_image"
+            <com.tallty.smart_life_android.custom.MyRecyclerView
+                android:id="@+id/step_rank"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:scaleType="fitXY"/>
+                android:scrollbars="none"/>
 
         </LinearLayout>
     </ScrollView>

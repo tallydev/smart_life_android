@@ -21,4 +21,8 @@
          热带雨林气候,光照充足\n
         版纳古朴民风, 无激素和催熟
     </string>
+    <string name="step_rank_photo">头像</string>
+    <string name="step_rank_number">1</string>
+    <string name="step_rank_name">Loda</string>
+    <string name="step_rank_praise_count">11</string>
 </resources>
