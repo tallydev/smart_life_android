@@ -13,7 +13,7 @@ import com.tallty.smart_life_android.R;
  * 首页banner图HolderView
  * 使用Glide来显示网络图片
  */
-public class HomeBannerHolderView implements Holder<Integer> {
+public class BannerHolderView implements Holder<Integer> {
     private ImageView imageView;
 
     @Override

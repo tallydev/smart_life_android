@@ -71,18 +71,58 @@
                 android:textColor="@color/white"
                 android:text="加入购物车"/>
         </LinearLayout>
+
         <ScrollView
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_above="@id/product_detail_layout">
-            <ImageView
-                android:id="@+id/product_detail_image"
+            android:layout_alignParentTop="true">
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:scaleType="fitXY"/>
+                android:layout_height="wrap_content">
+                <com.bigkoo.convenientbanner.ConvenientBanner
+                    android:id="@+id/product_detail_banner"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_alignParentTop="true"
+                    app:canLoop="true" />
+                <TextView
+                    android:id="@+id/product_detail_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="16dp"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:paddingBottom="5dp"
+                    android:layout_marginTop="4dp"
+                    android:textSize="@dimen/text_large"
+                    android:layout_below="@id/product_detail_banner"
+                    android:background="@color/white"
+                    android:text="西双版纳生态无眼凤梨新鲜直达"/>
+                <TextView
+                    android:id="@+id/product_detail_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="5dp"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:paddingBottom="15dp"
+                    android:textSize="@dimen/text_normal"
+                    android:layout_below="@id/product_detail_name"
+                    android:background="@color/white"
+                    android:text="￥66.00 (包邮)"/>
+                <TextView
+                    android:id="@+id/product_detail_describe"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="5dp"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:paddingBottom="15dp"
+                    android:layout_below="@id/product_detail_price"
+                    android:background="@color/white"
+                    android:text="@string/product_detail_describe"/>
+            </RelativeLayout>
         </ScrollView>
     </RelativeLayout>
 

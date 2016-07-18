@@ -28,7 +28,7 @@ import com.tallty.smart_life_android.custom.PedometerConstant;
 import com.tallty.smart_life_android.event.ShowSnackbarEvent;
 import com.tallty.smart_life_android.event.TabSelectedEvent;
 import com.tallty.smart_life_android.fragment.MainFragment;
-import com.tallty.smart_life_android.holder.HomeBannerHolderView;
+import com.tallty.smart_life_android.holder.BannerHolderView;
 import com.tallty.smart_life_android.holder.HomeViewHolder;
 import com.tallty.smart_life_android.service.StepService;
 import com.tallty.smart_life_android.utils.ToastUtil;
@@ -159,7 +159,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
         banner.setPages(new CBViewHolderCreator() {
             @Override
             public Object createHolder() {
-                return new HomeBannerHolderView();
+                return new BannerHolderView();
             }
         }, networkImages)
                 .setPageIndicator(new int[] {R.mipmap.banner_indicator, R.mipmap.banner_indicator_focused})

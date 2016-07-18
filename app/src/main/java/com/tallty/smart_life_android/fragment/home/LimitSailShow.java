@@ -6,17 +6,22 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import com.bigkoo.convenientbanner.ConvenientBanner;
+import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
+import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
+import com.tallty.smart_life_android.holder.BannerHolderView;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 首页-限量销售-商品详情
  */
-public class LimitSailShow extends BaseBackFragment {
+public class LimitSailShow extends BaseBackFragment implements OnItemClickListener{
     private String mName;
     private int count = 1;
 
@@ -26,7 +31,9 @@ public class LimitSailShow extends BaseBackFragment {
     private TextView reduce;
     private TextView number;
     private TextView add_to_cart;
-    private ImageView product_detail;
+    private ConvenientBanner banner;
+    // banner图数据
+    private Integer[] imagesUrl = { R.drawable.banner_one, R.drawable.banner_two };
 
     public static LimitSailShow newInstance(String title) {
         Bundle args = new Bundle();
@@ -58,7 +65,7 @@ public class LimitSailShow extends BaseBackFragment {
         reduce = getViewById(R.id.reduce);
         number = getViewById(R.id.number);
         add_to_cart = getViewById(R.id.add_to_cart);
-        product_detail = getViewById(R.id.product_detail_image);
+        banner = getViewById(R.id.product_detail_banner);
     }
 
     @Override
@@ -73,7 +80,8 @@ public class LimitSailShow extends BaseBackFragment {
         initBackToolbar(toolbar);
         toolbar_title.setText(mName);
         setToolbarMenu(toolbar);
-        Glide.with(context).load(R.drawable.product_detail).into(product_detail);
+        // 设置banner
+        setBanner();
     }
 
     @Override
@@ -119,5 +127,34 @@ public class LimitSailShow extends BaseBackFragment {
                 return true;
             }
         });
+    }
+
+    private void setBanner() {
+        List<Integer> networkImages = Arrays.asList(imagesUrl);
+        banner.setPages(new CBViewHolderCreator() {
+            @Override
+            public Object createHolder() {
+                return new BannerHolderView();
+            }
+        }, networkImages)
+                .setPageIndicator(new int[] {R.mipmap.banner_indicator, R.mipmap.banner_indicator_focused})
+                .setOnItemClickListener(this);
+    }
+
+    @Override
+    public void onItemClick(int position) {
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        banner.startTurning(5000);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        banner.stopTurning();
     }
 }

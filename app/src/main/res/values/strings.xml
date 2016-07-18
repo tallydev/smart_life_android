@@ -17,4 +17,8 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="product_detail_describe">
+         热带雨林气候,光照充足\n
+        版纳古朴民风, 无激素和催熟
+    </string>
 </resources>
