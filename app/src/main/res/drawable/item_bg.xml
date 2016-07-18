@@ -2,19 +2,19 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
-            <gradient android:angle="270.0" android:endColor="#ffe8ecef" android:startColor="#ffe8ecef"/>
+            <gradient android:angle="270.0" android:endColor="@color/gray" android:startColor="@color/gray"/>
         </shape>
     </item>
 
     <item android:state_focused="true">
         <shape android:shape="rectangle">
-            <gradient android:angle="270.0" android:endColor="#ffe8ecef" android:startColor="#ffe8ecef"/>
+            <gradient android:angle="270.0" android:endColor="@color/gray" android:startColor="@color/gray"/>
         </shape>
     </item>
 
     <item>
         <shape android:shape="rectangle">
-            <gradient android:angle="270.0" android:endColor="#ffffffff" android:startColor="#ffffffff"/>
+            <gradient android:angle="270.0" android:endColor="@color/white" android:startColor="@color/white"/>
         </shape>
     </item>
 </selector>
