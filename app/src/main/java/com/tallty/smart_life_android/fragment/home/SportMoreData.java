@@ -98,12 +98,10 @@ public class SportMoreData extends BaseBackFragment {
     protected void initView() {
         toolbar = getViewById(R.id.toolbar);
         toolbar_title = getViewById(R.id.toolbar_title);
-
         tab_day = getViewById(R.id.tab_day);
         tab_week = getViewById(R.id.tab_week);
         tab_month = getViewById(R.id.tab_month);
         tab_year = getViewById(R.id.tab_year);
-
         chart = getViewById(R.id.chart_one);
         recyclerView = getViewById(R.id.step_rank);
     }
@@ -175,7 +173,6 @@ public class SportMoreData extends BaseBackFragment {
 
         chart.addData(dataSet);
         chart.show();
-
     }
 
     // 重置tab的状态

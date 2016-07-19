@@ -46,7 +46,7 @@ public class HomeSportRankAdapter extends RecyclerView.Adapter<HomeSportRankAdap
     }
 
     @Override
-    public void onBindViewHolder(RankViewHolder holder, int position) {
+    public void onBindViewHolder(RankViewHolder holder, final int position) {
         holder.index.setText(String.valueOf(position+1));
         Glide.with(context).load(urls.get(position))
                 .transform(new GlideCircleTransform(context))
@@ -54,6 +54,7 @@ public class HomeSportRankAdapter extends RecyclerView.Adapter<HomeSportRankAdap
         holder.name.setText(names.get(position));
         holder.step_number.setText(String.valueOf(numbers.get(position)));
         holder.praise_count.setText(String.valueOf(praise_counts.get(position)));
+        // 0: 没有赞, 1: 有他人的赞, 2: 我的赞
         if (0 == states.get(position)) {
             holder.praise.setBackgroundResource(R.drawable.praise_empty);
         } else if (1 == states.get(position)) {
@@ -61,11 +62,42 @@ public class HomeSportRankAdapter extends RecyclerView.Adapter<HomeSportRankAdap
         } else if (2 == states.get(position)) {
             holder.praise.setBackgroundResource(R.drawable.praise_orange);
         }
+
+        if (getItemCount() == position + 1)
+            holder.line.setBackgroundResource(R.color.white);
+
+        holder.praise.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO: 16/7/19 点赞
+                changeData(position);
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
         return names.size();
+    }
+
+    public void changeData(int position) {
+        int count = praise_counts.get(position);
+        if (states.get(position) == 0) {
+            states.set(position, 2);
+            praise_counts.set(position, ++count);
+        } else if (states.get(position) == 1) {
+            states.set(position, 2);
+            praise_counts.set(position, ++count);
+        } else {
+            if (count > 1) {
+                states.set(position, 1);
+                praise_counts.set(position, --count);
+            } else {
+                states.set(position, 0);
+                praise_counts.set(position, --count);
+            }
+        }
+        notifyItemChanged(position);
     }
 
     class RankViewHolder extends RecyclerView.ViewHolder {
@@ -75,6 +107,7 @@ public class HomeSportRankAdapter extends RecyclerView.Adapter<HomeSportRankAdap
         private TextView step_number;
         private Button praise;
         private TextView praise_count;
+        private View line;
 
         public RankViewHolder(View itemView) {
             super(itemView);
@@ -84,6 +117,7 @@ public class HomeSportRankAdapter extends RecyclerView.Adapter<HomeSportRankAdap
             step_number = (TextView) itemView.findViewById(R.id.step_number);
             praise = (Button) itemView.findViewById(R.id.praise_button);
             praise_count = (TextView) itemView.findViewById(R.id.praise_count);
+            line = itemView.findViewById(R.id.line);
         }
     }
 }

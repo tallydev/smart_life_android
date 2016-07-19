@@ -3,10 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:paddingTop="16dp"
-    android:paddingBottom="16dp"
     android:paddingLeft="20dp"
     android:paddingRight="20dp"
-    android:layout_marginBottom="1dp"
     android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -27,8 +25,8 @@
         android:layout_height="34dp"
         android:adjustViewBounds="true"
         android:layout_toRightOf="@id/rank_index"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="15dp"
         android:scaleType="fitCenter"
         android:contentDescription="@string/step_rank_photo"
         android:src="@drawable/user_photo"/>
@@ -38,6 +36,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
+        android:textColor="@color/global_text"
+        android:textSize="@dimen/text_small"
         android:layout_toRightOf="@+id/rank_photo"
         android:text="@string/step_rank_name"/>
 
@@ -55,7 +55,7 @@
 
     <Button
         android:id="@+id/praise_button"
-        android:layout_width="15dp"
+        android:layout_width="16dp"
         android:layout_height="14dp"
         android:background="@drawable/praise_orange"
         android:layout_marginLeft="15dp"
@@ -73,4 +73,11 @@
         android:textColor="@color/orange"
         android:text="9074"/>
 
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/app_bg"
+        android:layout_below="@id/rank_photo"
+        android:layout_marginTop="16dp"/>
 </RelativeLayout>
