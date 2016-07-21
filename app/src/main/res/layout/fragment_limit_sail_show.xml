@@ -32,7 +32,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/global_text"
-                    android:textSize="@dimen/text_large"
+                    android:textSize="@dimen/text_18"
                     android:text="数量: "/>
                 <TextView
                     android:id="@+id/add"
@@ -41,7 +41,7 @@
                     android:gravity="center"
                     android:textColor="@color/global_text"
                     android:layout_marginLeft="10dp"
-                    android:textSize="@dimen/text_large"
+                    android:textSize="@dimen/text_18"
                     android:text="＋"/>
                 <TextView
                     android:id="@+id/number"
@@ -49,7 +49,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:textColor="@color/orange"
-                    android:textSize="@dimen/text_xlarge"
+                    android:textSize="@dimen/text_20"
                     android:textStyle="bold"
                     android:text="1"/>
                 <TextView
@@ -58,7 +58,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:textColor="@color/global_text"
-                    android:textSize="@dimen/text_large"
+                    android:textSize="@dimen/text_18"
                     android:text="—"/>
             </LinearLayout>
             <TextView
@@ -95,7 +95,7 @@
                     android:paddingRight="16dp"
                     android:paddingBottom="5dp"
                     android:layout_marginTop="4dp"
-                    android:textSize="@dimen/text_large"
+                    android:textSize="@dimen/text_18"
                     android:layout_below="@id/product_detail_banner"
                     android:background="@color/white"
                     android:text="西双版纳生态无眼凤梨新鲜直达"/>
@@ -107,7 +107,7 @@
                     android:paddingLeft="16dp"
                     android:paddingRight="16dp"
                     android:paddingBottom="15dp"
-                    android:textSize="@dimen/text_normal"
+                    android:textSize="@dimen/text_16"
                     android:layout_below="@id/product_detail_name"
                     android:background="@color/white"
                     android:text="￥66.00 (包邮)"/>

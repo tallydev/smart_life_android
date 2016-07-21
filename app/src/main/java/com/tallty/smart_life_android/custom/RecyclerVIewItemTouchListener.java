@@ -14,8 +14,11 @@ import android.view.View;
 public abstract class RecyclerVIewItemTouchListener implements RecyclerView.OnItemTouchListener{
     private GestureDetectorCompat gestureDetectorCompat;
     private RecyclerView recyclerView;
+    private RecyclerView.ViewHolder VH;
+    private View child;
+    private int position;
 
-    public RecyclerVIewItemTouchListener(RecyclerView recyclerView){
+    protected RecyclerVIewItemTouchListener(RecyclerView recyclerView){
         this.recyclerView = recyclerView;
         gestureDetectorCompat = new GestureDetectorCompat(recyclerView.getContext(),new MyGestureListener());
     }
@@ -38,28 +41,37 @@ public abstract class RecyclerVIewItemTouchListener implements RecyclerView.OnIt
 
     /**
      * 暴露给外部调用的抽象方法
+     * 点击事件
      * @param vh
      */
-    public abstract void onItemClick(RecyclerView.ViewHolder vh);
+    public abstract void onItemClick(RecyclerView.ViewHolder vh, int position);
+
+    /**
+     * 长按事件
+     * @param vh
+     */
+    public abstract void onItemLongPress(RecyclerView.ViewHolder vh, int position);
 
 
     private class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
         @Override
         public boolean onSingleTapUp(MotionEvent e) {
-            View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
+            child = recyclerView.findChildViewUnder(e.getX(), e.getY());
             if (child != null) {
-                RecyclerView.ViewHolder VH = recyclerView.getChildViewHolder(child);
-                onItemClick(VH);
+                VH = recyclerView.getChildViewHolder(child);
+                position = recyclerView.getChildAdapterPosition(child);
+                onItemClick(VH, position);
             }
             return true;
         }
 
         @Override
         public void onLongPress(MotionEvent e) {
-            View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
+            child = recyclerView.findChildViewUnder(e.getX(), e.getY());
             if (child != null) {
-                RecyclerView.ViewHolder VH = recyclerView.getChildViewHolder(child);
-                onItemClick(VH);
+                VH = recyclerView.getChildViewHolder(child);
+                position = recyclerView.getChildAdapterPosition(child);
+                onItemLongPress(VH, position);
             }
         }
     }

@@ -25,4 +25,5 @@
     <string name="step_rank_number">1</string>
     <string name="step_rank_name">Loda</string>
     <string name="step_rank_praise_count">11</string>
+    <string name="select_all">全选</string>
 </resources>

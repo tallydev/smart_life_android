@@ -12,7 +12,7 @@
         android:id="@+id/item_home_main_title"
         android:layout_width="match_parent"
         android:layout_height="36dp"
-        android:textSize="@dimen/text_normal"
+        android:textSize="@dimen/text_16"
         android:gravity="center"
         android:textColor="@color/black"/>
     <FrameLayout
@@ -46,7 +46,7 @@
                 android:text="2016.06.20"
                 android:layout_toRightOf="@id/step_weather"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_xs"/>
+                android:textSize="@dimen/text_10"/>
             <TextView
                 android:id="@+id/steps_rank_text"
                 android:layout_width="wrap_content"
@@ -55,7 +55,7 @@
                 android:text="排名: "
                 android:layout_below="@id/step_weather"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_tiny"/>
+                android:textSize="@dimen/text_12"/>
             <TextView
                 android:id="@+id/steps_rank"
                 android:layout_width="match_parent"
@@ -65,7 +65,7 @@
                 android:layout_toRightOf="@id/steps_rank_text"
                 android:layout_below="@id/steps_date"
                 android:textColor="@color/home_steps_text"
-                android:textSize="@dimen/text_small"
+                android:textSize="@dimen/text_14"
                 android:textStyle="bold"/>
             <View
                 android:id="@+id/step_divider"
@@ -83,7 +83,7 @@
                 android:text="步数: "
                 android:layout_below="@id/step_divider"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_tiny"/>
+                android:textSize="@dimen/text_12"/>
             <TextView
                 android:id="@+id/steps_number"
                 android:layout_width="match_parent"
@@ -92,7 +92,7 @@
                 android:text="9202"
                 android:layout_toRightOf="@id/steps_number_text"
                 android:layout_below="@id/step_divider"
-                android:textSize="@dimen/text_tiny"
+                android:textSize="@dimen/text_12"
                 android:textColor="@color/home_steps_text"/>
         </RelativeLayout>
     </FrameLayout>

@@ -16,7 +16,7 @@
         android:layout_alignParentLeft="true"
         android:textColor="@color/global_text"
         android:layout_centerVertical="true"
-        android:textSize="@dimen/text_small"
+        android:textSize="@dimen/text_14"
         android:text="@string/step_rank_number"/>
     
     <ImageView
@@ -37,7 +37,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:textColor="@color/global_text"
-        android:textSize="@dimen/text_small"
+        android:textSize="@dimen/text_14"
         android:layout_toRightOf="@+id/rank_photo"
         android:text="@string/step_rank_name"/>
 
@@ -49,7 +49,7 @@
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
         android:textColor="@color/gray_text"
-        android:textSize="@dimen/text_tiny"
+        android:textSize="@dimen/text_12"
         android:text="@string/step_rank_praise_count"
         tools:ignore="RelativeOverlap"/>
 
@@ -68,7 +68,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:textSize="@dimen/text_xxlarge"
+        android:textSize="@dimen/text_22"
         android:layout_toLeftOf="@id/praise_button"
         android:textColor="@color/orange"
         android:text="9074"/>

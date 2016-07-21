@@ -35,7 +35,7 @@
                     chart:chart_shadowRadius="1dp"
                     chart:chart_shadowColor="@android:color/transparent"
                     chart:chart_axisColor="@color/orange"
-                    chart:chart_fontSize="@dimen/text_tiny"
+                    chart:chart_fontSize="@dimen/text_12"
                     chart:chart_axisBorderSpacing="1dp" />
                 <TextView
                     android:id="@+id/chart_name"
@@ -43,7 +43,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:layout_marginLeft="16dp"
-                    android:textSize="@dimen/text_large"
+                    android:textSize="@dimen/text_18"
                     android:textColor="@color/white"
                     android:text="BMI"/>
             </FrameLayout>

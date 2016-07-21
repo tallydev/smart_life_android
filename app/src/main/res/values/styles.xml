@@ -26,32 +26,6 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
-
-
-    <style name="FullscreenTheme" parent="AppTheme">
-        <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
-        <item name="android:windowActionBarOverlay">true</item>
-        <item name="android:windowBackground">@null</item>
-        <item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
-        <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
-    </style>
-
-    <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
-        <item name="android:background">@color/black_overlay</item>
-    </style>
-
-    <!--图片背景的System Bar-->
-    <style name="ImageTranslucentTheme" parent="AppTheme">
-        <!--在Android 4.4之前的版本上运行，直接跟随系统主题-->
-    </style>
-
-    <!--纯色背景的System Bar-->
-    <style name="ColorTranslucentTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:windowTranslucentStatus" tools:targetApi="kitkat">false</item>
-        <item name="android:windowTranslucentNavigation" tools:targetApi="kitkat">true</item>
-        <item name="android:statusBarColor" tools:targetApi="lollipop">@color/systemBarColor</item>
-    </style>
-
     <!--tab menu文字公用样式(if it has)-->
     <style name="tab_menu_icon">
         <item name="android:layout_width">wrap_content</item>
@@ -70,4 +44,16 @@
         <item name="android:textColor">@color/tab_num_color</item>
     </style>
 
+    <!--自定义checkBox样式-->
+    <style name="CustomCheckBoxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:background">@drawable/check_box_style</item>
+        <item name="android:button">@null</item>
+    </style>
+
+    <!--自定义AlertDialog样式-->
+    <style name="CustomAlertDialogTheme" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="android:textColorPrimary">@color/global_text</item>
+        <item name="colorAccent">@color/orange</item>
+        <item name="android:background">@color/white</item>
+    </style>
 </resources>

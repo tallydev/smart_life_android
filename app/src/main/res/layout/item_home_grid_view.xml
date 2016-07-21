@@ -19,5 +19,5 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:textColor="@color/home_button_color"
-        android:textSize="@dimen/text_small"/>
+        android:textSize="@dimen/text_14"/>
 </LinearLayout>

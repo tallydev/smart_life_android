@@ -33,7 +33,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/global_text"
-                    android:textSize="@dimen/text_large"
+                    android:textSize="@dimen/text_18"
                     android:text="报名人数: "/>
                 <TextView
                     android:id="@+id/add"
@@ -42,7 +42,7 @@
                     android:gravity="center"
                     android:textColor="@color/global_text"
                     android:layout_marginLeft="10dp"
-                    android:textSize="@dimen/text_large"
+                    android:textSize="@dimen/text_18"
                     android:text="＋"/>
                 <TextView
                     android:id="@+id/number"
@@ -50,7 +50,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:textColor="@color/orange"
-                    android:textSize="@dimen/text_xlarge"
+                    android:textSize="@dimen/text_20"
                     android:textStyle="bold"
                     android:text="1"/>
                 <TextView
@@ -59,7 +59,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:textColor="@color/global_text"
-                    android:textSize="@dimen/text_large"
+                    android:textSize="@dimen/text_18"
                     android:text="—"/>
             </LinearLayout>
             <TextView

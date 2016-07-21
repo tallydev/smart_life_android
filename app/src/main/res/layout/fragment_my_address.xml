@@ -27,7 +27,7 @@
                 android:layout_height="match_parent"
                 android:background="@color/orange"
                 android:gravity="center"
-                android:textSize="@dimen/text_large"
+                android:textSize="@dimen/text_18"
                 android:text="新建收货地址"
                 android:textColor="@color/white"/>
         </LinearLayout>
@@ -60,12 +60,12 @@
                         android:layout_marginRight="15dp"
                         android:scaleType="fitCenter"
                         android:layout_centerVertical="true"
-                        android:src="@drawable/choose_active"/>
+                        android:src="@mipmap/ic_checked"/>
                     <TextView
                         android:id="@+id/receive_people_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/text_normal"
+                        android:textSize="@dimen/text_16"
                         android:textColor="@color/global_text"
                         android:text="Leo"
                         android:layout_alignParentTop="true"
@@ -74,7 +74,7 @@
                         android:id="@+id/receive_people_address"
                         android:layout_width="200dp"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/text_normal"
+                        android:textSize="@dimen/text_16"
                         android:textColor="@color/global_text"
                         android:text="XX区XX街道XX (小区名称) XX栋XX单元XXX室"
                         android:layout_below="@id/receive_people_name"
@@ -83,7 +83,7 @@
                         android:id="@+id/receive_people_number"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/text_normal"
+                        android:textSize="@dimen/text_16"
                         android:textColor="@color/global_text"
                         android:layout_alignParentRight="true"
                         android:text="18916510000"/>
@@ -91,7 +91,7 @@
                         android:id="@+id/default_address"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/text_normal"
+                        android:textSize="@dimen/text_16"
                         android:textColor="@color/orange"
                         android:text="默认地址"
                         android:layout_alignParentBottom="true"

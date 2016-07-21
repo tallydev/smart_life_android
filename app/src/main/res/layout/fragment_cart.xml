@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/app_bg"
     android:orientation="vertical"
     android:fitsSystemWindows="false">
@@ -15,96 +15,75 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <LinearLayout
-            android:id="@+id/cart_buy_layout"
+
+        <RelativeLayout
+            android:id="@+id/pay_layout"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:layout_alignParentBottom="true"
-            android:orientation="horizontal">
+            android:background="@color/white"
+            android:layout_alignParentBottom="true">
+
+            <CheckBox
+                android:id="@+id/select_all_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:maxHeight="48dp"
+                android:maxWidth="48dp"
+                android:button="@drawable/check_box_style"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/global_text"
+                android:layout_centerVertical="true"
+                android:textSize="@dimen/text_14"
+                android:layout_toRightOf="@id/select_all_btn"
+                android:text="@string/select_all"
+                android:id="@+id/textView7"/>
 
             <TextView
                 android:id="@+id/pay"
-                android:layout_width="match_parent"
+                android:layout_width="120dp"
                 android:layout_height="match_parent"
                 android:background="@color/orange"
                 android:gravity="center"
-                android:textSize="@dimen/text_large"
-                android:text="结 算"
+                android:layout_marginLeft="10dp"
+                android:textSize="@dimen/text_18"
+                android:text="结算"
+                android:layout_alignParentRight="true"
                 android:textColor="@color/white"/>
-        </LinearLayout>
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_above="@id/cart_buy_layout"
-            android:fillViewport="false">
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/orders_price"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="4dp"
-                android:orientation="vertical">
+                android:textSize="@dimen/text_14"
+                android:textColor="@color/orange"
+                android:layout_toLeftOf="@id/pay"
+                android:layout_centerVertical="true"
+                android:paddingLeft="5dp"
+                android:text="￥66.00"/>
 
-                <ImageView
-                    android:id="@+id/cart_item_image"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:adjustViewBounds="true"
-                    android:layout_marginBottom="4dp"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/cart_item"/>
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:layout_marginBottom="4dp"
-                    android:paddingTop="16dp"
-                    android:paddingBottom="16dp"
-                    android:paddingLeft="24dp"
-                    android:paddingRight="16dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_14"
+                android:textColor="@color/global_text"
+                android:layout_toLeftOf="@id/orders_price"
+                android:layout_centerVertical="true"
+                android:text="合计:"
+                android:id="@+id/textView5"/>
+        </RelativeLayout>
 
-                    <ImageView
-                        android:id="@+id/choose_all_icon"
-                        android:layout_width="19dp"
-                        android:layout_height="wrap_content"
-                        android:adjustViewBounds="true"
-                        android:layout_marginRight="15dp"
-                        android:scaleType="fitCenter"
-                        android:layout_centerVertical="true"
-                        android:src="@drawable/choose_active"/>
-
-                    <com.tallty.smart_life_android.custom.MyRecyclerView
-                        android:id="@+id/cart_list"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:scrollbars="none"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="@dimen/text_normal"
-                        android:textColor="@color/orange"
-                        android:text="全选"
-                        android:layout_alignParentTop="true"
-                        android:layout_toRightOf="@id/choose_all_icon"/>
-                    <TextView
-                        android:id="@+id/orders_price"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="@dimen/text_normal"
-                        android:textColor="@color/orange"
-                        android:layout_alignParentRight="true"
-                        android:paddingLeft="10dp"
-                        android:text="66.00"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="@dimen/text_normal"
-                        android:textColor="@color/orange"
-                        android:layout_toLeftOf="@id/orders_price"
-                        android:text="合计：￥"/>
-                </RelativeLayout>
-            </LinearLayout>
-        </ScrollView>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/cart_list"
+            android:scrollbars="vertical"
+            android:layout_alignParentTop="true"
+            android:layout_above="@id/pay_layout"
+            android:paddingTop="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
     </RelativeLayout>
 </LinearLayout>

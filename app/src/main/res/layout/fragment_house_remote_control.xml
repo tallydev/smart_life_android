@@ -23,7 +23,7 @@
             android:textColor="@color/white"
             android:gravity="center"
             android:text="预约体验"
-            android:textSize="@dimen/text_normal"/>
+            android:textSize="@dimen/text_16"/>
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

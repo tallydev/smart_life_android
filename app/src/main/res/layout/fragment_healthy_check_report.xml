@@ -73,7 +73,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="健康建议"
-                    android:textSize="@dimen/text_small"
+                    android:textSize="@dimen/text_14"
                     android:drawableLeft="@drawable/check_report_icon"/>
                 <View
                     android:layout_width="match_parent"

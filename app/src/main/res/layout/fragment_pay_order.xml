@@ -27,7 +27,7 @@
                 android:layout_height="match_parent"
                 android:background="@color/orange"
                 android:gravity="center"
-                android:textSize="@dimen/text_large"
+                android:textSize="@dimen/text_18"
                 android:text="立即支付"
                 android:textColor="@color/white"/>
         </LinearLayout>
@@ -56,7 +56,7 @@
                         android:id="@+id/textView1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/text_small"
+                        android:textSize="@dimen/text_14"
                         android:textColor="@color/global_text"
                         android:layout_alignParentLeft="true"
                         android:text="订单号："
@@ -65,7 +65,7 @@
                         android:id="@+id/order_number"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/text_small"
+                        android:textSize="@dimen/text_14"
                         android:textColor="@color/gray_text"
                         android:text="2013123456"
                         android:layout_alignParentTop="true"
@@ -83,7 +83,7 @@
                         android:id="@+id/textView2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/text_small"
+                        android:textSize="@dimen/text_14"
                         android:textColor="@color/global_text"
                         android:layout_alignParentLeft="true"
                         android:layout_below="@id/line1"
@@ -92,7 +92,7 @@
                         android:id="@+id/order_price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/text_small"
+                        android:textSize="@dimen/text_14"
                         android:textColor="@color/gray_text"
                         android:text="RMB 299"
                         android:layout_below="@+id/line1"
@@ -112,7 +112,7 @@
                         android:id="@+id/textView3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/text_small"
+                        android:textSize="@dimen/text_14"
                         android:layout_marginBottom="16dp"
                         android:textColor="@color/global_text"
                         android:layout_alignParentLeft="true"
@@ -133,7 +133,7 @@
                             android:buttonTint="@color/gray_text"
                             android:textColor="@color/global_text"
                             android:drawableLeft="@mipmap/ic_wechat_pay"
-                            android:textSize="@dimen/text_small"
+                            android:textSize="@dimen/text_14"
                             android:checked="true"/>
                         <RadioButton
                             android:layout_width="wrap_content"
@@ -144,7 +144,7 @@
                             android:buttonTint="@color/gray_text"
                             android:textColor="@color/global_text"
                             android:drawableLeft="@mipmap/ic_alipay"
-                            android:textSize="@dimen/text_small"
+                            android:textSize="@dimen/text_14"
                             android:checked="false"/>
                     </RadioGroup>
                 </RelativeLayout>

@@ -12,7 +12,7 @@
         android:id="@+id/item_home_main_title"
         android:layout_width="match_parent"
         android:layout_height="36dp"
-        android:textSize="@dimen/text_normal"
+        android:textSize="@dimen/text_16"
         android:gravity="center"
         android:textColor="@color/black"/>
     <ImageView
@@ -31,7 +31,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/text_small"
+            android:textSize="@dimen/text_14"
             android:textColor="@color/global_text"
             android:text="@string/timer_text"/>
         <cn.iwgang.countdownview.CountdownView
@@ -47,11 +47,11 @@
             app:isShowMinute="true"
             app:isShowSecond="true"
             app:timeTextColor="@color/timer_color"
-            app:timeTextSize="@dimen/text_timer"
+            app:timeTextSize="@dimen/text_24"
             app:isTimeTextBold="false"
             app:suffixGravity="center"
             app:suffixTextColor="@color/timer_color"
-            app:suffixTextSize="@dimen/text_normal"
+            app:suffixTextSize="@dimen/text_16"
             app:isSuffixTextBold="true"
             app:suffixHour=" : "
             app:suffixMinute=" : "

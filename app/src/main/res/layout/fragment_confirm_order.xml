@@ -27,7 +27,7 @@
                 android:layout_height="match_parent"
                 android:background="@color/orange"
                 android:gravity="center"
-                android:textSize="@dimen/text_large"
+                android:textSize="@dimen/text_18"
                 android:text="提交订单"
                 android:textColor="@color/white"/>
         </LinearLayout>
@@ -79,7 +79,7 @@
                         android:textColor="@color/global_text"
                         android:layout_toRightOf="@id/address_icon"
                         android:layout_toLeftOf="@id/address_indicator"
-                        android:textSize="@dimen/text_small"
+                        android:textSize="@dimen/text_14"
                         android:text="XX区XX街道XX (小区名称) XX栋XX单元XXX室"/>
                 </RelativeLayout>
                 <ImageView
@@ -107,12 +107,12 @@
                         android:layout_marginRight="15dp"
                         android:scaleType="fitCenter"
                         android:layout_centerVertical="true"
-                        android:src="@drawable/choose_active"/>
+                        android:src="@mipmap/ic_check"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/text_normal"
+                        android:textSize="@dimen/text_16"
                         android:textColor="@color/orange"
                         android:text="全选"
                         android:layout_alignParentTop="true"
@@ -121,7 +121,7 @@
                         android:id="@+id/orders_price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/text_normal"
+                        android:textSize="@dimen/text_16"
                         android:textColor="@color/orange"
                         android:layout_alignParentRight="true"
                         android:paddingLeft="10dp"
@@ -129,7 +129,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/text_normal"
+                        android:textSize="@dimen/text_16"
                         android:textColor="@color/orange"
                         android:layout_toLeftOf="@id/orders_price"
                         android:text="合计：￥"/>
