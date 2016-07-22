@@ -118,7 +118,7 @@
                         android:layout_alignParentTop="true"
                         android:layout_toRightOf="@id/choose_all_icon"/>
                     <TextView
-                        android:id="@+id/orders_price"
+                        android:id="@+id/total_price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/text_16"
@@ -131,7 +131,7 @@
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/text_16"
                         android:textColor="@color/orange"
-                        android:layout_toLeftOf="@id/orders_price"
+                        android:layout_toLeftOf="@id/total_price"
                         android:text="合计：￥"/>
                 </RelativeLayout>
             </LinearLayout>

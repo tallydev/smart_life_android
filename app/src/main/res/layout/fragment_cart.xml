@@ -56,22 +56,21 @@
                 android:textColor="@color/white"/>
 
             <TextView
-                android:id="@+id/orders_price"
+                android:id="@+id/total_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_14"
                 android:textColor="@color/orange"
                 android:layout_toLeftOf="@id/pay"
                 android:layout_centerVertical="true"
-                android:paddingLeft="5dp"
-                android:text="￥66.00"/>
+                android:paddingLeft="5dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_14"
                 android:textColor="@color/global_text"
-                android:layout_toLeftOf="@id/orders_price"
+                android:layout_toLeftOf="@id/total_price"
                 android:layout_centerVertical="true"
                 android:text="合计:"
                 android:id="@+id/textView5"/>
