@@ -77,6 +77,21 @@ public class CartListAdapter extends RecyclerView.Adapter<CartListAdapter.CartLi
         setHolderCheckBoxListener(holder, position);
         // 加减按钮点击事件
         setHolderCountListener(holder, position);
+        Logger.d("走了普通的onBindViewHolder");
+    }
+
+    @Override
+    public void onBindViewHolder(CartListViewHolder holder, int position, List<Object> payloads) {
+        if (payloads != null && !payloads.isEmpty()){
+            // 当点击数量操作时, 只更新itemView视图的 totalPrice , count
+            // 不更新CheckBox
+            item_totals.set(position, prices.get(position) * counts.get(position));
+            holder.count.setText(String.valueOf(counts.get(position)));
+            holder.count_price.setText("小计:￥ "+String.valueOf(item_totals.get(position)));
+            Logger.d("走了payloads的onBindViewHolder");
+        }else{
+            super.onBindViewHolder(holder, position, payloads);
+        }
     }
 
     @Override
@@ -99,7 +114,6 @@ public class CartListAdapter extends RecyclerView.Adapter<CartListAdapter.CartLi
         for (position = 0; position < select_items.size(); position++){
             select_items.set(position, true);
         }
-//        notifyItemRangeChanged(0, position);
         notifyDataSetChanged();
     }
 
@@ -109,7 +123,6 @@ public class CartListAdapter extends RecyclerView.Adapter<CartListAdapter.CartLi
         for (position = 0; position < select_items.size(); position++){
             select_items.set(position, false);
         }
-//        notifyItemRangeChanged(0, position);
         notifyDataSetChanged();
     }
 
@@ -130,6 +143,7 @@ public class CartListAdapter extends RecyclerView.Adapter<CartListAdapter.CartLi
                 // 逻辑
                 String info = isChecked ? "选中商品"+names.get(position) : "取消选中商品"+names.get(position);
                 Log.d("=====>", info+" && 发送商品小计: "+String.valueOf(item_totals.get(position)));
+
                 if(select_items.contains(false)){
                     EventBus.getDefault().post(new CartCheckBox(isChecked, item_totals.get(position), false));
                 }else{
@@ -163,10 +177,12 @@ public class CartListAdapter extends RecyclerView.Adapter<CartListAdapter.CartLi
                  * CheckBox的数据也会变化, 会自动调用setOnClickedChangeListener,
                  * 造成,点击【加】【减】,都会自动调用一次CheckBox点击事件,
                  * 使用CheckBox的setOnClickListener则不受影响,但【全选】改变CheckBox状态,却又不能触发点击
-                 * 解决方案:
+                 * 解决方案:(终于解决了)
+                 * *使用: notifyItemChanged(int position, Object payload)方法来更新item局部视图
+                 * *避免更新item全部视图,造成setChecked被调用,从而造成重复发送选择事件
                  *
                  */
-                notifyItemChanged(position);
+                notifyItemChanged(position, counts.get(position));
             }
         });
         // 数量减少
@@ -180,7 +196,7 @@ public class CartListAdapter extends RecyclerView.Adapter<CartListAdapter.CartLi
                     }
                     Log.d("减少选中商品数量------>", String.valueOf(prices.get(position)));
                     counts.set(position, counts.get(position) - 1);
-                    notifyItemChanged(position);
+                    notifyItemChanged(position, counts.get(position));
                 } else {
                     ToastUtil.show("已经不能再少了哦");
                 }
