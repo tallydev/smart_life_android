@@ -50,6 +50,8 @@ public class CartListAdapter extends RecyclerView.Adapter<CartListAdapter.CartLi
         // 购物车初始状态: 都不选中
         for(int i = 0; i < names.size(); i++){
             this.select_items.add(false);
+            // 初始总价格
+            item_totals.add(i, prices.get(i) * counts.get(i));
         }
 
     }
@@ -61,8 +63,6 @@ public class CartListAdapter extends RecyclerView.Adapter<CartListAdapter.CartLi
 
     @Override
     public void onBindViewHolder(CartListViewHolder holder, int position) {
-        // 初始总价格
-        item_totals.add(position, prices.get(position) * counts.get(position));
         // 商品信息
         /**
          * setChecked()方法会触发OnCheckedChangeListener
