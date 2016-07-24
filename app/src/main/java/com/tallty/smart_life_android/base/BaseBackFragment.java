@@ -27,10 +27,14 @@ import me.yokeyword.fragmentation_swipeback.SwipeBackFragment;
 public abstract class BaseBackFragment extends SwipeBackFragment implements View.OnClickListener {
     private static final String TAG = "Fragmentation";
     private View view;
-    // 全局常量
+
     protected Context context;
     protected SharedPreferences sharedPre;
-    protected SharedPreferences.Editor sharedEditor;
+    // SharedPreferences数据key
+    protected static final String ADDRESS_AREA = "address_area";
+    protected static final String ADDRESS_DETAIL = "address_detail";
+    protected static final String ADDRESS_PHONE = "address_phone";
+    protected static final String ADDRESS_NAME = "address_NAME";
     // 用于SharedPreferences取值
     protected static final String EMPTY_STRING = " ";
     // startForResultFragment使用
@@ -50,7 +54,6 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
         view = inflater.inflate(layout_id, container, false);
         context = getActivity().getApplicationContext();
         sharedPre = context.getSharedPreferences("SmartLife", Context.MODE_PRIVATE);
-        sharedEditor = sharedPre.edit();
         // 引用组件
         initView();
         return attachToSwipeBack(view);
@@ -78,7 +81,7 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
             }
         });
         // 调试Fragment时使用,添加fragment栈层级菜单
-//        initToolbarMenu(toolbar);
+        initToolbarMenu(toolbar);
     }
 
     /**

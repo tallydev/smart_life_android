@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.tallty.smart_life_android.R;
+import com.tallty.smart_life_android.event.SelectAddress;
+import com.tallty.smart_life_android.event.SetDefaultAddress;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.fragment.home.LimitSailShow;
 import com.tallty.smart_life_android.model.Address;
@@ -21,6 +23,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 
+import static com.tallty.smart_life_android.R.id.add;
 import static com.tallty.smart_life_android.R.id.contact_service;
 import static com.tallty.smart_life_android.R.id.line;
 
@@ -45,11 +48,20 @@ public class AddressListAdapter extends RecyclerView.Adapter<AddressListAdapter.
 
     @Override
     public void onBindViewHolder(AddressViewHolder holder, final int position) {
-        Address address = addresses.get(position);
-        holder.checkBox.setChecked(address.isChecked());
+        final Address address = addresses.get(position);
+
         holder.name.setText(address.getName());
         holder.address.setText(address.getArea()+address.getDetail());
         holder.phone.setText(address.getPhone());
+
+        holder.checkBox.setChecked(address.isChecked());
+        holder.checkBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EventBus.getDefault().post(new SelectAddress(position, address));
+            }
+        });
+
         if (address.isDefaultAddress()){
             holder.isDefault.setText("默认地址");
         }else{
@@ -59,7 +71,7 @@ public class AddressListAdapter extends RecyclerView.Adapter<AddressListAdapter.
                 @Override
                 public void onClick(View v) {
                     // 设置默认地址操作
-                    ToastUtil.show("设置默认地址->"+position);
+                    EventBus.getDefault().post(new SetDefaultAddress(position, address));
                 }
             });
         }

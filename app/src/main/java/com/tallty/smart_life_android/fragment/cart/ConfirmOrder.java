@@ -15,6 +15,7 @@ import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.CartListAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
+import com.tallty.smart_life_android.model.Address;
 import com.tallty.smart_life_android.model.Commodity;
 
 import org.greenrobot.eventbus.EventBus;
@@ -26,8 +27,10 @@ import java.util.ArrayList;
  */
 public class ConfirmOrder extends BaseBackFragment {
     private String mName;
-    private ArrayList<Commodity> selected_commodities;
-    private float total_price;
+    // 数据
+    private ArrayList<Commodity> selected_commodities = new ArrayList<>();
+    private float total_price = 0.0f;
+    private Address order_address = new Address();
 
     private Toolbar toolbar;
     private TextView toolbar_title;
@@ -97,11 +100,20 @@ public class ConfirmOrder extends BaseBackFragment {
 
     // 设置订单地址, 获取SharedPreferences保存的默认地址
     private void setDefaultAddress(){
-        String area = sharedPre.getString("address_area", EMPTY_STRING);
-        String address_detail = sharedPre.getString("address_detail", EMPTY_STRING);
+        String area = sharedPre.getString(ADDRESS_AREA, EMPTY_STRING);
+        String address_detail = sharedPre.getString(ADDRESS_DETAIL, EMPTY_STRING);
+        String name = sharedPre.getString(ADDRESS_NAME, EMPTY_STRING);
+        String phone = sharedPre.getString(ADDRESS_PHONE, EMPTY_STRING);
+
         if (EMPTY_STRING.equals(area) && EMPTY_STRING.equals(address_detail)){
-            order_address_text.setText("新建收货地址");
+            order_address_text.setText("选择收货地址");
         }else{
+            // 保存到对象
+            order_address.setName(name);
+            order_address.setPhone(phone);
+            order_address.setArea(area);
+            order_address.setDetail(address_detail);
+            // 显示
             order_address_text.setText(area+address_detail);
         }
     }
@@ -110,11 +122,27 @@ public class ConfirmOrder extends BaseBackFragment {
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.link_to_addresses:
-                EventBus.getDefault().post(new StartBrotherEvent(MyAddress.newInstance("收货地址")));
+                startForResult(MyAddress.newInstance("收货地址"), REQ_CODE);
                 break;
             case R.id.submit_order:
                 EventBus.getDefault().post(new StartBrotherEvent(PayOrder.newInstance("支付订单", total_price)));
                 break;
+        }
+    }
+
+    /**
+     * startForResult:
+     * 目标Fragment调用setFragmentResult()后，在其出栈时，会回调该方法
+     */
+    @Override
+    protected void onFragmentResult(int requestCode, int resultCode, Bundle data) {
+        super.onFragmentResult(requestCode, resultCode, data);
+        if (requestCode == REQ_CODE && resultCode == RESULT_YES) {
+            order_address = (Address) data.getSerializable(ADDRESS);
+            // 显示
+            if (order_address != null){
+                order_address_text.setText(order_address.getArea()+order_address.getDetail());
+            }
         }
     }
 }
