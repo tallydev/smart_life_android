@@ -1,6 +1,7 @@
 package com.tallty.smart_life_android.base;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
@@ -26,8 +27,17 @@ import me.yokeyword.fragmentation_swipeback.SwipeBackFragment;
 public abstract class BaseBackFragment extends SwipeBackFragment implements View.OnClickListener {
     private static final String TAG = "Fragmentation";
     private View view;
+    // 全局常量
     protected Context context;
-
+    protected SharedPreferences sharedPre;
+    protected SharedPreferences.Editor sharedEditor;
+    // 用于SharedPreferences取值
+    protected static final String EMPTY_STRING = " ";
+    // startForResultFragment使用
+    protected static final int REQ_CODE = 0;
+    protected static final int RESULT_YES = 1;
+    protected static final int RESULT_NO = 2;
+    // startBrotherFragment使用
     protected static final String TOOLBAR_TITLE = "BackFragmentTitle";
     protected static final String OBJECTS = "BackFragmentObjects";
     protected static final String ADDRESS = "BackFragmentAddress";
@@ -39,6 +49,8 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
         int layout_id = getFragmentLayout();
         view = inflater.inflate(layout_id, container, false);
         context = getActivity().getApplicationContext();
+        sharedPre = context.getSharedPreferences("SmartLife", Context.MODE_PRIVATE);
+        sharedEditor = sharedPre.edit();
         // 引用组件
         initView();
         return attachToSwipeBack(view);

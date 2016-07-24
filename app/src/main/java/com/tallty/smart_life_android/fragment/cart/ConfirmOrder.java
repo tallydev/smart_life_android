@@ -32,7 +32,8 @@ public class ConfirmOrder extends BaseBackFragment {
     private Toolbar toolbar;
     private TextView toolbar_title;
     private TextView submit_btn;
-    private RelativeLayout link_to_address;
+    private RelativeLayout link_to_addresses;
+    private TextView order_address_text;
     private RecyclerView recyclerView;
     private TextView total_price_text;
 
@@ -67,7 +68,8 @@ public class ConfirmOrder extends BaseBackFragment {
         toolbar = getViewById(R.id.toolbar);
         toolbar_title = getViewById(R.id.toolbar_title);
         submit_btn = getViewById(R.id.submit_order);
-        link_to_address = getViewById(R.id.link_to_address);
+        link_to_addresses = getViewById(R.id.link_to_addresses);
+        order_address_text = getViewById(R.id.order_address);
         total_price_text = getViewById(R.id.total_price);
         recyclerView = getViewById(R.id.submit_order_list);
     }
@@ -75,26 +77,39 @@ public class ConfirmOrder extends BaseBackFragment {
     @Override
     protected void setListener() {
         submit_btn.setOnClickListener(this);
-        link_to_address.setOnClickListener(this);
+        link_to_addresses.setOnClickListener(this);
     }
 
     @Override
     protected void afterAnimationLogic() {
         initBackToolbar(toolbar);
         toolbar_title.setText(mName);
-
+        // 合计
         total_price_text.setText("￥ "+total_price);
-
+        // 设置订单地址
+        setDefaultAddress();
+        // 列表
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         CartListAdapter adapter = new CartListAdapter(context, selected_commodities, "提交订单");
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
     }
 
+    // 设置订单地址, 获取SharedPreferences保存的默认地址
+    private void setDefaultAddress(){
+        String area = sharedPre.getString("address_area", EMPTY_STRING);
+        String address_detail = sharedPre.getString("address_detail", EMPTY_STRING);
+        if (EMPTY_STRING.equals(area) && EMPTY_STRING.equals(address_detail)){
+            order_address_text.setText("新建收货地址");
+        }else{
+            order_address_text.setText(area+address_detail);
+        }
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.link_to_address:
+            case R.id.link_to_addresses:
                 EventBus.getDefault().post(new StartBrotherEvent(MyAddress.newInstance("收货地址")));
                 break;
             case R.id.submit_order:

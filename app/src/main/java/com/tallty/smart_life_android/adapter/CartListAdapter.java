@@ -61,7 +61,8 @@ public class CartListAdapter extends RecyclerView.Adapter<CartListAdapter.CartLi
 
         // Custom
         if ("提交订单".equals(tag)){
-            holder.check_box.setVisibility(View.INVISIBLE);
+            holder.check_box.setChecked(true);
+            holder.check_box.setClickable(false);
             holder.add.setVisibility(View.INVISIBLE);
             holder.reduce.setVisibility(View.INVISIBLE);
             holder.count_price.setVisibility(View.GONE);

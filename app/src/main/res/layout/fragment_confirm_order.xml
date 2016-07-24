@@ -16,23 +16,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <RelativeLayout
-            android:id="@+id/link_to_address"
+            android:id="@+id/link_to_addresses"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:background="@drawable/item_bg"
             android:layout_marginBottom="4dp"
             android:layout_marginTop="4dp"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp"
-            android:paddingLeft="24dp"
-            android:paddingRight="16dp">
+            android:padding="16dp">
             <ImageView
                 android:id="@+id/address_icon"
                 android:layout_width="16dp"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
-                android:layout_marginRight="10dp"
+                android:layout_marginRight="16dp"
                 android:scaleType="fitCenter"
                 android:layout_centerVertical="true"
                 android:src="@drawable/address_icon"/>
@@ -47,12 +44,13 @@
                 android:text="{fa-angle-right}"
                 android:textSize="24sp"/>
             <TextView
-                android:id="@+id/address"
+                android:id="@+id/order_address"
                 android:layout_width="120dp"
-                android:layout_height="wrap_content"
+                android:layout_height="36dp"
                 android:textColor="@color/global_text"
                 android:layout_toRightOf="@id/address_icon"
                 android:layout_toLeftOf="@id/address_indicator"
+                android:gravity="center_vertical"
                 android:textSize="@dimen/text_14"
                 android:maxLines="2"
                 android:ellipsize="end"
@@ -103,7 +101,7 @@
             android:id="@+id/submit_order_list"
             android:scrollbars="vertical"
             android:layout_above="@id/submit_order_layout"
-            android:layout_below="@id/link_to_address"
+            android:layout_below="@id/link_to_addresses"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </RelativeLayout>
