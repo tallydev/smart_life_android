@@ -18,7 +18,6 @@ import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.model.Commodity;
 
 import org.greenrobot.eventbus.EventBus;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -40,8 +39,8 @@ public class ConfirmOrder extends BaseBackFragment {
     public static ConfirmOrder newInstance(String title, ArrayList<Commodity> selected_commodities, float total_price) {
         Bundle args = new Bundle();
         args.putString(TOOLBAR_TITLE, title);
-        args.putSerializable(DATA, selected_commodities);
-        args.putFloat("合计", total_price);
+        args.putSerializable(OBJECTS, selected_commodities);
+        args.putFloat(TOTAL_PRICE, total_price);
         ConfirmOrder fragment = new ConfirmOrder();
         fragment.setArguments(args);
         return fragment;
@@ -53,8 +52,8 @@ public class ConfirmOrder extends BaseBackFragment {
         Bundle args = getArguments();
         if (args != null) {
             mName = args.getString(TOOLBAR_TITLE);
-            selected_commodities = (ArrayList<Commodity>) args.getSerializable(DATA);
-            total_price = args.getFloat("合计");
+            selected_commodities = (ArrayList<Commodity>) args.getSerializable(OBJECTS);
+            total_price = args.getFloat(TOTAL_PRICE);
         }
     }
 
@@ -99,7 +98,7 @@ public class ConfirmOrder extends BaseBackFragment {
                 EventBus.getDefault().post(new StartBrotherEvent(MyAddress.newInstance("收货地址")));
                 break;
             case R.id.submit_order:
-                EventBus.getDefault().post(new StartBrotherEvent(PayOrder.newInstance("支付订单")));
+                EventBus.getDefault().post(new StartBrotherEvent(PayOrder.newInstance("支付订单", total_price)));
                 break;
         }
     }

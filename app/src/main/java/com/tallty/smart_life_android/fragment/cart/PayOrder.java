@@ -18,13 +18,16 @@ import com.tallty.smart_life_android.base.BaseBackFragment;
  */
 public class PayOrder extends BaseBackFragment {
     private String mName;
+    private float total_price;
 
     private Toolbar toolbar;
     private TextView toolbar_title;
+    private TextView order_price_text;
 
-    public static PayOrder newInstance(String title) {
+    public static PayOrder newInstance(String title, float total_price) {
         Bundle args = new Bundle();
         args.putString(TOOLBAR_TITLE, title);
+        args.putFloat(TOTAL_PRICE, total_price);
         PayOrder fragment = new PayOrder();
         fragment.setArguments(args);
         return fragment;
@@ -36,6 +39,7 @@ public class PayOrder extends BaseBackFragment {
         Bundle args = getArguments();
         if (args != null) {
             mName = args.getString(TOOLBAR_TITLE);
+            total_price = args.getFloat(TOTAL_PRICE);
         }
     }
 
@@ -48,6 +52,7 @@ public class PayOrder extends BaseBackFragment {
     protected void initView() {
         toolbar = getViewById(R.id.toolbar);
         toolbar_title = getViewById(R.id.toolbar_title);
+        order_price_text = getViewById(R.id.order_price);
     }
 
     @Override
@@ -59,6 +64,8 @@ public class PayOrder extends BaseBackFragment {
     protected void afterAnimationLogic() {
         initBackToolbar(toolbar);
         toolbar_title.setText(mName);
+
+        order_price_text.setText("RMB "+total_price);
     }
 
     @Override

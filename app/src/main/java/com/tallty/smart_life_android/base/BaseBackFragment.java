@@ -29,8 +29,9 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
     protected Context context;
 
     protected static final String TOOLBAR_TITLE = "BackFragmentTitle";
-    protected static final String DATA = "BackFragmentDatas";
-
+    protected static final String OBJECTS = "BackFragmentObjects";
+    protected static final String ADDRESS = "BackFragmentAddress";
+    protected static final String TOTAL_PRICE = "BackFragmentTotalPrice";
 
     @Nullable
     @Override
