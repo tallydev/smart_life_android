@@ -21,6 +21,8 @@ import com.tallty.smart_life_android.utils.ToastUtil;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Created by kang on 16/7/20.
@@ -52,6 +54,20 @@ public class CartListAdapter extends RecyclerView.Adapter<CartListAdapter.CartLi
         holder.count_price.setText("小计:￥ "+ commodity.getPrice()*commodity.getCount());
         // 设置监听
         setButtonListener(holder, position, commodity);
+    }
+
+    @Override
+    public void onBindViewHolder(CartListViewHolder holder, int position, List<Object> payloads) {
+        if (payloads.isEmpty()){
+            super.onBindViewHolder(holder, position, payloads);
+        }else{
+            Commodity commodity = (Commodity) payloads.get(0);
+            holder.check_box.setChecked(commodity.isChecked());
+            holder.count.setText(""+commodity.getCount());
+            holder.count_price.setText("小计:￥ "+ commodity.getPrice()*commodity.getCount());
+            // 设置监听
+            setButtonListener(holder, position, commodity);
+        }
     }
 
     @Override

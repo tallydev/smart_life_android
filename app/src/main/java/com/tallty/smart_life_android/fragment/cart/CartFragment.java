@@ -143,8 +143,12 @@ public class CartFragment extends BaseLazyMainFragment {
                 builder.setMessage("确定删除该商品吗?")
                         .setPositiveButton("确认", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
+                                // 从数据源删除数据
                                 commodities.remove(position);
+                                // 通知列表变化
                                 adapter.notifyItemRemoved(position);
+                                adapter.notifyItemRangeChanged(position, commodities.size()-position);
+
                                 // 重新计算总价
                                 float total = 0.0f;
                                 if (commodities.size() > 0){
@@ -177,7 +181,7 @@ public class CartFragment extends BaseLazyMainFragment {
     public void onCartUpdateItem(CartUpdateItem event){
         Log.d("接受了事件", "===》");
         commodities.set(event.position, event.commodity);
-        adapter.notifyItemChanged(event.position);
+        adapter.notifyItemChanged(event.position, event.commodity);
         // 处理【合计】【全选】逻辑
         float total = 0.0f;
         isSelectAll = true;
@@ -189,6 +193,7 @@ public class CartFragment extends BaseLazyMainFragment {
                 isSelectAll = false;
             }
         }
+        // 设置【合计】【全选】
         total_price_text.setText("￥ "+total);
         select_all_btn.setChecked(isSelectAll);
     }

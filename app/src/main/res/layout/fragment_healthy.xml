@@ -11,6 +11,7 @@
     <include layout="@layout/toolbar"/>
 
     <!--主体内容-->
+
     <LinearLayout
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
@@ -26,6 +27,7 @@
             android:textSize="@dimen/text_20"
             android:textColor="@color/white"
             android:text="健康数据收集中，敬请期待..."/>
+
     </LinearLayout>
 
 </LinearLayout>
