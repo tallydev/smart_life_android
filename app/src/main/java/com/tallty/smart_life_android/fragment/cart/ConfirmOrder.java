@@ -125,7 +125,8 @@ public class ConfirmOrder extends BaseBackFragment {
                 startForResult(MyAddress.newInstance("收货地址"), REQ_CODE);
                 break;
             case R.id.submit_order:
-                EventBus.getDefault().post(new StartBrotherEvent(PayOrder.newInstance("支付订单", total_price)));
+                EventBus.getDefault().post(new StartBrotherEvent(PayOrder
+                        .newInstance("支付订单", total_price, selected_commodities, order_address)));
                 break;
         }
     }
