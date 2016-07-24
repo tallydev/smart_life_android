@@ -32,10 +32,18 @@ import java.util.logging.Logger;
 public class CartListAdapter extends RecyclerView.Adapter<CartListAdapter.CartListViewHolder>{
     private Context context;
     private ArrayList<Commodity> commodities;
+    private String tag;
 
+    // 默认,购物车列表构造方法
     public CartListAdapter(Context context, ArrayList<Commodity> commodities){
         this.context = context;
         this.commodities = commodities;
+    }
+    // 提交订单列表构造方法
+    public CartListAdapter(Context context, ArrayList<Commodity> commodities, String tag){
+        this.context = context;
+        this.commodities = commodities;
+        this.tag = tag;
     }
 
     @Override
@@ -46,14 +54,26 @@ public class CartListAdapter extends RecyclerView.Adapter<CartListAdapter.CartLi
     @Override
     public void onBindViewHolder(CartListViewHolder holder, int position) {
         Commodity commodity = commodities.get(position);
-        holder.check_box.setChecked(commodity.isChecked());
+        // Global
         Glide.with(context).load(commodity.getPhoto_id()).into(holder.photo);
         holder.name.setText(commodity.getName());
-        holder.count.setText(""+commodity.getCount());
         holder.price.setText("￥ " + commodity.getPrice());
-        holder.count_price.setText("小计:￥ "+ commodity.getPrice()*commodity.getCount());
-        // 设置监听
-        setButtonListener(holder, position, commodity);
+
+        // Custom
+        if ("提交订单".equals(tag)){
+            holder.check_box.setVisibility(View.INVISIBLE);
+            holder.add.setVisibility(View.INVISIBLE);
+            holder.reduce.setVisibility(View.INVISIBLE);
+            holder.count_price.setVisibility(View.GONE);
+            holder.order_item_count.setVisibility(View.VISIBLE);
+            holder.order_item_count.setText("x "+commodity.getCount());
+        } else{
+            holder.check_box.setChecked(commodity.isChecked());
+            holder.count.setText(""+commodity.getCount());
+            holder.count_price.setText("小计:￥ "+ commodity.getPrice()*commodity.getCount());
+            // 设置监听
+            setButtonListener(holder, position, commodity);
+        }
     }
 
     @Override
@@ -126,6 +146,8 @@ public class CartListAdapter extends RecyclerView.Adapter<CartListAdapter.CartLi
         private TextView count;
         private TextView price;
         private TextView count_price;
+        // 提交订单
+        private TextView order_item_count;
 
         CartListViewHolder(View itemView) {
             super(itemView);
@@ -137,6 +159,8 @@ public class CartListAdapter extends RecyclerView.Adapter<CartListAdapter.CartLi
             count = (TextView) itemView.findViewById(R.id.cart_list_count);
             price = (TextView) itemView.findViewById(R.id.cart_list_price);
             count_price = (TextView) itemView.findViewById(R.id.cart_list_count_price);
+
+            order_item_count = (TextView) itemView.findViewById(R.id.order_item_count);
         }
     }
 }

@@ -27,6 +27,7 @@ import com.tallty.smart_life_android.utils.ToastUtil;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -48,6 +49,7 @@ public class CartFragment extends BaseLazyMainFragment {
     private ArrayList<Commodity> commodities = new ArrayList<>();
     // 结算相关
     private boolean isSelectAll = false;
+    private ArrayList<Commodity> selected_commodities = new ArrayList<>();
 
 
     public static CartFragment newInstance() {
@@ -88,18 +90,35 @@ public class CartFragment extends BaseLazyMainFragment {
 
     @Override
     public void onClick(View v) {
+        float total;
+
         switch (v.getId()) {
             case R.id.pay:
-                EventBus.getDefault().post(new StartBrotherEvent(ConfirmOrder.newInstance("确认订单")));
+                // 初始化selected_commodities
+                selected_commodities.clear();
+                total = 0.0f;
+                // 结算时,保存选中商品
+                for (Commodity commodity : commodities){
+                    if (commodity.isChecked()){
+                        total += commodity.getCount() * commodity.getPrice();
+                        selected_commodities.add(commodity);
+                    }
+                }
+                if (selected_commodities.size() > 0){
+                    EventBus.getDefault().post(new StartBrotherEvent(
+                            ConfirmOrder.newInstance("确认订单", selected_commodities, total))
+                    );
+                }else{
+                    showToast("您还未选择任何商品");
+                }
                 break;
             case R.id.select_all_btn:
+                total = 0.0f;
                 if (commodities.size() > 0){
-                    float total = 0.0f;
                     for (Commodity commodity : commodities){
                         if (select_all_btn.isChecked()){
                             commodity.setChecked(true);
-                            float item_total = commodity.getCount() * commodity.getPrice();
-                            total += item_total;
+                            total += commodity.getCount() * commodity.getPrice();
                         }else{
                             commodity.setChecked(false);
                         }
@@ -108,7 +127,7 @@ public class CartFragment extends BaseLazyMainFragment {
                     total_price_text.setText("￥ "+total);
                 }else{
                     select_all_btn.setChecked(false);
-                    showToast("购物车已经空了");
+                    showToast("购物车空空如也");
                 }
                 break;
         }

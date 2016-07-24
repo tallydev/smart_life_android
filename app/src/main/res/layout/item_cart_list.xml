@@ -55,6 +55,18 @@
         android:textColor="@color/orange"
         android:textSize="@dimen/text_14"/>
 
+    <TextView
+        android:id="@+id/order_item_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/cart_list_price"
+        android:layout_above="@id/cart_list_count_price"
+        android:layout_alignParentRight="true"
+        android:textSize="@dimen/text_12"
+        android:textColor="@color/global_text"
+        android:visibility="invisible"
+        android:layout_marginTop="3dp"/>
+
     <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
@@ -70,7 +82,8 @@
             android:layout_height="20dp"
             android:layout_centerVertical="true"
             android:background="@mipmap/ic_add"
-            android:layout_alignParentLeft="true"/>
+            android:layout_alignParentLeft="true"
+            android:textColor="@color/global_text"/>
         <TextView
             android:id="@+id/cart_list_count"
             android:layout_width="wrap_content"
