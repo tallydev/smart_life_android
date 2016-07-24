@@ -26,4 +26,5 @@
     <string name="step_rank_name">Loda</string>
     <string name="step_rank_praise_count">11</string>
     <string name="select_all">全选</string>
+    <string name="new_address_btn">新建收货地址</string>
 </resources>
