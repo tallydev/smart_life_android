@@ -20,6 +20,10 @@ import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.activity.MainActivity;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.base.BaseLazyMainFragment;
+import com.tallty.smart_life_android.event.StartBrotherEvent;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -63,6 +67,8 @@ public class LoginFragment extends BaseLazyMainFragment {
 
     @Override
     protected void initView() {
+        EventBus.getDefault().register(this);
+
         phone_edit = getViewById(R.id.login_phone);
         password_edit = getViewById(R.id.login_password);
         login_btn = getViewById(R.id.login_btn);
@@ -165,6 +171,20 @@ public class LoginFragment extends BaseLazyMainFragment {
      * 验证密码长度
      */
     private boolean isPasswordValid(String password) {
-        return password.length() >= 6;
+        return password.length() >= 5 && password.length() <= 8;
+    }
+
+    /**
+     * 接收事件, 启动一个同级的Fragment
+     */
+    @Subscribe
+    public void startBrother(StartBrotherEvent event) {
+        start(event.targetFragment);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        EventBus.getDefault().unregister(this);
     }
 }

@@ -27,4 +27,11 @@
     <string name="step_rank_praise_count">11</string>
     <string name="select_all">全选</string>
     <string name="new_address_btn">新建收货地址</string>
+    <string name="sign_phone">请输入您的手机号码</string>
+    <string name="sign_code">获取验证码</string>
+    <string name="sign_input_code">请输入验证码</string>
+    <string name="sign_pwd_tips">大于6位的数字、字母或符号</string>
+    <string name="sign_nickname">昵称</string>
+    <string name="sign_select_address">所在小区选择</string>
+    <string name="sign_accept">我已接收登录服务条款</string>
 </resources>
