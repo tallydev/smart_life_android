@@ -95,7 +95,6 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    testCompile 'junit:junit:4.12'
     // 数据库操作
     compile files('libs/lite-orm-1.7.0.jar')
     // retrofit 和 converter-gson 版本要保持一致
@@ -124,4 +123,6 @@ dependencies {
     compile 'com.github.iwgang:countdownview:2.1'
     compile 'com.diogobernardino:williamchart:2.2'
     compile 'com.joanzapata.iconify:android-iconify-fontawesome:2.2.2'
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha4'
+    testCompile 'junit:junit:4.12'
 }

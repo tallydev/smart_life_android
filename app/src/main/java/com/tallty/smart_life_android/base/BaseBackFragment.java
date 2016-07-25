@@ -40,7 +40,6 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
     // startForResultFragment使用
     protected static final int REQ_CODE = 0;
     protected static final int RESULT_YES = 1;
-    protected static final int RESULT_NO = 2;
     // startBrotherFragment使用
     protected static final String TOOLBAR_TITLE = "BackFragmentTitle";
     protected static final String OBJECTS = "BackFragmentObjects";
@@ -81,7 +80,7 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
             }
         });
         // 调试Fragment时使用,添加fragment栈层级菜单
-        initToolbarMenu(toolbar);
+//        initToolbarMenu(toolbar);
     }
 
     /**

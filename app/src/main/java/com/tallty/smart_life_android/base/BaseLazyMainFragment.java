@@ -1,6 +1,7 @@
 package com.tallty.smart_life_android.base;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
@@ -26,7 +27,9 @@ public abstract class BaseLazyMainFragment extends BaseFragment implements View.
     private Bundle mSavedInstanceState;
 
     private View view;
+
     protected Context context;
+    protected SharedPreferences sharedPre;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,6 +43,7 @@ public abstract class BaseLazyMainFragment extends BaseFragment implements View.
         int layout_id = getFragmentLayout();
         view = inflater.inflate(layout_id, container, false);
         context = getActivity().getApplicationContext();
+        sharedPre = context.getSharedPreferences("SmartLife", Context.MODE_PRIVATE);
         // 初始化ToolBar
         Toolbar toolbar = getViewById(R.id.toolbar);
         TextView toolbar_title = getViewById(R.id.toolbar_title);
@@ -79,17 +83,17 @@ public abstract class BaseLazyMainFragment extends BaseFragment implements View.
         }
     }
 
-    /**
-     * 懒加载
-     */
-    protected abstract void initLazyView(@Nullable Bundle savedInstanceState);
-
     // 获取布局文件
     public abstract int getFragmentLayout();
     // 初始化toolbar
     protected abstract void initToolBar(Toolbar toolbar, TextView title);
     // 初始化视图组件
     protected abstract void initView();
+    /**
+     * 懒加载
+     */
+    protected abstract void initLazyView(@Nullable Bundle savedInstanceState);
+
 
     /**
      * 处理回退事件

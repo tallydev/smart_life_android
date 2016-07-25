@@ -1,5 +1,6 @@
 package com.tallty.smart_life_android.fragment;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -39,6 +40,8 @@ public class MainFragment extends BaseFragment {
     private SupportFragment[] mFragments = new SupportFragment[5];
 
     private TabBar mTabBar;
+
+    protected SharedPreferences sharedPre;
 
 
     public static MainFragment newInstance() {

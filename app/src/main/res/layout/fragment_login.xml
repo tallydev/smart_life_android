@@ -9,16 +9,97 @@
     <include layout="@layout/toolbar"/>
 
     <!--主体部分-->
-    <ScrollView
+    <RelativeLayout
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <LinearLayout
+        android:layout_height="match_parent"
+        android:padding="4dp">
+        <ScrollView
+            android:id="@+id/login_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:background="@color/white"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/icon_phone"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:src="@drawable/login_phone_icon"
+                    android:padding="13dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"/>
+                <AutoCompleteTextView
+                    android:id="@+id/login_phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_toRightOf="@id/icon_phone"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:background="@color/white"
+                    android:hint="请输入您的手机号码"
+                    android:inputType="phone"
+                    android:textSize="@dimen/text_14"/>
 
-        </LinearLayout>
-    </ScrollView>
+                <View
+                    android:id="@+id/line"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@id/login_phone"
+                    android:background="@color/app_bg"/>
+
+                <ImageView
+                    android:id="@+id/icon_password"
+                    android:layout_below="@id/line"
+                    android:layout_alignParentLeft="true"
+                    android:src="@drawable/login_password_icon"
+                    android:padding="13dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"/>
+                <EditText
+                    android:id="@+id/login_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_below="@id/line"
+                    android:layout_toRightOf="@id/icon_password"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:background="@color/white"
+                    android:inputType="textPassword"
+                    android:textSize="@dimen/text_14"
+                    android:hint="请输入密码"/>
+            </RelativeLayout>
+        </ScrollView>
+
+        <Button
+            android:id="@+id/login_btn"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_below="@id/login_form"
+            android:background="@color/orange"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_18"
+            android:text="登录"
+            android:gravity="center"/>
+
+        <Button
+            android:id="@+id/free_register"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_marginTop="36dp"
+            android:textColor="@color/orange"
+            android:textSize="@dimen/text_14"
+            android:background="@drawable/register_btn_bg"
+            android:text="免费注册"
+            android:layout_below="@+id/login_btn"
+            android:layout_centerHorizontal="true"/>
+    </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -1,4 +1,4 @@
-package com.tallty.smart_life_android.fragment.me;
+package com.tallty.smart_life_android.fragment.authentication;
 
 
 import android.os.Bundle;
@@ -13,16 +13,15 @@ import com.tallty.smart_life_android.base.BaseBackFragment;
 /**
  * 个人中心-注册
  */
-public class Register extends BaseBackFragment {
-    private String mName;
+public class RegisterFragment extends BaseBackFragment {
 
     private Toolbar toolbar;
     private TextView toolbar_title;
 
-    public static Register newInstance(String title) {
+    public static RegisterFragment newInstance() {
         Bundle args = new Bundle();
-        args.putString(TOOLBAR_TITLE, title);
-        Register fragment = new Register();
+
+        RegisterFragment fragment = new RegisterFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -32,7 +31,7 @@ public class Register extends BaseBackFragment {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
-            mName = args.getString(TOOLBAR_TITLE);
+
         }
     }
 
@@ -55,7 +54,7 @@ public class Register extends BaseBackFragment {
     @Override
     protected void afterAnimationLogic() {
         initBackToolbar(toolbar);
-        toolbar_title.setText(mName);
+        toolbar_title.setText("注册");
     }
 
     @Override
