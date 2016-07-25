@@ -31,6 +31,12 @@ public abstract class BaseLazyMainFragment extends BaseFragment implements View.
     protected Context context;
     protected SharedPreferences sharedPre;
 
+    // sharedPre数据常量
+    protected static final String EMPTY_STRING = " ";
+
+    protected static final String PHONE = "user_phone";
+    protected static final String USER_TOKEN = "user_token";
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -87,7 +87,8 @@
             android:textColor="@color/white"
             android:textSize="@dimen/text_18"
             android:text="登录"
-            android:gravity="center"/>
+            android:gravity="center"
+            />
 
         <Button
             android:id="@+id/free_register"
@@ -98,7 +99,7 @@
             android:textSize="@dimen/text_14"
             android:background="@drawable/register_btn_bg"
             android:text="免费注册"
-            android:layout_below="@+id/login_btn"
+            android:layout_below="@id/login_btn"
             android:layout_centerHorizontal="true"/>
     </RelativeLayout>
 
