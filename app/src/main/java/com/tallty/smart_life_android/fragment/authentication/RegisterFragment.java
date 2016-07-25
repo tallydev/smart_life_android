@@ -13,7 +13,10 @@ import android.widget.TextView;
 
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
+import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.model.User;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -78,6 +81,7 @@ public class RegisterFragment extends BaseBackFragment {
         getCodeBtn.setOnClickListener(this);
         addressEdit.setOnClickListener(this);
         registerBtn.setOnClickListener(this);
+        clauseText.setOnClickListener(this);
         acceptBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -111,6 +115,7 @@ public class RegisterFragment extends BaseBackFragment {
                 beginRegister();
                 break;
             case R.id.clause:
+                EventBus.getDefault().post(new StartBrotherEvent(ClauseFragment.newInstance()));
                 break;
         }
     }
