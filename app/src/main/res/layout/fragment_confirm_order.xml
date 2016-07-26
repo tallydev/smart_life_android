@@ -41,7 +41,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:textColor="@color/angle_right_color"
-                android:text="{fa-angle-right}"
+                android:text="@string/fa_angle_right"
                 android:textSize="24sp"/>
             <TextView
                 android:id="@+id/order_address"

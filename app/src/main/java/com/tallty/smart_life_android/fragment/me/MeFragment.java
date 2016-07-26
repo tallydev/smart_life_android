@@ -145,10 +145,10 @@ public class MeFragment extends BaseLazyMainFragment {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.me_profile:
-                EventBus.getDefault().post(new StartBrotherEvent(Profile.newInstance("账户管理")));
+                EventBus.getDefault().post(new StartBrotherEvent(ProfileFragment.newInstance()));
                 break;
             case R.id.me_order:
-                EventBus.getDefault().post(new StartBrotherEvent(MyOrders.newInstance("我的订单")));
+                EventBus.getDefault().post(new StartBrotherEvent(MyOrders.newInstance()));
                 break;
             case R.id.wait_pay:
                 showToast("待付款");

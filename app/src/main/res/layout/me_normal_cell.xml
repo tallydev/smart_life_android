@@ -23,7 +23,6 @@
         android:layout_toRightOf="@id/cell_icon"
         android:layout_centerVertical="true"
         android:layout_marginLeft="16dp"
-        android:singleLine="true"
         android:ellipsize="end"
         android:maxLines="1"
         android:text="text"/>
@@ -35,7 +34,7 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:textColor="@color/angle_right_color"
-        android:text="{fa-angle-right}"
+        android:text="@string/fa_angle_right"
         android:textSize="24sp"/>
 
     <TextView
@@ -46,7 +45,6 @@
         android:layout_toLeftOf="@id/indicator"
         android:layout_marginRight="16dp"
         android:visibility="gone"
-        android:singleLine="true"
         android:ellipsize="end"
         android:maxLines="1"
         android:maxLength="20"

@@ -14,14 +14,12 @@ import com.tallty.smart_life_android.base.BaseBackFragment;
  * 个人中心-我的订单
  */
 public class MyOrders extends BaseBackFragment {
-    private String mName;
-
     private Toolbar toolbar;
     private TextView toolbar_title;
 
-    public static MyOrders newInstance(String title) {
+    public static MyOrders newInstance() {
         Bundle args = new Bundle();
-        args.putString(TOOLBAR_TITLE, title);
+
         MyOrders fragment = new MyOrders();
         fragment.setArguments(args);
         return fragment;
@@ -32,7 +30,7 @@ public class MyOrders extends BaseBackFragment {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
-            mName = args.getString(TOOLBAR_TITLE);
+
         }
     }
 
@@ -55,7 +53,7 @@ public class MyOrders extends BaseBackFragment {
     @Override
     protected void afterAnimationLogic() {
         initBackToolbar(toolbar);
-        toolbar_title.setText(mName);
+        toolbar_title.setText("我的订单");
     }
 
     @Override

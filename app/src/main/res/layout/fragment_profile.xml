@@ -9,18 +9,11 @@
     <include layout="@layout/toolbar"/>
 
     <!--主体部分-->
-    <ScrollView
+    <android.support.v7.widget.RecyclerView
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:id="@+id/profile_list"
+        android:padding="4dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="4dp">
-        <ImageView
-            android:id="@+id/profile_image"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:scaleType="fitXY"
-            android:adjustViewBounds="true"/>
-    </ScrollView>
+        android:layout_height="wrap_content" />
 
 </android.support.design.widget.CoordinatorLayout>

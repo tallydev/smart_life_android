@@ -149,6 +149,7 @@ public class LoginFragment extends BaseLazyMainFragment {
             // TODO: 16/7/25 开始登录功能
             Intent intent = new Intent(getActivity(), MainActivity.class);
             startActivity(intent);
+            getActivity().finish();
         }
     }
 

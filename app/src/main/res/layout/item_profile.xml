@@ -2,26 +2,21 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/cell_bg"
-    android:padding="10dp">
-    <ImageView
-        android:id="@+id/cell_icon"
-        android:layout_width="18dp"
-        android:layout_height="18dp"
-        android:layout_centerVertical="true"
-        android:scaleType="fitCenter"
-        android:layout_alignParentLeft="true"
-        android:src="@drawable/me_order"/>
-
+    android:layout_height="38dp"
+    android:background="@drawable/item_bg"
+    android:id="@+id/item_profile_layout"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp">
     <TextView
-        android:id="@+id/cell_text"
+        android:id="@+id/item_profile_key"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:paddingLeft="5dp"
         android:maxLength="8"
-        android:layout_toRightOf="@id/cell_icon"
+        android:textSize="@dimen/text_14"
+        android:textColor="@color/global_text"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="16dp"
         android:ellipsize="end"
         android:maxLines="1"
         android:text="text"/>
@@ -31,22 +26,31 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
+        android:paddingRight="5dp"
         android:layout_centerVertical="true"
         android:textColor="@color/angle_right_color"
         android:text="@string/fa_angle_right"
-        android:textSize="24sp"/>
+        android:textSize="22sp"/>
 
     <TextView
-        android:id="@+id/cell_value"
+        android:id="@+id/item_profile_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@id/indicator"
         android:layout_marginRight="16dp"
-        android:visibility="gone"
+        android:textSize="@dimen/text_14"
+        android:textColor="@color/gray_text"
         android:ellipsize="end"
         android:maxLines="1"
         android:maxLength="20"
         android:text="341621199205032917"/>
+
+    <View
+        android:id="@+id/profile_line"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/app_bg"
+        android:layout_alignParentBottom="true"/>
 
 </RelativeLayout>

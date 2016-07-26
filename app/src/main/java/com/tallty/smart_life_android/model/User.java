@@ -34,6 +34,31 @@ public class User implements Serializable{
     @Expose
     private String address;
 
+    @SerializedName("birth")
+    @Expose
+    private String birth;
+
+    @SerializedName("sex")
+    @Expose
+    private String sex;
+
+    @SerializedName("signature")
+    @Expose
+    private String signature;
+
+    @SerializedName("id_card")
+    @Expose
+    private String idCard;
+
+    @SerializedName("bind_phone")
+    @Expose
+    private String bindPhone;
+
+    @SerializedName("pay_password")
+    @Expose
+    private String payPassword;
+
+
     public User() {
     }
 
@@ -83,5 +108,53 @@ public class User implements Serializable{
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getBirth() {
+        return birth;
+    }
+
+    public void setBirth(String birth) {
+        this.birth = birth;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public String getSignature() {
+        return signature;
+    }
+
+    public void setSignature(String signature) {
+        this.signature = signature;
+    }
+
+    public String getIdCard() {
+        return idCard;
+    }
+
+    public void setIdCard(String idCard) {
+        this.idCard = idCard;
+    }
+
+    public String getBindPhone() {
+        return bindPhone;
+    }
+
+    public void setBindPhone(String bindPhone) {
+        this.bindPhone = bindPhone;
+    }
+
+    public String getPayPassword() {
+        return payPassword;
+    }
+
+    public void setPayPassword(String payPassword) {
+        this.payPassword = payPassword;
     }
 }

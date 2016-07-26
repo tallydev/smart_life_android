@@ -47,7 +47,7 @@ public class SportMoreData extends BaseBackFragment {
     // 列表数据
     private ArrayList<String> urls = new ArrayList<String>() {
         {
-            add("http://img0.pconline.com.cn/pconline/1312/27/4072897_01_thumb.gif");
+            add("http://sc.admin5.com/uploads/allimg/100210/113629E45-2.png");
             add("http://img0.pconline.com.cn/pconline/1312/27/4072897_02_thumb.gif");
             add("http://img0.pconline.com.cn/pconline/1312/27/4072897_03_thumb.gif");
             add("http://img0.pconline.com.cn/pconline/1312/27/4072897_04_thumb.gif");
