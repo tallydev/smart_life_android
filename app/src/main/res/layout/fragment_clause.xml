@@ -25,9 +25,12 @@
                 android:paddingBottom="16dp"
                 android:paddingLeft="24dp"
                 android:paddingRight="24dp"
+                android:lineSpacingExtra="4sp"
                 android:textSize="@dimen/text_12"
                 android:textColor="@color/global_text"
-                android:text="@string/clause_text"/>
+                android:text="@string/clause_text"
+                android:textAllCaps="false"
+                />
         </LinearLayout>
     </ScrollView>
 
