@@ -143,9 +143,7 @@ public class LoginFragment extends BaseLazyMainFragment {
         if (cancel) {
             focusView.requestFocus();
         } else {
-            // 隐藏软键盘
-            InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+            hideSoftInput();
             // TODO: 16/7/25 开始登录功能
             Intent intent = new Intent(getActivity(), MainActivity.class);
             startActivity(intent);

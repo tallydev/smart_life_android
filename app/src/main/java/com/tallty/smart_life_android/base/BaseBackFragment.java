@@ -39,7 +39,6 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
     protected static final String EMPTY_STRING = " ";
     // startForResultFragment使用
     protected static final int REQ_CODE = 0;
-    protected static final int RESULT_YES = 1;
     protected static final String RESULT_DATA = "data";
     protected static final String RESULT_POSITION = "position";
     // startBrotherFragment使用

@@ -153,7 +153,7 @@ public class MyAddress extends BaseBackFragment {
      */
     private void setAddressResult(){
         Bundle bundle = new Bundle();
-        setFramgentResult(RESULT_YES, bundle);
+        setFramgentResult(RESULT_OK, bundle);
     }
 
 
@@ -203,7 +203,7 @@ public class MyAddress extends BaseBackFragment {
         // 把选中的地址回传给上一个页面
         Bundle bundle = new Bundle();
         bundle.putSerializable(ADDRESS, cache_address);
-        setFramgentResult(RESULT_YES, bundle);
+        setFramgentResult(RESULT_OK, bundle);
         if (from == FROM_ORDER){
             pop();
         }

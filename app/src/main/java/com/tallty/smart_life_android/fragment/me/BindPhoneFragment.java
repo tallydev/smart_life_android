@@ -169,10 +169,9 @@ public class BindPhoneFragment extends BaseBackFragment {
             Bundle bundle = new Bundle();
             bundle.putString(RESULT_DATA, phone);
             bundle.putInt(RESULT_POSITION, position);
-            setFramgentResult(RESULT_YES, bundle);
+            setFramgentResult(RESULT_OK, bundle);
             // 隐藏软键盘
-            InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+            hideSoftInput();
             // 弹出fragment
             pop();
 
