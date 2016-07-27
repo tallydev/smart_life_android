@@ -172,6 +172,7 @@ public class RegisterFragment extends BaseBackFragment {
         }
         // 注册
         if (cancel) {
+            assert focusView != null;
             focusView.requestFocus();
         } else {
             // TODO: 16/7/25 注册任务

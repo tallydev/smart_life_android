@@ -1,11 +1,13 @@
 package com.tallty.smart_life_android.fragment.me;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -76,6 +78,9 @@ public class ChangeProfileFragment extends BaseBackFragment {
 
         change_input.setText(value);
         change_input.setHint("请输入"+key);
+        if (!key.equals("昵称")) {
+            change_tips.setText(null);
+        }
     }
 
     @Override
@@ -88,6 +93,9 @@ public class ChangeProfileFragment extends BaseBackFragment {
                 bundle.putString(RESULT_DATA, text);
                 bundle.putInt(RESULT_POSITION, position);
                 setFramgentResult(RESULT_YES, bundle);
+                // 隐藏软键盘
+                InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
                 pop();
                 break;
         }

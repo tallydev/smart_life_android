@@ -163,6 +163,8 @@ public class ProfileFragment extends BaseBackFragment {
                                 }
                             }).create();
                     alert.show();
+                } else if (position == 7) {
+                  EventBus.getDefault().post(new StartBrotherEvent(MyAddress.newInstance(FROM_PROFILE)));
                 } else if (position == 8) {
                     // 跳转修改页面
                     startForResult(BindPhoneFragment.newInstance(
