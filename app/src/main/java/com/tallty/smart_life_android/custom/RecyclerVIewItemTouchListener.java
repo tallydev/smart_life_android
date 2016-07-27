@@ -6,6 +6,8 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
+import java.text.ParseException;
+
 /**
  * Created by kang on 16/6/23.
  * 实现RecycleView 的点击事件
@@ -44,7 +46,7 @@ public abstract class RecyclerVIewItemTouchListener implements RecyclerView.OnIt
      * 点击事件
      * @param vh
      */
-    public abstract void onItemClick(RecyclerView.ViewHolder vh, int position);
+    public abstract void onItemClick(RecyclerView.ViewHolder vh, int position) throws ParseException;
 
     /**
      * 长按事件
@@ -60,7 +62,11 @@ public abstract class RecyclerVIewItemTouchListener implements RecyclerView.OnIt
             if (child != null) {
                 VH = recyclerView.getChildViewHolder(child);
                 position = recyclerView.getChildAdapterPosition(child);
-                onItemClick(VH, position);
+                try {
+                    onItemClick(VH, position);
+                } catch (ParseException e1) {
+                    e1.printStackTrace();
+                }
             }
             return true;
         }

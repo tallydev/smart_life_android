@@ -19,6 +19,7 @@ import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
+ * 购物车-支付订单
  */
 public class PayOrder extends BaseBackFragment {
     private String mName;

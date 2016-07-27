@@ -69,8 +69,8 @@ public class HealthyOrderCheck extends BaseBackFragment {
         initBackToolbar(toolbar);
         toolbar_title.setText(mName);
         // 加载图片
-        Glide.with(context).load(R.drawable.order_check_top).into(banner);
-        Glide.with(context).load(R.drawable.order_check_text).into(tips);
+        Glide.with(context).load(R.drawable.order_check_top).skipMemoryCache(true).into(banner);
+        Glide.with(context).load(R.drawable.order_check_text).skipMemoryCache(true).into(tips);
     }
 
     @Override

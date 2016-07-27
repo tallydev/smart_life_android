@@ -26,7 +26,8 @@ import java.util.ArrayList;
  * 购物车-确认订单-收货地址
  */
 public class MyAddress extends BaseBackFragment {
-    private String mName;
+    // 调用者
+    private int from;
 
     private Toolbar toolbar;
     private TextView toolbar_title;
@@ -47,9 +48,9 @@ public class MyAddress extends BaseBackFragment {
     private int defaultAddressPosition;
 
 
-    public static MyAddress newInstance(String title) {
+    public static MyAddress newInstance(int from) {
         Bundle args = new Bundle();
-        args.putString(TOOLBAR_TITLE, title);
+        args.putInt(NORMAL_DATA, from);
         MyAddress fragment = new MyAddress();
         fragment.setArguments(args);
         return fragment;
@@ -60,7 +61,7 @@ public class MyAddress extends BaseBackFragment {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
-            mName = args.getString(TOOLBAR_TITLE);
+            from = args.getInt(NORMAL_DATA);
         }
     }
 
@@ -87,7 +88,7 @@ public class MyAddress extends BaseBackFragment {
     @Override
     protected void afterAnimationLogic() {
         initBackToolbar(toolbar);
-        toolbar_title.setText(mName);
+        toolbar_title.setText("收货地址");
         // 载入数据并加载列表
         loadAddressData();
     }
@@ -203,7 +204,9 @@ public class MyAddress extends BaseBackFragment {
         Bundle bundle = new Bundle();
         bundle.putSerializable(ADDRESS, cache_address);
         setFramgentResult(RESULT_YES, bundle);
-        pop();
+        if (from == FROM_ORDER){
+            pop();
+        }
     }
 
     @Override

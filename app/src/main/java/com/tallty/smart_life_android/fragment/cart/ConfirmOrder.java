@@ -122,7 +122,7 @@ public class ConfirmOrder extends BaseBackFragment {
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.link_to_addresses:
-                startForResult(MyAddress.newInstance("收货地址"), REQ_CODE);
+                startForResult(MyAddress.newInstance(FROM_ORDER), REQ_CODE);
                 break;
             case R.id.submit_order:
                 EventBus.getDefault().post(new StartBrotherEvent(PayOrder
