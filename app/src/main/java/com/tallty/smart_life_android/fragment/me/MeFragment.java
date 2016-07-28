@@ -163,7 +163,7 @@ public class MeFragment extends BaseLazyMainFragment {
                 EventBus.getDefault().post(new StartBrotherEvent(SportMoreData.newInstance("健身达人")));
                 break;
             case R.id.me_appointment:
-                EventBus.getDefault().post(new StartBrotherEvent(MyAppointments.newInstance("我的预约")));
+                EventBus.getDefault().post(new StartBrotherEvent(MyAppointments.newInstance()));
                 break;
             case R.id.contact_service:
                 PackageManager pm = context.getPackageManager();

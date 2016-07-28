@@ -5,19 +5,13 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseActivity;
-import com.tallty.smart_life_android.presenter.ILoadingPresenter;
-import com.tallty.smart_life_android.presenter.LoadingPresenter;
-import com.tallty.smart_life_android.view.ILoadingView;
 
-public class LoadingActivity extends BaseActivity implements ILoadingView {
-    private ILoadingPresenter iLoadingPresenter;
+public class LoadingActivity extends BaseActivity {
     private ImageView loadingImage;
-    private TextView timeText;
     private CountDownTimer timer;
 
     @Override
@@ -28,7 +22,6 @@ public class LoadingActivity extends BaseActivity implements ILoadingView {
     @Override
     protected void initView(Bundle savedInstanceState) {
         loadingImage = getViewById(R.id.loading_image);
-        timeText = getViewById(R.id.loading_time);
     }
 
     @Override
@@ -41,23 +34,13 @@ public class LoadingActivity extends BaseActivity implements ILoadingView {
         // 全屏显示
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        // 初始化presenter
-        iLoadingPresenter = new LoadingPresenter(this);
-        iLoadingPresenter.onLoading();
-    }
 
-    @Override
-    public void showImage(String uri) {
         Glide.with(this).load(R.drawable.loading).into(loadingImage);
-    }
 
-    @Override
-    public void changeAty() {
         timer = new CountDownTimer(3000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-//                timeText.setText(millisUntilFinished/1000 + "秒");
-                timeText.setText(" ");
+
             }
 
             @Override

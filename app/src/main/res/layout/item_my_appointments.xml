@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:background="@drawable/border_bottom_bg"
+    android:padding="15dp">
+    <TextView
+        android:id="@+id/appointment_time"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:gravity="center_vertical"
+        android:textSize="@dimen/text_14"
+        android:layout_marginBottom="10dp"
+        android:textColor="@color/global_text"
+        android:text="预约时间: 2016年7月1日12:00"/>
+    <TextView
+        android:id="@+id/appointment_content"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:gravity="center_vertical"
+        android:textSize="@dimen/text_14"
+        android:layout_below="@id/appointment_time"
+        android:textColor="@color/global_text"
+        android:text="预约内容: IT学堂"/>
+
+    <TextView
+        android:id="@+id/appointment_state"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:gravity="center_vertical"
+        android:text="已接受"
+        android:textSize="@dimen/text_14"
+        android:textColor="@color/orange"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"/>
+</RelativeLayout>

@@ -1,11 +1,11 @@
 package com.tallty.smart_life_android.activity;
 
 import android.os.Bundle;
+import android.os.CountDownTimer;
 
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import com.tallty.smart_life_android.R;
-import com.tallty.smart_life_android.fragment.MainFragment;
 import com.tallty.smart_life_android.fragment.authentication.LoginFragment;
 
 import me.yokeyword.fragmentation.SupportActivity;
@@ -13,6 +13,7 @@ import me.yokeyword.fragmentation.anim.DefaultHorizontalAnimator;
 import me.yokeyword.fragmentation.anim.FragmentAnimator;
 
 public class LoginActivity extends SupportActivity {
+    private CountDownTimer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
