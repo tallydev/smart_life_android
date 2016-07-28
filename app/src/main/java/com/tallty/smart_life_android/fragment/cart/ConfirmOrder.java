@@ -26,23 +26,19 @@ import java.util.ArrayList;
  * 购物车-确认订单
  */
 public class ConfirmOrder extends BaseBackFragment {
-    private String mName;
     // 数据
     private ArrayList<Commodity> selected_commodities = new ArrayList<>();
     private float total_price = 0.0f;
     private Address order_address = new Address();
 
-    private Toolbar toolbar;
-    private TextView toolbar_title;
     private TextView submit_btn;
     private RelativeLayout link_to_addresses;
     private TextView order_address_text;
     private RecyclerView recyclerView;
     private TextView total_price_text;
 
-    public static ConfirmOrder newInstance(String title, ArrayList<Commodity> selected_commodities, float total_price) {
+    public static ConfirmOrder newInstance(ArrayList<Commodity> selected_commodities, float total_price) {
         Bundle args = new Bundle();
-        args.putString(TOOLBAR_TITLE, title);
         args.putSerializable(OBJECTS, selected_commodities);
         args.putFloat(TOTAL_PRICE, total_price);
         ConfirmOrder fragment = new ConfirmOrder();
@@ -55,7 +51,6 @@ public class ConfirmOrder extends BaseBackFragment {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
-            mName = args.getString(TOOLBAR_TITLE);
             selected_commodities = (ArrayList<Commodity>) args.getSerializable(OBJECTS);
             total_price = args.getFloat(TOTAL_PRICE);
         }
@@ -67,9 +62,12 @@ public class ConfirmOrder extends BaseBackFragment {
     }
 
     @Override
+    public void initToolbar(Toolbar toolbar, TextView toolbar_title) {
+        toolbar_title.setText("确认订单");
+    }
+
+    @Override
     protected void initView() {
-        toolbar = getViewById(R.id.toolbar);
-        toolbar_title = getViewById(R.id.toolbar_title);
         submit_btn = getViewById(R.id.submit_order);
         link_to_addresses = getViewById(R.id.link_to_addresses);
         order_address_text = getViewById(R.id.order_address);
@@ -85,8 +83,6 @@ public class ConfirmOrder extends BaseBackFragment {
 
     @Override
     protected void afterAnimationLogic() {
-        initBackToolbar(toolbar);
-        toolbar_title.setText(mName);
         // 合计
         total_price_text.setText("￥ "+total_price);
         // 设置订单地址
@@ -126,7 +122,7 @@ public class ConfirmOrder extends BaseBackFragment {
                 break;
             case R.id.submit_order:
                 EventBus.getDefault().post(new StartBrotherEvent(PayOrder
-                        .newInstance("支付订单", total_price, selected_commodities, order_address)));
+                        .newInstance(total_price, selected_commodities, order_address)));
                 break;
         }
     }

@@ -1,13 +1,11 @@
 package com.tallty.smart_life_android.fragment.me;
 
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -25,8 +23,6 @@ public class ChangeProfileFragment extends BaseBackFragment {
     private String value;
     private int position;
     // UI
-    private Toolbar toolbar;
-    private TextView toolbar_title;
     private EditText change_input;
     private TextView change_tips;
     private Button change_btn;
@@ -58,9 +54,12 @@ public class ChangeProfileFragment extends BaseBackFragment {
     }
 
     @Override
+    public void initToolbar(Toolbar toolbar, TextView toolbar_title) {
+        toolbar_title.setText(""+ key);
+    }
+
+    @Override
     protected void initView() {
-        toolbar = getViewById(R.id.toolbar);
-        toolbar_title = getViewById(R.id.toolbar_title);
         change_input = getViewById(R.id.change_input);
         change_tips = getViewById(R.id.change_tips);
         change_btn = getViewById(R.id.change_btn);
@@ -73,9 +72,6 @@ public class ChangeProfileFragment extends BaseBackFragment {
 
     @Override
     protected void afterAnimationLogic() {
-        initBackToolbar(toolbar);
-        toolbar_title.setText(""+ key);
-
         change_input.setText(value);
         change_input.setHint("请输入"+key);
         if (!key.equals("昵称")) {

@@ -29,8 +29,6 @@ public class MyAddress extends BaseBackFragment {
     // 调用者
     private int from;
 
-    private Toolbar toolbar;
-    private TextView toolbar_title;
     private TextView new_address_text;
     private RecyclerView recyclerView;
     private AddressListAdapter adapter;
@@ -71,11 +69,14 @@ public class MyAddress extends BaseBackFragment {
     }
 
     @Override
+    public void initToolbar(Toolbar toolbar, TextView toolbar_title) {
+        toolbar_title.setText("收货地址");
+    }
+
+    @Override
     protected void initView() {
         EventBus.getDefault().register(this);
 
-        toolbar = getViewById(R.id.toolbar);
-        toolbar_title = getViewById(R.id.toolbar_title);
         new_address_text = getViewById(R.id.new_address);
         recyclerView = getViewById(R.id.address_list);
     }
@@ -87,8 +88,6 @@ public class MyAddress extends BaseBackFragment {
 
     @Override
     protected void afterAnimationLogic() {
-        initBackToolbar(toolbar);
-        toolbar_title.setText("收货地址");
         // 载入数据并加载列表
         loadAddressData();
     }

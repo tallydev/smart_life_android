@@ -22,8 +22,6 @@ import java.io.InputStream;
 public class HouseCatEye extends BaseBackFragment {
     private String mName;
 
-    private Toolbar toolbar;
-    private TextView toolbar_title;
     private TextView experience;
     private ImageView detail_image1;
     private ImageView detail_image2;
@@ -52,9 +50,12 @@ public class HouseCatEye extends BaseBackFragment {
     }
 
     @Override
+    public void initToolbar(Toolbar toolbar, TextView toolbar_title) {
+        toolbar_title.setText(mName);
+    }
+
+    @Override
     protected void initView() {
-        toolbar = getViewById(R.id.toolbar);
-        toolbar_title = getViewById(R.id.toolbar_title);
         experience = getViewById(R.id.appointment_experience);
         detail_image1 = getViewById(R.id.cat_eye_image1);
         detail_image2 = getViewById(R.id.cat_eye_image2);
@@ -75,8 +76,6 @@ public class HouseCatEye extends BaseBackFragment {
 
     @Override
     protected void afterAnimationLogic() {
-        initBackToolbar(toolbar);
-        toolbar_title.setText(mName);
         Glide.with(context).load(R.drawable.cat_eye_01).into(detail_image1);
         Glide.with(context).load(R.drawable.cat_eye_02).into(detail_image2);
         Glide.with(context).load(R.drawable.cat_eye_03).into(detail_image3);

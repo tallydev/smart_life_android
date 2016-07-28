@@ -12,14 +12,11 @@ import com.tallty.smart_life_android.base.BaseBackFragment;
 
 /**
  * Created by kang on 16/7/5.
+ * 测试用: 循环BackFragment
  */
 public class CycleFragment extends BaseBackFragment{
     private static final String ARG_NUMBER = "arg_number";
     private static final String ARG_NAME = "arg_name";
-
-    private Toolbar mToolbar;
-    private TextView mTvName;
-    private Button mBtnNext, mBtnNextWithFinish;
 
     private int mNumber;
     private String mName;
@@ -49,8 +46,12 @@ public class CycleFragment extends BaseBackFragment{
     }
 
     @Override
+    public void initToolbar(Toolbar toolbar, TextView toolbar_title) {
+        toolbar_title.setText(mName);
+    }
+
+    @Override
     protected void initView() {
-        mToolbar = getViewById(R.id.toolbar);
 //        mTvName = getViewById(R.id.tv_name);
 //        mBtnNext = getViewById(R.id.btn_next);
 //        mBtnNextWithFinish = getViewById(R.id.btn_next_with_finish);
@@ -65,9 +66,7 @@ public class CycleFragment extends BaseBackFragment{
     protected void afterAnimationLogic() {
 //        String title = "循环Fragment" + mNumber;
 //
-        mToolbar.setTitle(mName);
-        initBackToolbar(mToolbar);
-//
+
 //        mTvName.setText(title + "\n可滑动返回");
 //        mBtnNext.setOnClickListener(new View.OnClickListener() {
 //            @Override

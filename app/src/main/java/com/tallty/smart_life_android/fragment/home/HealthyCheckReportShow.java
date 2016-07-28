@@ -26,8 +26,6 @@ import java.util.ArrayList;
 public class HealthyCheckReportShow extends BaseBackFragment {
     private String mName;
 
-    private Toolbar toolbar;
-    private TextView toolbar_title;
     private MyRecyclerView myRecyclerView;
     private LineChartView chart;
     private TextView chart_name;
@@ -77,9 +75,12 @@ public class HealthyCheckReportShow extends BaseBackFragment {
     }
 
     @Override
+    public void initToolbar(Toolbar toolbar, TextView toolbar_title) {
+        toolbar_title.setText(mName);
+    }
+
+    @Override
     protected void initView() {
-        toolbar = getViewById(R.id.toolbar);
-        toolbar_title = getViewById(R.id.toolbar_title);
         myRecyclerView = getViewById(R.id.check_report_show_list);
         chart = getViewById(R.id.check_line_chart);
         chart_name = getViewById(R.id.chart_name);
@@ -91,8 +92,6 @@ public class HealthyCheckReportShow extends BaseBackFragment {
 
     @Override
     protected void afterAnimationLogic() {
-        initBackToolbar(toolbar);
-        toolbar_title.setText(mName);
         chart_name.setText(mName);
         // 设置图表
         initChart();

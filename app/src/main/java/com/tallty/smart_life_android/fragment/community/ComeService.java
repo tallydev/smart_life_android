@@ -16,16 +16,12 @@ import com.tallty.smart_life_android.base.BaseBackFragment;
  * 社区 - 上门服务
  */
 public class ComeService extends BaseBackFragment {
-    private String mName;
-
-    private Toolbar toolbar;
-    private TextView toolbar_title;
     private ImageView service_image;
     private TextView appointment;
 
-    public static ComeService newInstance(String title) {
+    public static ComeService newInstance() {
         Bundle args = new Bundle();
-        args.putString(TOOLBAR_TITLE, title);
+
         ComeService fragment = new ComeService();
         fragment.setArguments(args);
         return fragment;
@@ -36,7 +32,7 @@ public class ComeService extends BaseBackFragment {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
-            mName = args.getString(TOOLBAR_TITLE);
+
         }
     }
 
@@ -46,9 +42,12 @@ public class ComeService extends BaseBackFragment {
     }
 
     @Override
+    public void initToolbar(Toolbar toolbar, TextView toolbar_title) {
+        toolbar_title.setText("上门服务");
+    }
+
+    @Override
     protected void initView() {
-        toolbar = getViewById(R.id.toolbar);
-        toolbar_title = getViewById(R.id.toolbar_title);
         service_image = getViewById(R.id.come_service_image);
         appointment = getViewById(R.id.come_service_appointment);
     }
@@ -60,8 +59,6 @@ public class ComeService extends BaseBackFragment {
 
     @Override
     protected void afterAnimationLogic() {
-        initBackToolbar(toolbar);
-        toolbar_title.setText(mName);
         Glide.with(context).load(R.drawable.community_service).into(service_image);
     }
 

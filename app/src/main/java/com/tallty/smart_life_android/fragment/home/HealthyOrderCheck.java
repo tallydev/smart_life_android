@@ -20,8 +20,6 @@ public class HealthyOrderCheck extends BaseBackFragment {
     private String mName;
 
     private CoordinatorLayout order_layout;
-    private Toolbar toolbar;
-    private TextView toolbar_title;
     private ImageView banner;
     private ImageView tips;
     private TextView order;
@@ -50,10 +48,13 @@ public class HealthyOrderCheck extends BaseBackFragment {
     }
 
     @Override
+    public void initToolbar(Toolbar toolbar, TextView toolbar_title) {
+        toolbar_title.setText(mName);
+    }
+
+    @Override
     protected void initView() {
         order_layout = getViewById(R.id.order_layout);
-        toolbar = getViewById(R.id.toolbar);
-        toolbar_title = getViewById(R.id.toolbar_title);
         banner = getViewById(R.id.order_check_banner);
         tips = getViewById(R.id.order_check_text);
         order = getViewById(R.id.order_btn);
@@ -66,8 +67,6 @@ public class HealthyOrderCheck extends BaseBackFragment {
 
     @Override
     protected void afterAnimationLogic() {
-        initBackToolbar(toolbar);
-        toolbar_title.setText(mName);
         // 加载图片
         Glide.with(context).load(R.drawable.order_check_top).skipMemoryCache(true).into(banner);
         Glide.with(context).load(R.drawable.order_check_text).skipMemoryCache(true).into(tips);

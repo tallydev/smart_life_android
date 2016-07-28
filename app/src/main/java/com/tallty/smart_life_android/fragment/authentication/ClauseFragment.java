@@ -16,9 +16,6 @@ import com.tallty.smart_life_android.base.BaseBackFragment;
  * 注册-服务条款
  */
 public class ClauseFragment extends BaseBackFragment {
-    private Toolbar toolbar;
-    private TextView toolbar_title;
-
     public static ClauseFragment newInstance() {
         Bundle args = new Bundle();
 
@@ -42,9 +39,13 @@ public class ClauseFragment extends BaseBackFragment {
     }
 
     @Override
+    public void initToolbar(Toolbar toolbar, TextView toolbar_title) {
+        toolbar_title.setText("服务条款");
+    }
+
+    @Override
     protected void initView() {
-        toolbar = getViewById(R.id.toolbar);
-        toolbar_title = getViewById(R.id.toolbar_title);
+
     }
 
     @Override
@@ -54,8 +55,7 @@ public class ClauseFragment extends BaseBackFragment {
 
     @Override
     protected void afterAnimationLogic() {
-        initBackToolbar(toolbar);
-        toolbar_title.setText("服务条款");
+
     }
 
     @Override

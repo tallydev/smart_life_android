@@ -27,8 +27,6 @@ import java.util.ArrayList;
 public class SportMoreData extends BaseBackFragment {
     private String mName;
     // 组件
-    private Toolbar toolbar;
-    private TextView toolbar_title;
     private TextView tab_day;
     private TextView tab_week;
     private TextView tab_month;
@@ -95,9 +93,12 @@ public class SportMoreData extends BaseBackFragment {
     }
 
     @Override
+    public void initToolbar(Toolbar toolbar, TextView toolbar_title) {
+        toolbar_title.setText(mName);
+    }
+
+    @Override
     protected void initView() {
-        toolbar = getViewById(R.id.toolbar);
-        toolbar_title = getViewById(R.id.toolbar_title);
         tab_day = getViewById(R.id.tab_day);
         tab_week = getViewById(R.id.tab_week);
         tab_month = getViewById(R.id.tab_month);
@@ -116,8 +117,6 @@ public class SportMoreData extends BaseBackFragment {
 
     @Override
     protected void afterAnimationLogic() {
-        initBackToolbar(toolbar);
-        toolbar_title.setText(mName);
         tab_day.performClick();
         // 初始化rank列表
         RecyclerView.LayoutManager manager = new LinearLayoutManager(context);

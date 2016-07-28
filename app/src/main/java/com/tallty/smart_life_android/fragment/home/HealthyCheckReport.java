@@ -26,8 +26,6 @@ import java.util.ArrayList;
 public class HealthyCheckReport extends BaseBackFragment {
     private String mName;
     // UI
-    private Toolbar toolbar;
-    private TextView toolbar_title;
     private MyRecyclerView myRecyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private ImageView suggest_image;
@@ -77,9 +75,12 @@ public class HealthyCheckReport extends BaseBackFragment {
     }
 
     @Override
+    public void initToolbar(Toolbar toolbar, TextView toolbar_title) {
+        toolbar_title.setText(mName);
+    }
+
+    @Override
     protected void initView() {
-        toolbar = getViewById(R.id.toolbar);
-        toolbar_title = getViewById(R.id.toolbar_title);
         myRecyclerView = getViewById(R.id.check_report_list);
         layoutManager = new LinearLayoutManager(context);
         suggest_image = getViewById(R.id.suggest_image);
@@ -92,9 +93,6 @@ public class HealthyCheckReport extends BaseBackFragment {
 
     @Override
     protected void afterAnimationLogic() {
-        initBackToolbar(toolbar);
-        toolbar_title.setText(mName);
-
         myRecyclerView.setLayoutManager(layoutManager);
         HomeCheckReportAdapter adapter = new HomeCheckReportAdapter(context, projects, results, ranges, status);
         myRecyclerView.setAdapter(adapter);

@@ -38,8 +38,6 @@ import java.util.Calendar;
  * 个人中心-个人资料
  */
 public class ProfileFragment extends BaseBackFragment {
-    private Toolbar toolbar;
-    private TextView toolbar_title;
     private RecyclerView recyclerView;
     private ProfileListAdapter adapter;
     // 数据
@@ -87,9 +85,12 @@ public class ProfileFragment extends BaseBackFragment {
     }
 
     @Override
+    public void initToolbar(Toolbar toolbar, TextView toolbar_title) {
+        toolbar_title.setText("账户管理");
+    }
+
+    @Override
     protected void initView() {
-        toolbar = getViewById(R.id.toolbar);
-        toolbar_title = getViewById(R.id.toolbar_title);
         recyclerView = getViewById(R.id.profile_list);
     }
 
@@ -99,8 +100,6 @@ public class ProfileFragment extends BaseBackFragment {
 
     @Override
     protected void afterAnimationLogic() {
-        initBackToolbar(toolbar);
-        toolbar_title.setText("账户管理");
         processRecyclerView();
     }
 

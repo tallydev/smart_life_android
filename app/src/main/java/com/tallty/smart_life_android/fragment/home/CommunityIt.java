@@ -18,8 +18,6 @@ import com.tallty.smart_life_android.base.BaseBackFragment;
 public class CommunityIt extends BaseBackFragment {
     private String mName;
 
-    private Toolbar toolbar;
-    private TextView toolbar_title;
     private ImageView detail_image;
     private TextView do_event;
 
@@ -46,9 +44,12 @@ public class CommunityIt extends BaseBackFragment {
     }
 
     @Override
+    public void initToolbar(Toolbar toolbar, TextView toolbar_title) {
+        toolbar_title.setText(mName);
+    }
+
+    @Override
     protected void initView() {
-        toolbar = getViewById(R.id.toolbar);
-        toolbar_title = getViewById(R.id.toolbar_title);
         detail_image = getViewById(R.id.it_image);
         do_event = getViewById(R.id.do_event);
     }
@@ -60,9 +61,6 @@ public class CommunityIt extends BaseBackFragment {
 
     @Override
     protected void afterAnimationLogic() {
-        initBackToolbar(toolbar);
-        toolbar_title.setText(mName);
-
         switch (mName){
             case "IT学堂":
                 Glide.with(context).load(R.drawable.it_class).into(detail_image);

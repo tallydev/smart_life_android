@@ -106,7 +106,7 @@ public class CartFragment extends BaseLazyMainFragment {
                 }
                 if (selected_commodities.size() > 0){
                     EventBus.getDefault().post(new StartBrotherEvent(
-                            ConfirmOrder.newInstance("确认订单", selected_commodities, total))
+                            ConfirmOrder.newInstance(selected_commodities, total))
                     );
                 }else{
                     showToast("您还未选择任何商品");

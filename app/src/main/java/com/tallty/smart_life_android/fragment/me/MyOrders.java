@@ -14,8 +14,6 @@ import com.tallty.smart_life_android.base.BaseBackFragment;
  * 个人中心-我的订单
  */
 public class MyOrders extends BaseBackFragment {
-    private Toolbar toolbar;
-    private TextView toolbar_title;
 
     public static MyOrders newInstance() {
         Bundle args = new Bundle();
@@ -40,9 +38,13 @@ public class MyOrders extends BaseBackFragment {
     }
 
     @Override
+    public void initToolbar(Toolbar toolbar, TextView toolbar_title) {
+        toolbar_title.setText("我的订单");
+    }
+
+    @Override
     protected void initView() {
-        toolbar = getViewById(R.id.toolbar);
-        toolbar_title = getViewById(R.id.toolbar_title);
+
     }
 
     @Override
@@ -52,8 +54,7 @@ public class MyOrders extends BaseBackFragment {
 
     @Override
     protected void afterAnimationLogic() {
-        initBackToolbar(toolbar);
-        toolbar_title.setText("我的订单");
+
     }
 
     @Override

@@ -1,7 +1,6 @@
 package com.tallty.smart_life_android.fragment.me;
 
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -12,7 +11,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -32,8 +30,6 @@ public class BindPhoneFragment extends BaseBackFragment {
     private String value;
     private int position;
     // UI
-    private Toolbar toolbar;
-    private TextView toolbar_title;
     private EditText phoneEdit;
     private EditText codeEdit;
     private TextView getCodeBtn;
@@ -69,9 +65,12 @@ public class BindPhoneFragment extends BaseBackFragment {
     }
 
     @Override
+    public void initToolbar(Toolbar toolbar, TextView toolbar_title) {
+        toolbar_title.setText(""+key);
+    }
+
+    @Override
     protected void initView() {
-        toolbar = getViewById(R.id.toolbar);
-        toolbar_title = getViewById(R.id.toolbar_title);
         phoneEdit = getViewById(R.id.bind_phone);
         codeEdit = getViewById(R.id.bind_code);
         getCodeBtn = getViewById(R.id.get_code_btn);
@@ -88,9 +87,6 @@ public class BindPhoneFragment extends BaseBackFragment {
 
     @Override
     protected void afterAnimationLogic() {
-        initBackToolbar(toolbar);
-        toolbar_title.setText(""+key);
-
         // 密码输入监听【enter】键
         codeEdit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override

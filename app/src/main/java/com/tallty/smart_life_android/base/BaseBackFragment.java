@@ -30,6 +30,9 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
 
     protected Context context;
     protected SharedPreferences sharedPre;
+
+    protected Toolbar toolbar;
+    protected TextView toolbar_title;
     // SharedPreferences数据key
     protected static final String ADDRESS_AREA = "address_area";
     protected static final String ADDRESS_DETAIL = "address_detail";
@@ -59,19 +62,37 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
         view = inflater.inflate(layout_id, container, false);
         context = getActivity().getApplicationContext();
         sharedPre = context.getSharedPreferences("SmartLife", Context.MODE_PRIVATE);
-        // 引用组件
-        initView();
+
+        toolbar = getViewById(R.id.toolbar);
+        toolbar_title = getViewById(R.id.toolbar_title);
+        initBackToolbar(toolbar);
+        initToolbar(toolbar, toolbar_title);
+
         return attachToSwipeBack(view);
     }
 
     @Override
     protected void onEnterAnimationEnd(Bundle savedInstanceState) {
         super.onEnterAnimationEnd(savedInstanceState);
+        // 引用组件
+        initView();
         // 设置监听器
         setListener();
         // 入场动画结束后执行  优化,防动画卡顿
         afterAnimationLogic();
     }
+
+    // 获取布局文件id
+    public abstract int getFragmentLayout();
+    // 处理toolbar
+    public abstract void initToolbar(Toolbar toolbar, TextView toolbar_title);
+    // find UI
+    protected abstract void initView();
+    // 设置监听
+    protected abstract void setListener();
+    // 转场动画完成后执行(可选)(耗时的逻辑)
+    protected abstract void afterAnimationLogic();
+
 
     /**
      * 设置toolbar的返回按钮
@@ -85,12 +106,11 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
                 pop();
             }
         });
-        // 调试Fragment时使用,添加fragment栈层级菜单
-//        initToolbarMenu(toolbar);
     }
 
     /**
      * 设置toolbar的菜单按钮
+     * 调试Fragment时使用,添加fragment栈层级菜单
      */
     private void initToolbarMenu(Toolbar toolbar) {
         toolbar.inflateMenu(R.menu.hierarchy);
@@ -107,15 +127,6 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
             }
         });
     }
-
-    // 获取布局文件id
-    public abstract int getFragmentLayout();
-    // find UI
-    protected abstract void initView();
-    // 设置监听
-    protected abstract void setListener();
-    // 转场动画完成后执行(可选)(耗时的逻辑)
-    protected abstract void afterAnimationLogic();
 
     /**
      * 处理物理返回键功能

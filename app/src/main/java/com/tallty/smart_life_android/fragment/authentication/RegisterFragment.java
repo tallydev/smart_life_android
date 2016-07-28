@@ -25,8 +25,6 @@ import java.util.regex.Pattern;
  * 个人中心-注册
  */
 public class RegisterFragment extends BaseBackFragment {
-    private Toolbar toolbar;
-    private TextView toolbar_title;
     private EditText phoneEdit;
     private EditText codeEdit;
     private TextView getCodeBtn;
@@ -62,9 +60,12 @@ public class RegisterFragment extends BaseBackFragment {
     }
 
     @Override
+    public void initToolbar(Toolbar toolbar, TextView toolbar_title) {
+        toolbar_title.setText("注册");
+    }
+
+    @Override
     protected void initView() {
-        toolbar = getViewById(R.id.toolbar);
-        toolbar_title = getViewById(R.id.toolbar_title);
         phoneEdit = getViewById(R.id.register_phone);
         codeEdit = getViewById(R.id.register_code);
         getCodeBtn = getViewById(R.id.get_code_btn);
@@ -98,8 +99,6 @@ public class RegisterFragment extends BaseBackFragment {
 
     @Override
     protected void afterAnimationLogic() {
-        initBackToolbar(toolbar);
-        toolbar_title.setText("注册");
         registerBtn.setClickable(false);
     }
 

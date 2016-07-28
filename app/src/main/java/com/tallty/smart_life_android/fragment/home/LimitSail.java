@@ -24,8 +24,6 @@ import java.util.ArrayList;
 public class LimitSail extends BaseBackFragment {
     private String mName;
 
-    private Toolbar toolbar;
-    private TextView toolbar_title;
     private RecyclerView recyclerView;
 
     private ArrayList<String> names = new ArrayList<String>() {
@@ -69,9 +67,12 @@ public class LimitSail extends BaseBackFragment {
     }
 
     @Override
+    public void initToolbar(Toolbar toolbar, TextView toolbar_title) {
+        toolbar_title.setText(mName);
+    }
+
+    @Override
     protected void initView() {
-        toolbar = getViewById(R.id.toolbar);
-        toolbar_title = getViewById(R.id.toolbar_title);
         recyclerView = getViewById(R.id.limit_sail_list);
     }
 
@@ -82,8 +83,6 @@ public class LimitSail extends BaseBackFragment {
 
     @Override
     protected void afterAnimationLogic() {
-        initBackToolbar(toolbar);
-        toolbar_title.setText(mName);
         // 初始化列表
         RecyclerView.LayoutManager manager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(manager);

@@ -25,8 +25,6 @@ public class LimitSailShow extends BaseBackFragment implements OnItemClickListen
     private String mName;
     private int count = 1;
 
-    private Toolbar toolbar;
-    private TextView toolbar_title;
     private TextView add;
     private TextView reduce;
     private TextView number;
@@ -58,9 +56,12 @@ public class LimitSailShow extends BaseBackFragment implements OnItemClickListen
     }
 
     @Override
+    public void initToolbar(Toolbar toolbar, TextView toolbar_title) {
+        toolbar_title.setText(mName);
+    }
+
+    @Override
     protected void initView() {
-        toolbar = getViewById(R.id.toolbar);
-        toolbar_title = getViewById(R.id.toolbar_title);
         add = getViewById(R.id.add);
         reduce = getViewById(R.id.reduce);
         number = getViewById(R.id.number);
@@ -77,8 +78,6 @@ public class LimitSailShow extends BaseBackFragment implements OnItemClickListen
 
     @Override
     protected void afterAnimationLogic() {
-        initBackToolbar(toolbar);
-        toolbar_title.setText(mName);
         setToolbarMenu(toolbar);
         // 设置banner
         setBanner();

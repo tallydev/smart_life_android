@@ -3,11 +3,8 @@ package com.tallty.smart_life_android.fragment.me;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.tallty.smart_life_android.R;
@@ -18,9 +15,6 @@ import com.tallty.smart_life_android.base.BaseBackFragment;
  */
 public class MyAppointments extends BaseBackFragment {
     private String mName;
-
-    private Toolbar toolbar;
-    private TextView toolbar_title;
 
     public static MyAppointments newInstance(String title) {
         Bundle args = new Bundle();
@@ -45,9 +39,13 @@ public class MyAppointments extends BaseBackFragment {
     }
 
     @Override
+    public void initToolbar(Toolbar toolbar, TextView toolbar_title) {
+        toolbar_title.setText(mName);
+    }
+
+    @Override
     protected void initView() {
-        toolbar = getViewById(R.id.toolbar);
-        toolbar_title = getViewById(R.id.toolbar_title);
+
     }
 
     @Override
@@ -57,8 +55,7 @@ public class MyAppointments extends BaseBackFragment {
 
     @Override
     protected void afterAnimationLogic() {
-        initBackToolbar(toolbar);
-        toolbar_title.setText(mName);
+
     }
 
     @Override

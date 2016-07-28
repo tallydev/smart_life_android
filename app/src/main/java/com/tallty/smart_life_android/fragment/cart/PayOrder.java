@@ -22,7 +22,6 @@ import java.util.ArrayList;
  * 购物车-支付订单
  */
 public class PayOrder extends BaseBackFragment {
-    private String mName;
     // 结算数据
     private ArrayList<Commodity> selected_commodities = new ArrayList<>();
     private float total_price = 0.0f;
@@ -32,11 +31,10 @@ public class PayOrder extends BaseBackFragment {
     private TextView toolbar_title;
     private TextView order_price_text;
 
-    public static PayOrder newInstance(String title, float total_price,
+    public static PayOrder newInstance(float total_price,
                                        ArrayList<Commodity> selected_commodities,
                                        Address order_address) {
         Bundle args = new Bundle();
-        args.putString(TOOLBAR_TITLE, title);
         args.putFloat(TOTAL_PRICE, total_price);
         args.putSerializable(OBJECTS, selected_commodities);
         args.putSerializable(ADDRESS, order_address);
@@ -50,7 +48,6 @@ public class PayOrder extends BaseBackFragment {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
-            mName = args.getString(TOOLBAR_TITLE);
             total_price = args.getFloat(TOTAL_PRICE);
             selected_commodities = (ArrayList<Commodity>) args.getSerializable(OBJECTS);
             order_address = (Address) args.getSerializable(ADDRESS);
@@ -63,9 +60,12 @@ public class PayOrder extends BaseBackFragment {
     }
 
     @Override
+    public void initToolbar(Toolbar toolbar, TextView toolbar_title) {
+        toolbar_title.setText("支付订单");
+    }
+
+    @Override
     protected void initView() {
-        toolbar = getViewById(R.id.toolbar);
-        toolbar_title = getViewById(R.id.toolbar_title);
         order_price_text = getViewById(R.id.order_price);
     }
 
@@ -76,9 +76,6 @@ public class PayOrder extends BaseBackFragment {
 
     @Override
     protected void afterAnimationLogic() {
-        initBackToolbar(toolbar);
-        toolbar_title.setText(mName);
-
         order_price_text.setText("RMB "+total_price);
     }
 

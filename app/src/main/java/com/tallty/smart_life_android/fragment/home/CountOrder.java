@@ -20,8 +20,6 @@ public class CountOrder extends BaseBackFragment {
     private int imageId;
     private int count = 1;
 
-    private Toolbar toolbar;
-    private TextView toolbar_title;
     private ImageView detail_image;
     private TextView count_text;
     private TextView add;
@@ -54,9 +52,12 @@ public class CountOrder extends BaseBackFragment {
     }
 
     @Override
+    public void initToolbar(Toolbar toolbar, TextView toolbar_title) {
+        toolbar_title.setText(mName);
+    }
+
+    @Override
     protected void initView() {
-        toolbar = getViewById(R.id.toolbar);
-        toolbar_title = getViewById(R.id.toolbar_title);
         detail_image = getViewById(R.id.detail_image);
         count_text = getViewById(R.id.count_text);
         add = getViewById(R.id.add);
@@ -74,8 +75,6 @@ public class CountOrder extends BaseBackFragment {
 
     @Override
     protected void afterAnimationLogic() {
-        initBackToolbar(toolbar);
-        toolbar_title.setText(mName);
         if (mName.equals("新品上市")) {
             count_text.setText("预约人数: ");
             apply.setText("我要预约");
