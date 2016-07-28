@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="80dp"
-    android:background="@drawable/border_bottom_bg"
+    android:background="@drawable/border_bottom_click_bg"
     android:padding="15dp">
     <TextView
         android:id="@+id/appointment_time"
