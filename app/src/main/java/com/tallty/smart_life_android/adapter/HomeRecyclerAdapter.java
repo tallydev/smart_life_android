@@ -12,7 +12,6 @@ import com.bumptech.glide.Glide;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.event.ShowSnackbarEvent;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
-import com.tallty.smart_life_android.fragment.CycleFragment;
 import com.tallty.smart_life_android.fragment.home.HouseCatEye;
 import com.tallty.smart_life_android.fragment.home.HouseRemoteControl;
 import com.tallty.smart_life_android.fragment.home.CountOrder;
