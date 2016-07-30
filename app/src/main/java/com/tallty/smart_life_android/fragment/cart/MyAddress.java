@@ -1,6 +1,7 @@
 package com.tallty.smart_life_android.fragment.cart;
 
 
+import android.app.FragmentManager;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,6 +16,7 @@ import com.tallty.smart_life_android.adapter.AddressListAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.event.SelectAddress;
 import com.tallty.smart_life_android.event.SetDefaultAddress;
+import com.tallty.smart_life_android.fragment.Pop.CreateAddressFragment;
 import com.tallty.smart_life_android.model.Address;
 
 import org.greenrobot.eventbus.EventBus;
@@ -141,6 +143,9 @@ public class MyAddress extends BaseBackFragment {
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.new_address:
+                FragmentManager fm = getActivity().getFragmentManager();
+                CreateAddressFragment fragment =  new CreateAddressFragment();
+                fragment.show(fm,"NewAddress");
                 break;
         }
     }

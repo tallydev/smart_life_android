@@ -11,6 +11,11 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
+import com.tallty.smart_life_android.event.ConfirmDialogEvent;
+import com.tallty.smart_life_android.fragment.Pop.HintDialogFragment;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 /**
  * Created by kang on 16/7/5.
@@ -54,6 +59,8 @@ public class HealthyOrderCheck extends BaseBackFragment {
 
     @Override
     protected void initView() {
+        EventBus.getDefault().register(this);
+
         order_layout = getViewById(R.id.order_layout);
         banner = getViewById(R.id.order_check_banner);
         tips = getViewById(R.id.order_check_text);
@@ -76,15 +83,9 @@ public class HealthyOrderCheck extends BaseBackFragment {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.order_btn:
-                setSnackBar(order_layout,
-                        "预约后由<慧生活>服务专员和您电话确认体检日期和体检项目,请保持手机畅通.",
-                        100000, R.layout.snackbar_icon, new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                order.setText("预约成功");
-                                order.setClickable(false);
-                            }
-                        });
+                HintDialogFragment fragment = HintDialogFragment.newInstance(
+                        "预约后由<慧生活>服务专员和您电话确认体检日期和体检项目,请保持手机畅通.", "预约体检");
+                fragment.show(getActivity().getFragmentManager(), "HintDialog");
                 break;
         }
     }
@@ -92,5 +93,12 @@ public class HealthyOrderCheck extends BaseBackFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe
+    public void onConfirmDialogEvnet(ConfirmDialogEvent event) {
+        event.dialog.dismiss();
+        showToast("确认了");
     }
 }

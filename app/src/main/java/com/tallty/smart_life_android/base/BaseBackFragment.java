@@ -17,6 +17,8 @@ import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.utils.SnackbarUtil;
 import com.tallty.smart_life_android.utils.ToastUtil;
 
+import org.greenrobot.eventbus.EventBus;
+
 import me.yokeyword.fragmentation_swipeback.SwipeBackFragment;
 
 /**
