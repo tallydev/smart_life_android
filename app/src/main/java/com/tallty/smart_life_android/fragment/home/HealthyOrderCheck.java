@@ -90,15 +90,15 @@ public class HealthyOrderCheck extends BaseBackFragment {
         }
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        EventBus.getDefault().unregister(this);
-    }
-
     @Subscribe
     public void onConfirmDialogEvnet(ConfirmDialogEvent event) {
         event.dialog.dismiss();
         showToast("确认了");
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        EventBus.getDefault().unregister(this);
     }
 }

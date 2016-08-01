@@ -24,7 +24,7 @@ import org.greenrobot.eventbus.EventBus;
  * 全局提示弹窗
  */
 public class HintDialogFragment extends DialogFragment implements View.OnClickListener {
-    private TextView cancel_btn;
+    private ImageView cancel_btn;
     private TextView confirm_btn;
     private ImageView hint_image;
     private TextView hint_text;
@@ -69,7 +69,7 @@ public class HintDialogFragment extends DialogFragment implements View.OnClickLi
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_hint_dialog, container, false);
         
-        cancel_btn = (TextView) view.findViewById(R.id.cancel_btn);
+        cancel_btn = (ImageView) view.findViewById(R.id.cancel_btn);
         confirm_btn = (TextView) view.findViewById(R.id.confirm_btn);
         hint_image = (ImageView) view.findViewById(R.id.hint_icon);
         hint_text = (TextView) view.findViewById(R.id.hint_text);

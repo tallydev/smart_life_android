@@ -9,7 +9,7 @@ import android.app.Dialog;
 
 public class ConfirmDialogEvent {
     public Dialog dialog;
-    private String caller;
+    public String caller;
 
     public ConfirmDialogEvent(Dialog dialog, String caller) {
         this.dialog = dialog;

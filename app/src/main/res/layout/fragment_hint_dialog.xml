@@ -8,16 +8,12 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="48dp">
-        <TextView
+        <ImageView
             android:id="@+id/cancel_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:gravity="center"
-            android:layout_marginLeft="16dp"
-            android:background="@color/transparent"
-            android:textSize="@dimen/text_16"
-            android:text="取消"/>
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="16dp"
+            android:src="@drawable/dialog_cancel"/>
         <TextView
             android:id="@+id/confirm_btn"
             android:layout_width="wrap_content"
@@ -26,7 +22,6 @@
             android:gravity="center"
             android:layout_marginRight="16dp"
             android:textColor="@color/orange"
-            android:background="@color/transparent"
             android:textSize="@dimen/text_16"
             android:text="确定"/>
     </RelativeLayout>
