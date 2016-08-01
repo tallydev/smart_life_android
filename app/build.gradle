@@ -95,9 +95,9 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    // 数据库操作
-    compile files('libs/lite-orm-1.7.0.jar')
+
     // retrofit 和 converter-gson 版本要保持一致
+    // 事件总线
     // fragment管理库
     // 滑动边缘退出Fragment/Activity功能
     // 日志
@@ -106,6 +106,9 @@ dependencies {
     // 倒计时控件
     // 图表控件
     // 图标
+    // WheelView
+    // 数据库操作
+    compile files('libs/lite-orm-1.7.0.jar')
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'com.android.support:support-v4:23.3.0'
     compile 'com.nineoldandroids:library:2.4.0'
@@ -124,5 +127,6 @@ dependencies {
     compile 'com.diogobernardino:williamchart:2.2'
     compile 'com.joanzapata.iconify:android-iconify-fontawesome:2.2.2'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha4'
+    compile 'com.wx.wheelview:wheelview:1.3.3'
     testCompile 'junit:junit:4.12'
 }

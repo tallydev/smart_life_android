@@ -1,7 +1,6 @@
 package com.tallty.smart_life_android.fragment.cart;
 
 
-import android.app.FragmentManager;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,7 +15,6 @@ import com.tallty.smart_life_android.adapter.AddressListAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.event.SelectAddress;
 import com.tallty.smart_life_android.event.SetDefaultAddress;
-import com.tallty.smart_life_android.fragment.Pop.CreateAddressFragment;
 import com.tallty.smart_life_android.model.Address;
 
 import org.greenrobot.eventbus.EventBus;
@@ -30,7 +28,7 @@ import java.util.ArrayList;
 public class MyAddress extends BaseBackFragment {
     // 调用者
     private int from;
-
+    // UI
     private TextView new_address_text;
     private RecyclerView recyclerView;
     private AddressListAdapter adapter;
@@ -43,9 +41,11 @@ public class MyAddress extends BaseBackFragment {
     private boolean default_address[] = {true, false};
     // 实例
     private ArrayList<Address> addresses = new ArrayList<>();
-
+    // sharePreferences 相关
     private Address shareDefaultAddress = null;
     private int defaultAddressPosition;
+    // 新增
+    private Address new_address = new Address();
 
 
     public static MyAddress newInstance(int from) {
@@ -143,15 +143,30 @@ public class MyAddress extends BaseBackFragment {
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.new_address:
-                FragmentManager fm = getActivity().getFragmentManager();
-                CreateAddressFragment fragment =  new CreateAddressFragment();
-                fragment.show(fm,"NewAddress");
+                startForResult(NewAddressFragment.newInstance(), REQ_CODE);
                 break;
         }
     }
 
     /**
-     * 设置传给上个Fragment的数据
+     * startForResult:
+     * 响应NewAddressFragment的返回数据
+     */
+    @Override
+    protected void onFragmentResult(int requestCode, int resultCode, Bundle data) {
+        super.onFragmentResult(requestCode, resultCode, data);
+        if (requestCode == REQ_CODE && resultCode == RESULT_OK) {
+            new_address = (Address) data.getSerializable(ADDRESS);
+            if (new_address != null) {
+                addresses.add(new_address);
+                adapter.notifyDataSetChanged();
+            }
+        }
+    }
+
+
+    /**
+     * 设置传给上个ConfirmOrderFragment的数据
      * 保存默认地址到SharedPreferences
      * 未设置默认地址,取首个地址为默认地址
      */
@@ -187,7 +202,6 @@ public class MyAddress extends BaseBackFragment {
 
     /**
      * 接收事件: SelectAddress
-     * 问题: 点击
      */
     @Subscribe
     public void onSelectAddress(SelectAddress event) {

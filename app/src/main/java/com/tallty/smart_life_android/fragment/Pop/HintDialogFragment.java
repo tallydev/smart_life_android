@@ -53,8 +53,6 @@ public class HintDialogFragment extends DialogFragment implements View.OnClickLi
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        // 使用不带theme的构造器，获得的dialog边框距离屏幕仍有几毫米的缝隙。
-        // Dialog dialog = new Dialog(getActivity()); // still has a little space between dialog and screen.
         Dialog dialog = new Dialog(getActivity(), R.style.CustomDatePickerDialog);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // must be called before set content
         dialog.setContentView(R.layout.fragment_hint_dialog);
@@ -103,7 +101,7 @@ public class HintDialogFragment extends DialogFragment implements View.OnClickLi
                 dismiss();
                 break;
             case R.id.confirm_btn:
-                EventBus.getDefault().post(new ConfirmDialogEvent(getDialog(), caller));
+                EventBus.getDefault().post(new ConfirmDialogEvent(getDialog(), caller, null));
                 break;
         }
     }
