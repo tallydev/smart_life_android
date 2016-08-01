@@ -12,12 +12,14 @@ import com.tallty.smart_life_android.base.BaseFragment;
 import com.tallty.smart_life_android.custom.TabBar;
 import com.tallty.smart_life_android.custom.TabBarTab;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
+import com.tallty.smart_life_android.event.SwitchTabFragment;
 import com.tallty.smart_life_android.event.TabSelectedEvent;
 import com.tallty.smart_life_android.fragment.cart.CartFragment;
 import com.tallty.smart_life_android.fragment.community.CommunityFragment;
 import com.tallty.smart_life_android.fragment.healthy.HealthyFragment;
 import com.tallty.smart_life_android.fragment.home.HomeFragment;
 import com.tallty.smart_life_android.fragment.me.MeFragment;
+import com.tallty.smart_life_android.utils.ToastUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -37,9 +39,10 @@ public class MainFragment extends BaseFragment {
     public static final int CART = 3;
     public static final int ME = 4;
 
-    private SupportFragment[] mFragments = new SupportFragment[5];
+    public SupportFragment[] mFragments = new SupportFragment[5];
 
     private TabBar mTabBar;
+    private int currentPosition;
 
     protected SharedPreferences sharedPre;
 
@@ -101,6 +104,7 @@ public class MainFragment extends BaseFragment {
             @Override
             public void onTabSelected(int position, int prePosition) {
                 showHideFragment(mFragments[position], mFragments[prePosition]);
+                currentPosition = position;
             }
 
             @Override
@@ -138,5 +142,14 @@ public class MainFragment extends BaseFragment {
     public void onDestroyView() {
         EventBus.getDefault().unregister(this);
         super.onDestroyView();
+    }
+
+    /**
+     * 接收事件, 切换fragment
+     */
+    @Subscribe
+    public void onSwitchTabFragment(SwitchTabFragment event) {
+        showHideFragment(mFragments[event.targetPosition], mFragments[currentPosition]);
+        mTabBar.setCurrentItem(event.targetPosition);
     }
 }

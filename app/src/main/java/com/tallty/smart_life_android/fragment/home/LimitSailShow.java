@@ -13,7 +13,12 @@ import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
+import com.tallty.smart_life_android.event.SwitchTabFragment;
+import com.tallty.smart_life_android.fragment.MainFragment;
+import com.tallty.smart_life_android.fragment.cart.CartFragment;
 import com.tallty.smart_life_android.holder.BannerHolderView;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.Arrays;
 import java.util.List;
@@ -111,17 +116,33 @@ public class LimitSailShow extends BaseBackFragment implements OnItemClickListen
     }
 
     /**
+     * 判断购物车是否为空
+     * 修改图标
      * 设置toolbar的菜单按钮
      */
     private void setToolbarMenu(Toolbar toolbar) {
-        toolbar.inflateMenu(R.menu.cart);
+        boolean blank = true;
+        // TODO: 16/8/1 调用接口判断购物车是否为空
+
+        if (blank) {
+            toolbar.inflateMenu(R.menu.cart_blank);
+        } else {
+            toolbar.inflateMenu(R.menu.cart_has);
+        }
+
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.toolbar_cart:
-                        // 进入购物车
-
+                        // TODO: 16/8/1 跳转到购物车Tab
+                        popTo(MainFragment.class, false, new Runnable() {
+                            @Override
+                            public void run() {
+                                // 通知MainFragment启动切换为购物车页面
+                                EventBus.getDefault().post(new SwitchTabFragment(3));
+                            }
+                        });
                 }
                 return true;
             }

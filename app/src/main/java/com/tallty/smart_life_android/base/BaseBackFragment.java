@@ -69,15 +69,14 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
         toolbar_title = getViewById(R.id.toolbar_title);
         initBackToolbar(toolbar);
         initToolbar(toolbar, toolbar_title);
-
+        // 引用组件
+        initView();
         return attachToSwipeBack(view);
     }
 
     @Override
     protected void onEnterAnimationEnd(Bundle savedInstanceState) {
         super.onEnterAnimationEnd(savedInstanceState);
-        // 引用组件
-        initView();
         // 设置监听器
         setListener();
         // 入场动画结束后执行  优化,防动画卡顿
@@ -108,6 +107,7 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
                 pop();
             }
         });
+        initToolbarMenu(toolbar);
     }
 
     /**

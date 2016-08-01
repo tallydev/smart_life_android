@@ -4,6 +4,6 @@
     <item
         android:id="@+id/toolbar_cart"
         android:title="购物车"
-        android:icon="@mipmap/cart_normal"
+        android:icon="@mipmap/ic_cart_blank"
         app:showAsAction="ifRoom"/>
 </menu>
