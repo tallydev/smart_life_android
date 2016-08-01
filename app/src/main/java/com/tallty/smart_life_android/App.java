@@ -5,8 +5,12 @@ import android.app.Application;
 import android.content.Context;
 
 import com.orhanobut.logger.Logger;
+import com.tallty.smart_life_android.Engine.Engine;
 
 import java.util.List;
+
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by kang on 16/6/14.
@@ -15,6 +19,8 @@ import java.util.List;
 public class App extends Application{
     private static App sInstance;
     private Context context;
+    // 网络请求实例
+    private Engine noHeaderEngine;
 
     @Override
     public void onCreate() {
@@ -22,6 +28,11 @@ public class App extends Application{
         sInstance = this;
         context = getApplicationContext();
         Logger.init();
+        setLoginEngine();
+    }
+
+    public static App getInstance() {
+        return sInstance;
     }
 
     // 判断是否是主线程
@@ -38,7 +49,18 @@ public class App extends Application{
         return false;
     }
 
-    public static App getInstance() {
-        return sInstance;
+    // 设置登录链接
+    private void setLoginEngine() {
+        noHeaderEngine = new Retrofit.Builder()
+                .baseUrl("http://220.163.125.158:8081/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build().create(Engine.class);
+    }
+
+    /**
+     * 返回登录链接
+     */
+    public Engine getNoHeaderEngine() {
+        return noHeaderEngine;
     }
 }

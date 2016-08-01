@@ -1,7 +1,5 @@
 package com.tallty.smart_life_android.base;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 

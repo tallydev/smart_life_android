@@ -1,15 +1,14 @@
 package com.tallty.smart_life_android.fragment.authentication;
 
 
-import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,15 +17,19 @@ import android.widget.TextView;
 
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.activity.MainActivity;
-import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.base.BaseLazyMainFragment;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
+import com.tallty.smart_life_android.model.User;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * 个人中心-登录
@@ -144,16 +147,45 @@ public class LoginFragment extends BaseLazyMainFragment {
             focusView.requestFocus();
         } else {
             hideSoftInput();
-            // TODO: 16/7/25 开始登录功能
-            Intent intent = new Intent(getActivity(), MainActivity.class);
-            startActivity(intent);
-            getActivity().finish();
+            showProgress("登录中...");
+            loginTask(phone, password);
         }
     }
 
-    /**
-     * 验证手机号格式
-     */
+    private void loginTask(String phone, String password) {
+        mApp.getNoHeaderEngine().getUser(phone, password).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.code() == 201) {
+                    // 保存用户信息
+                    User user = response.body();
+                    SharedPreferences.Editor editor = sharedPre.edit();
+                    editor.putInt("user_id", user.getId());
+                    editor.putString("user_email", user.getEmail());
+                    editor.putString("user_phone", user.getPhone());
+                    editor.putString("user_authentication_token", user.getAuthentication_token());
+                    editor.putString("user_created_at", user.getCreated_at());
+                    editor.putString("user_updated_at", user.getUpdated_at());
+                    editor.commit();
+                    // 进入首页
+                    Intent intent = new Intent(getActivity(), MainActivity.class);
+                    startActivity(intent);
+                    getActivity().finish();
+                    hideProgress();
+                } else {
+                    hideProgress();
+                    showToast("登录失败,请检查登录信息");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                showToast("网络连接出错,请检查网络");
+            }
+        });
+    }
+
+    // 验证手机号格式
     private boolean isPhoneValid(String phone) {
         boolean flag;
         try{
@@ -166,9 +198,7 @@ public class LoginFragment extends BaseLazyMainFragment {
         return flag;
     }
 
-    /**
-     * 验证密码长度
-     */
+    // 验证密码长度
     private boolean isPasswordValid(String password) {
         return password.length() >= 5 && password.length() <= 8;
     }

@@ -1,5 +1,6 @@
 package com.tallty.smart_life_android.base;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.utils.SnackbarUtil;
 import com.tallty.smart_life_android.utils.ToastUtil;
@@ -27,14 +29,16 @@ import me.yokeyword.fragmentation_swipeback.SwipeBackFragment;
  * 使用SwipeBackFragment开源库
  */
 public abstract class BaseBackFragment extends SwipeBackFragment implements View.OnClickListener {
-    private static final String TAG = "Fragmentation";
-    private View view;
-
+    protected static final App mApp = App.getInstance();
     protected Context context;
     protected SharedPreferences sharedPre;
-
+    // tag
+    private static final String TAG = "Fragmentation";
+    // UI
+    private View view;
     protected Toolbar toolbar;
     protected TextView toolbar_title;
+    private ProgressDialog progressDialog;
     // SharedPreferences数据key
     protected static final String ADDRESS_AREA = "address_area";
     protected static final String ADDRESS_DETAIL = "address_detail";
@@ -62,7 +66,7 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         int layout_id = getFragmentLayout();
         view = inflater.inflate(layout_id, container, false);
-        context = getActivity().getApplicationContext();
+        context = getActivity();
         sharedPre = context.getSharedPreferences("SmartLife", Context.MODE_PRIVATE);
 
         toolbar = getViewById(R.id.toolbar);
@@ -151,6 +155,30 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
      */
     public void showToast(String text) {
         ToastUtil.show(text);
+    }
+
+    /**
+     * 显示载入匡
+     */
+    public void showProgress(String message) {
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(context);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        }
+        progressDialog.setMessage(message);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+    }
+
+    /**
+     * 隐藏载入匡
+     */
+    public void hideProgress() {
+        if (progressDialog != null) {
+            if (progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
+        }
     }
 
     /**

@@ -45,7 +45,7 @@ public class LoadingActivity extends BaseActivity {
 
             @Override
             public void onFinish() {
-                startActivity(new Intent(LoadingActivity.this, MainActivity.class));
+                startActivity(new Intent(LoadingActivity.this, LoginActivity.class));
                 LoadingActivity.this.finish();
             }
         };

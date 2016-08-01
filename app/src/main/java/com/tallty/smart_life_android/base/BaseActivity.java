@@ -19,8 +19,8 @@ import com.tallty.smart_life_android.utils.ToastUtil;
  */
 public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener {
     protected String TAG;
-    protected App mApp;
-    protected SharedPreferences sp;
+    protected static final App mApp = App.getInstance();
+    protected SharedPreferences sharedPre;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -29,8 +29,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         // 基础数据
         TAG = this.getClass().getSimpleName();
-        mApp = App.getInstance();
-        sp = getSharedPreferences("SmartLife", Activity.MODE_PRIVATE);
+        sharedPre = getSharedPreferences("SmartLife", Activity.MODE_PRIVATE);
         // 加载图标
         Iconify.with(new FontAwesomeModule());
         // 设置布局

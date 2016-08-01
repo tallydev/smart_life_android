@@ -14,6 +14,10 @@ public class User implements Serializable{
     @Expose
     private int id;
 
+    @SerializedName("email")
+    @Expose
+    private String email;
+
     @SerializedName("name")
     @Expose
     private String name;
@@ -25,6 +29,18 @@ public class User implements Serializable{
     @SerializedName("phone")
     @Expose
     private String phone;
+
+    @SerializedName("authentication_token")
+    @Expose
+    private String authentication_token;
+
+    @SerializedName("created_at")
+    @Expose
+    private String created_at;
+
+    @SerializedName("updated_at")
+    @Expose
+    private String updated_at;
 
     @SerializedName("password")
     @Expose
@@ -92,6 +108,38 @@ public class User implements Serializable{
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getAuthentication_token() {
+        return authentication_token;
+    }
+
+    public void setAuthentication_token(String authentication_token) {
+        this.authentication_token = authentication_token;
+    }
+
+    public String getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(String created_at) {
+        this.created_at = created_at;
+    }
+
+    public String getUpdated_at() {
+        return updated_at;
+    }
+
+    public void setUpdated_at(String updated_at) {
+        this.updated_at = updated_at;
     }
 
     public String getPassword() {

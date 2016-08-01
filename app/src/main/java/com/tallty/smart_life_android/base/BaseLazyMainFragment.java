@@ -1,5 +1,7 @@
 package com.tallty.smart_life_android.base;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -12,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.utils.SnackbarUtil;
 import com.tallty.smart_life_android.utils.ToastUtil;
@@ -23,19 +26,20 @@ import com.tallty.smart_life_android.utils.ToastUtil;
  * 使用时, 直接继承此类即可
  */
 public abstract class BaseLazyMainFragment extends BaseFragment implements View.OnClickListener {
-    private boolean mInited = false;
-    private Bundle mSavedInstanceState;
-
-    private View view;
-
+    protected static final App mApp = App.getInstance();
     protected Context context;
     protected SharedPreferences sharedPre;
-
+    // 状态
+    private boolean mInited = false;
+    private Bundle mSavedInstanceState;
     // sharedPre数据常量
     protected static final String EMPTY_STRING = " ";
-
     protected static final String PHONE = "user_phone";
     protected static final String USER_TOKEN = "user_token";
+    // 布局
+    private View view;
+    // 载入框
+    private ProgressDialog progressDialog;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,7 +52,7 @@ public abstract class BaseLazyMainFragment extends BaseFragment implements View.
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         int layout_id = getFragmentLayout();
         view = inflater.inflate(layout_id, container, false);
-        context = getActivity().getApplicationContext();
+        context = getActivity();
         sharedPre = context.getSharedPreferences("SmartLife", Context.MODE_PRIVATE);
         // 初始化ToolBar
         Toolbar toolbar = getViewById(R.id.toolbar);
@@ -123,6 +127,30 @@ public abstract class BaseLazyMainFragment extends BaseFragment implements View.
      */
     public void showToast(String text) {
         ToastUtil.show(text);
+    }
+
+    /**
+     * 显示载入匡
+     */
+    public void showProgress(String message) {
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(context);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        }
+        progressDialog.setMessage(message);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+    }
+
+    /**
+     * 隐藏载入匡
+     */
+    public void hideProgress() {
+        if (progressDialog != null) {
+            if (progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
+        }
     }
 
     /**
