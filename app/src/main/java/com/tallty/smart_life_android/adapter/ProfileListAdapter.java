@@ -52,14 +52,12 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
         holder.key.setText(keys.get(position));
         if (holder.viewType == SHOW_NORMAL) {
             holder.value.setText(values.get(position));
-            if (keys.get(position).equals("收货地址")) {
+            if (keys.get(position).equals("收货地址") || keys.get(position).equals("设置支付密码")) {
                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT, DpUtil.dip2px(context, 40)
                 );
                 params.setMargins(0,0,0,DpUtil.dip2px(context, 4));
                 holder.layout.setLayoutParams(params);
-                holder.line.setVisibility(View.INVISIBLE);
-            } else if (keys.get(position).equals("设置支付密码")) {
                 holder.line.setVisibility(View.INVISIBLE);
             }
         } else if (holder.viewType == SHOW_PHOTO) {

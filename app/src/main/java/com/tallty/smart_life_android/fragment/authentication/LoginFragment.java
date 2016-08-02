@@ -59,9 +59,9 @@ public class LoginFragment extends BaseLazyMainFragment {
     @Override
     protected void fragmentInterceptor() {
         super.fragmentInterceptor();
-        String phone = sharedPre.getString("user_phone", null);
-        String token = sharedPre.getString("user_authentication_token", null);
-        if (phone != null && token != null) {
+        String phone = sharedPre.getString("user_phone", EMPTY_STRING);
+        String token = sharedPre.getString("user_authentication_token", EMPTY_STRING);
+        if (!phone.isEmpty() && !token.isEmpty()) {
             // 初始化retrofit服务
             mApp.setHeaderEngine(phone, token);
             // 进入首页, 不再登录
@@ -167,7 +167,7 @@ public class LoginFragment extends BaseLazyMainFragment {
     }
 
     private void loginTask(String phone, String password) {
-        mApp.noHeaderEngine().getUser(phone, password).enqueue(new Callback<User>() {
+        mApp.noHeaderEngine().login(phone, password).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 User user = response.body();

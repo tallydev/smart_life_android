@@ -5,9 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.tallty.smart_life_android.R;
@@ -37,7 +35,7 @@ public class PayOrder extends BaseBackFragment {
         Bundle args = new Bundle();
         args.putFloat(TOTAL_PRICE, total_price);
         args.putSerializable(OBJECTS, selected_commodities);
-        args.putSerializable(ADDRESS, order_address);
+        args.putSerializable(OBJECT, order_address);
         PayOrder fragment = new PayOrder();
         fragment.setArguments(args);
         return fragment;
@@ -50,7 +48,7 @@ public class PayOrder extends BaseBackFragment {
         if (args != null) {
             total_price = args.getFloat(TOTAL_PRICE);
             selected_commodities = (ArrayList<Commodity>) args.getSerializable(OBJECTS);
-            order_address = (Address) args.getSerializable(ADDRESS);
+            order_address = (Address) args.getSerializable(OBJECT);
         }
     }
 

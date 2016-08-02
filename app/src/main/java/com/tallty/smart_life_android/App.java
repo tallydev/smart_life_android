@@ -71,9 +71,21 @@ public class App extends Application{
 
     // 设置无header数据的通用链接
     private void setNoHeaderEngine() {
+        // 定义拦截器,添加headers
+        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                Request newRequest = chain.request().newBuilder()
+                        .addHeader("Accept", "application/json")
+                        .build();
+                return chain.proceed(newRequest);
+            }
+        }).build();
+
         noHeaderEngine = new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
                 .build()
                 .create(Engine.class);
     }
@@ -86,6 +98,7 @@ public class App extends Application{
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {
                 Request newRequest = chain.request().newBuilder()
+                        .addHeader("Accept", "application/json")
                         .addHeader("X-User-Token", token)
                         .addHeader("X-User-Phone", phone)
                         .build();

@@ -135,7 +135,7 @@ public class ConfirmOrder extends BaseBackFragment {
     protected void onFragmentResult(int requestCode, int resultCode, Bundle data) {
         super.onFragmentResult(requestCode, resultCode, data);
         if (requestCode == REQ_CODE && resultCode == RESULT_OK) {
-            order_address = (Address) data.getSerializable(ADDRESS);
+            order_address = (Address) data.getSerializable(OBJECT);
             // 显示
             if (order_address != null){
                 order_address_text.setText(order_address.getArea()+order_address.getDetail());

@@ -3,11 +3,8 @@ package com.tallty.smart_life_android.fragment.cart;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -15,7 +12,6 @@ import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.event.ConfirmDialogEvent;
 import com.tallty.smart_life_android.fragment.Pop.AddressDialogFragment;
-import com.tallty.smart_life_android.fragment.Pop.HintDialogFragment;
 import com.tallty.smart_life_android.model.Address;
 
 import org.greenrobot.eventbus.EventBus;
@@ -149,7 +145,7 @@ public class NewAddressFragment extends BaseBackFragment {
             cache_address.setArea(area);
             cache_address.setDetail(detail);
             Bundle bundle = new Bundle();
-            bundle.putSerializable(ADDRESS, cache_address);
+            bundle.putSerializable(OBJECT, cache_address);
             setFramgentResult(RESULT_OK, bundle);
             pop();
         }

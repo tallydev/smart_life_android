@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,11 +22,14 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 
 import com.tallty.smart_life_android.R;
+import com.tallty.smart_life_android.activity.LoginActivity;
+import com.tallty.smart_life_android.activity.MainActivity;
 import com.tallty.smart_life_android.adapter.ProfileListAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.custom.RecyclerVIewItemTouchListener;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.fragment.cart.MyAddress;
+import com.tallty.smart_life_android.model.User;
 import com.tallty.smart_life_android.utils.ImageUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -41,19 +45,15 @@ public class ProfileFragment extends BaseBackFragment {
     private RecyclerView recyclerView;
     private ProfileListAdapter adapter;
     // 数据
+    private User user;
     private ArrayList<String> keys = new ArrayList<String>(){
         {
             add("头像");add("昵称");add("登录手机号");add("出生日期");add("性别");add("个性签名");
             add("身份证号");add("收货地址");add("变更绑定手机号");add("设置支付密码");
+            add("退出当前账号");
         }
     };
-    private ArrayList<String> values = new ArrayList<String>(){
-        {
-            add("http://img0.pconline.com.cn/pconline/1312/27/4072897_01_thumb.gif");add("Stark");
-            add("13816000000");add("1992-05-03");add("男");add("未设置");add("310112199205031234");
-            add("");add("15316788888");add("");
-        }
-    };
+    private ArrayList<String> values;
     // 弹框
     private AlertDialog alert = null;
     private AlertDialog.Builder builder = null;
@@ -63,9 +63,9 @@ public class ProfileFragment extends BaseBackFragment {
     private static final int CROP_SMALL_PICTURE = 2;
     protected static Uri tempUri;
 
-    public static ProfileFragment newInstance() {
+    public static ProfileFragment newInstance(User user) {
         Bundle args = new Bundle();
-
+        args.putSerializable(OBJECT, user);
         ProfileFragment fragment = new ProfileFragment();
         fragment.setArguments(args);
         return fragment;
@@ -76,6 +76,7 @@ public class ProfileFragment extends BaseBackFragment {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
+            user = (User) args.getSerializable(OBJECT);
         }
     }
 
@@ -109,6 +110,15 @@ public class ProfileFragment extends BaseBackFragment {
     }
 
     private void processRecyclerView() {
+        // 整理数据
+        values = new ArrayList<String>(){
+            {
+                add(user.getAvatar());add(user.getNickname());add(user.getPhone());
+                add("未设置");add("未设置");add("未设置");add(user.getIdCard());
+                add("");add(user.getPhone());add("");add("");
+            }
+        };
+        // 加载列表
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         adapter = new ProfileListAdapter(context, keys, values);
         recyclerView.setAdapter(adapter);
@@ -166,9 +176,30 @@ public class ProfileFragment extends BaseBackFragment {
                 } else if (position == 7) {
                     EventBus.getDefault().post(new StartBrotherEvent(MyAddress.newInstance(FROM_PROFILE)));
                 } else if (position == 8) {
-                    // 跳转修改页面
+                    // 跳转绑定手机页面
                     startForResult(BindPhoneFragment.newInstance(
                             keys.get(position), values.get(position), position), REQ_CODE);
+                } else if (position == 10) {
+                    // 用户退出
+                    builder = new AlertDialog.Builder(getActivity(), R.style.CustomAlertDialogTheme);
+                    builder.setMessage("确定退出当前账号吗?")
+                            .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    // 从数据源删除数
+                                    SharedPreferences.Editor editor = sharedPre.edit();
+                                    editor.putString("user_phone", EMPTY_STRING);
+                                    editor.putString("user_authentication_token", EMPTY_STRING);
+                                    editor.commit();
+                                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                                    startActivity(intent);
+                                }
+                            })
+                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.dismiss();
+                                }
+                            }).create();
+                    builder.show();
                 } else {
                     // 跳转修改页面
                     startForResult(ChangeProfileFragment.newInstance(

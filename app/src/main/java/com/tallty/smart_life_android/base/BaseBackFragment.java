@@ -45,7 +45,7 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
     protected static final String ADDRESS_PHONE = "address_phone";
     protected static final String ADDRESS_NAME = "address_NAME";
     // 用于SharedPreferences取值
-    protected static final String EMPTY_STRING = " ";
+    protected static final String EMPTY_STRING = "";
     // startForResultFragment使用
     protected static final int REQ_CODE = 0;
     protected static final String RESULT_DATA = "data";
@@ -53,7 +53,7 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
     // startBrotherFragment使用
     protected static final String TOOLBAR_TITLE = "BackFragmentTitle";
     protected static final String OBJECTS = "BackFragmentObjects";
-    protected static final String ADDRESS = "BackFragmentAddress";
+    protected static final String OBJECT = "BackFragmentObject";
     protected static final String TOTAL_PRICE = "BackFragmentTotalPrice";
     protected static final String NORMAL_DATA = "normal_data";
     // 调用MyAddress的不同处理

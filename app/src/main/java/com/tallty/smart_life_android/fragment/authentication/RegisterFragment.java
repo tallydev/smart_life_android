@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.orhanobut.logger.Logger;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.event.ConfirmDialogEvent;
@@ -28,6 +29,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -52,7 +54,7 @@ public class RegisterFragment extends BaseBackFragment {
     private User user_edit = new User();
     // 验证码相关
     private CountDownTimer timer;
-    private boolean hasGot = false;
+//    private boolean hasGot = false;
 
     public static RegisterFragment newInstance() {
         Bundle args = new Bundle();
@@ -173,7 +175,7 @@ public class RegisterFragment extends BaseBackFragment {
 
         if (begin) {
             getCodeBtn.setEnabled(false);
-            hasGot = true;
+//            hasGot = true;
             timer.start();
             // 获取
             mApp.noHeaderEngine().getSms(phone).enqueue(new Callback<HashMap<String, String>>() {
@@ -238,11 +240,11 @@ public class RegisterFragment extends BaseBackFragment {
             focusView = codeEdit;
             cancel = true;
         }
-        if (!hasGot) {
-            codeEdit.setError("请点击按钮获取验证码");
-            focusView = codeEdit;
-            cancel = true;
-        }
+//        if (!hasGot) {
+//            codeEdit.setError("请点击按钮获取验证码");
+//            focusView = codeEdit;
+//            cancel = true;
+//        }
         if (user_edit.getPhone().isEmpty()) {
             phoneEdit.setError("请填写手机号码");
             focusView = phoneEdit;
@@ -270,23 +272,14 @@ public class RegisterFragment extends BaseBackFragment {
                 sms).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-                User user = response.body();
                 if (response.code() == 201) {
-                    // 保存用户信息
+                    User user = response.body();
+                    // 保存手机号,方便登陆页自动显示
                     SharedPreferences.Editor editor = sharedPre.edit();
-                    editor.putInt("user_id", user.getId());
-                    editor.putString("user_email", user.getEmail());
                     editor.putString("user_phone", user.getPhone());
-                    editor.putString("user_authentication_token", user.getAuthentication_token());
-                    editor.putString("user_created_at", user.getCreated_at());
-                    editor.putString("user_updated_at", user.getUpdated_at());
-                    // 接口暂无的数据,保存到SharedPreferences中
-                    editor.putString("user_nickname", user.getNickname());
-                    editor.putString("user_address", user.getAddress());
                     editor.commit();
-                    // 跳转
-                    hideProgress();
-                    pop();
+                    // 更新用户信息
+                    updateUser(user);
                 } else if (response.code() == 422) {
                     Log.d("tag",String.valueOf(response.errorBody().source()));
 
@@ -332,6 +325,36 @@ public class RegisterFragment extends BaseBackFragment {
                 showToast(context.getResources().getString(R.string.network_error));
             }
         });
+    }
+
+    private void updateUser(User user) {
+        // user: phone,token,email
+        Map<String, String> fields = new HashMap<>();
+        fields.put("user_info[nickname]", user_edit.getNickname());
+        Logger.d(user_edit.getNickname());
+        Logger.d(user.getAuthentication_token());
+        Logger.d(user.getPhone());
+        mApp.noHeaderEngine().updateUser(
+                user.getAuthentication_token(),
+                user.getPhone(),
+                fields)
+                .enqueue(new Callback<User>() {
+                    @Override
+                    public void onResponse(Call<User> call, Response<User> response) {
+                        Logger.d(response.code()+"");
+                        // 更新信息成功与否,都跳转登录(注册页处理不了修改信息失败的问题, profile也可处理)
+                        hideProgress();
+                        pop();
+                    }
+
+                    @Override
+                    public void onFailure(Call<User> call, Throwable t) {
+                        Logger.d(t.getMessage());
+                        Logger.d(t.toString());
+                        hideProgress();
+                        showToast(context.getResources().getString(R.string.network_error));
+                    }
+                });
     }
 
     /**

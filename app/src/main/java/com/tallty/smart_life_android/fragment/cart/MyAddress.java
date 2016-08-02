@@ -156,7 +156,7 @@ public class MyAddress extends BaseBackFragment {
     protected void onFragmentResult(int requestCode, int resultCode, Bundle data) {
         super.onFragmentResult(requestCode, resultCode, data);
         if (requestCode == REQ_CODE && resultCode == RESULT_OK) {
-            new_address = (Address) data.getSerializable(ADDRESS);
+            new_address = (Address) data.getSerializable(OBJECT);
             if (new_address != null) {
                 addresses.add(new_address);
                 adapter.notifyDataSetChanged();
@@ -220,7 +220,7 @@ public class MyAddress extends BaseBackFragment {
 
         // 把选中的地址回传给上一个页面
         Bundle bundle = new Bundle();
-        bundle.putSerializable(ADDRESS, cache_address);
+        bundle.putSerializable(OBJECT, cache_address);
         setFramgentResult(RESULT_OK, bundle);
         if (from == FROM_ORDER){
             pop();
