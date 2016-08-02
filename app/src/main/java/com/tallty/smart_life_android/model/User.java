@@ -74,6 +74,15 @@ public class User implements Serializable{
     @Expose
     private String payPassword;
 
+    // 业务参数(登录、注册错误信息)
+    @SerializedName("error")
+    @Expose
+    private String error;
+
+    @SerializedName("errors")
+    @Expose
+    private Errors errors;
+
 
     public User() {
     }
@@ -204,5 +213,13 @@ public class User implements Serializable{
 
     public void setPayPassword(String payPassword) {
         this.payPassword = payPassword;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public Errors getErrors() {
+        return errors;
     }
 }

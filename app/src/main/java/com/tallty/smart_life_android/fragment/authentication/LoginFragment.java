@@ -94,6 +94,7 @@ public class LoginFragment extends BaseLazyMainFragment {
                 beginLogin();
                 break;
             case R.id.free_register:
+                hideSoftInput();
                 start(RegisterFragment.newInstance());
                 break;
         }
@@ -123,6 +124,7 @@ public class LoginFragment extends BaseLazyMainFragment {
 
     // 开始登录
     private void beginLogin(){
+        hideSoftInput();
         // 初始化
         phone_edit.setError(null);
         password_edit.setError(null);
@@ -133,10 +135,11 @@ public class LoginFragment extends BaseLazyMainFragment {
         String password = password_edit.getText().toString();
         // 判断
         if (password.isEmpty() || !isPasswordValid(password)) {
-            password_edit.setError("登录密码错误");
+            password_edit.setError("密码长度不能小于8位");
             focusView = password_edit;
             cancel = true;
         }
+
         if (phone.isEmpty() || !isPhoneValid(phone)) {
             phone_edit.setError("手机号码错误");
             focusView = phone_edit;
@@ -146,7 +149,6 @@ public class LoginFragment extends BaseLazyMainFragment {
         if (cancel) {
             focusView.requestFocus();
         } else {
-            hideSoftInput();
             showProgress("登录中...");
             loginTask(phone, password);
         }
@@ -156,9 +158,9 @@ public class LoginFragment extends BaseLazyMainFragment {
         mApp.getNoHeaderEngine().getUser(phone, password).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
+                User user = response.body();
                 if (response.code() == 201) {
                     // 保存用户信息
-                    User user = response.body();
                     SharedPreferences.Editor editor = sharedPre.edit();
                     editor.putInt("user_id", user.getId());
                     editor.putString("user_email", user.getEmail());
@@ -167,11 +169,12 @@ public class LoginFragment extends BaseLazyMainFragment {
                     editor.putString("user_created_at", user.getCreated_at());
                     editor.putString("user_updated_at", user.getUpdated_at());
                     editor.commit();
+
                     // 进入首页
+                    hideProgress();
                     Intent intent = new Intent(getActivity(), MainActivity.class);
                     startActivity(intent);
                     getActivity().finish();
-                    hideProgress();
                 } else {
                     hideProgress();
                     showToast("登录失败,请检查登录信息");
@@ -180,7 +183,8 @@ public class LoginFragment extends BaseLazyMainFragment {
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-                showToast("网络连接出错,请检查网络");
+                hideProgress();
+                showToast(context.getResources().getString(R.string.network_error));
             }
         });
     }
@@ -200,7 +204,7 @@ public class LoginFragment extends BaseLazyMainFragment {
 
     // 验证密码长度
     private boolean isPasswordValid(String password) {
-        return password.length() >= 5 && password.length() <= 8;
+        return password.length() >= 8;
     }
 
     /**
