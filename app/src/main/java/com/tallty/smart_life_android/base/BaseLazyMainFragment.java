@@ -1,6 +1,5 @@
 package com.tallty.smart_life_android.base;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -33,7 +32,7 @@ public abstract class BaseLazyMainFragment extends BaseFragment implements View.
     private boolean mInited = false;
     private Bundle mSavedInstanceState;
     // sharedPre数据常量
-    protected static final String EMPTY_STRING = " ";
+    protected static final String EMPTY_STRING = "";
     protected static final String PHONE = "user_phone";
     protected static final String USER_TOKEN = "user_token";
     // 布局
@@ -45,6 +44,10 @@ public abstract class BaseLazyMainFragment extends BaseFragment implements View.
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mSavedInstanceState = savedInstanceState;
+        context = getActivity();
+        sharedPre = context.getSharedPreferences("SmartLife", Context.MODE_PRIVATE);
+        // 拦截调用
+        fragmentInterceptor();
     }
 
     @Nullable
@@ -52,13 +55,11 @@ public abstract class BaseLazyMainFragment extends BaseFragment implements View.
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         int layout_id = getFragmentLayout();
         view = inflater.inflate(layout_id, container, false);
-        context = getActivity();
-        sharedPre = context.getSharedPreferences("SmartLife", Context.MODE_PRIVATE);
         // 初始化ToolBar
         Toolbar toolbar = getViewById(R.id.toolbar);
         TextView toolbar_title = getViewById(R.id.toolbar_title);
-//        调试使用
-//        initToolbarMenu(toolbar);
+        // 调试使用
+        // initToolbarMenu(toolbar);
         initToolBar(toolbar, toolbar_title);
         // 引用组件
         initView();
@@ -93,15 +94,17 @@ public abstract class BaseLazyMainFragment extends BaseFragment implements View.
         }
     }
 
+    // fragment  拦截器
+    protected void fragmentInterceptor() {
+        // 供子类使用
+    }
     // 获取布局文件
     public abstract int getFragmentLayout();
     // 初始化toolbar
     protected abstract void initToolBar(Toolbar toolbar, TextView title);
     // 初始化视图组件
     protected abstract void initView();
-    /**
-     * 懒加载
-     */
+    // 懒加载
     protected abstract void initLazyView(@Nullable Bundle savedInstanceState);
 
 

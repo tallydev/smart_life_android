@@ -15,7 +15,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.orhanobut.logger.Logger;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.event.ConfirmDialogEvent;
@@ -177,7 +176,7 @@ public class RegisterFragment extends BaseBackFragment {
             hasGot = true;
             timer.start();
             // 获取
-            mApp.getNoHeaderEngine().getSms(phone).enqueue(new Callback<HashMap<String, String>>() {
+            mApp.noHeaderEngine().getSms(phone).enqueue(new Callback<HashMap<String, String>>() {
                 @Override
                 public void onResponse(Call<HashMap<String, String>> call, Response<HashMap<String, String>> response) {
                     if (response.code() == 201) {
@@ -265,7 +264,7 @@ public class RegisterFragment extends BaseBackFragment {
     }
 
     private void registerTask(User user_edit, String sms) {
-        mApp.getNoHeaderEngine().registerUser(
+        mApp.noHeaderEngine().registerUser(
                 user_edit.getPhone(),
                 user_edit.getPassword(),
                 sms).enqueue(new Callback<User>() {

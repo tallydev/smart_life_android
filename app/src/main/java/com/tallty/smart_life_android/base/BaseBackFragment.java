@@ -60,15 +60,19 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
     protected static final int FROM_PROFILE = 2;
     protected static final int FROM_ORDER = 3;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        context = getActivity();
+        sharedPre = context.getSharedPreferences("SmartLife", Context.MODE_PRIVATE);
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         int layout_id = getFragmentLayout();
         view = inflater.inflate(layout_id, container, false);
-        context = getActivity();
-        sharedPre = context.getSharedPreferences("SmartLife", Context.MODE_PRIVATE);
-
+        // toolbar
         toolbar = getViewById(R.id.toolbar);
         toolbar_title = getViewById(R.id.toolbar_title);
         initBackToolbar(toolbar);

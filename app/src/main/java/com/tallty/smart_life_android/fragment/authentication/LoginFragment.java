@@ -12,7 +12,6 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.tallty.smart_life_android.R;
@@ -39,7 +38,6 @@ public class LoginFragment extends BaseLazyMainFragment {
     private EditText password_edit;
     private Button login_btn;
     private Button link_to_register;
-    private ScrollView login_form_layout;
 
     public static LoginFragment newInstance() {
         Bundle args = new Bundle();
@@ -55,6 +53,21 @@ public class LoginFragment extends BaseLazyMainFragment {
         Bundle args = getArguments();
         if (args != null) {
 
+        }
+    }
+
+    @Override
+    protected void fragmentInterceptor() {
+        super.fragmentInterceptor();
+        String phone = sharedPre.getString("user_phone", null);
+        String token = sharedPre.getString("user_authentication_token", null);
+        if (phone != null && token != null) {
+            // 初始化retrofit服务
+            mApp.setHeaderEngine(phone, token);
+            // 进入首页, 不再登录
+            Intent intent = new Intent(getActivity(), MainActivity.class);
+            startActivity(intent);
+            getActivity().finish();
         }
     }
 
@@ -76,7 +89,6 @@ public class LoginFragment extends BaseLazyMainFragment {
         password_edit = getViewById(R.id.login_password);
         login_btn = getViewById(R.id.login_btn);
         link_to_register = getViewById(R.id.free_register);
-        login_form_layout = getViewById(R.id.login_form);
     }
 
     @Override
@@ -155,7 +167,7 @@ public class LoginFragment extends BaseLazyMainFragment {
     }
 
     private void loginTask(String phone, String password) {
-        mApp.getNoHeaderEngine().getUser(phone, password).enqueue(new Callback<User>() {
+        mApp.noHeaderEngine().getUser(phone, password).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 User user = response.body();
@@ -170,6 +182,10 @@ public class LoginFragment extends BaseLazyMainFragment {
                     editor.putString("user_updated_at", user.getUpdated_at());
                     editor.commit();
 
+                    /**
+                     * 登陆成功, 使用phone和token初始化headerEngine, 避免登录成功后接口调用时的重复初始化
+                     */
+                    mApp.setHeaderEngine(user.getPhone(), user.getAuthentication_token());
                     // 进入首页
                     hideProgress();
                     Intent intent = new Intent(getActivity(), MainActivity.class);
