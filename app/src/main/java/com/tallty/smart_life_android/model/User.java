@@ -26,6 +26,10 @@ public class User implements Serializable{
     @Expose
     private String nickname;
 
+    @SerializedName("avatar")
+    @Expose
+    private String avatar;
+
     @SerializedName("phone")
     @Expose
     private String phone;
@@ -62,7 +66,7 @@ public class User implements Serializable{
     @Expose
     private String signature;
 
-    @SerializedName("id_card")
+    @SerializedName("identity_card")
     @Expose
     private String idCard;
 
@@ -74,7 +78,7 @@ public class User implements Serializable{
     @Expose
     private String payPassword;
 
-    // 业务参数(登录、注册错误信息)
+    // 业务相关参数(登录、注册错误信息)
     @SerializedName("error")
     @Expose
     private String error;
@@ -192,11 +196,11 @@ public class User implements Serializable{
     }
 
     public String getIdCard() {
-        return idCard;
+        return  idCard;
     }
 
     public void setIdCard(String idCard) {
-        this.idCard = idCard;
+        this. idCard = idCard;
     }
 
     public String getBindPhone() {
@@ -221,5 +225,21 @@ public class User implements Serializable{
 
     public Errors getErrors() {
         return errors;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public void setError(String error) {
+        this.error = error;
+    }
+
+    public void setErrors(Errors errors) {
+        this.errors = errors;
     }
 }
