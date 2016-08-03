@@ -168,14 +168,14 @@ public class RegisterFragment extends BaseBackFragment {
 
             @Override
             public void onFinish() {
-                getCodeBtn.setEnabled(true);
+                getCodeBtn.setClickable(true);
                 getCodeBtn.setText("重新获取");
             }
         };
 
         if (begin) {
-            getCodeBtn.setEnabled(false);
 //            hasGot = true;
+            getCodeBtn.setClickable(false);
             timer.start();
             // 获取
             mApp.noHeaderEngine().getSms(phone).enqueue(new Callback<HashMap<String, String>>() {
@@ -186,7 +186,7 @@ public class RegisterFragment extends BaseBackFragment {
                         showToast("验证码已发送");
                     } else {
                         timer.cancel();
-                        getCodeBtn.setEnabled(true);
+                        getCodeBtn.setClickable(true);
                         getCodeBtn.setText("重新获取");
                         showToast("获取失败,请重新获取");
                     }
@@ -194,6 +194,8 @@ public class RegisterFragment extends BaseBackFragment {
 
                 @Override
                 public void onFailure(Call<HashMap<String, String>> call, Throwable t) {
+                    getCodeBtn.setClickable(true);
+                    getCodeBtn.setText("重新获取");
                     showToast(context.getResources().getString(R.string.network_error));
                 }
             });
@@ -331,17 +333,14 @@ public class RegisterFragment extends BaseBackFragment {
         // user: phone,token,email
         Map<String, String> fields = new HashMap<>();
         fields.put("user_info[nickname]", user_edit.getNickname());
-        Logger.d(user_edit.getNickname());
-        Logger.d(user.getAuthentication_token());
-        Logger.d(user.getPhone());
+
         mApp.noHeaderEngine().updateUser(
-                user.getAuthentication_token(),
+                user.getToken(),
                 user.getPhone(),
                 fields)
                 .enqueue(new Callback<User>() {
                     @Override
                     public void onResponse(Call<User> call, Response<User> response) {
-                        Logger.d(response.code()+"");
                         // 更新信息成功与否,都跳转登录(注册页处理不了修改信息失败的问题, profile也可处理)
                         hideProgress();
                         pop();

@@ -36,6 +36,7 @@
                     android:background="@drawable/border_bottom_click_bg"
                     android:textColor="@color/global_text"
                     android:textColorHint="@color/gray_text"
+                    android:textSize="@dimen/text_14"
                     android:hint="请输入要绑定的手机号码"
                     android:inputType="phone"/>
                 <TextView
@@ -44,6 +45,7 @@
                     android:layout_height="match_parent"
                     android:background="@drawable/border_bottom_click_bg"
                     android:textColor="@color/orange"
+                    android:textSize="@dimen/text_14"
                     android:layout_gravity="right"
                     android:gravity="center"
                     android:text="发送验证码"/>
@@ -55,6 +57,7 @@
                 android:background="@drawable/border_bottom_click_bg"
                 android:textColor="@color/global_text"
                 android:textColorHint="@color/gray_text"
+                android:textSize="@dimen/text_14"
                 android:hint="请输入验证码"
                 android:inputType="number"/>
         </LinearLayout>

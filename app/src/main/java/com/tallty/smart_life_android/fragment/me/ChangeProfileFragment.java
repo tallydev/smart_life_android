@@ -10,8 +10,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.orhanobut.logger.Logger;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
+import com.tallty.smart_life_android.model.User;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -83,16 +92,64 @@ public class ChangeProfileFragment extends BaseBackFragment {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.change_btn:
+                change_input.setError(null);
                 String text = change_input.getText().toString();
-                // TODO: 16/7/27 调用接口修改数据
-                Bundle bundle = new Bundle();
-                bundle.putString(RESULT_DATA, text);
-                bundle.putInt(RESULT_POSITION, position);
-                setFramgentResult(RESULT_OK, bundle);
-                // 隐藏软键盘
-                hideSoftInput();
-                pop();
+                if (text.isEmpty()) {
+                    change_input.setError("请填写信息");
+                    change_input.requestFocus();
+                } else {
+                    // 调用接口修改数据
+                    updateUser(text);
+                }
                 break;
         }
     }
+
+    private void updateUser(final String text) {
+        change_btn.setClickable(false);
+        showProgress("修改中...");
+        // user: phone,token,email
+        Map<String, String> fields = new HashMap<>();
+        if (key.equals("昵称")) {
+            fields.put("user_info[nickname]", text);
+            Logger.d("nickname"+text);
+        } else if (key.equals("身份证号")) {
+            fields.put("user_info[identity_card]", text);
+            Logger.d("identity_card"+text);
+        }
+
+        mApp.noHeaderEngine().updateUser(
+                sharedPre.getString("user_token", EMPTY_STRING),
+                sharedPre.getString("user_phone", EMPTY_STRING),
+                fields)
+                .enqueue(new Callback<User>() {
+                    @Override
+                    public void onResponse(Call<User> call, Response<User> response) {
+                        if (response.code() == 200) {
+                            Bundle bundle = new Bundle();
+                            bundle.putString(RESULT_DATA, text);
+                            bundle.putInt(RESULT_POSITION, position);
+                            setFramgentResult(RESULT_OK, bundle);
+                            // 隐藏软键盘
+                            hideSoftInput();
+                            hideProgress();
+                            pop();
+                        } else {
+                            hideProgress();
+                            change_btn.setClickable(true);
+                            showToast("修改失败,请重试");
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<User> call, Throwable t) {
+                        hideProgress();
+                        change_btn.setClickable(true);
+                        showToast(context.getResources().getString(R.string.network_error));
+                    }
+                });
+    }
+
+
 }

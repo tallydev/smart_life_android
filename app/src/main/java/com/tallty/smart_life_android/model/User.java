@@ -36,7 +36,7 @@ public class User implements Serializable{
 
     @SerializedName("authentication_token")
     @Expose
-    private String authentication_token;
+    private String token;
 
     @SerializedName("created_at")
     @Expose
@@ -131,12 +131,12 @@ public class User implements Serializable{
         this.email = email;
     }
 
-    public String getAuthentication_token() {
-        return authentication_token;
+    public String getToken() {
+        return token;
     }
 
-    public void setAuthentication_token(String authentication_token) {
-        this.authentication_token = authentication_token;
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public String getCreated_at() {

@@ -67,10 +67,8 @@
                         android:layout_toRightOf="@id/photo_ly"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="16dp"
-                        android:singleLine="true"
                         android:ellipsize="end"
-                        android:maxLines="1"
-                        android:text="text"/>
+                        android:maxLines="1"/>
 
                     <com.joanzapata.iconify.widget.IconTextView
                         android:id="@+id/indicator"

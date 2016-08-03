@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.orhanobut.logger.Logger;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.activity.MainActivity;
 import com.tallty.smart_life_android.base.BaseLazyMainFragment;
@@ -60,7 +61,9 @@ public class LoginFragment extends BaseLazyMainFragment {
     protected void fragmentInterceptor() {
         super.fragmentInterceptor();
         String phone = sharedPre.getString("user_phone", EMPTY_STRING);
-        String token = sharedPre.getString("user_authentication_token", EMPTY_STRING);
+        String token = sharedPre.getString("user_token", EMPTY_STRING);
+        Logger.d(phone);
+        Logger.d(token);
         if (!phone.isEmpty() && !token.isEmpty()) {
             // 初始化retrofit服务
             mApp.setHeaderEngine(phone, token);
@@ -167,6 +170,8 @@ public class LoginFragment extends BaseLazyMainFragment {
     }
 
     private void loginTask(String phone, String password) {
+        login_btn.setClickable(false);
+
         mApp.noHeaderEngine().login(phone, password).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
@@ -177,7 +182,7 @@ public class LoginFragment extends BaseLazyMainFragment {
                     editor.putInt("user_id", user.getId());
                     editor.putString("user_email", user.getEmail());
                     editor.putString("user_phone", user.getPhone());
-                    editor.putString("user_authentication_token", user.getAuthentication_token());
+                    editor.putString("user_token", user.getToken());
                     editor.putString("user_created_at", user.getCreated_at());
                     editor.putString("user_updated_at", user.getUpdated_at());
                     editor.commit();
@@ -185,13 +190,14 @@ public class LoginFragment extends BaseLazyMainFragment {
                     /**
                      * 登陆成功, 使用phone和token初始化headerEngine, 避免登录成功后接口调用时的重复初始化
                      */
-                    mApp.setHeaderEngine(user.getPhone(), user.getAuthentication_token());
+                    mApp.setHeaderEngine(user.getPhone(), user.getToken());
                     // 进入首页
-                    hideProgress();
                     Intent intent = new Intent(getActivity(), MainActivity.class);
                     startActivity(intent);
                     getActivity().finish();
+                    hideProgress();
                 } else {
+                    login_btn.setClickable(true);
                     hideProgress();
                     showToast("登录失败,请检查登录信息");
                 }
@@ -199,6 +205,7 @@ public class LoginFragment extends BaseLazyMainFragment {
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
+                login_btn.setClickable(true);
                 hideProgress();
                 showToast(context.getResources().getString(R.string.network_error));
             }

@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.orhanobut.logger.Logger;
 import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.utils.SnackbarUtil;
@@ -21,6 +22,7 @@ import com.tallty.smart_life_android.utils.ToastUtil;
 
 import org.greenrobot.eventbus.EventBus;
 
+import me.yokeyword.fragmentation.SwipeBackLayout;
 import me.yokeyword.fragmentation_swipeback.SwipeBackFragment;
 
 /**
@@ -89,6 +91,25 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
         setListener();
         // 入场动画结束后执行  优化,防动画卡顿
         afterAnimationLogic();
+        // 滑动过程监听
+        getSwipeBackLayout().addSwipeListener(new SwipeBackLayout.OnSwipeListener() {
+            @Override
+            public void onDragStateChange(int state) {
+                if (state == 1) {
+                    hideSoftInput();
+                }
+            }
+
+            @Override
+            public void onEdgeTouch(int oritentationEdgeFlag) {
+
+            }
+
+            @Override
+            public void onDragScrolled(float scrollPercent) {
+
+            }
+        });
     }
 
     // 获取布局文件id
@@ -111,6 +132,7 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideSoftInput();
                 // 出栈
                 pop();
             }

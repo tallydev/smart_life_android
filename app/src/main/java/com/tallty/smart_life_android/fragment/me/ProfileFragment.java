@@ -48,9 +48,10 @@ public class ProfileFragment extends BaseBackFragment {
     private User user;
     private ArrayList<String> keys = new ArrayList<String>(){
         {
-            add("头像");add("昵称");add("登录手机号");add("出生日期");add("性别");add("个性签名");
-            add("身份证号");add("收货地址");add("变更绑定手机号");add("设置支付密码");
-            add("退出当前账号");
+            add("头像");add("昵称");add("登录手机号");
+            add("出生日期");add("性别");add("个性签名");
+            add("身份证号");add("收货地址");add("变更绑定手机号");
+            add("设置支付密码");add("退出当前账号");
         }
     };
     private ArrayList<String> values;
@@ -58,10 +59,10 @@ public class ProfileFragment extends BaseBackFragment {
     private AlertDialog alert = null;
     private AlertDialog.Builder builder = null;
     // 上传头像相关
-    protected static final int CHOOSE_PICTURE = 0;
-    protected static final int TAKE_PICTURE = 1;
+    private static final int CHOOSE_PICTURE = 0;
+    private static final int TAKE_PICTURE = 1;
     private static final int CROP_SMALL_PICTURE = 2;
-    protected static Uri tempUri;
+    private static Uri tempUri;
 
     public static ProfileFragment newInstance(User user) {
         Bundle args = new Bundle();
@@ -114,8 +115,9 @@ public class ProfileFragment extends BaseBackFragment {
         values = new ArrayList<String>(){
             {
                 add(user.getAvatar());add(user.getNickname());add(user.getPhone());
-                add("未设置");add("未设置");add("未设置");add(user.getIdCard());
-                add("");add(user.getPhone());add("");add("");
+                add("未设置");add("未设置");add("未设置");
+                add(user.getIdCard());add("");add(user.getPhone());
+                add("");add("");
             }
         };
         // 加载列表
@@ -187,8 +189,7 @@ public class ProfileFragment extends BaseBackFragment {
                                 public void onClick(DialogInterface dialog, int id) {
                                     // 从数据源删除数
                                     SharedPreferences.Editor editor = sharedPre.edit();
-                                    editor.putString("user_phone", EMPTY_STRING);
-                                    editor.putString("user_authentication_token", EMPTY_STRING);
+                                    editor.putString("user_token", EMPTY_STRING);
                                     editor.commit();
                                     Intent intent = new Intent(getActivity(), LoginActivity.class);
                                     startActivity(intent);
@@ -283,7 +284,7 @@ public class ProfileFragment extends BaseBackFragment {
      *
      * @param data
      */
-    protected void setImageToView(Intent data) {
+    private void setImageToView(Intent data) {
         Bundle extras = data.getExtras();
         if (extras != null) {
             Bitmap photo = extras.getParcelable("data");

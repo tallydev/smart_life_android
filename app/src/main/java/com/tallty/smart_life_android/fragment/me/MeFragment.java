@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.orhanobut.logger.Logger;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseLazyMainFragment;
 import com.tallty.smart_life_android.custom.GlideCircleTransform;
@@ -127,6 +128,8 @@ public class MeFragment extends BaseLazyMainFragment {
                     Glide.with(context).load(user.getAvatar())
                             .placeholder(R.drawable.user_photo)
                             .transform(new GlideCircleTransform(context)).into(photo);
+                    name.setText(user.getNickname());
+                    Logger.d("获取用户信息成功");
                 } else {
                     showToast("获取用户信息失败");
                 }
@@ -151,8 +154,6 @@ public class MeFragment extends BaseLazyMainFragment {
     }
 
     private void setView() {
-        name.setText(sharedPre.getString("user_nickname", EMPTY_STRING));
-
         order_icon.setImageResource(R.drawable.me_order);
         order_text.setText("我的订单");
 
