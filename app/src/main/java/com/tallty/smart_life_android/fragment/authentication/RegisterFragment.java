@@ -54,7 +54,7 @@ public class RegisterFragment extends BaseBackFragment {
     private User user_edit = new User();
     // 验证码相关
     private CountDownTimer timer;
-//    private boolean hasGot = false;
+    private boolean hasGot = false;
 
     public static RegisterFragment newInstance() {
         Bundle args = new Bundle();
@@ -174,7 +174,7 @@ public class RegisterFragment extends BaseBackFragment {
         };
 
         if (begin) {
-//            hasGot = true;
+            hasGot = true;
             getCodeBtn.setClickable(false);
             timer.start();
             // 获取
@@ -242,11 +242,11 @@ public class RegisterFragment extends BaseBackFragment {
             focusView = codeEdit;
             cancel = true;
         }
-//        if (!hasGot) {
-//            codeEdit.setError("请点击按钮获取验证码");
-//            focusView = codeEdit;
-//            cancel = true;
-//        }
+        if (!hasGot) {
+            codeEdit.setError("请点击按钮获取验证码");
+            focusView = codeEdit;
+            cancel = true;
+        }
         if (user_edit.getPhone().isEmpty()) {
             phoneEdit.setError("请填写手机号码");
             focusView = phoneEdit;
