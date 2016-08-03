@@ -23,6 +23,7 @@
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
             android:background="@color/white"
+            android:textSize="@dimen/text_14"
             android:textColor="@color/global_text"
             android:textColorHint="@color/gray_text"
             android:hint="请输入昵称"

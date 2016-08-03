@@ -23,7 +23,6 @@ import android.widget.TextView;
 
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.activity.LoginActivity;
-import com.tallty.smart_life_android.activity.MainActivity;
 import com.tallty.smart_life_android.adapter.ProfileListAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.custom.RecyclerVIewItemTouchListener;
@@ -37,6 +36,12 @@ import org.greenrobot.eventbus.EventBus;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * 个人中心-个人资料
@@ -129,80 +134,28 @@ public class ProfileFragment extends BaseBackFragment {
             public void onItemClick(RecyclerView.ViewHolder vh, final int position) {
                 if (position == 0){
                     // 修改头像
-                    final String[] kind = new String[]{"相册", "拍照"};
-                    alert = null;
-                    builder = new AlertDialog.Builder(getActivity());
-                    builder.setNegativeButton("取消", null);
-                    alert = builder.setTitle("修改头像")
-                            .setItems(kind, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    uploadPhoto(which);
-                                }
-                            }).create();
-                    alert.show();
+                    processPhoto();
                 } else if (position == 2) {
                     // 登录手机号
                     showToast("可通过绑定手机号修改");
                 } else if (position == 3) {
                     // 修改生日
-                    Calendar calendar = Calendar.getInstance();
-                    Dialog dateDialog = new DatePickerDialog(getActivity(),
-                            new DatePickerDialog.OnDateSetListener() {
-                                @Override
-                                public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                                    String date = year+"-"+(monthOfYear+1)+"-"+dayOfMonth;
-                                    values.set(position, date);
-                                    adapter.notifyItemChanged(position);
-                                }
-                            },
-                            calendar.get(Calendar.YEAR),
-                            calendar.get(Calendar.MONTH),
-                            calendar.get(Calendar.DAY_OF_MONTH)
-                    );
-                    dateDialog.show();
+                    processBirth(position);
                 } else if (position == 4) {
                     // 修改性别
-                    final String[] sex = new String[]{"男", "女"};
-                    alert = null;
-                    builder = new AlertDialog.Builder(getActivity());
-                    alert = builder.setTitle("修改性别")
-                            .setItems(sex, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    values.set(position, sex[which]);
-                                    adapter.notifyItemChanged(position);
-                                }
-                            }).create();
-                    alert.show();
+                    processSex(position);
                 } else if (position == 7) {
-                    EventBus.getDefault().post(new StartBrotherEvent(MyAddress.newInstance(FROM_PROFILE)));
+                    EventBus.getDefault().post(
+                            new StartBrotherEvent(MyAddress.newInstance(FROM_PROFILE)));
                 } else if (position == 8) {
                     // 跳转绑定手机页面
                     startForResult(BindPhoneFragment.newInstance(
                             keys.get(position), values.get(position), position), REQ_CODE);
                 } else if (position == 10) {
                     // 用户退出
-                    builder = new AlertDialog.Builder(getActivity(), R.style.CustomAlertDialogTheme);
-                    builder.setMessage("确定退出当前账号吗?")
-                            .setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    // 从数据源删除数
-                                    SharedPreferences.Editor editor = sharedPre.edit();
-                                    editor.putString("user_token", EMPTY_STRING);
-                                    editor.commit();
-                                    Intent intent = new Intent(getActivity(), LoginActivity.class);
-                                    startActivity(intent);
-                                }
-                            })
-                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.dismiss();
-                                }
-                            }).create();
-                    builder.show();
+                    processSignOut();
                 } else {
-                    // 跳转修改页面
+                    // 跳转修改页面(昵称、个性签名、身份证号、支付密码)
                     startForResult(ChangeProfileFragment.newInstance(
                             keys.get(position), values.get(position), position), REQ_CODE);
                 }
@@ -213,6 +166,24 @@ public class ProfileFragment extends BaseBackFragment {
 
             }
         });
+    }
+
+    /**
+     * 处理头像
+     */
+    private void processPhoto() {
+        final String[] kind = new String[]{"相册", "拍照"};
+        alert = null;
+        builder = new AlertDialog.Builder(getActivity());
+        builder.setNegativeButton("取消", null);
+        alert = builder.setTitle("修改头像")
+                .setItems(kind, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        uploadPhoto(which);
+                    }
+                }).create();
+        alert.show();
     }
 
     /**
@@ -310,6 +281,107 @@ public class ProfileFragment extends BaseBackFragment {
             // TODO: 16/7/27 使用imagePath 上传头像
             showToast("上传了");
         }
+    }
+
+    /**
+     * 处理生日
+     */
+    private void processBirth(final int position) {
+        Calendar calendar = Calendar.getInstance();
+        Dialog dateDialog = new DatePickerDialog(getActivity(),
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        String date = year+"-"+(monthOfYear+1)+"-"+dayOfMonth;
+                        updateUserEithDialog(date, position, "生日");
+                    }
+                },
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+        );
+        dateDialog.show();
+    }
+
+    /**
+     * 处理性别
+     */
+    private void processSex(final int position) {
+        final String[] sex = new String[]{"男", "女"};
+        alert = null;
+        builder = new AlertDialog.Builder(getActivity());
+        alert = builder.setTitle("修改性别")
+                .setItems(sex, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        updateUserEithDialog(sex[which], position, "性别");
+                    }
+                }).create();
+        alert.show();
+    }
+
+    /**
+     * 处理退出登录
+     */
+    private void processSignOut() {
+        builder = new AlertDialog.Builder(getActivity(), R.style.CustomAlertDialogTheme);
+        builder.setMessage("确定退出当前账号吗?")
+                .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // 从数据源删除数
+                        SharedPreferences.Editor editor = sharedPre.edit();
+                        editor.putString("user_token", EMPTY_STRING);
+                        editor.commit();
+                        Intent intent = new Intent(getActivity(), LoginActivity.class);
+                        startActivity(intent);
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                }).create();
+        builder.show();
+    }
+
+    /**
+     * 修改用户信息:
+     * 出生日期、性别
+     */
+    private void updateUserEithDialog(final String value, final int position, String tag) {
+        showProgress("修改中...");
+        // TODO: 16/8/3 后台暂无字段 ,模拟更新
+        // 更新字段
+        Map<String, String> fields = new HashMap<>();
+        if (tag.equals("生日")) {
+            fields.put("user_info[birth]", value);
+        } else if (tag.equals("性别")){
+            fields.put("user_info[sex]", value);
+        }
+
+        mApp.noHeaderEngine().updateUser(
+                sharedPre.getString("user_token", EMPTY_STRING),
+                sharedPre.getString("user_phone", EMPTY_STRING),
+                fields
+        ).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.code() == 200) {
+                    values.set(position, value);
+                    adapter.notifyItemChanged(position);
+                    hideProgress();
+                } else {
+                    showToast("修改失败,请重试");
+                    hideProgress();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                hideProgress();
+                showToast(context.getResources().getString(R.string.network_error));
+            }
+        });
     }
 
     /**
