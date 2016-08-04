@@ -140,6 +140,7 @@ public class ProfileFragment extends BaseBackFragment {
                     values.set(8, user.getPhone());
 
                     processRecyclerView();
+                    Logger.d(response.code()+"");
                 } else {
                     hideProgress();
                     showToast("获取用户信息失败");
@@ -182,7 +183,7 @@ public class ProfileFragment extends BaseBackFragment {
                     processPhoto();
                 } else if (position == 2) {
                     // 登录手机号
-                    showToast("可通过绑定手机号修改");
+                    showToast("暂不支持修改");
                 } else if (position == 3) {
                     // 修改生日
                     processBirth(position);
@@ -194,8 +195,9 @@ public class ProfileFragment extends BaseBackFragment {
                             new StartBrotherEvent(MyAddress.newInstance(Const.FROM_PROFILE)));
                 } else if (position == 8) {
                     // 跳转绑定手机页面
-                    startForResult(BindPhoneFragment.newInstance(
-                            keys.get(position), values.get(position), position), REQ_CODE);
+                    showToast("暂不支持修改");
+//                    startForResult(BindPhoneFragment.newInstance(
+//                            keys.get(position), values.get(position), position), REQ_CODE);
                 } else if (position == 10) {
                     // 用户退出
                     processSignOut();

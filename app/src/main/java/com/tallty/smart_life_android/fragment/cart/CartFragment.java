@@ -136,6 +136,7 @@ public class CartFragment extends BaseLazyMainFragment {
     }
 
     private void processRecyclerVIew(){
+
         // 整理数据
         for (int i = 0; i < name.length; i++){
             Commodity commodity = new Commodity();

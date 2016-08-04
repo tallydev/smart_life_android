@@ -86,6 +86,8 @@ public class ChangeProfileFragment extends BaseBackFragment {
         change_input.setHint("请输入"+key);
         if (!key.equals("昵称")) {
             change_tips.setText(null);
+        } else if (key.equals("设置支付密码")) {
+            change_tips.setText("密码长度不小于8位");
         }
     }
 
@@ -104,6 +106,10 @@ public class ChangeProfileFragment extends BaseBackFragment {
                 } else {
                     if (key.equals("身份证号") && text.length() != 18) {
                         change_input.setError("身份证号码格式错误");
+                        change_input.requestFocus();
+                        begin = false;
+                    } else if (key.equals("设置支付密码") && text.length() < 8) {
+                        change_input.setError("密码长度小于8位");
                         change_input.requestFocus();
                         begin = false;
                     }
@@ -130,6 +136,8 @@ public class ChangeProfileFragment extends BaseBackFragment {
             fields.put("user_info[identity_card]", text);
         } else if (key.equals("个性签名")) {
             fields.put("user_info[slogan]", text);
+        } else if (key.equals("设置支付密码")) {
+            fields.put("user_info[pay_password]", text);
         }
 
         mApp.noHeaderEngine().updateUser(
@@ -148,12 +156,12 @@ public class ChangeProfileFragment extends BaseBackFragment {
                             hideSoftInput();
                             hideProgress();
                             pop();
+                            showToast("修改成功");
                         } else {
                             hideProgress();
                             change_btn.setClickable(true);
                             showToast("修改失败,请重试");
                         }
-
                     }
 
                     @Override

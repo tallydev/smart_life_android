@@ -59,13 +59,14 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
         }
 
         if (position == 7 || position == 9) {
-            Logger.d("设置了");
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, DpUtil.dip2px(context, 40)
             );
             params.setMargins(0,0,0,DpUtil.dip2px(context, 4));
             holder.layout.setLayoutParams(params);
             holder.line.setVisibility(View.INVISIBLE);
+            // 收货地址 & 支付密码   不显示Value
+            holder.value.setText("");
         }
     }
 
