@@ -21,6 +21,8 @@ import com.tallty.smart_life_android.event.CartCheckBox;
 import com.tallty.smart_life_android.event.CartUpdateCount;
 import com.tallty.smart_life_android.event.CartUpdateItem;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
+import com.tallty.smart_life_android.event.TabSelectedEvent;
+import com.tallty.smart_life_android.fragment.MainFragment;
 import com.tallty.smart_life_android.model.Commodity;
 import com.tallty.smart_life_android.utils.ToastUtil;
 
@@ -215,6 +217,16 @@ public class CartFragment extends BaseLazyMainFragment {
         // 设置【合计】【全选】
         total_price_text.setText("￥ "+total);
         select_all_btn.setChecked(isSelectAll);
+    }
+
+    /**
+     * 订阅事件:
+     * Tab Cart按钮被重复点击时执行的操作
+     */
+    @Subscribe
+    public void onTabSelectedEvent(TabSelectedEvent event) {
+        if (event.position != MainFragment.CART)
+            Log.d("tab-reselected", "购物车被重复点击了");
     }
 
     @Override

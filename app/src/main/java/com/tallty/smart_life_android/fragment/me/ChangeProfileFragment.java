@@ -146,7 +146,7 @@ public class ChangeProfileFragment extends BaseBackFragment {
                     public void onFailure(Call<User> call, Throwable t) {
                         hideProgress();
                         change_btn.setClickable(true);
-                        showToast(context.getResources().getString(R.string.network_error));
+                        showToast(context.getString(R.string.network_error));
                     }
                 });
     }

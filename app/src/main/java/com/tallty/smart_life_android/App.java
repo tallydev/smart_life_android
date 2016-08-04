@@ -23,9 +23,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class App extends Application{
     private static App sInstance;
     // 网络请求实例
-    private String baseUrl = "http://220.163.125.158:8081/";
-    private Engine noHeaderEngine;
-    private Engine headerEngine;
+    private static String baseUrl = "http://220.163.125.158:8081/";
+    private static Engine noHeaderEngine;
+    private static Engine headerEngine;
 
     @Override
     public void onCreate() {

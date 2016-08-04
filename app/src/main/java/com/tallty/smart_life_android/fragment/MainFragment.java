@@ -19,7 +19,6 @@ import com.tallty.smart_life_android.fragment.community.CommunityFragment;
 import com.tallty.smart_life_android.fragment.healthy.HealthyFragment;
 import com.tallty.smart_life_android.fragment.home.HomeFragment;
 import com.tallty.smart_life_android.fragment.me.MeFragment;
-import com.tallty.smart_life_android.utils.ToastUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -122,26 +121,12 @@ public class MainFragment extends BaseFragment {
         });
     }
 
-    @Override
-    protected void onFragmentResult(int requestCode, int resultCode, Bundle data) {
-        super.onFragmentResult(requestCode, resultCode, data);
-        if (requestCode == REQ_MSG && resultCode == RESULT_OK) {
-
-        }
-    }
-
     /**
      * 接收事件, 启动一个同级的Fragment
      */
     @Subscribe
     public void startBrother(StartBrotherEvent event) {
         start(event.targetFragment);
-    }
-
-    @Override
-    public void onDestroyView() {
-        EventBus.getDefault().unregister(this);
-        super.onDestroyView();
     }
 
     /**
@@ -151,5 +136,11 @@ public class MainFragment extends BaseFragment {
     public void onSwitchTabFragment(SwitchTabFragment event) {
         showHideFragment(mFragments[event.targetPosition], mFragments[currentPosition]);
         mTabBar.setCurrentItem(event.targetPosition);
+    }
+
+    @Override
+    public void onDestroyView() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroyView();
     }
 }

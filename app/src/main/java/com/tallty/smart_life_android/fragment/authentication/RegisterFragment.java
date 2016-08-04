@@ -196,7 +196,7 @@ public class RegisterFragment extends BaseBackFragment {
                 public void onFailure(Call<HashMap<String, String>> call, Throwable t) {
                     getCodeBtn.setClickable(true);
                     getCodeBtn.setText("重新获取");
-                    showToast(context.getResources().getString(R.string.network_error));
+                    showToast(context.getString(R.string.network_error));
                 }
             });
         }
@@ -324,7 +324,7 @@ public class RegisterFragment extends BaseBackFragment {
             @Override
             public void onFailure(Call<User> call, Throwable t) {
                 hideProgress();
-                showToast(context.getResources().getString(R.string.network_error));
+                showToast(context.getString(R.string.network_error));
             }
         });
     }
@@ -351,7 +351,7 @@ public class RegisterFragment extends BaseBackFragment {
                         Logger.d(t.getMessage());
                         Logger.d(t.toString());
                         hideProgress();
-                        showToast(context.getResources().getString(R.string.network_error));
+                        showToast(context.getString(R.string.network_error));
                     }
                 });
     }

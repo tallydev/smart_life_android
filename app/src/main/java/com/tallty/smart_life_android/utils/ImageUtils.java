@@ -14,36 +14,32 @@ import java.io.IOException;
 
 public class ImageUtils {
 
-
     /**
      * 保存Image的方法。
+     * 返回image file
      * 需要注意的地方有：1、判断是否有SD卡；2、判断SD卡存储空间是否够用。
      * @param fileName
      * @param bitmap
      * @throws IOException
      */
-    public static String savaBitmap(String fileName, Bitmap bitmap){
-        String imagePath = null;
-
+    public static File saveBitmapToFile(String fileName, Bitmap bitmap){
         FileOutputStream fos = null;
+        File file = null;
 
         try {
             if(bitmap == null){
                 return null;
             }
             String path = Environment.getExternalStorageDirectory().getAbsolutePath();
-//            String path = getStorageDirectory;
             File folderFile = new File(path);
             if(!folderFile.exists()){
                 folderFile.mkdir();
             }
-            File file = new File(path + File.separator + fileName);
+            file = new File(path + File.separator + fileName);
             file.createNewFile();
             fos = new FileOutputStream(file);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
-            imagePath =  file.getAbsolutePath();
-
-        }catch (IOException E){
+            bitmap.compress(Bitmap.CompressFormat.PNG, 50, fos);
+        }catch (IOException ignored){
 
         }finally {
             if(fos != null) {
@@ -55,6 +51,6 @@ public class ImageUtils {
                 }
             }
         }
-        return imagePath;
+        return file;
     }
 }

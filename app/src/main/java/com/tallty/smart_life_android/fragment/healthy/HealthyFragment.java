@@ -3,11 +3,17 @@ package com.tallty.smart_life_android.fragment.healthy;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseLazyMainFragment;
+import com.tallty.smart_life_android.event.TabSelectedEvent;
+import com.tallty.smart_life_android.fragment.MainFragment;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 /**
  * Created by kang on 16/6/20.
@@ -36,6 +42,7 @@ public class HealthyFragment extends BaseLazyMainFragment {
 
     @Override
     protected void initView() {
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -46,5 +53,21 @@ public class HealthyFragment extends BaseLazyMainFragment {
     @Override
     public void onClick(View v) {
 
+    }
+
+    /**
+     * 订阅事件:
+     * Tab Healthy按钮被重复点击时执行的操作
+     */
+    @Subscribe
+    public void onTabSelectedEvent(TabSelectedEvent event) {
+        if (event.position != MainFragment.HEALTHY)
+            Log.d("tab-reselected", "智慧健康被重复点击了");
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        EventBus.getDefault().unregister(this);
     }
 }

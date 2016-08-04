@@ -5,14 +5,19 @@ import com.tallty.smart_life_android.model.User;
 import java.util.HashMap;
 import java.util.Map;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Part;
 
 /**
  * Created by kang on 16/8/1.
@@ -39,12 +44,17 @@ public interface Engine {
                             @Field("user[password]") String password,
                             @Field("user[sms_token]") String sms);
 
-    // 更新用户信息
+    // 更新用户信息(不包括头像)
     @FormUrlEncoded
     @PUT("user_info")
     Call<User> updateUser(@Header("X-User-Token") String token,
                           @Header("X-User-Phone") String phone,
                           @FieldMap(encoded = true) Map<String, String> fields);
+
+    // 更新用户头像
+    @Multipart
+    @PUT("user_info")
+    Call<User> updateUserPhoto(@Part MultipartBody.Part file);
 
     // 查询用户信息
     @GET("user_info")

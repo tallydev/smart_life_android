@@ -211,7 +211,7 @@ public class BindPhoneFragment extends BaseBackFragment {
                         public void onFailure(Call<User> call, Throwable t) {
                             hideProgress();
                             bindBtn.setClickable(true);
-                            showToast(context.getResources().getString(R.string.network_error));
+                            showToast(context.getString(R.string.network_error));
                         }
                     });
 
@@ -275,7 +275,7 @@ public class BindPhoneFragment extends BaseBackFragment {
                 public void onFailure(Call<HashMap<String, String>> call, Throwable t) {
                     getCodeBtn.setClickable(true);
                     getCodeBtn.setText("重新获取");
-                    showToast(context.getResources().getString(R.string.network_error));
+                    showToast(context.getString(R.string.network_error));
                 }
             });
         }

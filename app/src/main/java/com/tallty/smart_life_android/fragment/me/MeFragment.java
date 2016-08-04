@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -14,16 +15,21 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.orhanobut.logger.Logger;
+import com.tallty.smart_life_android.ConstantSet;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseLazyMainFragment;
 import com.tallty.smart_life_android.custom.GlideCircleTransform;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
+import com.tallty.smart_life_android.event.TabSelectedEvent;
+import com.tallty.smart_life_android.event.TransferDataEvent;
+import com.tallty.smart_life_android.fragment.MainFragment;
 import com.tallty.smart_life_android.fragment.home.HealthyCheckReport;
 import com.tallty.smart_life_android.fragment.home.SportMoreData;
 import com.tallty.smart_life_android.model.Address;
 import com.tallty.smart_life_android.model.User;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -129,7 +135,6 @@ public class MeFragment extends BaseLazyMainFragment {
                             .placeholder(R.drawable.user_photo)
                             .transform(new GlideCircleTransform(context)).into(photo);
                     name.setText(user.getNickname());
-                    Logger.d("获取用户信息成功");
                 } else {
                     showToast("获取用户信息失败");
                 }
@@ -137,7 +142,7 @@ public class MeFragment extends BaseLazyMainFragment {
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-                showToast(context.getResources().getString(R.string.network_error));
+                showToast(context.getString(R.string.network_error));
             }
         });
     }
@@ -154,6 +159,8 @@ public class MeFragment extends BaseLazyMainFragment {
     }
 
     private void setView() {
+        EventBus.getDefault().register(this);
+
         order_icon.setImageResource(R.drawable.me_order);
         order_text.setText("我的订单");
 
@@ -174,7 +181,7 @@ public class MeFragment extends BaseLazyMainFragment {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.me_profile:
-                EventBus.getDefault().post(new StartBrotherEvent(ProfileFragment.newInstance(user)));
+                EventBus.getDefault().post(new StartBrotherEvent(ProfileFragment.newInstance()));
                 break;
             case R.id.me_order:
                 EventBus.getDefault().post(new StartBrotherEvent(MyOrders.newInstance()));
@@ -215,8 +222,34 @@ public class MeFragment extends BaseLazyMainFragment {
         }
     }
 
+    /**
+     * 订阅事件: TabSelectedEvent
+     * Tab Me 按钮被重复点击时执行的操作
+     */
+    @Subscribe
+    public void onTabSelectedEvent(TabSelectedEvent event) {
+        if (event.position != MainFragment.ME)
+            Log.d("tab-reselected", "个人中心被重复点击了");
+    }
+
+    /**
+     * 订阅事件: TransferDataEvent
+     * 接收profile修改过后的用户对象
+     * 更新账户管理信息
+     */
+    @Subscribe
+    public void onTransferDataEvent(TransferDataEvent event) {
+        user = (User) event.bundle.getSerializable(ConstantSet.OBJECT);
+        // 更新UI
+        Glide.with(context).load(user.getAvatar())
+                .placeholder(R.drawable.user_photo)
+                .transform(new GlideCircleTransform(context)).into(photo);
+        name.setText(user.getNickname());
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        EventBus.getDefault().unregister(this);
     }
 }

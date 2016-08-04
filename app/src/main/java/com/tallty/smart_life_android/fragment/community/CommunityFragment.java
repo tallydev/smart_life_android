@@ -3,6 +3,7 @@ package com.tallty.smart_life_android.fragment.community;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -14,8 +15,11 @@ import com.tallty.smart_life_android.adapter.CommunityGridViewAdapter;
 import com.tallty.smart_life_android.base.BaseLazyMainFragment;
 import com.tallty.smart_life_android.custom.MyGridView;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
+import com.tallty.smart_life_android.event.TabSelectedEvent;
+import com.tallty.smart_life_android.fragment.MainFragment;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,6 +93,8 @@ public class CommunityFragment extends BaseLazyMainFragment{
     }
 
     private void initGridView() {
+        EventBus.getDefault().register(this);
+
         CommunityGridViewAdapter adapter = new CommunityGridViewAdapter(context, icons, names);
         gridView.setAdapter(adapter);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -125,5 +131,21 @@ public class CommunityFragment extends BaseLazyMainFragment{
                 showToast("号码百事通(暂未开放)");
                 break;
         }
+    }
+
+    /**
+     * 订阅事件:
+     * Tab Community按钮被重复点击时执行的操作
+     */
+    @Subscribe
+    public void onTabSelectedEvent(TabSelectedEvent event) {
+        if (event.position != MainFragment.COMMUNITY)
+            Log.d("tab-reselected", "社区被重复点击了");
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        EventBus.getDefault().unregister(this);
     }
 }

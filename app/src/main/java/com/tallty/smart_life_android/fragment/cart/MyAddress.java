@@ -50,7 +50,7 @@ public class MyAddress extends BaseBackFragment {
 
     public static MyAddress newInstance(int from) {
         Bundle args = new Bundle();
-        args.putInt(NORMAL_DATA, from);
+        args.putInt(NORMAL_STRING, from);
         MyAddress fragment = new MyAddress();
         fragment.setArguments(args);
         return fragment;
@@ -61,7 +61,7 @@ public class MyAddress extends BaseBackFragment {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
-            from = args.getInt(NORMAL_DATA);
+            from = args.getInt(NORMAL_STRING);
         }
     }
 

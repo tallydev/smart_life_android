@@ -21,12 +21,15 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TextView;
 
+import com.orhanobut.logger.Logger;
+import com.tallty.smart_life_android.ConstantSet;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.activity.LoginActivity;
 import com.tallty.smart_life_android.adapter.ProfileListAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.custom.RecyclerVIewItemTouchListener;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
+import com.tallty.smart_life_android.event.TransferDataEvent;
 import com.tallty.smart_life_android.fragment.cart.MyAddress;
 import com.tallty.smart_life_android.model.User;
 import com.tallty.smart_life_android.utils.ImageUtils;
@@ -39,6 +42,9 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -59,7 +65,14 @@ public class ProfileFragment extends BaseBackFragment {
             add("设置支付密码");add("退出当前账号");
         }
     };
-    private ArrayList<String> values;
+    private ArrayList<String> values = new ArrayList<String>(){
+        {
+            add(user.getAvatar());add(user.getNickname());add(user.getPhone());
+            add("未设置");add("未设置");add("未设置");
+            add(user.getIdCard());add("");add(user.getPhone());
+            add("");add("");
+        }
+    };
     // 弹框
     private AlertDialog alert = null;
     private AlertDialog.Builder builder = null;
@@ -69,9 +82,9 @@ public class ProfileFragment extends BaseBackFragment {
     private static final int CROP_SMALL_PICTURE = 2;
     private static Uri tempUri;
 
-    public static ProfileFragment newInstance(User user) {
+    public static ProfileFragment newInstance() {
         Bundle args = new Bundle();
-        args.putSerializable(OBJECT, user);
+
         ProfileFragment fragment = new ProfileFragment();
         fragment.setArguments(args);
         return fragment;
@@ -82,7 +95,7 @@ public class ProfileFragment extends BaseBackFragment {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
-            user = (User) args.getSerializable(OBJECT);
+
         }
     }
 
@@ -116,15 +129,33 @@ public class ProfileFragment extends BaseBackFragment {
     }
 
     private void processRecyclerView() {
-        // 整理数据
-        values = new ArrayList<String>(){
-            {
-                add(user.getAvatar());add(user.getNickname());add(user.getPhone());
-                add("未设置");add("未设置");add("未设置");
-                add(user.getIdCard());add("");add(user.getPhone());
-                add("");add("");
+        // 查询用户信息
+        mApp.headerEngine().getUser().enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.code() == 200) {
+                    user = response.body();
+                    values.clear();
+                    values = new ArrayList<String>(){
+                        {
+                            add(user.getAvatar());add(user.getNickname());add(user.getPhone());
+                            add("未设置");add("未设置");add("未设置");
+                            add(user.getIdCard());add("");add(user.getPhone());
+                            add("");add("");
+                        }
+                    };
+                    adapter.notifyDataSetChanged();
+                } else {
+                    showToast("获取用户信息失败");
+                }
             }
-        };
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                showToast(context.getString(R.string.network_error));
+            }
+        });
+
         // 加载列表
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         adapter = new ProfileListAdapter(context, keys, values);
@@ -228,8 +259,6 @@ public class ProfileFragment extends BaseBackFragment {
 
     /**
      * 裁剪图片方法实现
-     *
-     * @param uri
      */
     private void startPhotoZoom(Uri uri) {
         if (uri == null) {
@@ -252,35 +281,64 @@ public class ProfileFragment extends BaseBackFragment {
 
     /**
      * 保存裁剪之后的图片数据
-     *
-     * @param data
      */
     private void setImageToView(Intent data) {
         Bundle extras = data.getExtras();
         if (extras != null) {
             Bitmap photo = extras.getParcelable("data");
             // Bitmap转化为file, 获取file 路径
-            String imagePath = ImageUtils.savaBitmap(String.valueOf(System.currentTimeMillis()), photo);
+            File file = ImageUtils.saveBitmapToFile(String.valueOf(System.currentTimeMillis()), photo);
             // 更新账户管理图片
-            values.set(0, imagePath);
-            adapter.notifyItemChanged(0);
-            uploadPic(imagePath);
+            if (file != null) {
+                // 上传
+                Logger.d("开始上传");
+                uploadPic(file);
+            } else {
+                showToast("");
+            }
         }
     }
 
     /**
-     * 上传到服务器
-     * @param imagePath
+     * 上传头像到服务器
+     * @param file
      */
-    private void uploadPic(String imagePath) {
-        // 上传至服务器
-        // ... 可以在这里把Bitmap转换成file，然后得到file的url，做文件上传操作
-        // bitmap是已经被裁剪了
-        Log.e("imagePath", imagePath+"");
-        if(imagePath != null){
-            // TODO: 16/7/27 使用imagePath 上传头像
-            showToast("上传了");
-        }
+    private void uploadPic(final File file) {
+        showProgress("正在上传...");
+        // 构建上传的文件
+        RequestBody requestBody = RequestBody.create(MediaType.parse("image/png"), file);
+        MultipartBody.Part body = MultipartBody.Part
+                .createFormData("user_info[avatar_attributes][photo]", file.getName(), requestBody);
+        // 上传
+        mApp.headerEngine().updateUserPhoto(body).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.code() == 200) {
+                    // 更新头像地址
+                    SharedPreferences.Editor editor = sharedPre.edit();
+                    editor.putString("user_avatar", response.body().getAvatar());
+                    editor.commit();
+                    // 给<账户管理>传递对象
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable(ConstantSet.OBJECT, response.body());
+                    EventBus.getDefault().post(new TransferDataEvent(bundle));
+                    // 更新UI
+                    values.set(0, file.getAbsolutePath());
+                    adapter.notifyItemChanged(0);
+                    hideProgress();
+                    showToast("上传成功");
+                } else {
+                    hideProgress();
+                    showToast("上传失败");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                hideProgress();
+                showToast(context.getString(R.string.network_error));
+            }
+        });
     }
 
     /**
@@ -293,7 +351,7 @@ public class ProfileFragment extends BaseBackFragment {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         String date = year+"-"+(monthOfYear+1)+"-"+dayOfMonth;
-                        updateUserEithDialog(date, position, "生日");
+                        updateUserInfoDialog(date, position, "生日");
                     }
                 },
                 calendar.get(Calendar.YEAR),
@@ -314,7 +372,7 @@ public class ProfileFragment extends BaseBackFragment {
                 .setItems(sex, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        updateUserEithDialog(sex[which], position, "性别");
+                        updateUserInfoDialog(sex[which], position, "性别");
                     }
                 }).create();
         alert.show();
@@ -348,7 +406,7 @@ public class ProfileFragment extends BaseBackFragment {
      * 修改用户信息:
      * 出生日期、性别
      */
-    private void updateUserEithDialog(final String value, final int position, String tag) {
+    private void updateUserInfoDialog(final String value, final int position, String tag) {
         showProgress("修改中...");
         // TODO: 16/8/3 后台暂无字段 ,模拟更新
         // 更新字段
@@ -379,7 +437,7 @@ public class ProfileFragment extends BaseBackFragment {
             @Override
             public void onFailure(Call<User> call, Throwable t) {
                 hideProgress();
-                showToast(context.getResources().getString(R.string.network_error));
+                showToast(context.getString(R.string.network_error));
             }
         });
     }

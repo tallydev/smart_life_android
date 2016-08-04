@@ -54,10 +54,10 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
     protected static final String RESULT_POSITION = "position";
     // startBrotherFragment使用
     protected static final String TOOLBAR_TITLE = "BackFragmentTitle";
+    protected static final String TOTAL_PRICE = "BackFragmentTotalPrice";
     protected static final String OBJECTS = "BackFragmentObjects";
     protected static final String OBJECT = "BackFragmentObject";
-    protected static final String TOTAL_PRICE = "BackFragmentTotalPrice";
-    protected static final String NORMAL_DATA = "normal_data";
+    protected static final String NORMAL_STRING = "normal_string";
     // 调用MyAddress的不同处理
     protected static final int FROM_PROFILE = 2;
     protected static final int FROM_ORDER = 3;
