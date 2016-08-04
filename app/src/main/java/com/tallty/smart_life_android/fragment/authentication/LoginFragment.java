@@ -61,8 +61,8 @@ public class LoginFragment extends BaseLazyMainFragment {
     @Override
     protected void fragmentInterceptor() {
         super.fragmentInterceptor();
-        String phone = sharedPre.getString("user_phone", Const.EMPTY_STRING);
-        String token = sharedPre.getString("user_token", Const.EMPTY_STRING);
+        String phone = sharedPre.getString(Const.USER_PHONE, Const.EMPTY_STRING);
+        String token = sharedPre.getString(Const.USER_TOKEN, Const.EMPTY_STRING);
         Logger.d(phone);
         Logger.d(token);
         if (!phone.isEmpty() && !token.isEmpty()) {
@@ -118,7 +118,7 @@ public class LoginFragment extends BaseLazyMainFragment {
 
     // 表单初始化
     private void initFormEdit() {
-        String phone = sharedPre.getString("user_phone", Const.EMPTY_STRING);
+        String phone = sharedPre.getString(Const.USER_PHONE, Const.EMPTY_STRING);
         if (Const.EMPTY_STRING.equals(phone)) {
             phone_edit.requestFocus();
         } else {
@@ -165,13 +165,13 @@ public class LoginFragment extends BaseLazyMainFragment {
         if (cancel) {
             focusView.requestFocus();
         } else {
-            showProgress("登录中...");
             loginTask(phone, password);
         }
     }
 
     private void loginTask(String phone, String password) {
         login_btn.setClickable(false);
+        showProgress(showString(R.string.progress_login));
 
         mApp.noHeaderEngine().login(phone, password).enqueue(new Callback<User>() {
             @Override

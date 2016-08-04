@@ -1,5 +1,6 @@
 package com.tallty.smart_life_android.Engine;
 
+import com.tallty.smart_life_android.model.CartList;
 import com.tallty.smart_life_android.model.User;
 
 import java.util.HashMap;
@@ -18,6 +19,7 @@ import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Part;
+import retrofit2.http.Query;
 
 /**
  * Created by kang on 16/8/1.
@@ -59,4 +61,8 @@ public interface Engine {
     // 查询用户信息
     @GET("user_info")
     Call<User> getUser();
+
+    // 获取购物车列表
+    @GET("cart_items")
+    Call<CartList> getCartList(@Query("page") Integer page, @Query("per_page") Integer per_page);
 }

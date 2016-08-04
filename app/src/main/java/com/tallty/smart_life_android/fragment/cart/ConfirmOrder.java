@@ -17,18 +17,19 @@ import com.tallty.smart_life_android.adapter.CartListAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.model.Address;
-import com.tallty.smart_life_android.model.Commodity;
+import com.tallty.smart_life_android.model.CartItem;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 购物车-确认订单
  */
 public class ConfirmOrder extends BaseBackFragment {
     // 数据
-    private ArrayList<Commodity> selected_commodities = new ArrayList<>();
+    private ArrayList<CartItem> selected_cart_items = new ArrayList<>();
     private float total_price = 0.0f;
     private Address order_address = new Address();
 
@@ -38,7 +39,7 @@ public class ConfirmOrder extends BaseBackFragment {
     private RecyclerView recyclerView;
     private TextView total_price_text;
 
-    public static ConfirmOrder newInstance(ArrayList<Commodity> selected_commodities, float total_price) {
+    public static ConfirmOrder newInstance(ArrayList<CartItem> selected_commodities, float total_price) {
         Bundle args = new Bundle();
         args.putSerializable(Const.OBJECT_List, selected_commodities);
         args.putFloat(Const.TOTAL_PRICE, total_price);
@@ -52,7 +53,7 @@ public class ConfirmOrder extends BaseBackFragment {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
-            selected_commodities = (ArrayList<Commodity>) args.getSerializable(Const.OBJECT_List);
+            selected_cart_items = (ArrayList<CartItem>) args.getSerializable(Const.OBJECT_List);
             total_price = args.getFloat(Const.TOTAL_PRICE);
         }
     }
@@ -90,7 +91,7 @@ public class ConfirmOrder extends BaseBackFragment {
         setDefaultAddress();
         // 列表
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        CartListAdapter adapter = new CartListAdapter(context, selected_commodities, "提交订单");
+        CartListAdapter adapter = new CartListAdapter(context, selected_cart_items, "提交订单");
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
     }
@@ -123,7 +124,7 @@ public class ConfirmOrder extends BaseBackFragment {
                 break;
             case R.id.submit_order:
                 EventBus.getDefault().post(new StartBrotherEvent(PayOrder
-                        .newInstance(total_price, selected_commodities, order_address)));
+                        .newInstance(total_price, selected_cart_items, order_address)));
                 break;
         }
     }

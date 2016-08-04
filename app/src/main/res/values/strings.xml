@@ -37,7 +37,12 @@
 
     <string name="fa_angle_right">{fa-angle-right}</string>
 
-    <string name="network_error">操作失败</string>
+    <!--网络操作相关-->
+    <string name="progress_login">登录中…</string>
+    <string name="progress_register">注册中…</string>
+    <string name="progress_normal">载入中…</string>
+    <string name="response_error">载入失败,请重试</string>
+    <string name="network_error">载入错误</string>
 
     <string name="clause_text">
         【慧生活】在此特别提醒用户认真阅读、充分理解本《用户协议》（下称《协议》）--- 用户应认真阅读、充分理解本《协议》中各条款，包括免除或者限制【慧生活】责任的免责条款及对用户的权利限制条款。请您审慎阅读并选择接受或不接受本《协议》（未成年人应在法定监护人陪同下阅读）。除非您接受本《协议》所有条款，否则您无权注册、登录或使用本协议所涉相关服务。您的注册、登录、使用等行为将视为对本《协议》的接受，并同意接受本《协议》各项条款的约束。

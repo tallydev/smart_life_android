@@ -1,6 +1,6 @@
 package com.tallty.smart_life_android.event;
 
-import com.tallty.smart_life_android.model.Commodity;
+import com.tallty.smart_life_android.model.CartItem;
 
 /**
  * Created by kang on 16/7/23.
@@ -9,10 +9,10 @@ import com.tallty.smart_life_android.model.Commodity;
 
 public class CartUpdateItem {
     public int position;
-    public Commodity commodity;
+    public CartItem cartItem;
 
-    public CartUpdateItem(int position, Commodity commodity){
+    public CartUpdateItem(int position, CartItem cartItem){
         this.position = position;
-        this.commodity = commodity;
+        this.cartItem = cartItem;
     }
 }

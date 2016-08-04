@@ -44,7 +44,7 @@ public class Order implements Serializable {
 
     @SerializedName("Commodities")
     @Expose
-    private List<Commodity> commodities = new ArrayList<>();
+    private List<CartItem> commodities = new ArrayList<>();
 
     public int getId() {
         return id;
@@ -94,11 +94,11 @@ public class Order implements Serializable {
         this.price = price;
     }
 
-    public List<Commodity> getCommodities() {
+    public List<CartItem> getCommodities() {
         return commodities;
     }
 
-    public void setCommodities(List<Commodity> commodities) {
+    public void setCommodities(List<CartItem> commodities) {
         this.commodities = commodities;
     }
 }

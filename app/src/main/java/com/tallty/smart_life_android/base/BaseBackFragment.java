@@ -203,6 +203,20 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
     }
 
     /**
+     * 获取字符串资源
+     */
+    public String showString(int ResId) {
+        return context.getString(ResId);
+    }
+
+    /**
+     * 获取颜色资源
+     */
+    public int showColor(int ResId) {
+        return context.getResources().getColor(R.color.alpha_white);
+    }
+
+    /**
      * 初始化显示Snackbar
      * 调用
      */

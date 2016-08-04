@@ -122,7 +122,7 @@ public class ProfileFragment extends BaseBackFragment {
 
     @Override
     protected void afterAnimationLogic() {
-        showProgress("载入中...");
+        showProgress(showString(R.string.progress_normal));
         // 查询用户信息, 更新列表
         mApp.headerEngine().getUser().enqueue(new Callback<User>() {
             @Override
@@ -140,17 +140,16 @@ public class ProfileFragment extends BaseBackFragment {
                     values.set(8, user.getPhone());
 
                     processRecyclerView();
-                    Logger.d(response.code()+"");
                 } else {
                     hideProgress();
-                    showToast("获取用户信息失败");
+                    showToast(showString(R.string.response_error));
                 }
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
                 hideProgress();
-                showToast("获取用户信息失败");
+                showToast(showString(R.string.network_error));
             }
         });
     }

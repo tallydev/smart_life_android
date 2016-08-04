@@ -6,15 +6,13 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.orhanobut.logger.Logger;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.MyOrdersAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
-import com.tallty.smart_life_android.model.Commodity;
+import com.tallty.smart_life_android.model.CartItem;
 import com.tallty.smart_life_android.model.Order;
 
 import java.util.ArrayList;
@@ -30,7 +28,7 @@ public class MyOrders extends BaseBackFragment {
     private List<Order> orders = new ArrayList<>();
     // 临时数据
     // 订单的两个商品
-    private int photo_id[] = {R.drawable.limi_sail_one,R.drawable.limi_sail_one};
+    private String thumb[] = {"",""};
     private String name[] = {"西双版纳生态无眼凤梨","西双版纳生态蜂蜜"};
     private int count[] = {2,1};
     private float price[] = {10.00f, 100.00f};
@@ -89,14 +87,14 @@ public class MyOrders extends BaseBackFragment {
             order.setState(states[i]);
             order.setPayWay(pay_way[i]);
             order.setPrice(prices[i]);
-            List<Commodity> commodities = new ArrayList<>();
+            List<CartItem> commodities = new ArrayList<>();
             for (int j=i;j<count.length;j++) {
-                Commodity commodity = new Commodity();
-                commodity.setCount(count[j]);
-                commodity.setPhoto_id(photo_id[j]);
-                commodity.setName(name[j]);
-                commodity.setPrice(price[j]);
-                commodities.add(commodity);
+                CartItem cartItem = new CartItem();
+                cartItem.setCount(count[j]);
+                cartItem.setThumb(thumb[j]);
+                cartItem.setName(name[j]);
+                cartItem.setPrice(price[j]);
+                commodities.add(cartItem);
             }
             order.setCommodities(commodities);
             orders.add(order);

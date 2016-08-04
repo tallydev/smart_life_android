@@ -109,10 +109,10 @@ public class RegisterFragment extends BaseBackFragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    registerBtn.setTextColor(context.getResources().getColor(R.color.white));
+                    registerBtn.setTextColor(showColor(R.color.white));
                     registerBtn.setClickable(true);
                 } else {
-                    registerBtn.setTextColor(context.getResources().getColor(R.color.alpha_white));
+                    registerBtn.setTextColor(showColor(R.color.alpha_white));
                     registerBtn.setClickable(false);
                 }
             }
@@ -263,12 +263,14 @@ public class RegisterFragment extends BaseBackFragment {
             assert focusView != null;
             focusView.requestFocus();
         } else {
-            showProgress("注册中...");
             registerTask(user_edit, sms);
         }
     }
 
     private void registerTask(User user_edit, String sms) {
+        registerBtn.setClickable(false);
+        showProgress(showString(R.string.progress_register));
+
         mApp.noHeaderEngine().registerUser(
                 user_edit.getPhone(),
                 user_edit.getPassword(),
@@ -316,12 +318,14 @@ public class RegisterFragment extends BaseBackFragment {
                         e.printStackTrace();
                     }
 
+                    registerBtn.setClickable(true);
                     hideProgress();
                 }
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
+                registerBtn.setClickable(true);
                 hideProgress();
                 showToast(context.getString(R.string.network_error));
             }
@@ -347,8 +351,7 @@ public class RegisterFragment extends BaseBackFragment {
 
                     @Override
                     public void onFailure(Call<User> call, Throwable t) {
-                        Logger.d(t.getMessage());
-                        Logger.d(t.toString());
+                        registerBtn.setClickable(true);
                         hideProgress();
                         showToast(context.getString(R.string.network_error));
                     }

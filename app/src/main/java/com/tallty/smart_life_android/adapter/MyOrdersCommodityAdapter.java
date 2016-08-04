@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.tallty.smart_life_android.R;
-import com.tallty.smart_life_android.model.Commodity;
+import com.tallty.smart_life_android.model.CartItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +22,9 @@ import java.util.List;
 
 public class MyOrdersCommodityAdapter extends RecyclerView.Adapter<MyOrdersCommodityAdapter.OrderCommodityViewHolder>{
     private Context context;
-    private List<Commodity> commodities = new ArrayList<>();
+    private List<CartItem> commodities = new ArrayList<>();
 
-    public MyOrdersCommodityAdapter(Context context, List<Commodity> commodities) {
+    public MyOrdersCommodityAdapter(Context context, List<CartItem> commodities) {
         this.context = context;
         this.commodities = commodities;
     }
@@ -37,11 +37,11 @@ public class MyOrdersCommodityAdapter extends RecyclerView.Adapter<MyOrdersCommo
 
     @Override
     public void onBindViewHolder(OrderCommodityViewHolder holder, int position) {
-        Commodity commodity = commodities.get(position);
-        Glide.with(context).load(commodity.getPhoto_id()).skipMemoryCache(true).into(holder.image);
-        holder.name.setText(commodity.getName());
-        holder.price.setText("￥ "+commodity.getPrice());
-        holder.count.setText("x "+commodity.getCount());
+        CartItem cartItem = commodities.get(position);
+        Glide.with(context).load(cartItem.getThumb()).skipMemoryCache(true).into(holder.image);
+        holder.name.setText(cartItem.getName());
+        holder.price.setText("￥ "+ cartItem.getPrice());
+        holder.count.setText("x "+ cartItem.getCount());
     }
 
     @Override
