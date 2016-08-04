@@ -122,7 +122,33 @@ public class ProfileFragment extends BaseBackFragment {
 
     @Override
     protected void afterAnimationLogic() {
-        processRecyclerView();
+        // 查询用户信息, 更新列表
+        mApp.headerEngine().getUser().enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.code() == 200) {
+                    user = response.body();
+
+                    values.set(0, user.getAvatar());
+                    values.set(1, user.getNickname());
+                    values.set(2, user.getPhone());
+                    values.set(3, user.getBirth());
+                    values.set(4, user.getSex());
+                    values.set(5, user.getSlogan());
+                    values.set(6, user.getIdCard());
+                    values.set(8, user.getPhone());
+
+                    processRecyclerView();
+                } else {
+                    showToast("获取用户信息失败");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                showToast("获取用户信息失败");
+            }
+        });
     }
 
     @Override
@@ -180,31 +206,6 @@ public class ProfileFragment extends BaseBackFragment {
             @Override
             public void onItemLongPress(RecyclerView.ViewHolder vh, int position) {
 
-            }
-        });
-
-        // 查询用户信息, 更新列表
-        mApp.headerEngine().getUser().enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                if (response.code() == 200) {
-                    user = response.body();
-
-                    values.set(0, user.getAvatar());
-                    values.set(1, user.getNickname());
-                    values.set(2, user.getPhone());
-                    values.set(6, user.getIdCard());
-                    values.set(8, user.getPhone());
-
-                    adapter.notifyDataSetChanged();
-                } else {
-                    showToast("获取用户信息失败");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                showToast("获取用户信息失败");
             }
         });
     }
@@ -420,7 +421,8 @@ public class ProfileFragment extends BaseBackFragment {
         if (tag.equals("生日")) {
             fields.put("user_info[birth]", value);
         } else if (tag.equals("性别")){
-            fields.put("user_info[sex]", value);
+            String parse_sex = value.equals("男") ? "male" : "female";
+            fields.put("user_info[sex]", parse_sex);
         }
 
         mApp.noHeaderEngine().updateUser(

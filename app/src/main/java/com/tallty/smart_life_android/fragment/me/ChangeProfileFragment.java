@@ -95,13 +95,25 @@ public class ChangeProfileFragment extends BaseBackFragment {
             case R.id.change_btn:
                 change_input.setError(null);
                 String text = change_input.getText().toString();
+                boolean begin = true;
+
                 if (text.isEmpty()) {
                     change_input.setError("请填写信息");
                     change_input.requestFocus();
+                    begin = false;
                 } else {
+                    if (key.equals("身份证号") && text.length() != 18) {
+                        change_input.setError("身份证号码格式错误");
+                        change_input.requestFocus();
+                        begin = false;
+                    }
+                }
+
+                if (begin) {
                     // 调用接口修改数据
                     updateUser(text);
                 }
+
                 break;
         }
     }
@@ -109,14 +121,15 @@ public class ChangeProfileFragment extends BaseBackFragment {
     private void updateUser(final String text) {
         change_btn.setClickable(false);
         showProgress("修改中...");
-        // user: phone,token,email
+
         Map<String, String> fields = new HashMap<>();
+
         if (key.equals("昵称")) {
             fields.put("user_info[nickname]", text);
-            Logger.d("nickname"+text);
         } else if (key.equals("身份证号")) {
             fields.put("user_info[identity_card]", text);
-            Logger.d("identity_card"+text);
+        } else if (key.equals("个性签名")) {
+            fields.put("user_info[slogan]", text);
         }
 
         mApp.noHeaderEngine().updateUser(

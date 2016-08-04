@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.orhanobut.logger.Logger;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.custom.GlideCircleTransform;
 import com.tallty.smart_life_android.utils.DpUtil;
@@ -52,17 +53,19 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
         holder.key.setText(keys.get(position));
         if (holder.viewType == SHOW_NORMAL) {
             holder.value.setText(values.get(position));
-            if (keys.get(position).equals("收货地址") || keys.get(position).equals("设置支付密码")) {
-                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT, DpUtil.dip2px(context, 40)
-                );
-                params.setMargins(0,0,0,DpUtil.dip2px(context, 4));
-                holder.layout.setLayoutParams(params);
-                holder.line.setVisibility(View.INVISIBLE);
-            }
         } else if (holder.viewType == SHOW_PHOTO) {
             Glide.with(context).load(values.get(position))
                     .transform(new GlideCircleTransform(context)).into(holder.photo);
+        }
+
+        if (position == 7 || position == 9) {
+            Logger.d("设置了");
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT, DpUtil.dip2px(context, 40)
+            );
+            params.setMargins(0,0,0,DpUtil.dip2px(context, 4));
+            holder.layout.setLayoutParams(params);
+            holder.line.setVisibility(View.INVISIBLE);
         }
     }
 

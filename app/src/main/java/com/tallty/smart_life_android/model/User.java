@@ -62,9 +62,9 @@ public class User implements Serializable{
     @Expose
     private String sex;
 
-    @SerializedName("signature")
+    @SerializedName("slogan")
     @Expose
-    private String signature;
+    private String slogan;
 
     @SerializedName("identity_card")
     @Expose
@@ -180,19 +180,19 @@ public class User implements Serializable{
     }
 
     public String getSex() {
-        return sex;
+        return sex.equals("male") ? "男" : "女";
     }
 
     public void setSex(String sex) {
         this.sex = sex;
     }
 
-    public String getSignature() {
-        return signature;
+    public String getSlogan() {
+        return slogan;
     }
 
-    public void setSignature(String signature) {
-        this.signature = signature;
+    public void setSlogan(String slogan) {
+        this.slogan = slogan;
     }
 
     public String getIdCard() {
