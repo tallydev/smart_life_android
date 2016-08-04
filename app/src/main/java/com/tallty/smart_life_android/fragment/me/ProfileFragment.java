@@ -22,7 +22,7 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
-import com.tallty.smart_life_android.ConstantSet;
+import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.activity.LoginActivity;
 import com.tallty.smart_life_android.adapter.ProfileListAdapter;
@@ -53,10 +53,19 @@ import retrofit2.Response;
  * 个人中心-个人资料
  */
 public class ProfileFragment extends BaseBackFragment {
+    // 弹框
+    private AlertDialog alert = null;
+    private AlertDialog.Builder builder = null;
+    // 上传头像相关
+    private static final int CHOOSE_PICTURE = 0;
+    private static final int TAKE_PICTURE = 1;
+    private static final int CROP_SMALL_PICTURE = 2;
+    private static Uri tempUri;
+    // 数据
     private RecyclerView recyclerView;
     private ProfileListAdapter adapter;
-    // 数据
-    private User user;
+
+    private User user = new User();
     private ArrayList<String> keys = new ArrayList<String>(){
         {
             add("头像");add("昵称");add("登录手机号");
@@ -67,20 +76,13 @@ public class ProfileFragment extends BaseBackFragment {
     };
     private ArrayList<String> values = new ArrayList<String>(){
         {
-            add(user.getAvatar());add(user.getNickname());add(user.getPhone());
+            add("");add("");add("");
             add("未设置");add("未设置");add("未设置");
-            add(user.getIdCard());add("");add(user.getPhone());
+            add("");add("");add("");
             add("");add("");
         }
     };
-    // 弹框
-    private AlertDialog alert = null;
-    private AlertDialog.Builder builder = null;
-    // 上传头像相关
-    private static final int CHOOSE_PICTURE = 0;
-    private static final int TAKE_PICTURE = 1;
-    private static final int CROP_SMALL_PICTURE = 2;
-    private static Uri tempUri;
+
 
     public static ProfileFragment newInstance() {
         Bundle args = new Bundle();
@@ -124,38 +126,21 @@ public class ProfileFragment extends BaseBackFragment {
     }
 
     @Override
+    protected void onFragmentPop() {
+        super.onFragmentPop();
+        // 给<账户管理>传递对象
+        Bundle bundle = new Bundle();
+        bundle.putString("user_avatar", values.get(0));
+        bundle.putString("user_nickname", values.get(1));
+        EventBus.getDefault().post(new TransferDataEvent(bundle));
+    }
+
+    @Override
     public void onClick(View v) {
 
     }
 
     private void processRecyclerView() {
-        // 查询用户信息
-        mApp.headerEngine().getUser().enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                if (response.code() == 200) {
-                    user = response.body();
-                    values.clear();
-                    values = new ArrayList<String>(){
-                        {
-                            add(user.getAvatar());add(user.getNickname());add(user.getPhone());
-                            add("未设置");add("未设置");add("未设置");
-                            add(user.getIdCard());add("");add(user.getPhone());
-                            add("");add("");
-                        }
-                    };
-                    adapter.notifyDataSetChanged();
-                } else {
-                    showToast("获取用户信息失败");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                showToast(context.getString(R.string.network_error));
-            }
-        });
-
         // 加载列表
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         adapter = new ProfileListAdapter(context, keys, values);
@@ -177,7 +162,7 @@ public class ProfileFragment extends BaseBackFragment {
                     processSex(position);
                 } else if (position == 7) {
                     EventBus.getDefault().post(
-                            new StartBrotherEvent(MyAddress.newInstance(FROM_PROFILE)));
+                            new StartBrotherEvent(MyAddress.newInstance(Const.FROM_PROFILE)));
                 } else if (position == 8) {
                     // 跳转绑定手机页面
                     startForResult(BindPhoneFragment.newInstance(
@@ -195,6 +180,31 @@ public class ProfileFragment extends BaseBackFragment {
             @Override
             public void onItemLongPress(RecyclerView.ViewHolder vh, int position) {
 
+            }
+        });
+
+        // 查询用户信息, 更新列表
+        mApp.headerEngine().getUser().enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.code() == 200) {
+                    user = response.body();
+
+                    values.set(0, user.getAvatar());
+                    values.set(1, user.getNickname());
+                    values.set(2, user.getPhone());
+                    values.set(6, user.getIdCard());
+                    values.set(8, user.getPhone());
+
+                    adapter.notifyDataSetChanged();
+                } else {
+                    showToast("获取用户信息失败");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                showToast("获取用户信息失败");
             }
         });
     }
@@ -316,12 +326,8 @@ public class ProfileFragment extends BaseBackFragment {
                 if (response.code() == 200) {
                     // 更新头像地址
                     SharedPreferences.Editor editor = sharedPre.edit();
-                    editor.putString("user_avatar", response.body().getAvatar());
+                    editor.putString(Const.USER_AVATAR, response.body().getAvatar());
                     editor.commit();
-                    // 给<账户管理>传递对象
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable(ConstantSet.OBJECT, response.body());
-                    EventBus.getDefault().post(new TransferDataEvent(bundle));
                     // 更新UI
                     values.set(0, file.getAbsolutePath());
                     adapter.notifyItemChanged(0);
@@ -388,7 +394,7 @@ public class ProfileFragment extends BaseBackFragment {
                     public void onClick(DialogInterface dialog, int id) {
                         // 从数据源删除数
                         SharedPreferences.Editor editor = sharedPre.edit();
-                        editor.putString("user_token", EMPTY_STRING);
+                        editor.putString(Const.USER_TOKEN, Const.EMPTY_STRING);
                         editor.commit();
                         Intent intent = new Intent(getActivity(), LoginActivity.class);
                         startActivity(intent);
@@ -418,8 +424,8 @@ public class ProfileFragment extends BaseBackFragment {
         }
 
         mApp.noHeaderEngine().updateUser(
-                sharedPre.getString("user_token", EMPTY_STRING),
-                sharedPre.getString("user_phone", EMPTY_STRING),
+                sharedPre.getString("user_token", Const.EMPTY_STRING),
+                sharedPre.getString("user_phone", Const.EMPTY_STRING),
                 fields
         ).enqueue(new Callback<User>() {
             @Override
@@ -444,9 +450,6 @@ public class ProfileFragment extends BaseBackFragment {
 
     /**
      * 处理ChangeProfileFragment返回的数据
-     * @param requestCode
-     * @param resultCode
-     * @param data
      */
     @Override
     protected void onFragmentResult(int requestCode, int resultCode, Bundle data) {

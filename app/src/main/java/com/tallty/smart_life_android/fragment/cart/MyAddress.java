@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
+import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.AddressListAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
@@ -50,7 +51,7 @@ public class MyAddress extends BaseBackFragment {
 
     public static MyAddress newInstance(int from) {
         Bundle args = new Bundle();
-        args.putInt(NORMAL_STRING, from);
+        args.putInt(Const.FROM, from);
         MyAddress fragment = new MyAddress();
         fragment.setArguments(args);
         return fragment;
@@ -61,7 +62,7 @@ public class MyAddress extends BaseBackFragment {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
-            from = args.getInt(NORMAL_STRING);
+            from = args.getInt(Const.FROM);
         }
     }
 
@@ -113,22 +114,6 @@ public class MyAddress extends BaseBackFragment {
             }
         }
 
-        // 设置传给上个Fragment的数据 && 保存默认地址到SharedPreferences
-//        SharedPreferences.Editor editor = sharedPre.edit();
-//        if (addresses.size() > 0){
-//            if (shareDefaultAddress != null){
-//                editor.putString(ADDRESS_AREA, shareDefaultAddress.getArea());
-//                editor.putString(ADDRESS_DETAIL, shareDefaultAddress.getDetail());
-//            } else {
-//
-//            }
-//            setAddressResult();
-//        } else {
-//            editor.putString(ADDRESS_AREA, EMPTY_STRING);
-//            editor.putString(ADDRESS_DETAIL, EMPTY_STRING);
-//        }
-//        editor.commit();
-
         // 载入列表
         processList();
     }
@@ -156,7 +141,7 @@ public class MyAddress extends BaseBackFragment {
     protected void onFragmentResult(int requestCode, int resultCode, Bundle data) {
         super.onFragmentResult(requestCode, resultCode, data);
         if (requestCode == REQ_CODE && resultCode == RESULT_OK) {
-            new_address = (Address) data.getSerializable(OBJECT);
+            new_address = (Address) data.getSerializable(Const.OBJECT);
             if (new_address != null) {
                 addresses.add(new_address);
                 adapter.notifyDataSetChanged();
@@ -182,10 +167,10 @@ public class MyAddress extends BaseBackFragment {
     @Subscribe
     public void onSetDefaultAddress(SetDefaultAddress event) {
         SharedPreferences.Editor editor = sharedPre.edit();
-        editor.putString(ADDRESS_AREA, event.getAddress().getArea());
-        editor.putString(ADDRESS_DETAIL, event.getAddress().getDetail());
-        editor.putString(ADDRESS_NAME, event.getAddress().getName());
-        editor.putString(ADDRESS_PHONE, event.getAddress().getPhone());
+        editor.putString(Const.ADDRESS_AREA, event.getAddress().getArea());
+        editor.putString(Const.ADDRESS_DETAIL, event.getAddress().getDetail());
+        editor.putString(Const.ADDRESS_NAME, event.getAddress().getName());
+        editor.putString(Const.ADDRESS_PHONE, event.getAddress().getPhone());
         editor.commit();
         // 取消原来的默认地址
         Address cache_address = addresses.get(defaultAddressPosition);
@@ -220,9 +205,9 @@ public class MyAddress extends BaseBackFragment {
 
         // 把选中的地址回传给上一个页面
         Bundle bundle = new Bundle();
-        bundle.putSerializable(OBJECT, cache_address);
+        bundle.putSerializable(Const.OBJECT, cache_address);
         setFramgentResult(RESULT_OK, bundle);
-        if (from == FROM_ORDER){
+        if (from == Const.FROM_ORDER){
             pop();
         }
     }

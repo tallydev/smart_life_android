@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.CartListAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
@@ -39,8 +40,8 @@ public class ConfirmOrder extends BaseBackFragment {
 
     public static ConfirmOrder newInstance(ArrayList<Commodity> selected_commodities, float total_price) {
         Bundle args = new Bundle();
-        args.putSerializable(OBJECTS, selected_commodities);
-        args.putFloat(TOTAL_PRICE, total_price);
+        args.putSerializable(Const.OBJECT_List, selected_commodities);
+        args.putFloat(Const.TOTAL_PRICE, total_price);
         ConfirmOrder fragment = new ConfirmOrder();
         fragment.setArguments(args);
         return fragment;
@@ -51,8 +52,8 @@ public class ConfirmOrder extends BaseBackFragment {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
-            selected_commodities = (ArrayList<Commodity>) args.getSerializable(OBJECTS);
-            total_price = args.getFloat(TOTAL_PRICE);
+            selected_commodities = (ArrayList<Commodity>) args.getSerializable(Const.OBJECT_List);
+            total_price = args.getFloat(Const.TOTAL_PRICE);
         }
     }
 
@@ -96,12 +97,12 @@ public class ConfirmOrder extends BaseBackFragment {
 
     // 设置订单地址, 获取SharedPreferences保存的默认地址
     private void setDefaultAddress(){
-        String area = sharedPre.getString(ADDRESS_AREA, EMPTY_STRING);
-        String address_detail = sharedPre.getString(ADDRESS_DETAIL, EMPTY_STRING);
-        String name = sharedPre.getString(ADDRESS_NAME, EMPTY_STRING);
-        String phone = sharedPre.getString(ADDRESS_PHONE, EMPTY_STRING);
+        String area = sharedPre.getString(Const.ADDRESS_AREA, Const.EMPTY_STRING);
+        String address_detail = sharedPre.getString(Const.ADDRESS_DETAIL, Const.EMPTY_STRING);
+        String name = sharedPre.getString(Const.ADDRESS_NAME, Const.EMPTY_STRING);
+        String phone = sharedPre.getString(Const.ADDRESS_PHONE, Const.EMPTY_STRING);
 
-        if (EMPTY_STRING.equals(area) && EMPTY_STRING.equals(address_detail)){
+        if (Const.EMPTY_STRING.equals(area) && Const.EMPTY_STRING.equals(address_detail)){
             order_address_text.setText("选择收货地址");
         }else{
             // 保存到对象
@@ -118,7 +119,7 @@ public class ConfirmOrder extends BaseBackFragment {
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.link_to_addresses:
-                startForResult(MyAddress.newInstance(FROM_ORDER), REQ_CODE);
+                startForResult(MyAddress.newInstance(Const.FROM_ORDER), REQ_CODE);
                 break;
             case R.id.submit_order:
                 EventBus.getDefault().post(new StartBrotherEvent(PayOrder
@@ -135,7 +136,7 @@ public class ConfirmOrder extends BaseBackFragment {
     protected void onFragmentResult(int requestCode, int resultCode, Bundle data) {
         super.onFragmentResult(requestCode, resultCode, data);
         if (requestCode == REQ_CODE && resultCode == RESULT_OK) {
-            order_address = (Address) data.getSerializable(OBJECT);
+            order_address = (Address) data.getSerializable(Const.OBJECT);
             // 显示
             if (order_address != null){
                 order_address_text.setText(order_address.getArea()+order_address.getDetail());

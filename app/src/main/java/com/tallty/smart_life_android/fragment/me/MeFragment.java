@@ -14,8 +14,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.orhanobut.logger.Logger;
-import com.tallty.smart_life_android.ConstantSet;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseLazyMainFragment;
 import com.tallty.smart_life_android.custom.GlideCircleTransform;
@@ -25,7 +23,6 @@ import com.tallty.smart_life_android.event.TransferDataEvent;
 import com.tallty.smart_life_android.fragment.MainFragment;
 import com.tallty.smart_life_android.fragment.home.HealthyCheckReport;
 import com.tallty.smart_life_android.fragment.home.SportMoreData;
-import com.tallty.smart_life_android.model.Address;
 import com.tallty.smart_life_android.model.User;
 
 import org.greenrobot.eventbus.EventBus;
@@ -234,17 +231,16 @@ public class MeFragment extends BaseLazyMainFragment {
 
     /**
      * 订阅事件: TransferDataEvent
-     * 接收profile修改过后的用户对象
+     * 接收profile回传的nickname, avatar
      * 更新账户管理信息
      */
     @Subscribe
     public void onTransferDataEvent(TransferDataEvent event) {
-        user = (User) event.bundle.getSerializable(ConstantSet.OBJECT);
         // 更新UI
-        Glide.with(context).load(user.getAvatar())
+        Glide.with(context).load(event.bundle.getString("user_avatar"))
                 .placeholder(R.drawable.user_photo)
                 .transform(new GlideCircleTransform(context)).into(photo);
-        name.setText(user.getNickname());
+        name.setText(event.bundle.getString("user_nickname"));
     }
 
     @Override

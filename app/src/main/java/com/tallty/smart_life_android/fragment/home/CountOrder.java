@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.event.ConfirmDialogEvent;
@@ -34,7 +35,7 @@ public class CountOrder extends BaseBackFragment {
 
     public static CountOrder newInstance(String title, int imageId) {
         Bundle args = new Bundle();
-        args.putString(TOOLBAR_TITLE, title);
+        args.putString(Const.TOOLBAR_TITLE, title);
         args.putInt("image", imageId);
         CountOrder fragment = new CountOrder();
         fragment.setArguments(args);
@@ -46,7 +47,7 @@ public class CountOrder extends BaseBackFragment {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
-            mName = args.getString(TOOLBAR_TITLE);
+            mName = args.getString(Const.TOOLBAR_TITLE);
             imageId = args.getInt("image");
         }
     }

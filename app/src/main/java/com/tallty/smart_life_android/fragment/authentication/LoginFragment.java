@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
+import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.activity.MainActivity;
 import com.tallty.smart_life_android.base.BaseLazyMainFragment;
@@ -60,8 +61,8 @@ public class LoginFragment extends BaseLazyMainFragment {
     @Override
     protected void fragmentInterceptor() {
         super.fragmentInterceptor();
-        String phone = sharedPre.getString("user_phone", EMPTY_STRING);
-        String token = sharedPre.getString("user_token", EMPTY_STRING);
+        String phone = sharedPre.getString("user_phone", Const.EMPTY_STRING);
+        String token = sharedPre.getString("user_token", Const.EMPTY_STRING);
         Logger.d(phone);
         Logger.d(token);
         if (!phone.isEmpty() && !token.isEmpty()) {
@@ -117,8 +118,8 @@ public class LoginFragment extends BaseLazyMainFragment {
 
     // 表单初始化
     private void initFormEdit() {
-        String phone = sharedPre.getString(PHONE, EMPTY_STRING);
-        if (EMPTY_STRING.equals(phone)) {
+        String phone = sharedPre.getString("user_phone", Const.EMPTY_STRING);
+        if (Const.EMPTY_STRING.equals(phone)) {
             phone_edit.requestFocus();
         } else {
             phone_edit.setText(phone);
@@ -179,12 +180,9 @@ public class LoginFragment extends BaseLazyMainFragment {
                 if (response.code() == 201) {
                     // 保存用户信息
                     SharedPreferences.Editor editor = sharedPre.edit();
-                    editor.putInt("user_id", user.getId());
-                    editor.putString("user_email", user.getEmail());
-                    editor.putString("user_phone", user.getPhone());
-                    editor.putString("user_token", user.getToken());
-                    editor.putString("user_created_at", user.getCreated_at());
-                    editor.putString("user_updated_at", user.getUpdated_at());
+                    editor.putInt(Const.USER_ID, user.getId());
+                    editor.putString(Const.USER_PHONE, user.getPhone());
+                    editor.putString(Const.USER_TOKEN, user.getToken());
                     editor.commit();
 
                     /**

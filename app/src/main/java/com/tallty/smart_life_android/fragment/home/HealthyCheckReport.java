@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.HomeCheckReportAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
@@ -53,7 +54,7 @@ public class HealthyCheckReport extends BaseBackFragment {
 
     public static HealthyCheckReport newInstance(String title) {
         Bundle args = new Bundle();
-        args.putString(TOOLBAR_TITLE, title);
+        args.putString(Const.TOOLBAR_TITLE, title);
         HealthyCheckReport fragment = new HealthyCheckReport();
         fragment.setArguments(args);
         return fragment;
@@ -65,7 +66,7 @@ public class HealthyCheckReport extends BaseBackFragment {
         // 获取数据:getArguments()
         Bundle args = getArguments();
         if (args != null) {
-            mName = args.getString(TOOLBAR_TITLE);
+            mName = args.getString(Const.TOOLBAR_TITLE);
         }
     }
 

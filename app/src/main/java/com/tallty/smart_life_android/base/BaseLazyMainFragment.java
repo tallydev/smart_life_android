@@ -31,14 +31,11 @@ public abstract class BaseLazyMainFragment extends BaseFragment implements View.
     // 状态
     private boolean mInited = false;
     private Bundle mSavedInstanceState;
-    // sharedPre数据常量
-    protected static final String EMPTY_STRING = "";
-    protected static final String PHONE = "user_phone";
-    protected static final String USER_TOKEN = "user_token";
     // 布局
     private View view;
     // 载入框
     private ProgressDialog progressDialog;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

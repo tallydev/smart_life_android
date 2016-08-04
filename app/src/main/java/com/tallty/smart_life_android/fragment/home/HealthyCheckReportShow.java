@@ -12,6 +12,7 @@ import com.db.chart.Tools;
 import com.db.chart.model.LineSet;
 import com.db.chart.view.AxisController;
 import com.db.chart.view.LineChartView;
+import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.HomeCheckReportShowAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
@@ -54,7 +55,7 @@ public class HealthyCheckReportShow extends BaseBackFragment {
 
     public static HealthyCheckReportShow newInstance(String title) {
         Bundle args = new Bundle();
-        args.putString(TOOLBAR_TITLE, title);
+        args.putString(Const.TOOLBAR_TITLE, title);
         HealthyCheckReportShow fragment = new HealthyCheckReportShow();
         fragment.setArguments(args);
         return fragment;
@@ -65,7 +66,7 @@ public class HealthyCheckReportShow extends BaseBackFragment {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
-            mName = args.getString(TOOLBAR_TITLE);
+            mName = args.getString(Const.TOOLBAR_TITLE);
         }
     }
 

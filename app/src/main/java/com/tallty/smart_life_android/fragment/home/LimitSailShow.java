@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
+import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.event.SwitchTabFragment;
@@ -40,7 +41,7 @@ public class LimitSailShow extends BaseBackFragment implements OnItemClickListen
 
     public static LimitSailShow newInstance(String title) {
         Bundle args = new Bundle();
-        args.putString(TOOLBAR_TITLE, title);
+        args.putString(Const.TOOLBAR_TITLE, title);
         LimitSailShow fragment = new LimitSailShow();
         fragment.setArguments(args);
         return fragment;
@@ -51,7 +52,7 @@ public class LimitSailShow extends BaseBackFragment implements OnItemClickListen
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
-            mName = args.getString(TOOLBAR_TITLE);
+            mName = args.getString(Const.TOOLBAR_TITLE);
         }
     }
 

@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.custom.LargeImageView;
@@ -34,7 +35,7 @@ public class HouseCatEye extends BaseBackFragment {
 
     public static HouseCatEye newInstance(String title) {
         Bundle args = new Bundle();
-        args.putString(TOOLBAR_TITLE, title);
+        args.putString(Const.TOOLBAR_TITLE, title);
         HouseCatEye fragment = new HouseCatEye();
         fragment.setArguments(args);
         return fragment;
@@ -45,7 +46,7 @@ public class HouseCatEye extends BaseBackFragment {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
-            mName = args.getString(TOOLBAR_TITLE);
+            mName = args.getString(Const.TOOLBAR_TITLE);
         }
     }
 

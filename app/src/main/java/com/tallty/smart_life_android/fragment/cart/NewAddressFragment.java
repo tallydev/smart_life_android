@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.event.ConfirmDialogEvent;
@@ -145,7 +146,7 @@ public class NewAddressFragment extends BaseBackFragment {
             cache_address.setArea(area);
             cache_address.setDetail(detail);
             Bundle bundle = new Bundle();
-            bundle.putSerializable(OBJECT, cache_address);
+            bundle.putSerializable(Const.OBJECT, cache_address);
             setFramgentResult(RESULT_OK, bundle);
             pop();
         }

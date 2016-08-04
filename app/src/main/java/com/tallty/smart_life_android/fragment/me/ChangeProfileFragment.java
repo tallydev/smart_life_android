@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
+import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.model.User;
@@ -119,8 +120,8 @@ public class ChangeProfileFragment extends BaseBackFragment {
         }
 
         mApp.noHeaderEngine().updateUser(
-                sharedPre.getString("user_token", EMPTY_STRING),
-                sharedPre.getString("user_phone", EMPTY_STRING),
+                sharedPre.getString("user_token", Const.EMPTY_STRING),
+                sharedPre.getString("user_phone", Const.EMPTY_STRING),
                 fields)
                 .enqueue(new Callback<User>() {
                     @Override

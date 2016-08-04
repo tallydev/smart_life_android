@@ -41,26 +41,11 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
     protected Toolbar toolbar;
     protected TextView toolbar_title;
     private ProgressDialog progressDialog;
-    // SharedPreferences数据key
-    protected static final String ADDRESS_AREA = "address_area";
-    protected static final String ADDRESS_DETAIL = "address_detail";
-    protected static final String ADDRESS_PHONE = "address_phone";
-    protected static final String ADDRESS_NAME = "address_NAME";
-    // 用于SharedPreferences取值
-    protected static final String EMPTY_STRING = "";
     // startForResultFragment使用
     protected static final int REQ_CODE = 0;
     protected static final String RESULT_DATA = "data";
     protected static final String RESULT_POSITION = "position";
-    // startBrotherFragment使用
-    protected static final String TOOLBAR_TITLE = "BackFragmentTitle";
-    protected static final String TOTAL_PRICE = "BackFragmentTotalPrice";
-    protected static final String OBJECTS = "BackFragmentObjects";
-    protected static final String OBJECT = "BackFragmentObject";
-    protected static final String NORMAL_STRING = "normal_string";
-    // 调用MyAddress的不同处理
-    protected static final int FROM_PROFILE = 2;
-    protected static final int FROM_ORDER = 3;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -97,7 +82,11 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
             public void onDragStateChange(int state) {
                 if (state == 1) {
                     hideSoftInput();
+                } else if (state == 2) {
+                    // 退出fragment时执行
+                    onFragmentPop();
                 }
+
             }
 
             @Override
@@ -111,6 +100,9 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
             }
         });
     }
+
+    // fragment 退出时调用(滑动退出,点击返回退出)
+    protected void onFragmentPop() {}
 
     // 获取布局文件id
     public abstract int getFragmentLayout();
@@ -132,9 +124,12 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // 隐藏软键盘
                 hideSoftInput();
                 // 出栈
                 pop();
+                // 退出时执行
+                onFragmentPop();
             }
         });
         initToolbarMenu(toolbar);

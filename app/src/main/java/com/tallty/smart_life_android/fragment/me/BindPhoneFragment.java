@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
+import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.model.User;
@@ -178,8 +179,8 @@ public class BindPhoneFragment extends BaseBackFragment {
             fields.put("user_info[phone]", phone);
 
             mApp.noHeaderEngine().updateUser(
-                    sharedPre.getString("user_token", EMPTY_STRING),
-                    sharedPre.getString("user_phone", EMPTY_STRING),
+                    sharedPre.getString("user_token", Const.EMPTY_STRING),
+                    sharedPre.getString("user_phone", Const.EMPTY_STRING),
                     fields)
                     .enqueue(new Callback<User>() {
                         @Override
@@ -188,7 +189,7 @@ public class BindPhoneFragment extends BaseBackFragment {
                                 // TODO: 16/8/3 暂时还不能绑定新手机号
                                 // 更新本地信息
                                 SharedPreferences.Editor editor = sharedPre.edit();
-                                editor.putString("use_phone", phone);
+                                editor.putString(Const.USER_PHONE, phone);
                                 editor.commit();
                                 // 回传给上个fragment
                                 Bundle bundle = new Bundle();

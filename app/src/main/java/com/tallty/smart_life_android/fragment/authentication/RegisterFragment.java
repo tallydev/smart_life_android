@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.orhanobut.logger.Logger;
+import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.event.ConfirmDialogEvent;
@@ -278,13 +279,11 @@ public class RegisterFragment extends BaseBackFragment {
                     User user = response.body();
                     // 保存手机号,方便登陆页自动显示
                     SharedPreferences.Editor editor = sharedPre.edit();
-                    editor.putString("user_phone", user.getPhone());
+                    editor.putString(Const.USER_PHONE, user.getPhone());
                     editor.commit();
                     // 更新用户信息
                     updateUser(user);
                 } else if (response.code() == 422) {
-                    Log.d("tag",String.valueOf(response.errorBody().source()));
-
                     Gson gson = new Gson();
                     try {
                         String error = null;
