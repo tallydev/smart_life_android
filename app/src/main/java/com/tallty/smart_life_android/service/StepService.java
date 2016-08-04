@@ -1,5 +1,6 @@
 package com.tallty.smart_life_android.service;
 
+import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -12,6 +13,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -133,22 +135,22 @@ public class StepService extends Service implements SensorEventListener {
                 String action = intent.getAction();
 
                 if (Intent.ACTION_SCREEN_ON.equals(action)) {
-                    Log.d("xf", "screen on");
+                    Log.d("计步器,Intent状态", "screen on");
                 } else if (Intent.ACTION_SCREEN_OFF.equals(action)) {
-                    Log.d("xf", "screen off");
+                    Log.d("计步器,Intent状态", "screen off");
                     //改为60秒一存储
                     duration = 60000;
                 } else if (Intent.ACTION_USER_PRESENT.equals(action)) {
-                    Log.d("xf", "screen unlock");
+                    Log.d("计步器,Intent状态", "screen unlock");
                     save();
                     //改为30秒一存储
                     duration = 30000;
                 } else if (Intent.ACTION_CLOSE_SYSTEM_DIALOGS.equals(intent.getAction())) {
-                    Log.i("xf", " receive Intent.ACTION_CLOSE_SYSTEM_DIALOGS");
-                    //保存一次
+                    Log.i("计步器,Intent状态", " receive Intent.ACTION_CLOSE_SYSTEM_DIALOGS");
+                    // 点击Home按钮,保存一次
                     save();
                 } else if (Intent.ACTION_SHUTDOWN.equals(intent.getAction())) {
-                    Log.i("xf", " receive ACTION_SHUTDOWN");
+                    Log.i("计步器,Intent状态", " receive ACTION_SHUTDOWN");
                     save();
                 }
             }
@@ -164,6 +166,7 @@ public class StepService extends Service implements SensorEventListener {
     /**
      * 更新通知
      */
+    @TargetApi (Build.VERSION_CODES.JELLY_BEAN)
     private void updateNotification(String content) {
         builder = new NotificationCompat.Builder(this);
         builder.setPriority(Notification.PRIORITY_MIN);
@@ -222,6 +225,7 @@ public class StepService extends Service implements SensorEventListener {
         }
     }
 
+    @TargetApi (Build.VERSION_CODES.KITKAT)
     private void addCountStepListener() {
         Sensor detectorSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
         Sensor countSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);

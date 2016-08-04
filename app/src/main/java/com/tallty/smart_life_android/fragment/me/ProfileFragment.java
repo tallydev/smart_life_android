@@ -122,6 +122,7 @@ public class ProfileFragment extends BaseBackFragment {
 
     @Override
     protected void afterAnimationLogic() {
+        showProgress("载入中...");
         // 查询用户信息, 更新列表
         mApp.headerEngine().getUser().enqueue(new Callback<User>() {
             @Override
@@ -140,12 +141,14 @@ public class ProfileFragment extends BaseBackFragment {
 
                     processRecyclerView();
                 } else {
+                    hideProgress();
                     showToast("获取用户信息失败");
                 }
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
+                hideProgress();
                 showToast("获取用户信息失败");
             }
         });
@@ -208,6 +211,7 @@ public class ProfileFragment extends BaseBackFragment {
 
             }
         });
+        hideProgress();
     }
 
     /**
