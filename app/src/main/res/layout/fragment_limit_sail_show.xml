@@ -87,7 +87,7 @@
                     android:layout_alignParentTop="true"
                     app:canLoop="true" />
                 <TextView
-                    android:id="@+id/product_detail_name"
+                    android:id="@+id/product_detail_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="16dp"
@@ -97,8 +97,7 @@
                     android:layout_marginTop="4dp"
                     android:textSize="@dimen/text_18"
                     android:layout_below="@id/product_detail_banner"
-                    android:background="@color/white"
-                    android:text="西双版纳生态无眼凤梨新鲜直达"/>
+                    android:background="@color/white"/>
                 <TextView
                     android:id="@+id/product_detail_price"
                     android:layout_width="match_parent"
@@ -106,22 +105,23 @@
                     android:paddingTop="5dp"
                     android:paddingLeft="16dp"
                     android:paddingRight="16dp"
-                    android:paddingBottom="15dp"
+                    android:paddingBottom="10dp"
                     android:textSize="@dimen/text_16"
-                    android:layout_below="@id/product_detail_name"
-                    android:background="@color/white"
-                    android:text="￥66.00 (包邮)"/>
+                    android:textColor="@color/orange"
+                    android:layout_below="@id/product_detail_title"
+                    android:background="@color/white"/>
                 <TextView
-                    android:id="@+id/product_detail_describe"
+                    android:id="@+id/product_detail_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:lineSpacingExtra="5sp"
                     android:paddingTop="5dp"
                     android:paddingLeft="16dp"
                     android:paddingRight="16dp"
                     android:paddingBottom="15dp"
+                    android:textColor="@color/global_text"
                     android:layout_below="@id/product_detail_price"
-                    android:background="@color/white"
-                    android:text="@string/product_detail_describe"/>
+                    android:background="@color/white"/>
             </RelativeLayout>
         </ScrollView>
     </RelativeLayout>

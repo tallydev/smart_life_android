@@ -69,7 +69,7 @@ public class SportMoreData extends BaseBackFragment {
     };
     private ArrayList<Integer> praise_counts = new ArrayList<Integer>() {
         {
-            add(15);add(11);add(0);add(4);
+            add(1);add(2);add(0);add(4);
         }
     };
 

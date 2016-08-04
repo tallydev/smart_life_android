@@ -16,8 +16,19 @@ import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.HomeLimitSailAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
+import com.tallty.smart_life_android.custom.RecyclerVIewItemTouchListener;
+import com.tallty.smart_life_android.event.StartBrotherEvent;
+import com.tallty.smart_life_android.model.Product;
+import com.tallty.smart_life_android.model.ProductList;
 
+import org.greenrobot.eventbus.EventBus;
+
+import java.text.ParseException;
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * 首页-限量销售
@@ -26,22 +37,42 @@ public class LimitSail extends BaseBackFragment {
     private String mName;
 
     private RecyclerView recyclerView;
+    private HomeLimitSailAdapter adapter;
 
-    private ArrayList<String> names = new ArrayList<String>() {
+    // 数据
+    private ArrayList<Product> products = new ArrayList<>();
+
+    private ArrayList<Integer> tag = new ArrayList<Integer>() {
         {
-            add("西双版纳生态无眼凤梨新鲜直达");add("蜂蜜");
-            add("蜂蜜");add("蜂蜜");
+            add(0);
+            add(1);
+            add(2);
         }
     };
-    private ArrayList<String> prices = new ArrayList<String>() {
+    private ArrayList<String> titles = new ArrayList<String>() {
         {
-            add(" 今日价: 66.00");add(" 今日价: 40.00");add(" 今日价: 40.00");add(" 今日价: 40.00");
+            add("西双版纳生态无眼凤梨新鲜直达\n"+"每件Kg (5-6个)");
+            add("西双版纳野生蜂蜜（一年一季）\n"+"每件500克");
+            add("天然放养土鸡蛋儿童老人首选\n"+"每件20枚");
         }
     };
-    private ArrayList<Integer> photos = new ArrayList<Integer>() {
+    private ArrayList<Float> prices = new ArrayList<Float>() {
         {
-            add(R.drawable.limi_sail_one);add(R.drawable.on_sail);add(R.drawable.on_sail);
-            add(R.drawable.on_sail);
+            add(66.00f);add(50.00f);add(50.00f);
+        }
+    };
+    private ArrayList<Integer> thumbs = new ArrayList<Integer>() {
+        {
+            add(R.drawable.product_pineapple_one);
+            add(R.drawable.product_honey_one);
+            add(R.drawable.product_egg_one);
+        }
+    };
+    private ArrayList<Integer> strings = new ArrayList<Integer>() {
+        {
+            add(R.string.product_pineapple_description);
+            add(R.string.product_honey_description);
+            add(R.string.product_egg_description);
         }
     };
 
@@ -84,11 +115,47 @@ public class LimitSail extends BaseBackFragment {
 
     @Override
     protected void afterAnimationLogic() {
-        // 初始化列表
-        RecyclerView.LayoutManager manager = new LinearLayoutManager(context);
-        recyclerView.setLayoutManager(manager);
-        HomeLimitSailAdapter adapter = new HomeLimitSailAdapter(context, names, prices, photos);
+        // TODO: 16/8/4 假数据
+        for (int i=0; i<titles.size();i++) {
+            Product product = new Product();
+            product.setTitle(titles.get(i));
+            product.setPrice(prices.get(i));
+            product.setThumbId(thumbs.get(i));
+            product.setStringId(strings.get(i));
+            product.setTag(tag.get(i));
+            products.add(product);
+        }
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        adapter = new HomeLimitSailAdapter(context, products);
         recyclerView.setAdapter(adapter);
+
+//        showProgress(showString(R.string.progress_normal));
+//        mApp.noHeaderEngine().getProductList(1, 10).enqueue(new Callback<ProductList>() {
+//            @Override
+//            public void onResponse(Call<ProductList> call, Response<ProductList> response) {
+//                if (response.code() == 200) {
+//                    // 商品列表
+//                    ProductList productList = response.body();
+//                    products = productList.getProducts();
+//                    // 加载列表
+//                    recyclerView.setLayoutManager(new LinearLayoutManager(context));
+//                    adapter = new HomeLimitSailAdapter(context, products);
+//                    recyclerView.setAdapter(adapter);
+//
+//                    hideProgress();
+//                } else {
+//                    hideProgress();
+//                    showToast(showString(R.string.response_error));
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ProductList> call, Throwable t) {
+//                hideProgress();
+//                showToast(showString(R.string.network_error));
+//            }
+//        });
     }
 
     @Override

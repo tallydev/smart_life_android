@@ -1,6 +1,7 @@
 package com.tallty.smart_life_android.Engine;
 
 import com.tallty.smart_life_android.model.CartList;
+import com.tallty.smart_life_android.model.ProductList;
 import com.tallty.smart_life_android.model.User;
 
 import java.util.HashMap;
@@ -62,7 +63,16 @@ public interface Engine {
     @GET("user_info")
     Call<User> getUser();
 
+    // 获取商品列表
+    @GET("products")
+    Call<ProductList> getProductList(@Query("page") Integer page,
+                                     @Query("per_page") Integer per_page);
+
+    // 添加商品到购物车
+
+
     // 获取购物车列表
     @GET("cart_items")
-    Call<CartList> getCartList(@Query("page") Integer page, @Query("per_page") Integer per_page);
+    Call<CartList> getCartList(@Query("page") Integer page,
+                               @Query("per_page") Integer per_page);
 }

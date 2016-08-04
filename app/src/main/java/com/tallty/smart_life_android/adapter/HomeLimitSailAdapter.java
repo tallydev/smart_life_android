@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.fragment.home.LimitSailShow;
+import com.tallty.smart_life_android.model.Product;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -23,17 +24,13 @@ import java.util.ArrayList;
  * 首页-限量销售-适配器
  */
 public class HomeLimitSailAdapter extends RecyclerView.Adapter<HomeLimitSailAdapter.ProductViewHolder> {
-    private ArrayList<String> names;
-    private ArrayList<String> prices;
-    private ArrayList<Integer> photos;
+    private ArrayList<Product> products;
+
     private Context context;
 
-    public HomeLimitSailAdapter(Context context, ArrayList<String> names,
-                                ArrayList<String> prices, ArrayList<Integer> photos) {
+    public HomeLimitSailAdapter(Context context, ArrayList<Product> products) {
         this.context = context;
-        this.names = names;
-        this.prices = prices;
-        this.photos = photos;
+        this.products = products;
     }
 
     @Override
@@ -44,23 +41,28 @@ public class HomeLimitSailAdapter extends RecyclerView.Adapter<HomeLimitSailAdap
 
     @Override
     public void onBindViewHolder(ProductViewHolder holder, int position) {
-        Glide.with(context).load(photos.get(position)).into(holder.photo);
-        holder.name.setText(names.get(position));
-        holder.price.setText(prices.get(position));
-        if (position == getItemCount()-1) {
-            holder.line.setVisibility(View.GONE);
-        }
+        final Product product = products.get(position);
+
+//        Glide.with(context).load(product.getThumb()).into(holder.photo);
+        Glide.with(context).load(product.getThumbId()).into(holder.photo);
+        holder.name.setText(product.getTitle());
+        holder.price.setText("今日价格: "+product.getPrice()+"0");
+
         holder.detail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventBus.getDefault().post(new StartBrotherEvent(LimitSailShow.newInstance("商品详情")));
+                EventBus.getDefault().post(new StartBrotherEvent(LimitSailShow.newInstance(product)));
             }
         });
+
+        if (position == getItemCount()-1) {
+            holder.line.setVisibility(View.GONE);
+        }
     }
 
     @Override
     public int getItemCount() {
-        return names.size();
+        return products.size();
     }
 
     class ProductViewHolder extends RecyclerView.ViewHolder {
@@ -70,7 +72,7 @@ public class HomeLimitSailAdapter extends RecyclerView.Adapter<HomeLimitSailAdap
         private Button detail;
         private View line;
 
-        public ProductViewHolder(View itemView) {
+        ProductViewHolder(View itemView) {
             super(itemView);
             name = (TextView) itemView.findViewById(R.id.product_name);
             price = (TextView) itemView.findViewById(R.id.product_price);

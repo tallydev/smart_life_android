@@ -16,11 +16,12 @@ import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.event.SwitchTabFragment;
 import com.tallty.smart_life_android.fragment.MainFragment;
-import com.tallty.smart_life_android.fragment.cart.CartFragment;
 import com.tallty.smart_life_android.holder.BannerHolderView;
+import com.tallty.smart_life_android.model.Product;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -28,20 +29,27 @@ import java.util.List;
  * 首页-限量销售-商品详情
  */
 public class LimitSailShow extends BaseBackFragment implements OnItemClickListener{
-    private String mName;
+    // 商品
+    private Product product;
+    // 修改数量
     private int count = 1;
-
+    // UI
+    private TextView product_title;
+    private TextView product_price;
+    private TextView product_description;
     private TextView add;
     private TextView reduce;
     private TextView number;
     private TextView add_to_cart;
-    private ConvenientBanner banner;
+    private ConvenientBanner<Integer> banner;
     // banner图数据
-    private Integer[] imagesUrl = { R.drawable.banner_one, R.drawable.banner_two };
+    private Integer[] firstImages = { R.drawable.product_pineapple_one, R.drawable.product_pineapple_two, R.drawable.product_pineapplie_three };
+    private Integer[] secondImages = { R.drawable.product_honey_one, R.drawable.product_honey_two, R.drawable.product_honey_three };
+    private Integer[] thirdImages = { R.drawable.product_egg_one, R.drawable.product_egg_two, R.drawable.product_egg_three };
 
-    public static LimitSailShow newInstance(String title) {
+    public static LimitSailShow newInstance(Product product) {
         Bundle args = new Bundle();
-        args.putString(Const.TOOLBAR_TITLE, title);
+        args.putSerializable(Const.OBJECT, product);
         LimitSailShow fragment = new LimitSailShow();
         fragment.setArguments(args);
         return fragment;
@@ -52,7 +60,7 @@ public class LimitSailShow extends BaseBackFragment implements OnItemClickListen
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
-            mName = args.getString(Const.TOOLBAR_TITLE);
+            product = (Product) args.getSerializable(Const.OBJECT);
         }
     }
 
@@ -63,11 +71,14 @@ public class LimitSailShow extends BaseBackFragment implements OnItemClickListen
 
     @Override
     public void initToolbar(Toolbar toolbar, TextView toolbar_title) {
-        toolbar_title.setText(mName);
+        toolbar_title.setText("商品详情");
     }
 
     @Override
     protected void initView() {
+        product_title = getViewById(R.id.product_detail_title);
+        product_price = getViewById(R.id.product_detail_price);
+        product_description = getViewById(R.id.product_detail_description);
         add = getViewById(R.id.add);
         reduce = getViewById(R.id.reduce);
         number = getViewById(R.id.number);
@@ -85,9 +96,12 @@ public class LimitSailShow extends BaseBackFragment implements OnItemClickListen
     @Override
     protected void afterAnimationLogic() {
         setToolbarMenu(toolbar);
+        // 显示商品信息
+        showProduct();
         // 设置banner
         setBanner();
     }
+
 
     @Override
     public void onClick(View v) {
@@ -103,17 +117,14 @@ public class LimitSailShow extends BaseBackFragment implements OnItemClickListen
                 }
                 break;
             case R.id.add_to_cart:
-                setSnackBar(add_to_cart,
-                        "添加成功",
-                        100000, R.layout.snackbar_icon, new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                add_to_cart.setText("添加成功");
-                                add_to_cart.setClickable(false);
-                            }
-                        });
+                // TODO: 16/8/4 添加商品到购物车
+                addProductToCart();
                 break;
         }
+    }
+
+    private void addProductToCart() {
+
     }
 
     /**
@@ -136,11 +147,11 @@ public class LimitSailShow extends BaseBackFragment implements OnItemClickListen
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.toolbar_cart:
-                        // TODO: 16/8/1 跳转到购物车Tab
+                        // 调到MainFragment
                         popTo(MainFragment.class, false, new Runnable() {
                             @Override
                             public void run() {
-                                // 通知MainFragment启动切换为购物车页面
+                                // 通知MainFragment切换CartFragment
                                 EventBus.getDefault().post(new SwitchTabFragment(3));
                             }
                         });
@@ -150,16 +161,31 @@ public class LimitSailShow extends BaseBackFragment implements OnItemClickListen
         });
     }
 
+    private void showProduct() {
+        product_title.setText(product.getTitle());
+        product_price.setText("￥ "+product.getPrice()+"0 (包邮)");
+        product_description.setText(" "+showString(product.getStringId()));
+    }
+
     private void setBanner() {
-        List<Integer> networkImages = Arrays.asList(imagesUrl);
+        // TODO: 16/8/4 假数据
+        List<Integer> networkImages;
+        if (product.getTag() == 0) {
+            networkImages = Arrays.asList(firstImages);
+        } else if (product.getTag() == 1) {
+            networkImages = Arrays.asList(secondImages);
+        } else {
+            networkImages = Arrays.asList(thirdImages);
+        }
+
         banner.setPages(new CBViewHolderCreator() {
             @Override
             public Object createHolder() {
                 return new BannerHolderView();
             }
         }, networkImages)
-                .setPageIndicator(new int[] {R.mipmap.banner_indicator, R.mipmap.banner_indicator_focused})
-                .setOnItemClickListener(this);
+            .setPageIndicator(new int[] {R.mipmap.banner_indicator, R.mipmap.banner_indicator_focused})
+            .setOnItemClickListener(this);
     }
 
     @Override

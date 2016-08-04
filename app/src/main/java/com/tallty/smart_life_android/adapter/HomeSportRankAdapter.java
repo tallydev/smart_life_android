@@ -53,6 +53,7 @@ public class HomeSportRankAdapter extends RecyclerView.Adapter<HomeSportRankAdap
                 .into(holder.photo);
         holder.name.setText(names.get(position));
         holder.step_number.setText(String.valueOf(numbers.get(position)));
+
         holder.praise_count.setText(String.valueOf(praise_counts.get(position)));
         // 0: 没有赞, 1: 有他人的赞, 2: 我的赞
         if (0 == states.get(position)) {

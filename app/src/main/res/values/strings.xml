@@ -4,7 +4,6 @@
     <string name="title_activity_main">慧生活</string>
     <string name="terms_of_service">服务条款</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="timer_text">距离结束时间:</string>
     <string name="press_again_exit">再按一次退出</string>
 
@@ -15,15 +14,9 @@
     <string name="report_show_one">检查日期</string>
     <string name="report_show_two">检测结果</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="product_detail_describe">
-         热带雨林气候,光照充足\n
-        版纳古朴民风, 无激素和催熟
-    </string>
     <string name="step_rank_photo">头像</string>
     <string name="step_rank_number">1</string>
-    <string name="step_rank_name">Loda</string>
+    <string name="step_rank_name">Tony</string>
     <string name="step_rank_praise_count">11</string>
     <string name="select_all">全选</string>
     <string name="new_address_btn">新建收货地址</string>
@@ -43,6 +36,39 @@
     <string name="progress_normal">载入中…</string>
     <string name="response_error">载入失败,请重试</string>
     <string name="network_error">载入错误</string>
+
+
+    <!--商品详情简介-->
+    <string name="product_pineapple_description">
+        热带雨林气候,光照充足\n
+        版纳古朴民风, 无激素和催熟\n\n
+        温馨提示：\n
+        1.人工采摘，大小个头不一，以重量为准；\n
+        2.发货时间待定，待新鲜采摘后即刻发货；\n
+        3.鉴于水果保质特性，请收货当日去皮食用\n
+          或者冰箱冷藏72小时内请食用完毕。
+    </string>
+    <string name="product_egg_description">
+        自然低密度农林散养，自由觅食，纯粮补喂\n
+        公母同林，保持好心情\n
+        蛋壳厚实，微量元素丰富\n\n
+        温馨提示：\n
+        1.	土鸡蛋整体偏小，食量大小不一，产蛋大小不一；\n
+        2.	散养鸡大多三五天才下一次蛋，供应商尽早发货；\n
+        3.	冰箱冷藏30天内请食用完毕。
+    </string>
+    <string name="product_honey_description">
+        深山野生原蜜珍酿\n
+        清香浓郁，甜而不腻\n
+        采收季节：2016年春季\n\n
+        温馨提示：\n
+        1.	存放于低于25℃的阴凉干燥处;\n
+        2.	每日三次，每次1茶匙;\n
+        3.	一周岁以下婴幼儿、糖尿病患者以及\n
+        蜂产品过敏者或其他禁忌者不建议食用；\n
+        4.	忌与豆腐、韭菜同食，易导致腹泻。
+    </string>
+
 
     <string name="clause_text">
         【慧生活】在此特别提醒用户认真阅读、充分理解本《用户协议》（下称《协议》）--- 用户应认真阅读、充分理解本《协议》中各条款，包括免除或者限制【慧生活】责任的免责条款及对用户的权利限制条款。请您审慎阅读并选择接受或不接受本《协议》（未成年人应在法定监护人陪同下阅读）。除非您接受本《协议》所有条款，否则您无权注册、登录或使用本协议所涉相关服务。您的注册、登录、使用等行为将视为对本《协议》的接受，并同意接受本《协议》各项条款的约束。
