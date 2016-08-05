@@ -34,10 +34,6 @@ public class AddressDialogFragment extends DialogFragment implements View.OnClic
     private WheelView communityWheel;
     private WheelView streetWheel;
     private WheelView areaWheel;
-    // data
-    private String[] communities = {"五华区"};
-    private String[] streets = {"丰宁街道","红云街道","大观街道","龙翔街道","华山街道"};
-    private String[] areas = {"文明花园","红云小区","安康园","原样风景","金域蓝湾"};
     // tag
     private String caller;
 
@@ -130,7 +126,12 @@ public class AddressDialogFragment extends DialogFragment implements View.OnClic
         // 小区
         areaWheel.setWheelAdapter(new MyWheelViewAdapter(getActivity().getApplicationContext()));
         areaWheel.setSkin(WheelView.Skin.Holo);
-        areaWheel.setWheelData(Arrays.asList(areas));
+        areaWheel.setWheelData(
+                areaDatas().get(
+                        streetDatas().get(communityDatas().get(communityWheel.getSelection()))
+                        .get(streetWheel.getSelection())
+                )
+        );
         areaWheel.setStyle(style);
         streetWheel.join(areaWheel);
         streetWheel.joinDatas(areaDatas());
@@ -138,17 +139,16 @@ public class AddressDialogFragment extends DialogFragment implements View.OnClic
 
     // 整理联动数据
     private List<String> communityDatas() {
-        String[] strings = {"黑龙江", "吉林", "辽宁"};
+        String[] strings = {"五华区", "西山区"};
         return Arrays.asList(strings);
     }
 
     private HashMap<String, List<String>> streetDatas() {
         HashMap<String, List<String>> map = new HashMap<String, List<String>>();
-        String[] strings = {"黑龙江", "吉林", "辽宁"};
-        String[] s1 = {"哈尔滨", "齐齐哈尔", "大庆"};
-        String[] s2 = {"长春", "吉林"};
-        String[] s3 = {"沈阳", "大连", "鞍山", "抚顺"};
-        String[][] ss = {s1, s2, s3};
+        String[] strings = {"五华区", "西山区"};
+        String[] s1 = {"大观街道", "丰宁街道", "红云街道", "黑林铺街道", "华山街道", "护国街道", "莲华街道", "龙翔街道", "普吉街道", "西翥街道"};
+        String[] s2 = {"前卫街道"};
+        String[][] ss = {s1, s2};
         for (int i = 0; i < strings.length; i++) {
             map.put(strings[i], Arrays.asList(ss[i]));
         }
@@ -157,17 +157,19 @@ public class AddressDialogFragment extends DialogFragment implements View.OnClic
 
     private HashMap<String, List<String>> areaDatas() {
         HashMap<String, List<String>> map = new HashMap<String, List<String>>();
-        String[] strings = {"哈尔滨", "齐齐哈尔", "大庆", "长春", "吉林", "沈阳", "大连", "鞍山", "抚顺"};
-        String[] s1 = {"道里区", "道外区", "南岗区", "香坊区"};
-        String[] s2 = {"龙沙区", "建华区", "铁锋区"};
-        String[] s3 = {"红岗区", "大同区"};
-        String[] s11 = {"南关区", "朝阳区"};
-        String[] s12 = {"龙潭区"};
-        String[] s21 = {"和平区", "皇姑区", "大东区", "铁西区"};
-        String[] s22 = {"中山区", "金州区"};
-        String[] s23 = {"铁东区", "铁西区"};
-        String[] s24 = {"新抚区", "望花区", "顺城区"};
-        String[][] ss = {s1, s2, s3, s11, s12, s21, s22, s23, s24};
+        String[] strings = {"大观街道", "丰宁街道", "红云街道", "黑林铺街道", "华山街道", "护国街道", "莲华街道", "龙翔街道", "普吉街道", "西翥街道" , "前卫街道"};
+        String[] s1 = {""};
+        String[] s2 = {""};
+        String[] s3 = {"安康园", "彩信园", "红云小区", "金域蓝湾", "文明花园", "远洋风景"};
+        String[] s4 = {""};
+        String[] s5 = {""};
+        String[] s6 = {""};
+        String[] s7 = {""};
+        String[] s8 = {""};
+        String[] s9 = {""};
+        String[] s10 = {""};
+        String[] s11 = {"广福城"};
+        String[][] ss = {s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11};
         for (int i = 0; i < strings.length; i++) {
             map.put(strings[i], Arrays.asList(ss[i]));
         }
