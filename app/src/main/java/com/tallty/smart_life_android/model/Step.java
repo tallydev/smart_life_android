@@ -19,6 +19,7 @@ public class Step {
 
     @Column("today")
     private String today;
+
     @Column ("step")
     private String step;
 

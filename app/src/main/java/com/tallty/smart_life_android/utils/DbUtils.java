@@ -10,6 +10,7 @@ import java.util.List;
 
 /**
  * Created by kang on 16/6/25.
+ * 数据库操作
  */
 public class DbUtils {
     public static String DB_NAME;

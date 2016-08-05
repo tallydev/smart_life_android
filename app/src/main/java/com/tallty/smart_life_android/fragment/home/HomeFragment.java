@@ -20,11 +20,11 @@ import android.widget.TextView;
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
+import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.HomeRecyclerAdapter;
 import com.tallty.smart_life_android.base.BaseLazyMainFragment;
 import com.tallty.smart_life_android.custom.MyRecyclerView;
-import com.tallty.smart_life_android.custom.PedometerConstant;
 import com.tallty.smart_life_android.event.ShowSnackbarEvent;
 import com.tallty.smart_life_android.event.TabSelectedEvent;
 import com.tallty.smart_life_android.fragment.MainFragment;
@@ -46,10 +46,12 @@ import java.util.List;
  */
 public class HomeFragment extends BaseLazyMainFragment implements OnItemClickListener, Handler.Callback{
     // 计步器相关
+    private ServiceConnection conn;
     private long TIME_INTERVAL = 500;
     private Messenger messenger;
     private Messenger mGetReplyMessenger = new Messenger(new Handler(this));
     private Handler delayHandler;
+    private Integer step = 0;
     // 组件
     private ConvenientBanner banner;
     private MyRecyclerView recyclerView;
@@ -57,7 +59,6 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
     // banner图数据
     private Integer[] imagesUrl = { R.drawable.banner_one, R.drawable.banner_two };
     // 列表数据
-    private Integer step = 0;
     private List<String> titles = new ArrayList<String>() {
         {
             add("智慧健康");add("健身达人");add("市政大厅");add("社区活动");
@@ -92,7 +93,8 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
         {R.mipmap.on_sail_one}
     };
     // ViewHolder
-    HomeViewHolder homeViewHolder;
+    private HomeViewHolder homeViewHolder;
+
 
     public static HomeFragment newInstance() {
         Bundle args = new Bundle();
@@ -101,28 +103,6 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
         fragment.setArguments(args);
         return fragment;
     }
-
-    /**
-     * 启动计步器服务
-     */
-    ServiceConnection conn = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            try {
-                messenger = new Messenger(service);
-                Message msg = Message.obtain(null, PedometerConstant.MSG_FROM_CLIENT);
-                msg.replyTo = mGetReplyMessenger;
-                messenger.send(msg);
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-
-        }
-    };
 
     @Override
     public int getFragmentLayout() {
@@ -174,40 +154,91 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
         recyclerView.setFocusable(false);
     }
 
-    private void setupService() {
-        Intent intent = new Intent(context, StepService.class);
-        context.bindService(intent, conn, Context.BIND_AUTO_CREATE);
-        context.startService(intent);
-    }
-
     @Override
     public void onClick(View v) {
 
     }
 
     /**
+     * 启动计步器服务
+     * 发送消息: 【MSG_FROM_CLIENT】
+     * 作用: 启动计步服务, 【MSG_FROM_CLIENT】 消息为催化剂,
+     *      通知StepService发送: 步数 + 【MSG_FROM_Server】消息
+     */
+    private void setupService() {
+        conn = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                try {
+                    messenger = new Messenger(service);
+                    Message msg = Message.obtain(null, Const.MSG_FROM_CLIENT);
+                    msg.replyTo = mGetReplyMessenger;
+                    messenger.send(msg);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+
+            }
+        };
+
+        Intent intent = new Intent(context, StepService.class);
+        context.bindService(intent, conn, Context.BIND_AUTO_CREATE);
+        context.startService(intent);
+    }
+
+    /**
      * 获取计步器数据
-     * @param msg
-     * @return
+     * 接收消息: 【MSG_FROM_SERVER】|| 【REQUEST_SERVER】
+     * if 【MSG_FROM_SERVER】: 1、接收计步服务发来的数据 -> 处理业务逻辑
+     *                        2、延时0.5秒发送【REQUEST_SERVER】
+     * if 【REQUEST_SERVER】: 发送【MSG_FROM_CLIENT】通知计步服务发送: 步数 + 【MSG_FROM_Server】消息
+     *
+     * 逻辑图:
+     *
+     *                      setupService()
+     *                      |
+     *                      |CLIENT消息
+     *                      |
+     *                      V
+     *                      |
+     *                      StepService -------<----------
+     *                      |                            |
+     *                      |                            |
+     *                      |SERVER                      | 延时 0.5 s
+     *                      | +                          | +
+     *                      |step                        | CLIENT消息
+     *                      |                            |
+     *                      V                            |
+     *                      |                            |
+     *                      Home(handleMessage) ---->-----
+     *                      |
+     *                      |
+     *                      步数(0.5秒获得一次数据)
+     *
+     *
      */
     @Override
     public boolean handleMessage(Message msg) {
         switch (msg.what) {
-            case PedometerConstant.MSG_FROM_SERVER:
+            case Const.MSG_FROM_SERVER:
                 // 更新首页视图
                 step = msg.getData().getInt("step");
                 if (homeViewHolder == null) {
                     homeViewHolder = (HomeViewHolder) recyclerView.findViewHolderForAdapterPosition(1);
                 } else {
-                    homeViewHolder.steps.setText(String.valueOf(step));
+                    homeViewHolder.steps.setText(""+step);
                 }
 
-                // 计步器数据: msg.getData().getInt("step")
-                delayHandler.sendEmptyMessageDelayed(PedometerConstant.REQUEST_SERVER,TIME_INTERVAL);
+                // 延时0.5s 发送 REQUEST_SERVER 消息
+                delayHandler.sendEmptyMessageDelayed(Const.REQUEST_SERVER,TIME_INTERVAL);
                 break;
-            case PedometerConstant.REQUEST_SERVER:
+            case Const.REQUEST_SERVER:
                 try {
-                    Message msg1 = Message.obtain(null, PedometerConstant.MSG_FROM_CLIENT);
+                    Message msg1 = Message.obtain(null, Const.MSG_FROM_CLIENT);
                     msg1.replyTo = mGetReplyMessenger;
                     messenger.send(msg1);
                 } catch (RemoteException e) {

@@ -15,6 +15,12 @@ public class Const {
     public static final String OBJECT_List = "object_list";
     public static final String INT = "int";
 
+    /**
+     * 计步服务消息传递控制常量
+     */
+    public static final int MSG_FROM_CLIENT = 0;
+    public static final int MSG_FROM_SERVER = 1;
+    public static final int REQUEST_SERVER = 2;
 
     /**
      * SharedPreferences

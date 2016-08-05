@@ -30,22 +30,21 @@ import me.yokeyword.fragmentation.SupportFragment;
  * MainActivity 五个tab页面的父节点
  */
 public class MainFragment extends BaseFragment {
-    private static final int REQ_MSG = 10;
-
+    protected SharedPreferences sharedPre;
+    // tab相关
+    private TabBar mTabBar;
+    private SupportFragment[] mFragments = new SupportFragment[5];
+    private int currentPosition;
     public static final int HOME = 0;
     public static final int HEALTHY = 1;
     public static final int COMMUNITY = 2;
     public static final int CART = 3;
     public static final int ME = 4;
 
-    public SupportFragment[] mFragments = new SupportFragment[5];
 
-    private TabBar mTabBar;
-    private int currentPosition;
-
-    protected SharedPreferences sharedPre;
-
-
+    /**
+     * 实例化fragment
+     */
     public static MainFragment newInstance() {
         Bundle args = new Bundle();
 
