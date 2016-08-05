@@ -13,6 +13,8 @@ public class Const {
     public static final String BUNDLE = "bundle";
     public static final String OBJECT = "object";
     public static final String OBJECT_List = "object_list";
+    public static final String INT = "int";
+
 
     /**
      * SharedPreferences
@@ -22,6 +24,7 @@ public class Const {
     public static final String USER_ID = "user_id";
     public static final String USER_PHONE = "user_phone";
     public static final String USER_TOKEN = "user_token";
+    public static final String USER_NICKNAME = "user_nickname";
     public static final String USER_AVATAR = "user_avatar";
     // Address
     public static final String ADDRESS_AREA = "address_area";

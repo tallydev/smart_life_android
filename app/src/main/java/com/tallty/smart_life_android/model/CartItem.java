@@ -59,6 +59,8 @@ public class CartItem implements Serializable{
     @Expose
     private boolean checked;
 
+    private int thumbID;
+
 
     public int getId() {
         return id;
@@ -138,5 +140,13 @@ public class CartItem implements Serializable{
 
     public void setAmount(float amount) {
         this.amount = amount;
+    }
+
+    public int getThumbID() {
+        return thumbID;
+    }
+
+    public void setThumbID(int thumbID) {
+        this.thumbID = thumbID;
     }
 }

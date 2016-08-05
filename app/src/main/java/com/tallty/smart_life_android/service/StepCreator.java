@@ -13,6 +13,7 @@ import java.util.TimerTask;
 
 /**
  * Created by kang on 16/6/25.
+ * 传感器监听
  */
 public class StepCreator implements SensorEventListener{
     //存放三轴数据
@@ -71,6 +72,9 @@ public class StepCreator implements SensorEventListener{
 
     OnSensorChangeListener onSensorChangeListener;
 
+    /**
+     * 接口: 计步器开始改变
+     */
     public interface OnSensorChangeListener {
         void onChange();
     }
@@ -136,6 +140,9 @@ public class StepCreator implements SensorEventListener{
         gravityOld = values;
     }
 
+    /**
+     * 更新界面
+     */
     private void preStep() {
         if (CountTimeState == 0) {
             // 开启计时器

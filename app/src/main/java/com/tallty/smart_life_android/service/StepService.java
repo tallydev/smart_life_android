@@ -40,7 +40,7 @@ import java.util.List;
 public class StepService extends Service implements SensorEventListener {
     //默认为30秒进行一次存储
     private static int duration = 30000;
-    private static String CURRENTDATE = "";
+    private static String CURRENT_DATE = "";
     private SensorManager sensorManager;
     private StepCreator stepDetector;
     private NotificationManager nm;
@@ -81,7 +81,7 @@ public class StepService extends Service implements SensorEventListener {
     @Override
     public void onCreate() {
         super.onCreate();
-        CURRENTDATE = getTodayDate();
+        CURRENT_DATE = getTodayDate();
         initBroadcastReceiver();
         new Thread(new Runnable() {
             public void run() {
@@ -104,7 +104,7 @@ public class StepService extends Service implements SensorEventListener {
     private void initTodayData() {
         DbUtils.createDb(this, "smart_life");
         //获取当天的数据，用于展示
-        List<Step> list = DbUtils.getQueryByWhere(Step.class, "today", new String[]{CURRENTDATE});
+        List<Step> list = DbUtils.getQueryByWhere(Step.class, "today", new String[]{CURRENT_DATE});
         if (list.size() == 0 || list.isEmpty()) {
             StepCreator.CURRENT_SETP = 0;
         } else if (list.size() == 1) {
@@ -302,10 +302,10 @@ public class StepService extends Service implements SensorEventListener {
     private void save() {
         int tempStep = StepCreator.CURRENT_SETP;
 
-        List<Step> list = DbUtils.getQueryByWhere(Step.class, "today", new String[]{CURRENTDATE});
+        List<Step> list = DbUtils.getQueryByWhere(Step.class, "today", new String[]{CURRENT_DATE});
         if (list.size() == 0 || list.isEmpty()) {
             Step data = new Step();
-            data.setToday(CURRENTDATE);
+            data.setToday(CURRENT_DATE);
             data.setStep(tempStep + "");
             DbUtils.insert(data);
         } else if (list.size() == 1) {

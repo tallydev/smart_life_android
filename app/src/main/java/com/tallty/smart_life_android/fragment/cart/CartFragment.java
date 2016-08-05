@@ -13,6 +13,8 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.orhanobut.logger.Logger;
+import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.CartListAdapter;
 import com.tallty.smart_life_android.base.BaseLazyMainFragment;
@@ -20,9 +22,11 @@ import com.tallty.smart_life_android.custom.RecyclerVIewItemTouchListener;
 import com.tallty.smart_life_android.event.CartUpdateItem;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.event.TabSelectedEvent;
+import com.tallty.smart_life_android.event.TransferDataEvent;
 import com.tallty.smart_life_android.fragment.MainFragment;
 import com.tallty.smart_life_android.model.CartItem;
 import com.tallty.smart_life_android.model.CartList;
+import com.tallty.smart_life_android.model.Product;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -135,34 +139,37 @@ public class CartFragment extends BaseLazyMainFragment {
     }
 
     private void getCartList() {
-        showProgress(showString(R.string.progress_normal));
-        // 获取网络数据
-        mApp.headerEngine().getCartList(1, 10).enqueue(new Callback<CartList>() {
-            @Override
-            public void onResponse(Call<CartList> call, Response<CartList> response) {
-                if (response.code() == 200) {
-                    CartList cartList = response.body();
-                    cartItems = cartList.getCartItems();
-                    // 设置业务参数Checked
-                    for (CartItem item : cartItems) {
-                        item.setChecked(false);
-                    }
+        // TODO: 16/8/5 LimitSailShow传来的死数据,待处理
+//        showProgress(showString(R.string.progress_normal));
+//        // 获取网络数据
+//        mApp.headerEngine().getCartList(1, 10).enqueue(new Callback<CartList>() {
+//            @Override
+//            public void onResponse(Call<CartList> call, Response<CartList> response) {
+//                if (response.code() == 200) {
+//                    CartList cartList = response.body();
+//                    cartItems = cartList.getCartItems();
+//                    // 设置业务参数Checked
+//                    for (CartItem item : cartItems) {
+//                        item.setChecked(false);
+//                    }
+//
+//                    processRecyclerVIew();
+//
+//                    hideProgress();
+//                } else {
+//                    hideProgress();
+//                    showToast(showString(R.string.response_error));
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<CartList> call, Throwable t) {
+//                hideProgress();
+//                showToast(showString(R.string.network_error));
+//            }
+//        });
 
-                    processRecyclerVIew();
-
-                    hideProgress();
-                } else {
-                    hideProgress();
-                    showToast(showString(R.string.response_error));
-                }
-            }
-
-            @Override
-            public void onFailure(Call<CartList> call, Throwable t) {
-                hideProgress();
-                showToast(showString(R.string.network_error));
-            }
-        });
+        processRecyclerVIew();
     }
 
     private void processRecyclerVIew(){
@@ -253,5 +260,32 @@ public class CartFragment extends BaseLazyMainFragment {
     public void onDestroyView() {
         super.onDestroyView();
         EventBus.getDefault().unregister(this);
+    }
+
+    /**
+     * 订阅事件: TransferDataEvent
+     * 接收商品详情加入购物车事件
+     */
+    @Subscribe
+    public void onTransferDataEvent(TransferDataEvent event) {
+        if (event.tag.equals("LimitSailShow")) {
+            Bundle bundle = event.bundle;
+            int count = bundle.getInt(Const.INT);
+            Product product = (Product) bundle.getSerializable(Const.OBJECT);
+
+            CartItem cartItem = new CartItem();
+            cartItem.setChecked(false);
+            // TODO: 16/8/5 记得修改,
+            cartItem.setThumbID(product.getThumbId());
+            cartItem.setPrice(product.getPrice());
+            cartItem.setCount(count);
+            cartItem.setName(product.getTitle());
+
+            cartItems.add(cartItem);
+
+            adapter.notifyDataSetChanged();
+
+            Logger.d("接受数据");
+        }
     }
 }

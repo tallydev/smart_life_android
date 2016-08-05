@@ -159,9 +159,9 @@ public class ProfileFragment extends BaseBackFragment {
         super.onFragmentPop();
         // 给<账户管理>传递对象
         Bundle bundle = new Bundle();
-        bundle.putString("user_avatar", values.get(0));
-        bundle.putString("user_nickname", values.get(1));
-        EventBus.getDefault().post(new TransferDataEvent(bundle));
+        bundle.putString(Const.USER_AVATAR, values.get(0));
+        bundle.putString(Const.USER_NICKNAME, values.get(1));
+        EventBus.getDefault().post(new TransferDataEvent(bundle, "ProfileFragment"));
     }
 
     @Override

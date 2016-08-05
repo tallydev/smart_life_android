@@ -35,13 +35,15 @@
     <TextView
         android:id="@+id/cart_list_name"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:layout_marginTop="20dp"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@id/cart_list_photo"
         android:layout_toLeftOf="@id/cart_list_price"
         android:textColor="@color/global_text"
         android:maxLines="2"
+        android:text="鸡蛋// TODO: 16/8/5 记得修改, // TODO: 16/8/5 记得修改, // TODO: 16/8/5 记得修改, "
+
         android:ellipsize="end"
         android:textSize="@dimen/text_12"/>
 
@@ -72,7 +74,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="15dp"
         android:layout_toRightOf="@+id/cart_list_photo"
         android:paddingLeft="5dp"
         android:paddingRight="5dp">

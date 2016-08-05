@@ -15,13 +15,13 @@ import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.event.SwitchTabFragment;
+import com.tallty.smart_life_android.event.TransferDataEvent;
 import com.tallty.smart_life_android.fragment.MainFragment;
 import com.tallty.smart_life_android.holder.BannerHolderView;
 import com.tallty.smart_life_android.model.Product;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -29,6 +29,7 @@ import java.util.List;
  * 首页-限量销售-商品详情
  */
 public class LimitSailShow extends BaseBackFragment implements OnItemClickListener{
+    private static final String TAG = "LimitSailShow";
     // 商品
     private Product product;
     // 修改数量
@@ -124,7 +125,15 @@ public class LimitSailShow extends BaseBackFragment implements OnItemClickListen
     }
 
     private void addProductToCart() {
+        // TODO: 16/8/5 暂时使用事件传递, 后来要调用接口
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(Const.OBJECT, product);
+        bundle.putInt(Const.INT, count);
+        EventBus.getDefault().post(new TransferDataEvent(bundle, "LimitSailShow"));
 
+        toolbar.getMenu().clear();
+        toolbar.inflateMenu(R.menu.cart_has);
+        showToast("加入成功");
     }
 
     /**

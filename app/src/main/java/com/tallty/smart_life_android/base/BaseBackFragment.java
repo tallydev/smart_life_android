@@ -132,7 +132,7 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
                 onFragmentPop();
             }
         });
-        initToolbarMenu(toolbar);
+//        initToolbarMenu(toolbar);
     }
 
     /**

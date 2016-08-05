@@ -10,8 +10,10 @@ import android.os.Bundle;
 
 public class TransferDataEvent {
     public Bundle bundle;
+    public String tag;
 
-    public TransferDataEvent(Bundle bundle) {
+    public TransferDataEvent(Bundle bundle, String tag) {
         this.bundle = bundle;
+        this.tag = tag;
     }
 }

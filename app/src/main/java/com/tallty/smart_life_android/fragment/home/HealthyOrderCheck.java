@@ -94,7 +94,7 @@ public class HealthyOrderCheck extends BaseBackFragment {
     @Subscribe
     public void onConfirmDialogEvnet(ConfirmDialogEvent event) {
         event.dialog.dismiss();
-        showToast("确认了");
+        showToast("预约成功");
     }
 
     @Override

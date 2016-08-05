@@ -238,10 +238,12 @@ public class MeFragment extends BaseLazyMainFragment {
     @Subscribe
     public void onTransferDataEvent(TransferDataEvent event) {
         // 更新UI
-        Glide.with(context).load(event.bundle.getString("user_avatar"))
-                .placeholder(R.drawable.user_photo)
-                .transform(new GlideCircleTransform(context)).into(photo);
-        name.setText(event.bundle.getString("user_nickname"));
+        if (event.tag.equals("ProfileFragment")) {
+            Glide.with(context).load(event.bundle.getString("user_avatar"))
+                    .placeholder(R.drawable.user_photo)
+                    .transform(new GlideCircleTransform(context)).into(photo);
+            name.setText(event.bundle.getString("user_nickname"));
+        }
     }
 
     @Override

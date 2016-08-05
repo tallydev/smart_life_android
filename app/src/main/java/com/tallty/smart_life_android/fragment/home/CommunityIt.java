@@ -105,7 +105,7 @@ public class CommunityIt extends BaseBackFragment {
     @Subscribe
     public void onConfirmDialogEvnet(ConfirmDialogEvent event) {
         event.dialog.dismiss();
-        showToast("确认了"+event.caller);
+        showToast("预约成功");
     }
 
     @Override
