@@ -4,12 +4,11 @@ package com.tallty.smart_life_android.fragment.home;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.db.chart.Tools;
 import com.db.chart.model.LineSet;
 import com.db.chart.view.AxisController;
@@ -19,8 +18,20 @@ import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.HomeSportRankAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.custom.MyRecyclerView;
+import com.tallty.smart_life_android.model.SportData;
+import com.tallty.smart_life_android.model.SportDetail;
+import com.tallty.smart_life_android.model.SportInfo;
+import com.tallty.smart_life_android.model.SportRank;
+import com.tallty.smart_life_android.model.SportRankItem;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * 首页-健身达人-更多数据
@@ -32,46 +43,31 @@ public class SportMoreData extends BaseBackFragment {
     private TextView tab_week;
     private TextView tab_month;
     private TextView tab_year;
-    private LineChartView chart;
+    private LineChartView chartDay;
+    private LineChartView chartWeek;
+    private LineChartView chartMonth;
+    private LineChartView chartYear;
+    private TextView now_step;
+    private TextView avg_step;
+    private TextView now_time;
+    private TextView total_step;
+    private TextView rank_percent;
+    // 列表
     private MyRecyclerView recyclerView;
-    // 图表数据
-    private String[] label_one = {"8:00","9:00","10:00","11:00","12:00","13:00"};
-    private float[] data_one = {123f,160f,90f,100f,140f,100f};
-    private String[] label_two = {"周一","周二","周三","周四","周五","周六"};
-    private float[] data_two = {32f,64f,45f,78f,56f,90f};
-    private String[] label_three = {"一月","二月","三月","四月","五月","六月"};
-    private float[] data_three = {10f,15f,9f,13f,14f,8f};
-    private String[] label_four = {"2014年","2015年","2016年"};
-    private float[] data_four = {60f,100f,50f};
-    // 列表数据
-    private ArrayList<String> urls = new ArrayList<String>() {
-        {
-            add("http://sc.admin5.com/uploads/allimg/100210/113629E45-2.png");
-            add("http://img0.pconline.com.cn/pconline/1312/27/4072897_02_thumb.gif");
-            add("http://img0.pconline.com.cn/pconline/1312/27/4072897_03_thumb.gif");
-            add("http://img0.pconline.com.cn/pconline/1312/27/4072897_04_thumb.gif");
-        }
-    };
-    private ArrayList<String> names = new ArrayList<String>(){
-        {
-            add("Mr.chen");add("Mr.zhang");add("Mr.wang");add("Mr.sun");
-        }
-    };
-    private ArrayList<Integer> numbers = new ArrayList<Integer>() {
-        {
-            add(8000);add(4000);add(8320);add(6500);
-        }
-    };
-    private ArrayList<Integer> states = new ArrayList<Integer>() {
-        {
-            add(2);add(1);add(0);add(1);
-        }
-    };
-    private ArrayList<Integer> praise_counts = new ArrayList<Integer>() {
-        {
-            add(1);add(2);add(0);add(4);
-        }
-    };
+    private HomeSportRankAdapter adapter;
+    // 切换加载控制
+    private boolean isLoadDay = false;
+    private boolean isLoadWeek = false;
+    private boolean isLoadMonth = false;
+    private boolean isLoadYear = false;
+    // 获取数据
+    private SportInfo dayInfo;
+    private SportInfo weekInfo;
+    private SportInfo monthInfo;
+    private SportInfo yearInfo;
+    private ArrayList<SportDetail> sportChartData = new ArrayList<>();
+    private ArrayList<SportRankItem> sportRankItems = new ArrayList<>();
+
 
     public static SportMoreData newInstance(String title) {
         Bundle args = new Bundle();
@@ -104,7 +100,18 @@ public class SportMoreData extends BaseBackFragment {
         tab_week = getViewById(R.id.tab_week);
         tab_month = getViewById(R.id.tab_month);
         tab_year = getViewById(R.id.tab_year);
-        chart = getViewById(R.id.chart_one);
+
+        chartDay = getViewById(R.id.chart_day);
+        chartWeek = getViewById(R.id.chart_week);
+        chartMonth = getViewById(R.id.chart_month);
+        chartYear = getViewById(R.id.chart_year);
+
+        now_step = getViewById(R.id.now_step);
+        avg_step = getViewById(R.id.avg_step);
+        now_time = getViewById(R.id.now_time);
+        total_step = getViewById(R.id.total_step);
+        rank_percent = getViewById(R.id.rank_percent);
+
         recyclerView = getViewById(R.id.step_rank);
     }
 
@@ -118,43 +125,208 @@ public class SportMoreData extends BaseBackFragment {
 
     @Override
     protected void afterAnimationLogic() {
-        tab_day.performClick();
-        // 初始化rank列表
-        RecyclerView.LayoutManager manager = new LinearLayoutManager(context);
-        recyclerView.setLayoutManager(manager);
-        HomeSportRankAdapter adapter = new HomeSportRankAdapter(context, urls, names, numbers, states, praise_counts);
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        adapter = new HomeSportRankAdapter(context, sportRankItems);
         recyclerView.setAdapter(adapter);
+
+        tab_day.performClick();
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tab_day:
-                chartTabReset();
-                tab_day.setSelected(true);
-                chart.setVisibility(View.VISIBLE);
-                initChart(chart, label_one, data_one, 0, 200);
+                tabSelectedTask(tab_day, chartDay, "daily", isLoadDay);
+                isLoadDay = true;
                 break;
             case R.id.tab_week:
-                chartTabReset();
-                tab_week.setSelected(true);
-                initChart(chart, label_two, data_two, 0, 120);
+                tabSelectedTask(tab_week, chartWeek, "weekly", isLoadWeek);
+                isLoadWeek = true;
                 break;
             case R.id.tab_month:
-                chartTabReset();
-                tab_month.setSelected(true);
-                initChart(chart, label_three, data_three, 0, 18);
+                tabSelectedTask(tab_month, chartMonth, "monthly", isLoadMonth);
+                isLoadMonth = true;
                 break;
             case R.id.tab_year:
-                chartTabReset();
-                tab_year.setSelected(true);
-                initChart(chart, label_four, data_four, 0, 120);
+                tabSelectedTask(tab_year, chartYear, "yearly", isLoadYear);
+                isLoadYear = true;
                 break;
         }
     }
 
-    // 设置图表数据
-    private void initChart(LineChartView chart, String[] labels, float[] datas, int min, int max) {
+    /**
+     * tab按钮点击任务
+     * @param tab
+     * @param chart
+     * @param timeLine
+     * @param isLoad
+     */
+    private void tabSelectedTask(TextView tab, LineChartView chart, String timeLine, boolean isLoad) {
+        chartTabReset();
+        tab.setSelected(true);
+        chart.setVisibility(View.VISIBLE);
+        if (isLoad) {
+            // 如果加载过,只修改统计信息,不再加载图表和rank
+            switch (timeLine) {
+                case "daily":
+                    setPersonInfo(dayInfo);
+                    break;
+                case "weekly":
+                    setPersonInfo(weekInfo);
+                    break;
+                case "monthly":
+                    setPersonInfo(monthInfo);
+                    break;
+                case "yearly":
+                    setPersonInfo(yearInfo);
+                    break;
+            }
+        } else {
+            // 如果是第一次加载,获取接口数据
+            initChartAndRank(timeLine, chart);
+        }
+
+    }
+
+    /**
+     * 初始化图表和rank
+     * @param timeLine
+     * @param chart
+     */
+    private void initChartAndRank(final String timeLine, final LineChartView chart) {
+        showProgress(showString(R.string.progress_normal));
+        // 获取时间段运动图表数据和个人统计信息
+        mApp.headerEngine().getSportsData(timeLine).enqueue(new Callback<SportData>() {
+            @Override
+            public void onResponse(Call<SportData> call, Response<SportData> response) {
+                if (response.code() == 200) {
+                    // 缓存不同时间段的个人统计信息,避免重复调用网络
+                    switch (timeLine) {
+                        case "daily":
+                            dayInfo = response.body().getSelf();
+                            break;
+                        case "weekly":
+                            weekInfo = response.body().getSelf();
+                            break;
+                        case "monthly":
+                            monthInfo = response.body().getSelf();
+                            break;
+                        case "yearly":
+                            yearInfo = response.body().getSelf();
+                            break;
+                    }
+                    // 获取图表信息
+                    sportChartData = response.body().getDetail();
+                    // 加载个人统计信息
+                    setPersonInfo(response.body().getSelf());
+                    // 加载图表
+                    if (sportChartData.isEmpty()) {
+                        // 整理每日图表数据
+                        setDayChartData(chart);
+                    } else {
+                        // 整理周、月、年图表数据
+                        setChartData(chart);
+                    }
+                    // 加载rank
+                    initRankList(timeLine);
+                } else {
+                    hideProgress();
+                    showToast(showString(R.string.response_error));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SportData> call, Throwable t) {
+                hideProgress();
+                showToast(showString(R.string.network_error));
+            }
+        });
+    }
+
+    /**
+     * 获取rank接口数据,载入rank列表
+     * @param timeLine
+     */
+    private void initRankList(String timeLine) {
+        // 获取rank数据
+        mApp.headerEngine().getSportRanks(timeLine).enqueue(new Callback<SportRank>() {
+            @Override
+            public void onResponse(Call<SportRank> call, Response<SportRank> response) {
+                if (response.code() == 200) {
+                    SportRank sportRank = response.body();
+                    sportRankItems.clear();
+                    sportRankItems = sportRank.getTop();
+                    int total_pages = sportRank.getTotal_pages();
+                    int current_page = sportRank.getCurrent_page();
+                    // 更新列表
+                    Log.i("运动", "开始更新列表");
+                    adapter.notifyDataSetChanged();
+
+                    hideProgress();
+                } else {
+                    hideProgress();
+                    showToast(showString(R.string.response_error));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SportRank> call, Throwable t) {
+                hideProgress();
+                showToast(showString(R.string.response_error));
+            }
+        });
+    }
+
+    /**
+     * 设置个人统计信息
+     */
+    private void setPersonInfo(SportInfo sportInfo) {
+        // 当前时间
+        Date date = new Date(System.currentTimeMillis());
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
+
+        now_step.setText(sportInfo.getTodayCount()+"步");
+        avg_step.setText("平均步数: "+ sportInfo.getAvgCount());
+        now_time.setText("今天: "+sdf.format(date));
+        total_step.setText(sportInfo.getCount()+"");
+        rank_percent.setText(sportInfo.getRankPercent() * 100 + "%");
+    }
+
+    // 设置图表数据(日)
+    private void setDayChartData(LineChartView chart) {
+        // TODO: 16/8/8 整理本地步数数据显示
+        String[] labels = {"8:00","9:00","10:00","11:00","12:00","13:00"};
+        float[] counts = {123f,160f,90f,100f,140f,100f};
+        int max = 200;
+        // 载入图表
+        loadChart(chart, labels, counts, max);
+    }
+
+    // 设置图表数据(周, 月, 年)
+    private void setChartData(LineChartView chart) {
+        int max = 0;
+        String[] labels = new String[sportChartData.size()];
+        float[] counts = new float[sportChartData.size()];
+
+        for (int i = 0; i < sportChartData.size(); i++) {
+            SportDetail sportDetail = sportChartData.get(i);
+            labels[i] = sportDetail.getTag();
+            counts[i] = sportDetail.getCount();
+
+            max = sportDetail.getCount() > max ? sportDetail.getCount() : max;
+        }
+        // 载入图表
+        loadChart(chart, labels, counts, max);
+    }
+
+    /**
+     * 载入运动图表
+     * @param chart
+     * @param labels
+     * @param datas
+     * @param max
+     */
+    private void loadChart(LineChartView chart, String[] labels, float[] datas, int max) {
         chart.reset();
         LineSet dataSet = new LineSet(labels, datas);
 
@@ -164,7 +336,7 @@ public class SportMoreData extends BaseBackFragment {
                 .setThickness(4);
 
         chart.setBorderSpacing(Tools.fromDpToPx(15))
-                .setAxisBorderValues(min, max)
+                .setAxisBorderValues(0, max)
                 .setYLabels(AxisController.LabelPosition.NONE)
                 .setLabelsColor(getResources().getColor(R.color.orange))
                 .setXAxis(false)
@@ -181,5 +353,10 @@ public class SportMoreData extends BaseBackFragment {
         tab_week.setSelected(false);
         tab_month.setSelected(false);
         tab_year.setSelected(false);
+
+        chartDay.setVisibility(View.GONE);
+        chartWeek.setVisibility(View.GONE);
+        chartMonth.setVisibility(View.GONE);
+        chartYear.setVisibility(View.GONE);
     }
 }

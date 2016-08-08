@@ -2,6 +2,8 @@ package com.tallty.smart_life_android.Engine;
 
 import com.tallty.smart_life_android.model.CartList;
 import com.tallty.smart_life_android.model.ProductList;
+import com.tallty.smart_life_android.model.SportData;
+import com.tallty.smart_life_android.model.SportRank;
 import com.tallty.smart_life_android.model.Step;
 import com.tallty.smart_life_android.model.User;
 
@@ -9,8 +11,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
@@ -21,6 +21,7 @@ import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Part;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -83,6 +84,11 @@ public interface Engine {
     @POST("sports")
     Call<Step> uploadStep(@Field("sport[date]") String date, @Field("sport[count]") int count);
 
-    @GET("sports/daily")
-    Call<HashMap<String, String>> getDailySports();
+    // 基于时间线的运动统计信息
+    @GET("sports/{timeLine}")
+    Call<SportData> getSportsData(@Path("timeLine") String timeLine);
+
+    // 基于时间线的运动rank信息
+    @GET("ranks/{timeLine}")
+    Call<SportRank> getSportRanks(@Path("timeLine") String timeLine);
 }

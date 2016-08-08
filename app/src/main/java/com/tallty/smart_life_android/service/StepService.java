@@ -41,6 +41,13 @@ import java.util.List;
  * 计步服务
  * 监听器: OnSensorChangeListener
  */
+// TODO: 16/8/8 存在问题
+
+/**
+ * 1、当手机处于裤子口袋时,步数为实际步数的一半
+ * 2、当手机处于手中时,步数等于实际步数
+ * 3、当手机处于上半身口袋时,步数待测试
+ */
 public class StepService extends Service implements SensorEventListener {
     private static final String TAG = "step_service";
     //默认为30秒进行一次存储

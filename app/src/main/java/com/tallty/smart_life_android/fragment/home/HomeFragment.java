@@ -295,6 +295,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
             case Const.MSG_FROM_SERVER:
                 // 更新首页视图
                 step = msg.getData().getInt("step");
+
                 if (homeViewHolder == null) {
                     homeViewHolder = (HomeViewHolder) recyclerView.findViewHolderForAdapterPosition(1);
                 } else {

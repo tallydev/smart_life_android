@@ -82,27 +82,24 @@
                         android:textColor="@color/white"
                         android:text="步数"/>
                     <TextView
-                        android:id="@+id/step_number"
+                        android:id="@+id/now_step"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:textColor="@color/white"
-                        android:text="3467步"/>
+                        android:textColor="@color/white"/>
                     <TextView
-                        android:id="@+id/ave_step_number"
+                        android:id="@+id/avg_step"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/step_text"
-                        android:textColor="@color/white"
-                        android:text="平均步数: 6503"/>
+                        android:textColor="@color/white"/>
                     <TextView
-                        android:id="@+id/step_time"
+                        android:id="@+id/now_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:layout_below="@id/step_number"
-                        android:textColor="@color/white"
-                        android:text="今天: 15:20"/>
+                        android:layout_below="@id/now_step"
+                        android:textColor="@color/white"/>
 
                     <View
                         android:layout_width="match_parent"
@@ -112,10 +109,49 @@
                 </RelativeLayout>
                 <com.db.chart.view.LineChartView
                     xmlns:chart="http://schemas.android.com/apk/res-auto"
-                    android:id="@+id/chart_one"
+                    android:id="@+id/chart_day"
                     android:layout_width="match_parent"
                     android:layout_height="160dp"
                     android:padding="10dp"
+                    chart:chart_shadowDy="1dp"
+                    chart:chart_shadowRadius="1dp"
+                    chart:chart_shadowColor="@android:color/transparent"
+                    chart:chart_axisColor="@color/orange"
+                    chart:chart_fontSize="@dimen/text_12"
+                    chart:chart_axisBorderSpacing="1dp" />
+                <com.db.chart.view.LineChartView
+                    xmlns:chart="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/chart_week"
+                    android:layout_width="match_parent"
+                    android:layout_height="160dp"
+                    android:padding="10dp"
+                    android:visibility="gone"
+                    chart:chart_shadowDy="1dp"
+                    chart:chart_shadowRadius="1dp"
+                    chart:chart_shadowColor="@android:color/transparent"
+                    chart:chart_axisColor="@color/orange"
+                    chart:chart_fontSize="@dimen/text_12"
+                    chart:chart_axisBorderSpacing="1dp" />
+                <com.db.chart.view.LineChartView
+                    xmlns:chart="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/chart_month"
+                    android:layout_width="match_parent"
+                    android:layout_height="160dp"
+                    android:padding="10dp"
+                    android:visibility="gone"
+                    chart:chart_shadowDy="1dp"
+                    chart:chart_shadowRadius="1dp"
+                    chart:chart_shadowColor="@android:color/transparent"
+                    chart:chart_axisColor="@color/orange"
+                    chart:chart_fontSize="@dimen/text_12"
+                    chart:chart_axisBorderSpacing="1dp" />
+                <com.db.chart.view.LineChartView
+                    xmlns:chart="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/chart_year"
+                    android:layout_width="match_parent"
+                    android:layout_height="160dp"
+                    android:padding="10dp"
+                    android:visibility="gone"
                     chart:chart_shadowDy="1dp"
                     chart:chart_shadowRadius="1dp"
                     chart:chart_shadowColor="@android:color/transparent"
@@ -145,14 +181,13 @@
                     android:layout_alignParentStart="true"/>
 
                 <TextView
+                    android:id="@+id/total_step"
                     android:layout_width="wrap_content"
                     android:layout_height="28dp"
                     android:gravity="center_vertical"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_16"
-                    android:text="179094"
                     android:textStyle="bold"
-                    android:id="@+id/textView4"
                     android:layout_below="@+id/textView3"
                     android:layout_alignLeft="@+id/textView3"
                     android:layout_alignStart="@+id/textView3"/>
@@ -176,7 +211,6 @@
                     android:gravity="center_vertical"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_16"
-                    android:text="90%"
                     android:textStyle="bold"
                     android:id="@+id/rank_percent"
                     android:layout_alignParentBottom="true"
