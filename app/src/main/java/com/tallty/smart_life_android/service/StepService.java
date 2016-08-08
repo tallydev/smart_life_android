@@ -25,7 +25,6 @@ import android.os.RemoteException;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
-import com.orhanobut.logger.Logger;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.activity.MainActivity;
@@ -43,21 +42,23 @@ import java.util.List;
  * 监听器: OnSensorChangeListener
  */
 public class StepService extends Service implements SensorEventListener {
-    private static final String TAG = "Step_Service";
+    private static final String TAG = "step_service";
     //默认为30秒进行一次存储
     private static int duration = 30000;
-    private static String CURRENT_DATE = "";
     private SensorManager sensorManager;
     private StepCreator stepDetector;
     private Messenger messenger = new Messenger(new MessengerHandler());
     private BroadcastReceiver phoneStatusReceiver;
     private WakeLock mWakeLock;
     private TimeCount time;
-
-    //计步传感器类型 0-counter 1-detector
+    // 计步传感器类型 0-counter 1-detector
     private static int stepSensor = -1;
 
 
+    /**
+     * 传递步数消息
+     * 通知接收者,更新页面
+     */
     private static class MessengerHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
@@ -67,7 +68,7 @@ public class StepService extends Service implements SensorEventListener {
                         Messenger messenger = msg.replyTo;
                         Message replyMsg = Message.obtain(null, Const.MSG_FROM_SERVER);
                         Bundle bundle = new Bundle();
-                        bundle.putInt("step", StepCreator.CURRENT_SETP);
+                        bundle.putInt("step", StepCreator.CURRENT_STEP);
                         replyMsg.setData(bundle);
                         messenger.send(replyMsg);
                     } catch (RemoteException e) {
@@ -80,7 +81,9 @@ public class StepService extends Service implements SensorEventListener {
         }
     }
 
-    // 计时器
+    /**
+     * 计时器: 保存步数
+     */
     private class TimeCount extends CountDownTimer {
         TimeCount(long millisInFuture, long countDownInterval) {
             super(millisInFuture, countDownInterval);
@@ -100,12 +103,9 @@ public class StepService extends Service implements SensorEventListener {
         }
     }
 
+
     @Override
     public void onCreate() {
-        super.onCreate();
-        Logger.i("计步器服务启动成功");
-        // 当前日期
-        CURRENT_DATE = getTodayDate();
         // 注册广播接收器, 监听手机状态, 并做相应处理
         initBroadcastReceiver();
         // 启动计步器
@@ -119,26 +119,19 @@ public class StepService extends Service implements SensorEventListener {
         // 初始化今天的数据
         initTodayData();
         // 更新通知
-        updateNotification("今日步数：" + StepCreator.CURRENT_SETP + " 步");
-    }
-
-    private String getTodayDate() {
-        // TODO: 16/8/5 建议调用接口获取服务器时间,避免用户手机时间不准确造成的rank误差
-        Date date = new Date(System.currentTimeMillis());
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        return sdf.format(date);
+        updateNotification("今日步数：" + StepCreator.CURRENT_STEP + " 步");
+        Log.d(TAG, "创建了计步器服务");
     }
 
     private void initTodayData() {
         DbUtils.createDb(this, "smart_life");
+        String current_date = getTodayDate();
         //获取当天的数据，用于展示
-        List<Step> list = DbUtils.getQueryByWhere(Step.class, "today", new String[]{CURRENT_DATE});
+        List<Step> list = DbUtils.getQueryByWhere(Step.class, "date", new String[]{current_date});
         if (list.size() == 0 || list.isEmpty()) {
-            StepCreator.CURRENT_SETP = 0;
+            StepCreator.CURRENT_STEP = 0;
         } else if (list.size() == 1) {
-            StepCreator.CURRENT_SETP = Integer.parseInt(list.get(0).getStep());
-        } else {
-            Log.w(TAG, "初始化当天的步数出错！");
+            StepCreator.CURRENT_STEP = Integer.parseInt(list.get(0).getCount());
         }
     }
 
@@ -191,6 +184,7 @@ public class StepService extends Service implements SensorEventListener {
     }
 
     private void startTimeCount() {
+        Log.d(TAG, "启动了定时器");
         time = new TimeCount(duration, 1000);
         time.start();
     }
@@ -288,7 +282,7 @@ public class StepService extends Service implements SensorEventListener {
         stepDetector.setOnSensorChangeListener(new StepCreator.OnSensorChangeListener() {
                     @Override
                     public void onChange() {
-                        updateNotification("今日步数：" + StepCreator.CURRENT_SETP + " 步");
+                        updateNotification("今日步数：" + StepCreator.CURRENT_STEP + " 步");
                     }
                 });
     }
@@ -297,11 +291,11 @@ public class StepService extends Service implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent event) {
         if(stepSensor == 0){
-            StepCreator.CURRENT_SETP = (int)event.values[0];
+            StepCreator.CURRENT_STEP = (int)event.values[0];
         }else if(stepSensor == 1){
-            StepCreator.CURRENT_SETP++;
+            StepCreator.CURRENT_STEP++;
         }
-        updateNotification("今日步数：" + StepCreator.CURRENT_SETP + " 步");
+        updateNotification("今日步数：" + StepCreator.CURRENT_STEP + " 步");
     }
 
     @Override
@@ -313,21 +307,36 @@ public class StepService extends Service implements SensorEventListener {
      * 保存步数到数据库中
      */
     private void save() {
-        int tempStep = StepCreator.CURRENT_SETP;
-
-        List<Step> list = DbUtils.getQueryByWhere(Step.class, "today", new String[]{CURRENT_DATE});
+        int tempStep = StepCreator.CURRENT_STEP;
+        String current_date = getTodayDate();
+        // 保存到数据库
+        List<Step> list = DbUtils.getQueryByWhere(Step.class, "date", new String[]{current_date});
         if (list.size() == 0 || list.isEmpty()) {
+            /**
+             * 自己补充: 如果保存时,数据库没有今天的记录,说明今天已经结束,重置步数,更新通知
+             */
+            StepCreator.CURRENT_STEP = 0;
+            updateNotification("今日步数：" + StepCreator.CURRENT_STEP + " 步");
+            // 插入新的一天的步数记录
             Step data = new Step();
-            data.setToday(CURRENT_DATE);
-            data.setStep(tempStep + "");
+            data.setDate(current_date);
+            data.setCount(tempStep + "");
             DbUtils.insert(data);
+
+            Log.d(TAG, "插入"+current_date+"新步数记录,总记录数:"+DbUtils.getQueryAll(Step.class).size());
         } else if (list.size() == 1) {
             Step data = list.get(0);
-            data.setStep(tempStep + "");
+            data.setCount(tempStep + "");
             DbUtils.update(data);
-        } else {
 
+            Log.d(TAG, "更新"+current_date+"今天步数记录:"+list.get(0).getCount()+", 总记录数:"+DbUtils.getQueryAll(Step.class).size());
         }
+    }
+
+    private String getTodayDate() {
+        Date date = new Date(System.currentTimeMillis());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return sdf.format(date);
     }
 
 
@@ -339,6 +348,7 @@ public class StepService extends Service implements SensorEventListener {
         unregisterReceiver(phoneStatusReceiver);
         Intent intent = new Intent(this, StepService.class);
         startService(intent);
+        Log.d("OnDestroy", "重启了计步器服务");
         super.onDestroy();
     }
 
@@ -347,14 +357,14 @@ public class StepService extends Service implements SensorEventListener {
         return super.onUnbind(intent);
     }
 
-//    private  void unlock(){
-//        setLockPatternEnabled(android.provider.Settings.Secure.LOCK_PATTERN_ENABLED,false);
-//    }
-//
-//    private void setLockPatternEnabled(String systemSettingKey, boolean enabled) {
-//        //推荐使用
-//        android.provider.Settings.Secure.putInt(getContentResolver(), systemSettingKey,enabled ? 1 : 0);
-//    }
+    private  void unlock(){
+        setLockPatternEnabled(android.provider.Settings.Secure.LOCK_PATTERN_ENABLED,false);
+    }
+
+    private void setLockPatternEnabled(String systemSettingKey, boolean enabled) {
+        //推荐使用
+        android.provider.Settings.Secure.putInt(getContentResolver(), systemSettingKey,enabled ? 1 : 0);
+    }
 
     synchronized private PowerManager.WakeLock getLock(Context context) {
         if (mWakeLock != null) {

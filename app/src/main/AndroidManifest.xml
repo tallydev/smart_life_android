@@ -56,9 +56,8 @@
         <service
             android:name=".service.StepService"
             android:priority="1000"
-            android:process="com.base.basepedo.step">
+            android:process="com.tallty.smart_life_android.count">
             <intent-filter>
-
                 <!-- 系统启动完成后会调用 -->
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
                 <action android:name="android.intent.action.DATE_CHANGED"/>

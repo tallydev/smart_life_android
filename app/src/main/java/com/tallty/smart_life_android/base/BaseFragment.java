@@ -3,6 +3,7 @@ package com.tallty.smart_life_android.base;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.R;
 
 import me.yokeyword.fragmentation.SupportFragment;
@@ -13,7 +14,8 @@ import me.yokeyword.fragmentation.SupportFragment;
  * 使用Fragmentation开源库
  */
 public class BaseFragment extends SupportFragment {
-    private static final String TAG = "Fragmentation";
+    protected static final String TAG = "Fragmentation";
+    protected static final App mApp = App.getInstance();
 
     protected void initToolbarMenu(Toolbar toolbar) {
         toolbar.inflateMenu(R.menu.hierarchy);

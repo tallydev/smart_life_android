@@ -25,7 +25,6 @@ import com.tallty.smart_life_android.utils.ToastUtil;
  * 使用时, 直接继承此类即可
  */
 public abstract class BaseLazyMainFragment extends BaseFragment implements View.OnClickListener {
-    protected static final App mApp = App.getInstance();
     protected Context context;
     protected SharedPreferences sharedPre;
     // 状态

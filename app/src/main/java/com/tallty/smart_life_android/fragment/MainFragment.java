@@ -1,12 +1,16 @@
 package com.tallty.smart_life_android.fragment;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseFragment;
 import com.tallty.smart_life_android.custom.TabBar;
@@ -14,16 +18,23 @@ import com.tallty.smart_life_android.custom.TabBarTab;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.event.SwitchTabFragment;
 import com.tallty.smart_life_android.event.TabSelectedEvent;
+import com.tallty.smart_life_android.event.TransferDataEvent;
 import com.tallty.smart_life_android.fragment.cart.CartFragment;
 import com.tallty.smart_life_android.fragment.community.CommunityFragment;
 import com.tallty.smart_life_android.fragment.healthy.HealthyFragment;
 import com.tallty.smart_life_android.fragment.home.HomeFragment;
 import com.tallty.smart_life_android.fragment.me.MeFragment;
+import com.tallty.smart_life_android.model.Step;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.io.IOException;
+
 import me.yokeyword.fragmentation.SupportFragment;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by kang on 16/7/5.
@@ -90,7 +101,6 @@ public class MainFragment extends BaseFragment {
         EventBus.getDefault().register(this);
 
         mTabBar = (TabBar) view.findViewById(R.id.bottomBar);
-
         mTabBar
                 .addItem(new TabBarTab(_mActivity, R.mipmap.home_normal))
                 .addItem(new TabBarTab(_mActivity, R.mipmap.healthy_normal))

@@ -2,6 +2,7 @@ package com.tallty.smart_life_android.Engine;
 
 import com.tallty.smart_life_android.model.CartList;
 import com.tallty.smart_life_android.model.ProductList;
+import com.tallty.smart_life_android.model.Step;
 import com.tallty.smart_life_android.model.User;
 
 import java.util.HashMap;
@@ -75,4 +76,13 @@ public interface Engine {
     @GET("cart_items")
     Call<CartList> getCartList(@Query("page") Integer page,
                                @Query("per_page") Integer per_page);
+
+
+    // 上传运动步数
+    @FormUrlEncoded
+    @POST("sports")
+    Call<Step> uploadStep(@Field("sport[date]") String date, @Field("sport[count]") int count);
+
+    @GET("sports/daily")
+    Call<HashMap<String, String>> getDailySports();
 }

@@ -57,7 +57,7 @@ public class StepCreator implements SensorEventListener{
      * 0-准备计时   1-计时中  2-准备为正常计步计时  3-正常计步中
      */
     private int CountTimeState = 0;
-    public static int CURRENT_SETP = 0;
+    public static int CURRENT_STEP = 0;
     public static int TEMP_STEP = 0;
     private int lastStep = -1;
     // 加速计的三个维度数值
@@ -156,7 +156,7 @@ public class StepCreator implements SensorEventListener{
             TEMP_STEP++;
             Log.v(TAG, "计步中 TEMP_STEP:" + TEMP_STEP);
         } else if (CountTimeState == 3) {
-            CURRENT_SETP++;
+            CURRENT_STEP++;
             if (onSensorChangeListener != null) {
                 // 正常步数计数
                 onSensorChangeListener.onChange();
@@ -255,7 +255,7 @@ public class StepCreator implements SensorEventListener{
         public void onFinish() {
             // 如果计时器正常结束，则开始计步
             time.cancel();
-            CURRENT_SETP += TEMP_STEP;
+            CURRENT_STEP += TEMP_STEP;
             lastStep = -1;
 //            CountTimeState = 2;
             Log.v(TAG, "计时正常结束");
@@ -263,14 +263,14 @@ public class StepCreator implements SensorEventListener{
             timer = new Timer(true);
             TimerTask task = new TimerTask() {
                 public void run() {
-                    if (lastStep == CURRENT_SETP) {
+                    if (lastStep == CURRENT_STEP) {
                         timer.cancel();
                         CountTimeState = 0;
                         lastStep = -1;
                         TEMP_STEP = 0;
-                        Log.v(TAG, "停止计步：" + CURRENT_SETP);
+                        Log.v(TAG, "停止计步：" + CURRENT_STEP);
                     } else {
-                        lastStep = CURRENT_SETP;
+                        lastStep = CURRENT_STEP;
                     }
                 }
             };

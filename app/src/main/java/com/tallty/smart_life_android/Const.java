@@ -2,7 +2,7 @@ package com.tallty.smart_life_android;
 
 /**
  * Created by kang on 16/8/3.
- * 通用常量集合
+ * 通用常量集合、静态变量集合
  * (传递数据,作为key使用)
  */
 
@@ -14,6 +14,7 @@ public class Const {
     public static final String OBJECT = "object";
     public static final String OBJECT_List = "object_list";
     public static final String INT = "int";
+    public static final String STRING = "string";
 
     /**
      * 计步服务消息传递控制常量
@@ -37,7 +38,6 @@ public class Const {
     public static final String ADDRESS_DETAIL = "address_detail";
     public static final String ADDRESS_PHONE = "address_phone";
     public static final String ADDRESS_NAME = "address_name";
-
 
     /**
      * 创建Fragment

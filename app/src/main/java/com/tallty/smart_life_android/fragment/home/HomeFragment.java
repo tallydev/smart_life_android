@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -14,6 +15,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -30,15 +32,23 @@ import com.tallty.smart_life_android.event.TabSelectedEvent;
 import com.tallty.smart_life_android.fragment.MainFragment;
 import com.tallty.smart_life_android.holder.BannerHolderView;
 import com.tallty.smart_life_android.holder.HomeViewHolder;
+import com.tallty.smart_life_android.model.Step;
 import com.tallty.smart_life_android.service.StepService;
 import com.tallty.smart_life_android.utils.ToastUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by kang on 16/6/20.
@@ -47,15 +57,21 @@ import java.util.List;
 public class HomeFragment extends BaseLazyMainFragment implements OnItemClickListener, Handler.Callback{
     // 计步器相关
     private ServiceConnection conn;
-    private long TIME_INTERVAL = 500;
+    private static final int TIME_INTERVAL = 500;
     private Messenger messenger;
     private Messenger mGetReplyMessenger = new Messenger(new Handler(this));
     private Handler delayHandler;
-    private Integer step = 0;
+    private static int step = 0;
+    // 计时器: 15分钟上传步数
+    private static final int uploadStepInterval = 900000;
+    private UploadStepTimer timer;
     // 组件
-    private ConvenientBanner banner;
+    private ConvenientBanner<Integer> banner;
     private MyRecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
+    // 运动达人的ViewHolder
+    private HomeViewHolder homeViewHolder;
+
     // banner图数据
     private Integer[] imagesUrl = { R.drawable.banner_one, R.drawable.banner_two };
     // 列表数据
@@ -92,8 +108,6 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
         {R.mipmap.new_product_one},
         {R.mipmap.on_sail_one}
     };
-    // ViewHolder
-    private HomeViewHolder homeViewHolder;
 
 
     public static HomeFragment newInstance() {
@@ -131,6 +145,33 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
         setList();
         // 设置计步服务
         setupService();
+        // 第一次进入应用时, 先上传一次步数
+
+        // 设置步数上传计时器(15分钟)
+        setUploadStepTimer();
+    }
+
+
+    /**
+     * 自定义计时器
+     */
+    private class UploadStepTimer extends CountDownTimer {
+        public UploadStepTimer(long millisInFuture, long countDownInterval) {
+            super(millisInFuture, countDownInterval);
+        }
+
+        @Override
+        public void onTick(long millisUntilFinished) {
+            Log.d(TAG, ""+millisUntilFinished/1000);
+        }
+
+        @Override
+        public void onFinish() {
+            // 计时器正常结束时,取消上一个计时器,上传步数,开始新的计时器
+            timer.cancel();
+            uploadStep();
+            setUploadStepTimer();
+        }
     }
 
     // ========================业务逻辑=========================
@@ -154,9 +195,36 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
         recyclerView.setFocusable(false);
     }
 
-    @Override
-    public void onClick(View v) {
+    private void setUploadStepTimer() {
+        timer = new UploadStepTimer(uploadStepInterval, 1000);
+        timer.start();
+    }
 
+    private void uploadStep() {
+        String current_date = getTodayDate();
+        Log.d(TAG, "开始上传步数任务"+current_date+","+step);
+
+        mApp.headerEngine().uploadStep(current_date, step).enqueue(new Callback<Step>() {
+            @Override
+            public void onResponse(Call<Step> call, Response<Step> response) {
+                if (response.code() == 201) {
+                    Log.d(TAG, "上传步数成功"+response.body().getCount());
+                } else {
+                    Log.d(TAG, "上传步数失败");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Step> call, Throwable t) {
+                Log.d(TAG, "上传步数链接服务器失败");
+            }
+        });
+    }
+
+    private String getTodayDate() {
+        Date date = new Date(System.currentTimeMillis());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return sdf.format(date);
     }
 
     /**
@@ -248,6 +316,11 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
                 break;
         }
         return false;
+    }
+
+    @Override
+    public void onClick(View v) {
+
     }
 
     @Override
