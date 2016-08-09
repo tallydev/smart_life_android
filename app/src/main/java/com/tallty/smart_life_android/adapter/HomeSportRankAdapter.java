@@ -22,11 +22,12 @@ import java.util.ArrayList;
  */
 
 public class HomeSportRankAdapter extends RecyclerView.Adapter<HomeSportRankAdapter.RankViewHolder> {
-    private ArrayList<SportRankItem> sportRankItems;
+    private Context context;
+    private ArrayList<SportRankItem> sportRankItems = new ArrayList<>();
 
     private ArrayList<Integer> states;
     private ArrayList<Integer> praise_counts;
-    private Context context;
+
 
     public HomeSportRankAdapter( Context context, ArrayList<SportRankItem> sportRankItems) {
         this.context = context;
@@ -45,6 +46,7 @@ public class HomeSportRankAdapter extends RecyclerView.Adapter<HomeSportRankAdap
 
         holder.index.setText(""+item.getIndex());
         Glide.with(context).load(item.getAvatar())
+                .placeholder(R.drawable.user_default)
                 .transform(new GlideCircleTransform(context))
                 .into(holder.photo);
         holder.name.setText(item.getNickname());

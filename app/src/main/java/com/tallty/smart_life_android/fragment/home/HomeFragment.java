@@ -162,7 +162,6 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
 
         @Override
         public void onTick(long millisUntilFinished) {
-            Log.d(TAG, ""+millisUntilFinished/1000);
         }
 
         @Override

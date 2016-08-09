@@ -29,7 +29,7 @@
         android:layout_marginRight="15dp"
         android:scaleType="fitCenter"
         android:contentDescription="@string/step_rank_photo"
-        android:src="@drawable/user_photo"/>
+        android:src="@drawable/user_default"/>
 
     <TextView
         android:id="@+id/rank_name"
@@ -38,7 +38,7 @@
         android:layout_centerVertical="true"
         android:textColor="@color/global_text"
         android:textSize="@dimen/text_14"
-        android:layout_toRightOf="@+id/rank_photo"
+        android:layout_toRightOf="@id/rank_photo"
         android:text="@string/step_rank_name"/>
 
     <TextView

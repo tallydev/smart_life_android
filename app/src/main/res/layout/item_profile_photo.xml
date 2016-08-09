@@ -38,7 +38,7 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/user_photo"
+        android:src="@drawable/user_default"
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@id/indicator"
         android:layout_marginRight="16dp"/>

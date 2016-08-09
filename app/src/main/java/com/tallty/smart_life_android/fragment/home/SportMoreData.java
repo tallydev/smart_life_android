@@ -60,13 +60,12 @@ public class SportMoreData extends BaseBackFragment {
     private boolean isLoadWeek = false;
     private boolean isLoadMonth = false;
     private boolean isLoadYear = false;
-    // 获取数据
-    private SportInfo dayInfo;
-    private SportInfo weekInfo;
-    private SportInfo monthInfo;
-    private SportInfo yearInfo;
+    // 图表数据
     private ArrayList<SportDetail> sportChartData = new ArrayList<>();
+    // rank数据
     private ArrayList<SportRankItem> sportRankItems = new ArrayList<>();
+    // 列表控制
+    private boolean isLoadRank = false;
 
 
     public static SportMoreData newInstance(String title) {
@@ -125,10 +124,6 @@ public class SportMoreData extends BaseBackFragment {
 
     @Override
     protected void afterAnimationLogic() {
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        adapter = new HomeSportRankAdapter(context, sportRankItems);
-        recyclerView.setAdapter(adapter);
-
         tab_day.performClick();
     }
 
@@ -165,27 +160,7 @@ public class SportMoreData extends BaseBackFragment {
         chartTabReset();
         tab.setSelected(true);
         chart.setVisibility(View.VISIBLE);
-        if (isLoad) {
-            // 如果加载过,只修改统计信息,不再加载图表和rank
-            switch (timeLine) {
-                case "daily":
-                    setPersonInfo(dayInfo);
-                    break;
-                case "weekly":
-                    setPersonInfo(weekInfo);
-                    break;
-                case "monthly":
-                    setPersonInfo(monthInfo);
-                    break;
-                case "yearly":
-                    setPersonInfo(yearInfo);
-                    break;
-            }
-        } else {
-            // 如果是第一次加载,获取接口数据
-            initChartAndRank(timeLine, chart);
-        }
-
+        initChartAndRank(timeLine, chart);
     }
 
     /**
@@ -200,21 +175,6 @@ public class SportMoreData extends BaseBackFragment {
             @Override
             public void onResponse(Call<SportData> call, Response<SportData> response) {
                 if (response.code() == 200) {
-                    // 缓存不同时间段的个人统计信息,避免重复调用网络
-                    switch (timeLine) {
-                        case "daily":
-                            dayInfo = response.body().getSelf();
-                            break;
-                        case "weekly":
-                            weekInfo = response.body().getSelf();
-                            break;
-                        case "monthly":
-                            monthInfo = response.body().getSelf();
-                            break;
-                        case "yearly":
-                            yearInfo = response.body().getSelf();
-                            break;
-                    }
                     // 获取图表信息
                     sportChartData = response.body().getDetail();
                     // 加载个人统计信息
@@ -255,12 +215,21 @@ public class SportMoreData extends BaseBackFragment {
                 if (response.code() == 200) {
                     SportRank sportRank = response.body();
                     sportRankItems.clear();
-                    sportRankItems = sportRank.getTop();
+                    sportRankItems.addAll(sportRank.getTop());
+
                     int total_pages = sportRank.getTotal_pages();
                     int current_page = sportRank.getCurrent_page();
                     // 更新列表
-                    Log.i("运动", "开始更新列表");
-                    adapter.notifyDataSetChanged();
+
+                    if (isLoadRank) {
+                        // 以后采取更新列表
+                        Log.d("运动", "开始更新列表");
+                        adapter.notifyDataSetChanged();
+                    } else {
+                        // 第一次初始化列表
+                        setRankList(sportRankItems);
+                        isLoadRank = true;
+                    }
 
                     hideProgress();
                 } else {
@@ -278,6 +247,16 @@ public class SportMoreData extends BaseBackFragment {
     }
 
     /**
+     * 操作列表
+     */
+    private void setRankList(ArrayList<SportRankItem> sportRankItems) {
+        Log.d("运动", "初始化列表");
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        adapter = new HomeSportRankAdapter(context, sportRankItems);
+        recyclerView.setAdapter(adapter);
+    }
+
+    /**
      * 设置个人统计信息
      */
     private void setPersonInfo(SportInfo sportInfo) {
@@ -285,11 +264,13 @@ public class SportMoreData extends BaseBackFragment {
         Date date = new Date(System.currentTimeMillis());
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
 
-        now_step.setText(sportInfo.getTodayCount()+"步");
-        avg_step.setText("平均步数: "+ sportInfo.getAvgCount());
-        now_time.setText("今天: "+sdf.format(date));
-        total_step.setText(sportInfo.getCount()+"");
-        rank_percent.setText(sportInfo.getRankPercent() * 100 + "%");
+        if (sportInfo != null) {
+            now_step.setText(sportInfo.getTodayCount()+"步");
+            avg_step.setText("平均步数: "+ sportInfo.getAvgCount());
+            now_time.setText("今天: "+sdf.format(date));
+            total_step.setText(sportInfo.getCount()+"");
+            rank_percent.setText(sportInfo.getRankPercent() * 100 + "%");
+        }
     }
 
     // 设置图表数据(日)

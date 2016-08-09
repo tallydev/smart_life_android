@@ -130,7 +130,7 @@ public class MeFragment extends BaseLazyMainFragment {
                 if (response.code() == 200) {
                     profile.setClickable(true);
                     Glide.with(context).load(user.getAvatar())
-                            .placeholder(R.drawable.user_photo)
+                            .placeholder(R.drawable.user_default)
                             .transform(new GlideCircleTransform(context)).into(photo);
                     name.setText(user.getNickname());
                 } else {
@@ -240,7 +240,7 @@ public class MeFragment extends BaseLazyMainFragment {
         // 更新UI
         if (event.tag.equals("ProfileFragment")) {
             Glide.with(context).load(event.bundle.getString("user_avatar"))
-                    .placeholder(R.drawable.user_photo)
+                    .placeholder(R.drawable.user_default)
                     .transform(new GlideCircleTransform(context)).into(photo);
             name.setText(event.bundle.getString("user_nickname"));
         }
