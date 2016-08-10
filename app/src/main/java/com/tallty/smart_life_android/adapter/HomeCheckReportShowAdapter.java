@@ -10,8 +10,10 @@ import android.widget.TextView;
 
 import com.joanzapata.iconify.widget.IconTextView;
 import com.tallty.smart_life_android.R;
+import com.tallty.smart_life_android.model.ReportShowItem;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by kang on 16/7/13.
@@ -19,16 +21,11 @@ import java.util.ArrayList;
  */
 public class HomeCheckReportShowAdapter extends RecyclerView.Adapter<HomeCheckReportShowAdapter.CheckReportShowViewHolder> {
     private Context context;
-    private ArrayList<String> dates;
-    private ArrayList<Float> results;
-    private ArrayList<Integer> status;
+    private List<ReportShowItem> items;
 
-    public HomeCheckReportShowAdapter(Context context, ArrayList<String> dates,
-                                  ArrayList<Float> results, ArrayList<Integer> status) {
+    public HomeCheckReportShowAdapter(Context context, List<ReportShowItem> items) {
         this.context = context;
-        this.dates = dates;
-        this.results = results;
-        this.status = status;
+        this.items = items;
     }
 
     @Override
@@ -39,11 +36,18 @@ public class HomeCheckReportShowAdapter extends RecyclerView.Adapter<HomeCheckRe
 
     @Override
     public void onBindViewHolder(CheckReportShowViewHolder holder, int position) {
-        holder.date.setText(dates.get(position));
-        holder.result.setText(results.get(position).toString());
-        if (status.get(position) == -1) {
+        ReportShowItem item = items.get(position);
+
+        holder.date.setText(item.getDate());
+        if (item.getValue() == 0.0) {
+            holder.result.setText("——");
+        } else {
+            holder.result.setText(item.getValue()+"");
+        }
+
+        if ("low".equals(item.getState())) {
             holder.status.setText("{fa-caret-down}");
-        } else if (status.get(position) == 1) {
+        } else if ("high".equals(item.getState())) {
             holder.status.setText("{fa-caret-up}");
         }
         if (position % 2 != 0) {
@@ -53,7 +57,7 @@ public class HomeCheckReportShowAdapter extends RecyclerView.Adapter<HomeCheckRe
 
     @Override
     public int getItemCount() {
-        return dates.size();
+        return items.size();
     }
 
     class CheckReportShowViewHolder extends RecyclerView.ViewHolder {

@@ -40,7 +40,11 @@ public class HomeCheckReportAdapter extends RecyclerView.Adapter<HomeCheckReport
         //  设置标签,方便点击时获取
         holder.itemView.setTag(report.getAlias());
         holder.project.setText(report.getAlias());
-        holder.result.setText(report.getValue()+"");
+        if (report.getValue() == 0.0) {
+            holder.result.setText("——");
+        } else {
+            holder.result.setText(report.getValue()+"");
+        }
         holder.range.setText(report.getHint());
         // 高低
         if (report.getState().equals("low")) {

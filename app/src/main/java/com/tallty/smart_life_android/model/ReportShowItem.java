@@ -7,21 +7,13 @@ import java.io.Serializable;
 
 /**
  * Created by kang on 16/8/10.
- * 健康报告-item
+ * 健康报告-单项历史数据-item
  */
 
-public class Report implements Serializable {
-    @SerializedName ("name")
+public class ReportShowItem implements Serializable {
+    @SerializedName ("date")
     @Expose
-    private String name;
-
-    @SerializedName("alias")
-    @Expose
-    private String alias;
-
-    @SerializedName("hint")
-    @Expose
-    private String hint;
+    private String date;
 
     @SerializedName("value")
     @Expose
@@ -31,30 +23,12 @@ public class Report implements Serializable {
     @Expose
     private String state;
 
-
-
-    public String getName() {
-        return name;
+    public String getDate() {
+        return date;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getAlias() {
-        return alias;
-    }
-
-    public void setAlias(String alias) {
-        this.alias = alias;
-    }
-
-    public String getHint() {
-        return hint;
-    }
-
-    public void setHint(String hint) {
-        this.hint = hint;
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public float getValue() {

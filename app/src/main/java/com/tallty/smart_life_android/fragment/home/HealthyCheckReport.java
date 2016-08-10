@@ -112,7 +112,7 @@ public class HealthyCheckReport extends BaseBackFragment {
         myRecyclerView.addOnItemTouchListener(new RecyclerVIewItemTouchListener(myRecyclerView) {
             @Override
             public void onItemClick(RecyclerView.ViewHolder vh, int position) {
-                start(HealthyCheckReportShow.newInstance(vh.itemView.getTag().toString()));
+                start(HealthyCheckReportShow.newInstance(reports.get(position)));
             }
 
             @Override

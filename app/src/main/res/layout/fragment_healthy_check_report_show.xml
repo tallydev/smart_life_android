@@ -29,7 +29,8 @@
                     xmlns:chart="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/check_line_chart"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="160dp"
+                    android:layout_marginTop="40dp"
                     android:padding="10dp"
                     chart:chart_shadowDy="1dp"
                     chart:chart_shadowRadius="1dp"
@@ -41,11 +42,18 @@
                     android:id="@+id/chart_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginLeft="16dp"
-                    android:textSize="@dimen/text_18"
+                    android:textSize="@dimen/text_16"
                     android:textColor="@color/white"
                     android:text="BMI"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/alpha_white"
+                    android:layout_marginTop="38dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"/>
             </FrameLayout>
 
             <LinearLayout
