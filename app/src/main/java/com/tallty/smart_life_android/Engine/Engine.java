@@ -1,5 +1,7 @@
 package com.tallty.smart_life_android.Engine;
 
+import com.tallty.smart_life_android.model.Appointment;
+import com.tallty.smart_life_android.model.AppointmentList;
 import com.tallty.smart_life_android.model.CartList;
 import com.tallty.smart_life_android.model.ProductList;
 import com.tallty.smart_life_android.model.SportData;
@@ -70,14 +72,14 @@ public interface Engine {
     Call<ProductList> getProductList(@Query("page") Integer page,
                                      @Query("per_page") Integer per_page);
 
-    // 添加商品到购物车
-
+    // *********************************************************************************************
 
     // 获取购物车列表
     @GET("cart_items")
     Call<CartList> getCartList(@Query("page") Integer page,
                                @Query("per_page") Integer per_page);
 
+    // *********************************************************************************************
 
     // 上传运动步数
     @FormUrlEncoded
@@ -91,4 +93,17 @@ public interface Engine {
     // 基于时间线的运动rank信息
     @GET("ranks/{timeLine}")
     Call<SportRank> getSportRanks(@Path("timeLine") String timeLine);
+
+    // *********************************************************************************************
+
+    // 提交预约
+    @FormUrlEncoded
+    @POST("appointments")
+    Call<Appointment> submitAppointment(@Field("appointment[type]") String type,
+                                        @Field("appointment[count]") int count);
+
+    // 预约列表
+    @GET("appointments")
+    Call<AppointmentList> getAppointments(@Query("page") int page,
+                                          @Query("per_page") int per_page);
 }

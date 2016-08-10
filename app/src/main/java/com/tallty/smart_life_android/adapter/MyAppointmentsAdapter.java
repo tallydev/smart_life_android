@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.model.Appointment;
 
@@ -37,8 +38,8 @@ public class MyAppointmentsAdapter extends RecyclerView.Adapter<MyAppointmentsAd
     public void onBindViewHolder(MyAppointmentsViewHolder holder, int position) {
         Appointment appointment = appointments.get(position);
         holder.dateTime.setText("预约时间: "+appointment.getDate());
-        holder.content.setText("预约内容: "+appointment.getContent());
-        holder.state.setText(appointment.getState());
+        holder.content.setText("预约内容: "+ Const.APPOINTMENT_TYPES.get(appointment.getAppointmentType()));
+        holder.state.setText(appointment.getStateAlias());
     }
 
     @Override

@@ -14,16 +14,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.orhanobut.logger.Logger;
 import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.R;
+import com.tallty.smart_life_android.model.Appointment;
 import com.tallty.smart_life_android.utils.SnackbarUtil;
 import com.tallty.smart_life_android.utils.ToastUtil;
 
-import org.greenrobot.eventbus.EventBus;
+import java.io.IOException;
 
 import me.yokeyword.fragmentation.SwipeBackLayout;
 import me.yokeyword.fragmentation_swipeback.SwipeBackFragment;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by kang on 16/6/21.
@@ -45,6 +48,8 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
     protected static final int REQ_CODE = 0;
     protected static final String RESULT_DATA = "data";
     protected static final String RESULT_POSITION = "position";
+    // 接口
+    private OnAppointListener onAppointListener;
 
 
     @Override
@@ -101,9 +106,8 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
         });
     }
 
-    // fragment 退出时调用(滑动退出,点击返回退出)
+    // fragment 添加退出时的逻辑 (滑动退出,点击返回退出)
     protected void onFragmentPop() {}
-
     // 获取布局文件id
     public abstract int getFragmentLayout();
     // 处理toolbar
@@ -115,6 +119,15 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
     // 转场动画完成后执行(可选)(耗时的逻辑)
     protected abstract void afterAnimationLogic();
 
+    // ========================回调接口==============================
+
+    public interface OnAppointListener {
+        void onSuccess(Appointment appointment);
+        void onFail(String errorMsg);
+        void onError();
+    }
+
+    // ========================通用逻辑==============================
 
     /**
      * 设置toolbar的返回按钮
@@ -132,7 +145,8 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
                 onFragmentPop();
             }
         });
-//        initToolbarMenu(toolbar);
+        // 调试使用
+        // initToolbarMenu(toolbar);
     }
 
     /**
@@ -164,6 +178,41 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
         return true;
     }
 
+    /**
+     * 通用预约
+     */
+    protected void submitAppointmentListener(String type, int count, OnAppointListener listener) {
+        this.onAppointListener = listener;
+
+        showProgress(showString(R.string.progress_normal));
+        mApp.headerEngine().submitAppointment(type, count).enqueue(new Callback<Appointment>() {
+            @Override
+            public void onResponse(Call<Appointment> call, Response<Appointment> response) {
+                if (201 == response.code()) {
+                    onAppointListener.onSuccess(response.body());
+                    hideProgress();
+                } else {
+                    try {
+                        onAppointListener.onFail(response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    hideProgress();
+                    showToast(showString(R.string.response_error));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Appointment> call, Throwable t) {
+                onAppointListener.onError();
+                hideProgress();
+                showToast(showString(R.string.network_error));
+            }
+        });
+    }
+
+
+    // ===========================工具方法============================
     /**
      * 全局查找View
      */

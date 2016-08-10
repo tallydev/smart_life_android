@@ -30,7 +30,7 @@ public class Appointment implements Serializable {
 
     @SerializedName("appointment_type")
     @Expose
-    private String content;
+    private String appointmentType;
 
     @SerializedName("date")
     @Expose
@@ -39,6 +39,10 @@ public class Appointment implements Serializable {
     @SerializedName("state")
     @Expose
     private String state;
+
+    @SerializedName("state_alias")
+    @Expose
+    private String stateAlias;
 
 
     public int getId() {
@@ -65,12 +69,12 @@ public class Appointment implements Serializable {
         this.count = count;
     }
 
-    public String getContent() {
-        return content;
+    public String getAppointmentType() {
+        return appointmentType;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setAppointmentType(String appointmentType) {
+        this.appointmentType = appointmentType;
     }
 
     public String getDate() {
@@ -87,5 +91,13 @@ public class Appointment implements Serializable {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public String getStateAlias() {
+        return stateAlias;
+    }
+
+    public void setStateAlias(String stateAlias) {
+        this.stateAlias = stateAlias;
     }
 }

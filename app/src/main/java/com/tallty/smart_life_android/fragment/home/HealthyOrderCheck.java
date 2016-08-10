@@ -14,6 +14,7 @@ import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.event.ConfirmDialogEvent;
 import com.tallty.smart_life_android.fragment.Pop.HintDialogFragment;
+import com.tallty.smart_life_android.model.Appointment;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -91,10 +92,30 @@ public class HealthyOrderCheck extends BaseBackFragment {
         }
     }
 
+    /**
+     * 接收事件
+     * @param event
+     */
     @Subscribe
     public void onConfirmDialogEvnet(ConfirmDialogEvent event) {
         event.dialog.dismiss();
-        showToast("预约成功");
+
+        submitAppointmentListener("ZHJK", 1, new OnAppointListener() {
+            @Override
+            public void onSuccess(Appointment appointment) {
+                showToast(showString(R.string.appoint_success));
+            }
+
+            @Override
+            public void onFail(String errorMsg) {
+
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
     }
 
     @Override

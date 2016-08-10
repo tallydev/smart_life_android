@@ -1,5 +1,7 @@
 package com.tallty.smart_life_android;
 
+import java.util.HashMap;
+
 /**
  * Created by kang on 16/8/3.
  * 通用常量集合、静态变量集合
@@ -51,4 +53,20 @@ public class Const {
      */
     public static final int FROM_PROFILE = 2;
     public static final int FROM_ORDER = 3;
+
+    /**
+     * 预约相关
+     */
+    public static final HashMap<String, String> APPOINTMENT_TYPES
+            = new HashMap<String, String>(){
+        {
+            put("ZHJK", "智慧健康");
+            put("DZMY", "电子猫眼");
+            put("ITFW", "IT服务");
+            put("ITXT", "IT学堂");
+            put("SQHD", "社区活动");
+            put("XPSS", "新品上市");
+            put("ZNJJ", "智能家居");
+        }
+    };
 }

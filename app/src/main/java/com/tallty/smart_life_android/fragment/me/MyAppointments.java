@@ -22,18 +22,17 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 /**
  * 个人中心-我的预约
  */
 public class MyAppointments extends BaseBackFragment {
     private RecyclerView recyclerView;
     private MyAppointmentsAdapter adapter;
-    // 临时数据
-    private String[] date = {"2016年7月1日", "2016年7月2日"};
-    private String[] content = {"IT学堂", "社区活动"};
-    private String[] state = {"未接受", "已接受"};
     // 数据
-    private AppointmentList appointmentList = new AppointmentList();
     private List<Appointment> appointments = new ArrayList<>();
 
     public static MyAppointments newInstance() {
@@ -76,18 +75,30 @@ public class MyAppointments extends BaseBackFragment {
     @Override
     protected void afterAnimationLogic() {
         // 获取数据
-        appointmentList.setCurrent_page(1);
-        appointmentList.setTotal_pages(1);
+        showProgress(showString(R.string.progress_normal));
+        mApp.headerEngine().getAppointments(1, 10).enqueue(new Callback<AppointmentList>() {
+            @Override
+            public void onResponse(Call<AppointmentList> call, Response<AppointmentList> response) {
+                if (response.code() == 200) {
+                    appointments.addAll(response.body().getAppointments());
+                    // 加载列表
+                    setList();
+                    hideProgress();
+                } else {
+                    hideProgress();
+                    showToast(showString(R.string.response_error));
+                }
+            }
 
-        for (int i=0;i<date.length;i++){
-            Appointment appointment = new Appointment();
-            appointment.setDate(date[i]);
-            appointment.setContent(content[i]);
-            appointment.setState(state[i]);
-            appointments.add(appointment);
-        }
-        appointmentList.setAppointments(appointments);
+            @Override
+            public void onFailure(Call<AppointmentList> call, Throwable t) {
+                hideProgress();
+                showToast(showString(R.string.network_error));
+            }
+        });
+    }
 
+    private void setList() {
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         adapter = new MyAppointmentsAdapter(context, appointments);
         recyclerView.setAdapter(adapter);
