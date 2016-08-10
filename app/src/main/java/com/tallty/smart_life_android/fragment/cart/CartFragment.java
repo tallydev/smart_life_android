@@ -252,7 +252,7 @@ public class CartFragment extends BaseLazyMainFragment {
      */
     @Subscribe
     public void onTabSelectedEvent(TabSelectedEvent event) {
-        if (event.position != MainFragment.CART)
+        if (event.position == MainFragment.CART)
             Log.d("tab-reselected", "购物车被重复点击了");
     }
 

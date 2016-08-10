@@ -74,6 +74,8 @@ public class CommunityFragment extends BaseLazyMainFragment{
 
     @Override
     protected void initView() {
+        EventBus.getDefault().register(this);
+
         government = getViewById(R.id.community_government);
         best_tone = getViewById(R.id.best_tone);
         service = getViewById(R.id.community_service);
@@ -93,8 +95,6 @@ public class CommunityFragment extends BaseLazyMainFragment{
     }
 
     private void initGridView() {
-        EventBus.getDefault().register(this);
-
         CommunityGridViewAdapter adapter = new CommunityGridViewAdapter(context, icons, names);
         gridView.setAdapter(adapter);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -139,7 +139,7 @@ public class CommunityFragment extends BaseLazyMainFragment{
      */
     @Subscribe
     public void onTabSelectedEvent(TabSelectedEvent event) {
-        if (event.position != MainFragment.COMMUNITY)
+        if (event.position == MainFragment.COMMUNITY)
             Log.d("tab-reselected", "社区被重复点击了");
     }
 

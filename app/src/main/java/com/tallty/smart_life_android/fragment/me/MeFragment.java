@@ -89,6 +89,8 @@ public class MeFragment extends BaseLazyMainFragment {
 
     @Override
     protected void initView() {
+        EventBus.getDefault().register(this);
+
         profile = getViewById(R.id.me_profile);
         profile.setClickable(false);
         photo = getViewById(R.id.user_photo);
@@ -157,8 +159,6 @@ public class MeFragment extends BaseLazyMainFragment {
     }
 
     private void setView() {
-        EventBus.getDefault().register(this);
-
         order_icon.setImageResource(R.drawable.me_order);
         order_text.setText("我的订单");
 
@@ -226,7 +226,7 @@ public class MeFragment extends BaseLazyMainFragment {
      */
     @Subscribe
     public void onTabSelectedEvent(TabSelectedEvent event) {
-        if (event.position != MainFragment.ME)
+        if (event.position == MainFragment.ME)
             Log.d("tab-reselected", "个人中心被重复点击了");
     }
 

@@ -6,18 +6,23 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.HomeCheckReportAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.custom.MyRecyclerView;
 import com.tallty.smart_life_android.custom.RecyclerVIewItemTouchListener;
+import com.tallty.smart_life_android.model.Report;
+import com.tallty.smart_life_android.model.ReportList;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 /**
@@ -28,29 +33,10 @@ public class HealthyCheckReport extends BaseBackFragment {
     private String mName;
     // UI
     private MyRecyclerView myRecyclerView;
-    private RecyclerView.LayoutManager layoutManager;
-    private ImageView suggest_image;
+    private HomeCheckReportAdapter adapter;
     // Data
-    private ArrayList<String> projects = new ArrayList<String>(){
-        {
-            add("BMI");add("舒张压");add("收缩压");add("脉搏");add("血糖");add("胆固醇");add("尿酸");
-        }
-    };
-    private ArrayList<String> results = new ArrayList<String>(){
-        {
-            add("26.00");add("75mmHg");add("120mmHg");add("80次/分");add("7.3mmoL/L");add("2.2mmoL/L");add("323umol/L");
-        }
-    };
-    private ArrayList<String> ranges = new ArrayList<String>() {
-        {
-            add("18.5-24.99");add("60-90mmHg");add("90-140mmHg");add("60-100次/分");add("3.9-6.1mmoL/L");add("3-5.2mmoL/L");add("男性: 149-416umoL/L"+"\n"+"女性: 89-357umoL/L  ");
-        }
-    };
-    private ArrayList<Integer> status = new ArrayList<Integer>(){
-        {
-            add(1);add(0);add(0);add(0);add(1);add(-1);add(0);
-        }
-    };
+    private List<Report> reports = new ArrayList<>();
+
 
     public static HealthyCheckReport newInstance(String title) {
         Bundle args = new Bundle();
@@ -83,8 +69,6 @@ public class HealthyCheckReport extends BaseBackFragment {
     @Override
     protected void initView() {
         myRecyclerView = getViewById(R.id.check_report_list);
-        layoutManager = new LinearLayoutManager(context);
-        suggest_image = getViewById(R.id.suggest_image);
     }
 
     @Override
@@ -94,8 +78,36 @@ public class HealthyCheckReport extends BaseBackFragment {
 
     @Override
     protected void afterAnimationLogic() {
-        myRecyclerView.setLayoutManager(layoutManager);
-        HomeCheckReportAdapter adapter = new HomeCheckReportAdapter(context, projects, results, ranges, status);
+        // 获取报告
+        showProgress(showString(R.string.progress_normal));
+        mApp.headerEngine().getCheckReport().enqueue(new Callback<ReportList>() {
+            @Override
+            public void onResponse(Call<ReportList> call, Response<ReportList> response) {
+                if (response.code() == 200) {
+                    reports = response.body().getItems();
+                    // 加载列表
+                    setList();
+                    hideProgress();
+                } else {
+                    hideProgress();
+                    showToast(showString(R.string.response_error));
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ReportList> call, Throwable t) {
+                hideProgress();
+                showToast(showString(R.string.network_error));
+            }
+        });
+
+        // 健康建议
+    }
+
+    private void setList() {
+        myRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+        adapter = new HomeCheckReportAdapter(context, reports);
         myRecyclerView.setAdapter(adapter);
         myRecyclerView.addOnItemTouchListener(new RecyclerVIewItemTouchListener(myRecyclerView) {
             @Override
@@ -108,8 +120,6 @@ public class HealthyCheckReport extends BaseBackFragment {
 
             }
         });
-
-        Glide.with(context).load(R.drawable.check_report_suggest).into(suggest_image);
     }
 
     @Override

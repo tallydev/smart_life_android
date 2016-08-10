@@ -61,7 +61,7 @@ public class HealthyFragment extends BaseLazyMainFragment {
      */
     @Subscribe
     public void onTabSelectedEvent(TabSelectedEvent event) {
-        if (event.position != MainFragment.HEALTHY)
+        if (event.position == MainFragment.HEALTHY)
             Log.d("tab-reselected", "智慧健康被重复点击了");
     }
 

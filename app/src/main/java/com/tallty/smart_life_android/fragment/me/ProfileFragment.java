@@ -404,6 +404,7 @@ public class ProfileFragment extends BaseBackFragment {
                         editor.commit();
                         Intent intent = new Intent(getActivity(), LoginActivity.class);
                         startActivity(intent);
+                        getActivity().finish();
                     }
                 })
                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {

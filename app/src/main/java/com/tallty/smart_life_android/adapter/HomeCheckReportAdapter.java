@@ -10,8 +10,10 @@ import android.widget.TextView;
 
 import com.joanzapata.iconify.widget.IconTextView;
 import com.tallty.smart_life_android.R;
+import com.tallty.smart_life_android.model.Report;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by kang on 16/7/12.
@@ -19,19 +21,11 @@ import java.util.ArrayList;
  */
 public class HomeCheckReportAdapter extends RecyclerView.Adapter<HomeCheckReportAdapter.CheckReportViewHolder> {
     private Context context;
-    private ArrayList<String> projects;
-    private ArrayList<String> results;
-    private ArrayList<String> ranges;
-    private ArrayList<Integer> status;
+    private List<Report> reports = new ArrayList<>();
 
-    public HomeCheckReportAdapter(Context context, ArrayList<String> projects,
-                                  ArrayList<String> results, ArrayList<String> ranges,
-                                  ArrayList<Integer> status) {
+    public HomeCheckReportAdapter(Context context, List<Report> reports) {
         this.context = context;
-        this.projects = projects;
-        this.results = results;
-        this.ranges = ranges;
-        this.status = status;
+        this.reports = reports;
     }
 
     @Override
@@ -42,16 +36,19 @@ public class HomeCheckReportAdapter extends RecyclerView.Adapter<HomeCheckReport
 
     @Override
     public void onBindViewHolder(CheckReportViewHolder holder, int position) {
+        Report report = reports.get(position);
         //  设置标签,方便点击时获取
-        holder.itemView.setTag(projects.get(position));
-        holder.project.setText(projects.get(position));
-        holder.result.setText(results.get(position));
-        holder.range.setText(ranges.get(position));
-        if (status.get(position) == -1) {
+        holder.itemView.setTag(report.getAlias());
+        holder.project.setText(report.getAlias());
+        holder.result.setText(report.getValue()+"");
+        holder.range.setText(report.getHint());
+        // 高低
+        if (report.getState().equals("low")) {
             holder.status.setText("{fa-caret-down}");
-        } else if (status.get(position) == 1) {
+        } else if (report.getState().equals("high")) {
             holder.status.setText("{fa-caret-up}");
         }
+        // 斑马线背景
         if (position % 2 != 0) {
             holder.report_layout.setBackgroundResource(R.color.item_gray_bg);
         }
@@ -59,7 +56,7 @@ public class HomeCheckReportAdapter extends RecyclerView.Adapter<HomeCheckReport
 
     @Override
     public int getItemCount() {
-        return projects.size();
+        return reports.size();
     }
 
     class CheckReportViewHolder extends RecyclerView.ViewHolder {
@@ -69,7 +66,7 @@ public class HomeCheckReportAdapter extends RecyclerView.Adapter<HomeCheckReport
         private LinearLayout report_layout;
         private IconTextView status;
 
-        public CheckReportViewHolder(View itemView) {
+        CheckReportViewHolder(View itemView) {
             super(itemView);
             project = (TextView) itemView.findViewById(R.id.report_project);
             result = (TextView) itemView.findViewById(R.id.report_result);

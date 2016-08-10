@@ -4,6 +4,7 @@ import com.tallty.smart_life_android.model.Appointment;
 import com.tallty.smart_life_android.model.AppointmentList;
 import com.tallty.smart_life_android.model.CartList;
 import com.tallty.smart_life_android.model.ProductList;
+import com.tallty.smart_life_android.model.ReportList;
 import com.tallty.smart_life_android.model.SportData;
 import com.tallty.smart_life_android.model.SportRank;
 import com.tallty.smart_life_android.model.Step;
@@ -106,4 +107,10 @@ public interface Engine {
     @GET("appointments")
     Call<AppointmentList> getAppointments(@Query("page") int page,
                                           @Query("per_page") int per_page);
+
+    // *********************************************************************************************
+
+    // 健康报告
+    @GET("reports")
+    Call<ReportList> getCheckReport();
 }
