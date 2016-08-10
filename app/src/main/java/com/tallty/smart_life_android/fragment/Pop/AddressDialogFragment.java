@@ -62,7 +62,7 @@ public class AddressDialogFragment extends DialogFragment implements View.OnClic
         WindowManager.LayoutParams layoutParams = getDialog().getWindow().getAttributes();
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        layoutParams.width = layoutParams.MATCH_PARENT;
+        layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
         layoutParams.gravity = Gravity.BOTTOM;
         layoutParams.windowAnimations = R.style.dialogStyle;
         getDialog().getWindow().setAttributes(layoutParams);

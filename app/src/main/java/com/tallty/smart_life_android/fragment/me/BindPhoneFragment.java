@@ -18,7 +18,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.orhanobut.logger.Logger;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
@@ -166,7 +165,7 @@ public class BindPhoneFragment extends BaseBackFragment {
             phoneEdit.setError("手机号码不能为空");
             focusView = phoneEdit;
             begin = false;
-        } else if (!isPhoneValid(phone)) {
+        } else if (isPhoneValid(phone)) {
             phoneEdit.setError("手机号码格式不正确");
             focusView = phoneEdit;
             begin = false;
@@ -233,7 +232,7 @@ public class BindPhoneFragment extends BaseBackFragment {
             phoneEdit.setError("手机号不能为空");
             phoneEdit.requestFocus();
             begin = false;
-        } else if (!isPhoneValid(phone)) {
+        } else if (isPhoneValid(phone)) {
             phoneEdit.requestFocus();
             phoneEdit.setError("手机号码格式不正确");
             begin = false;

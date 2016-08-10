@@ -29,7 +29,6 @@ import java.util.List;
  * 首页-限量销售-商品详情
  */
 public class LimitSailShow extends BaseBackFragment implements OnItemClickListener{
-    private static final String TAG = "LimitSailShow";
     // 商品
     private Product product;
     // 修改数量

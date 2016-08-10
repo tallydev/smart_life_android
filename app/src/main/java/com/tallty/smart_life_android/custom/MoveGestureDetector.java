@@ -123,11 +123,11 @@ public class MoveGestureDetector extends BaseGestureDetector {
 
     public interface OnMoveGestureListener
     {
-        public boolean onMoveBegin(MoveGestureDetector detector);
+        boolean onMoveBegin(MoveGestureDetector detector);
 
-        public boolean onMove(MoveGestureDetector detector);
+        boolean onMove(MoveGestureDetector detector);
 
-        public void onMoveEnd(MoveGestureDetector detector);
+        void onMoveEnd(MoveGestureDetector detector);
     }
 
     public static class SimpleMoveGestureDetector implements OnMoveGestureListener

@@ -13,6 +13,7 @@ import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.event.ConfirmDialogEvent;
 import com.tallty.smart_life_android.fragment.Pop.HintDialogFragment;
+import com.tallty.smart_life_android.model.Appointment;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -80,15 +81,37 @@ public class ComeService extends BaseBackFragment {
         }
     }
 
+    /**
+     * 订阅事件: 确认了dialog
+     * @param event
+     */
+    @Subscribe
+    public void onConfirmDialogEvnet(ConfirmDialogEvent event) {
+        event.dialog.dismiss();
+
+        submitAppointmentListener("SMFW", 1, new OnAppointListener() {
+            @Override
+            public void onSuccess(Appointment appointment) {
+                showToast(showString(R.string.appoint_success));
+            }
+
+            @Override
+            public void onFail(String errorMsg) {
+
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         EventBus.getDefault().unregister(this);
     }
 
-    @Subscribe
-    public void onConfirmDialogEvnet(ConfirmDialogEvent event) {
-        event.dialog.dismiss();
-        showToast("确认了"+event.caller);
-    }
+
 }

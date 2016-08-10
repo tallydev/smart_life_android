@@ -68,10 +68,10 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
     // 组件
     private ConvenientBanner<Integer> banner;
     private MyRecyclerView recyclerView;
+    private HomeRecyclerAdapter homeRecyclerAdapter;
     private RecyclerView.LayoutManager layoutManager;
     // 运动达人的ViewHolder
     private HomeViewHolder homeViewHolder;
-
     // banner图数据
     private Integer[] imagesUrl = { R.drawable.banner_one, R.drawable.banner_two };
     // 列表数据
@@ -188,7 +188,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
 
     private void setList() {
         recyclerView.setLayoutManager(layoutManager);
-        HomeRecyclerAdapter homeRecyclerAdapter = new HomeRecyclerAdapter(context, titles, images, itemButtons, itemIcons);
+        homeRecyclerAdapter = new HomeRecyclerAdapter(context, titles, images, itemButtons, itemIcons);
         recyclerView.setAdapter(homeRecyclerAdapter);
         // ScrollView嵌套RecyclerView,设置屏幕从顶部开始
         recyclerView.setFocusable(false);

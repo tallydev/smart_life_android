@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.utils.SnackbarUtil;
 import com.tallty.smart_life_android.utils.ToastUtil;

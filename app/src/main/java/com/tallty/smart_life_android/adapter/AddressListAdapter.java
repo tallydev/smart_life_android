@@ -5,27 +5,17 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.event.SelectAddress;
 import com.tallty.smart_life_android.event.SetDefaultAddress;
-import com.tallty.smart_life_android.event.StartBrotherEvent;
-import com.tallty.smart_life_android.fragment.home.LimitSailShow;
 import com.tallty.smart_life_android.model.Address;
-import com.tallty.smart_life_android.utils.ToastUtil;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
-
-import static com.tallty.smart_life_android.R.id.add;
-import static com.tallty.smart_life_android.R.id.contact_service;
-import static com.tallty.smart_life_android.R.id.line;
 
 /**
  * Created by kang on 16/7/24.

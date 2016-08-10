@@ -72,7 +72,7 @@ public class HintDialogFragment extends DialogFragment implements View.OnClickLi
         hint_image = (ImageView) view.findViewById(R.id.hint_icon);
         hint_text = (TextView) view.findViewById(R.id.hint_text);
 
-        Glide.with(getActivity()).load(R.drawable.snackbar_icon).into(hint_image);
+        Glide.with(getActivity()).load(R.drawable.snack_bar_icon).into(hint_image);
         hint_text.setText(hint);
         
         cancel_btn.setOnClickListener(this);
@@ -88,7 +88,7 @@ public class HintDialogFragment extends DialogFragment implements View.OnClickLi
         WindowManager.LayoutParams layoutParams = getDialog().getWindow().getAttributes();
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        layoutParams.width = layoutParams.MATCH_PARENT;
+        layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
         layoutParams.gravity = Gravity.BOTTOM;
         layoutParams.windowAnimations = R.style.dialogStyle;
         getDialog().getWindow().setAttributes(layoutParams);

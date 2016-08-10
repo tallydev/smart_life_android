@@ -11,7 +11,7 @@
     <!--
     接着再定义一个填充区域的 颜色,并给该颜色 设置内边距,达到遮住上面背景但又没有遮挡住全部的目的
     android:top="1dp"
-        android:bottom="1dp"这两个就是定义上边框 和下边框的粗细的 下面的pading只是定义了下间距,可有可无
+        android:bottom="1dp"这两个就是定义上边框 和下边框的粗细的 下面的padding只是定义了下间距,可有可无
     -->
 
     <item android:bottom="1dp">

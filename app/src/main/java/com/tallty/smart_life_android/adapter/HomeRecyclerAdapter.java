@@ -156,7 +156,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
                     } else if (position == 1) {
                         EventBus.getDefault().post(new StartBrotherEvent(HealthyCheckReport.newInstance("健康报告")));
                     } else if (position == 2) {
-                        EventBus.getDefault().post(new ShowSnackbarEvent("待确认"));
+                        EventBus.getDefault().post(new ShowSnackbarEvent("即将上线，敬请期待"));
                     }
                 }
                 // 健身达人
