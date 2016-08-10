@@ -33,7 +33,7 @@ public class HealthyOrderCheck extends BaseBackFragment {
 
     public static HealthyOrderCheck newInstance(String title) {
         Bundle args = new Bundle();
-        args.putString(Const.TOOLBAR_TITLE, title);
+        args.putString(Const.FRAGMENT_NAME, title);
         HealthyOrderCheck fragment = new HealthyOrderCheck();
         fragment.setArguments(args);
         return fragment;
@@ -45,7 +45,7 @@ public class HealthyOrderCheck extends BaseBackFragment {
         // 获取数据:getArguments()
         Bundle args = getArguments();
         if (args != null) {
-            mName = args.getString(Const.TOOLBAR_TITLE);
+            mName = args.getString(Const.FRAGMENT_NAME);
         }
     }
 

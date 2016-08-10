@@ -55,7 +55,7 @@ public class HealthyCheckReportShow extends BaseBackFragment {
 
     public static HealthyCheckReportShow newInstance(String title) {
         Bundle args = new Bundle();
-        args.putString(Const.TOOLBAR_TITLE, title);
+        args.putString(Const.FRAGMENT_NAME, title);
         HealthyCheckReportShow fragment = new HealthyCheckReportShow();
         fragment.setArguments(args);
         return fragment;
@@ -66,7 +66,7 @@ public class HealthyCheckReportShow extends BaseBackFragment {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
-            mName = args.getString(Const.TOOLBAR_TITLE);
+            mName = args.getString(Const.FRAGMENT_NAME);
         }
     }
 

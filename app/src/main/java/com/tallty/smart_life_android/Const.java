@@ -44,7 +44,7 @@ public class Const {
     /**
      * 创建Fragment
      */
-    public static final String TOOLBAR_TITLE = "BackFragmentTitle";
+    public static final String FRAGMENT_NAME = "BackFragmentTitle";
     public static final String TOTAL_PRICE = "BackFragmentTotalPrice";
     public static final String FROM = "from_fragment";
 

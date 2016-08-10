@@ -14,12 +14,10 @@ import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.event.ConfirmDialogEvent;
 import com.tallty.smart_life_android.fragment.Pop.HintDialogFragment;
+import com.tallty.smart_life_android.model.Appointment;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * 首页-智慧家居-远程控制
@@ -33,7 +31,7 @@ public class HouseRemoteControl extends BaseBackFragment {
 
     public static HouseRemoteControl newInstance(String title) {
         Bundle args = new Bundle();
-        args.putString(Const.TOOLBAR_TITLE, title);
+        args.putString(Const.FRAGMENT_NAME, title);
         HouseRemoteControl fragment = new HouseRemoteControl();
         fragment.setArguments(args);
         return fragment;
@@ -44,7 +42,7 @@ public class HouseRemoteControl extends BaseBackFragment {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
-            mName = args.getString(Const.TOOLBAR_TITLE);
+            mName = args.getString(Const.FRAGMENT_NAME);
         }
     }
 
@@ -99,7 +97,22 @@ public class HouseRemoteControl extends BaseBackFragment {
     @Subscribe
     public void onConfirmDialogEvnet(ConfirmDialogEvent event) {
         event.dialog.dismiss();
-        showToast("预约成功");
+        submitAppointmentListener("ZNJJ", 1, new OnAppointListener() {
+            @Override
+            public void onSuccess(Appointment appointment) {
+                showToast(showString(R.string.appoint_success));
+            }
+
+            @Override
+            public void onFail(String errorMsg) {
+
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
     }
 
     @Override

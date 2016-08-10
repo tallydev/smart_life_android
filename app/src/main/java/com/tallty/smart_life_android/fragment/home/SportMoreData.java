@@ -70,7 +70,7 @@ public class SportMoreData extends BaseBackFragment {
 
     public static SportMoreData newInstance(String title) {
         Bundle args = new Bundle();
-        args.putString(Const.TOOLBAR_TITLE, title);
+        args.putString(Const.FRAGMENT_NAME, title);
         SportMoreData fragment = new SportMoreData();
         fragment.setArguments(args);
         return fragment;
@@ -80,7 +80,7 @@ public class SportMoreData extends BaseBackFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
-        mName = args.getString(Const.TOOLBAR_TITLE);
+        mName = args.getString(Const.FRAGMENT_NAME);
     }
 
     @Override

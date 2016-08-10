@@ -12,15 +12,12 @@ import com.bumptech.glide.Glide;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
-import com.tallty.smart_life_android.custom.LargeImageView;
 import com.tallty.smart_life_android.event.ConfirmDialogEvent;
 import com.tallty.smart_life_android.fragment.Pop.HintDialogFragment;
+import com.tallty.smart_life_android.model.Appointment;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * 首页-智慧家居-电子猫眼
@@ -35,7 +32,7 @@ public class HouseCatEye extends BaseBackFragment {
 
     public static HouseCatEye newInstance(String title) {
         Bundle args = new Bundle();
-        args.putString(Const.TOOLBAR_TITLE, title);
+        args.putString(Const.FRAGMENT_NAME, title);
         HouseCatEye fragment = new HouseCatEye();
         fragment.setArguments(args);
         return fragment;
@@ -46,7 +43,7 @@ public class HouseCatEye extends BaseBackFragment {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
-            mName = args.getString(Const.TOOLBAR_TITLE);
+            mName = args.getString(Const.FRAGMENT_NAME);
         }
     }
 
@@ -103,7 +100,22 @@ public class HouseCatEye extends BaseBackFragment {
     @Subscribe
     public void onConfirmDialogEvnet(ConfirmDialogEvent event) {
         event.dialog.dismiss();
-        showToast("预约成功");
+        submitAppointmentListener("DZMY", 1, new OnAppointListener() {
+            @Override
+            public void onSuccess(Appointment appointment) {
+                showToast(showString(R.string.appoint_success));
+            }
+
+            @Override
+            public void onFail(String errorMsg) {
+
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
     }
 
     @Override

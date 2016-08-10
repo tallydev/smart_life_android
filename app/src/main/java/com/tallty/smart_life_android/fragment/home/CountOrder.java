@@ -14,16 +14,19 @@ import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.event.ConfirmDialogEvent;
 import com.tallty.smart_life_android.fragment.Pop.HintDialogFragment;
+import com.tallty.smart_life_android.model.Appointment;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 /**
  * 首页-社区活动-活动详情
+ * 首页-社区活动-新品上市
  */
 public class CountOrder extends BaseBackFragment {
     private String mName;
     private int imageId;
+
     private int count = 1;
 
     private ImageView detail_image;
@@ -35,7 +38,7 @@ public class CountOrder extends BaseBackFragment {
 
     public static CountOrder newInstance(String title, int imageId) {
         Bundle args = new Bundle();
-        args.putString(Const.TOOLBAR_TITLE, title);
+        args.putString(Const.FRAGMENT_NAME, title);
         args.putInt("image", imageId);
         CountOrder fragment = new CountOrder();
         fragment.setArguments(args);
@@ -47,7 +50,7 @@ public class CountOrder extends BaseBackFragment {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
-            mName = args.getString(Const.TOOLBAR_TITLE);
+            mName = args.getString(Const.FRAGMENT_NAME);
             imageId = args.getInt("image");
         }
     }
@@ -111,10 +114,41 @@ public class CountOrder extends BaseBackFragment {
         }
     }
 
+    /**
+     * 接收预约确认事件
+     * @param event
+     */
     @Subscribe
     public void onConfirmDialogEvnet(ConfirmDialogEvent event) {
         event.dialog.dismiss();
-        showToast("预约成功");
+
+        String appointType = null;
+
+        if (!mName.isEmpty() && "社区活动".equals(mName)) {
+            appointType = "SQHD";
+        }
+        if (!mName.isEmpty() && "新品上市".equals(mName)) {
+            appointType = "XPSS";
+        }
+
+        if (appointType != null) {
+            submitAppointmentListener(appointType, count, new OnAppointListener() {
+                @Override
+                public void onSuccess(Appointment appointment) {
+                    showToast(showString(R.string.appoint_success));
+                }
+
+                @Override
+                public void onFail(String errorMsg) {
+
+                }
+
+                @Override
+                public void onError() {
+
+                }
+            });
+        }
     }
 
     @Override

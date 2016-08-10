@@ -14,6 +14,7 @@ import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.event.ConfirmDialogEvent;
 import com.tallty.smart_life_android.fragment.Pop.HintDialogFragment;
+import com.tallty.smart_life_android.model.Appointment;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -23,13 +24,14 @@ import org.greenrobot.eventbus.Subscribe;
  */
 public class CommunityIt extends BaseBackFragment {
     private String mName;
+    private String appointType = "";
 
     private ImageView detail_image;
     private TextView do_event;
 
     public static CommunityIt newInstance(String title) {
         Bundle args = new Bundle();
-        args.putString(Const.TOOLBAR_TITLE, title);
+        args.putString(Const.FRAGMENT_NAME, title);
         CommunityIt fragment = new CommunityIt();
         fragment.setArguments(args);
         return fragment;
@@ -40,7 +42,7 @@ public class CommunityIt extends BaseBackFragment {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
-            mName = args.getString(Const.TOOLBAR_TITLE);
+            mName = args.getString(Const.FRAGMENT_NAME);
         }
     }
 
@@ -73,6 +75,7 @@ public class CommunityIt extends BaseBackFragment {
             case "IT学堂":
                 Glide.with(context).load(R.drawable.it_class).into(detail_image);
                 do_event.setText("我要预约");
+                appointType = "ITXT";
                 break;
             case "在线冲印":
                 Glide.with(context).load(R.drawable.print_online).into(detail_image);
@@ -81,6 +84,7 @@ public class CommunityIt extends BaseBackFragment {
             case "IT服务":
                 Glide.with(context).load(R.drawable.it_service).into(detail_image);
                 do_event.setText("我要预约");
+                appointType = "ITFW";
                 break;
             case "更多服务":
                 do_event.setVisibility(View.GONE);
@@ -105,7 +109,23 @@ public class CommunityIt extends BaseBackFragment {
     @Subscribe
     public void onConfirmDialogEvnet(ConfirmDialogEvent event) {
         event.dialog.dismiss();
-        showToast("预约成功");
+
+        submitAppointmentListener(appointType, 1, new OnAppointListener() {
+            @Override
+            public void onSuccess(Appointment appointment) {
+                showToast(showString(R.string.appoint_success));
+            }
+
+            @Override
+            public void onFail(String errorMsg) {
+
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
     }
 
     @Override
