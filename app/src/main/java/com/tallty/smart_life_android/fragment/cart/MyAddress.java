@@ -16,7 +16,7 @@ import com.tallty.smart_life_android.adapter.AddressListAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.event.SelectAddress;
 import com.tallty.smart_life_android.event.SetDefaultAddress;
-import com.tallty.smart_life_android.model.Address;
+import com.tallty.smart_life_android.model.Contact;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -41,12 +41,12 @@ public class MyAddress extends BaseBackFragment {
     private String details[] = {"XX街道XX (小区名称) XX栋XX单元XXX室", "YY街道YY (小区名称) YY栋YY单元YYY室"};
     private boolean default_address[] = {true, false};
     // 实例
-    private ArrayList<Address> addresses = new ArrayList<>();
+    private ArrayList<Contact> contacts = new ArrayList<>();
     // sharePreferences 相关
-    private Address shareDefaultAddress = null;
+    private Contact shareDefaultContact = null;
     private int defaultAddressPosition;
     // 新增
-    private Address new_address = new Address();
+    private Contact new_contact = new Contact();
 
 
     public static MyAddress newInstance(int from) {
@@ -98,17 +98,17 @@ public class MyAddress extends BaseBackFragment {
     private void loadAddressData() {
         // 获取数据
         for (int i = 0; i < names.length; i++){
-            Address address = new Address();
-            address.setChecked(checkeds[i]);
-            address.setName(names[i]);
-            address.setPhone(phones[i]);
-            address.setArea(areas[i]);
-            address.setDetail(details[i]);
-            address.setDefaultAddress(default_address[i]);
-            addresses.add(address);
+            Contact contact = new Contact();
+            contact.setChecked(checkeds[i]);
+            contact.setName(names[i]);
+            contact.setPhone(phones[i]);
+            contact.setArea(areas[i]);
+            contact.setAddress(details[i]);
+            contact.setDefault(default_address[i]);
+            contacts.add(contact);
             // 取出默认地址
-            if (default_address[i] && shareDefaultAddress == null){
-                shareDefaultAddress = address;
+            if (default_address[i] && shareDefaultContact == null){
+                shareDefaultContact = contact;
                 // 记录下标
                 defaultAddressPosition = i;
             }
@@ -120,7 +120,7 @@ public class MyAddress extends BaseBackFragment {
 
     private void processList() {
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        adapter = new AddressListAdapter(context, addresses);
+        adapter = new AddressListAdapter(context, contacts);
         recyclerView.setAdapter(adapter);
     }
 
@@ -141,9 +141,9 @@ public class MyAddress extends BaseBackFragment {
     protected void onFragmentResult(int requestCode, int resultCode, Bundle data) {
         super.onFragmentResult(requestCode, resultCode, data);
         if (requestCode == REQ_CODE && resultCode == RESULT_OK) {
-            new_address = (Address) data.getSerializable(Const.OBJECT);
-            if (new_address != null) {
-                addresses.add(new_address);
+            new_contact = (Contact) data.getSerializable(Const.OBJECT);
+            if (new_contact != null) {
+                contacts.add(new_contact);
                 adapter.notifyDataSetChanged();
             }
         }
@@ -167,20 +167,20 @@ public class MyAddress extends BaseBackFragment {
     @Subscribe
     public void onSetDefaultAddress(SetDefaultAddress event) {
         SharedPreferences.Editor editor = sharedPre.edit();
-        editor.putString(Const.ADDRESS_AREA, event.getAddress().getArea());
-        editor.putString(Const.ADDRESS_DETAIL, event.getAddress().getDetail());
-        editor.putString(Const.ADDRESS_NAME, event.getAddress().getName());
-        editor.putString(Const.ADDRESS_PHONE, event.getAddress().getPhone());
+        editor.putString(Const.ADDRESS_AREA, event.getContact().getArea());
+        editor.putString(Const.ADDRESS_DETAIL, event.getContact().getAddress());
+        editor.putString(Const.ADDRESS_NAME, event.getContact().getName());
+        editor.putString(Const.ADDRESS_PHONE, event.getContact().getPhone());
         editor.commit();
         // 取消原来的默认地址
-        Address cache_address = addresses.get(defaultAddressPosition);
-        cache_address.setDefaultAddress(false);
-        addresses.set(defaultAddressPosition, cache_address);
+        Contact cache_contact = contacts.get(defaultAddressPosition);
+        cache_contact.setDefault(false);
+        contacts.set(defaultAddressPosition, cache_contact);
         adapter.notifyItemChanged(defaultAddressPosition);
         // 设置新的默认地址 && 重置 defaultAddressPosition 为新的position
-        cache_address = addresses.get(event.getPosition());
-        cache_address.setDefaultAddress(true);
-        addresses.set(event.getPosition(), cache_address);
+        cache_contact = contacts.get(event.getPosition());
+        cache_contact.setDefault(true);
+        contacts.set(event.getPosition(), cache_contact);
         adapter.notifyItemChanged(event.getPosition());
         defaultAddressPosition = event.getPosition();
     }
@@ -190,22 +190,22 @@ public class MyAddress extends BaseBackFragment {
      */
     @Subscribe
     public void onSelectAddress(SelectAddress event) {
-        Address cache_address;
+        Contact cache_contact;
         // 取消原来的选中地址
-        cache_address = addresses.get(defaultAddressPosition);
-        cache_address.setChecked(false);
-        addresses.set(defaultAddressPosition, cache_address);
+        cache_contact = contacts.get(defaultAddressPosition);
+        cache_contact.setChecked(false);
+        contacts.set(defaultAddressPosition, cache_contact);
         adapter.notifyItemChanged(defaultAddressPosition);
         // 设置新的选中地址 && 重置 defaultAddressPosition 为新的position
-        cache_address = addresses.get(event.getPosition());
-        cache_address.setChecked(true);
-        addresses.set(event.getPosition(), cache_address);
+        cache_contact = contacts.get(event.getPosition());
+        cache_contact.setChecked(true);
+        contacts.set(event.getPosition(), cache_contact);
         adapter.notifyItemChanged(event.getPosition());
         defaultAddressPosition = event.getPosition();
 
         // 把选中的地址回传给上一个页面
         Bundle bundle = new Bundle();
-        bundle.putSerializable(Const.OBJECT, cache_address);
+        bundle.putSerializable(Const.OBJECT, cache_contact);
         setFramgentResult(RESULT_OK, bundle);
         if (from == Const.FROM_ORDER){
             pop();

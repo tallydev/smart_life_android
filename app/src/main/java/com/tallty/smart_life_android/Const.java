@@ -35,7 +35,7 @@ public class Const {
     public static final String USER_TOKEN = "user_token";
     public static final String USER_NICKNAME = "user_nickname";
     public static final String USER_AVATAR = "user_avatar";
-    // Address
+    // Contact
     public static final String ADDRESS_AREA = "address_area";
     public static final String ADDRESS_DETAIL = "address_detail";
     public static final String ADDRESS_PHONE = "address_phone";

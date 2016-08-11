@@ -10,9 +10,9 @@ import java.io.Serializable;
  * 收货地址
  */
 
-public class Address implements Serializable {
+public class Contact implements Serializable {
 
-    public Address(){
+    public Contact(){
 
     }
 
@@ -33,14 +33,30 @@ public class Address implements Serializable {
     @SerializedName("area")
     @Expose
     private String area;
-
-    @SerializedName("detail")
+    // 街道
+    @SerializedName("street")
     @Expose
-    private String detail;
+    private String street;
+    // 社区
+    @SerializedName("conmunity")
+    @Expose
+    private String conmunity;
+    // 详细地址
+    @SerializedName("address")
+    @Expose
+    private String address;
+
+    @SerializedName("is_default")
+    @Expose
+    private boolean isDefault;
+
+    @SerializedName("order")
+    @Expose
+    private int order;
+
 
     // UI属性
     private boolean checked;
-    private boolean defaultAddress;
 
 
     public int getId() {
@@ -75,12 +91,12 @@ public class Address implements Serializable {
         this.area = area;
     }
 
-    public String getDetail() {
-        return detail;
+    public String getAddress() {
+        return address;
     }
 
-    public void setDetail(String detail) {
-        this.detail = detail;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public boolean isChecked() {
@@ -91,11 +107,35 @@ public class Address implements Serializable {
         this.checked = checked;
     }
 
-    public boolean isDefaultAddress() {
-        return defaultAddress;
+    public boolean isDefault() {
+        return isDefault;
     }
 
-    public void setDefaultAddress(boolean defaultAddress) {
-        this.defaultAddress = defaultAddress;
+    public void setDefault(boolean aDefault) {
+        this.isDefault = aDefault;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public String getConmunity() {
+        return conmunity;
+    }
+
+    public void setConmunity(String conmunity) {
+        this.conmunity = conmunity;
+    }
+
+    public int getOrder() {
+        return order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
     }
 }

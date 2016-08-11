@@ -1,6 +1,6 @@
 package com.tallty.smart_life_android.event;
 
-import com.tallty.smart_life_android.model.Address;
+import com.tallty.smart_life_android.model.Contact;
 
 /**
  * Created by kang on 16/7/25.
@@ -8,16 +8,16 @@ import com.tallty.smart_life_android.model.Address;
  */
 
 public class SelectAddress {
-    private Address address;
+    private Contact contact;
     private int position;
 
-    public SelectAddress(int position, Address address) {
-        this.address = address;
+    public SelectAddress(int position, Contact contact) {
+        this.contact = contact;
         this.position = position;
     }
 
-    public Address getAddress() {
-        return address;
+    public Contact getContact() {
+        return contact;
     }
 
     public int getPosition() {

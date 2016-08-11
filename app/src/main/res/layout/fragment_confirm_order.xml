@@ -44,7 +44,7 @@
                 android:text="@string/fa_angle_right"
                 android:textSize="24sp"/>
             <TextView
-                android:id="@+id/order_address"
+                android:id="@+id/order_contact"
                 android:layout_width="120dp"
                 android:layout_height="36dp"
                 android:textColor="@color/global_text"

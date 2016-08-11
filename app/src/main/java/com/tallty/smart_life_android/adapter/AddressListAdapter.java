@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.event.SelectAddress;
 import com.tallty.smart_life_android.event.SetDefaultAddress;
-import com.tallty.smart_life_android.model.Address;
+import com.tallty.smart_life_android.model.Contact;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -24,11 +24,11 @@ import java.util.ArrayList;
 
 public class AddressListAdapter extends RecyclerView.Adapter<AddressListAdapter.AddressViewHolder>{
     private Context context;
-    private ArrayList<Address> addresses;
+    private ArrayList<Contact> contacts;
 
-    public AddressListAdapter(Context context, ArrayList<Address> addresses) {
+    public AddressListAdapter(Context context, ArrayList<Contact> contacts) {
         this.context = context;
-        this.addresses = addresses;
+        this.contacts = contacts;
     }
 
     @Override
@@ -38,21 +38,21 @@ public class AddressListAdapter extends RecyclerView.Adapter<AddressListAdapter.
 
     @Override
     public void onBindViewHolder(AddressViewHolder holder, final int position) {
-        final Address address = addresses.get(position);
+        final Contact contact = contacts.get(position);
 
-        holder.name.setText(address.getName());
-        holder.address.setText(address.getArea()+address.getDetail());
-        holder.phone.setText(address.getPhone());
+        holder.name.setText(contact.getName());
+        holder.address.setText(contact.getArea()+ contact.getAddress());
+        holder.phone.setText(contact.getPhone());
 
-        holder.checkBox.setChecked(address.isChecked());
+        holder.checkBox.setChecked(contact.isChecked());
         holder.checkBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventBus.getDefault().post(new SelectAddress(position, address));
+                EventBus.getDefault().post(new SelectAddress(position, contact));
             }
         });
 
-        if (address.isDefaultAddress()){
+        if (contact.isDefault()){
             holder.isDefault.setText("默认地址");
         }else{
             holder.isDefault.setText("设为默认地址");
@@ -61,7 +61,7 @@ public class AddressListAdapter extends RecyclerView.Adapter<AddressListAdapter.
                 @Override
                 public void onClick(View v) {
                     // 设置默认地址操作
-                    EventBus.getDefault().post(new SetDefaultAddress(position, address));
+                    EventBus.getDefault().post(new SetDefaultAddress(position, contact));
                 }
             });
         }
@@ -69,7 +69,7 @@ public class AddressListAdapter extends RecyclerView.Adapter<AddressListAdapter.
 
     @Override
     public int getItemCount() {
-        return addresses.size();
+        return contacts.size();
     }
 
     class AddressViewHolder extends RecyclerView.ViewHolder {

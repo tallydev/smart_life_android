@@ -13,7 +13,7 @@ import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.event.ConfirmDialogEvent;
 import com.tallty.smart_life_android.fragment.Pop.AddressDialogFragment;
-import com.tallty.smart_life_android.model.Address;
+import com.tallty.smart_life_android.model.Contact;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -140,13 +140,13 @@ public class NewAddressFragment extends BaseBackFragment {
             // TODO: 16/8/1 向服务器提交新地址
 
             // 提交成功: 返回数据
-            Address cache_address = new Address();
-            cache_address.setName(name);
-            cache_address.setPhone(phone);
-            cache_address.setArea(area);
-            cache_address.setDetail(detail);
+            Contact cache_contact = new Contact();
+            cache_contact.setName(name);
+            cache_contact.setPhone(phone);
+            cache_contact.setArea(area);
+            cache_contact.setAddress(detail);
             Bundle bundle = new Bundle();
-            bundle.putSerializable(Const.OBJECT, cache_address);
+            bundle.putSerializable(Const.OBJECT, cache_contact);
             setFramgentResult(RESULT_OK, bundle);
             pop();
         }

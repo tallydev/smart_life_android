@@ -14,11 +14,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <LinearLayout
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
             android:id="@+id/product_detail_layout"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:layout_marginTop="4dp"
             android:orientation="horizontal"
             android:background="@color/white"
             android:layout_alignParentBottom="true">
@@ -73,10 +71,10 @@
         </LinearLayout>
 
         <ScrollView
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true">
+            android:layout_alignParentTop="true"
+            android:layout_above="@id/product_detail_layout">
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -122,6 +120,12 @@
                     android:textColor="@color/global_text"
                     android:layout_below="@id/product_detail_price"
                     android:background="@color/white"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="4dp"
+                    android:layout_below="@id/product_detail_description"
+                    android:background="@color/app_bg"/>
             </RelativeLayout>
         </ScrollView>
     </RelativeLayout>

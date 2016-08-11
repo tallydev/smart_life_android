@@ -118,4 +118,10 @@ public interface Engine {
     // 单项历史数据
     @GET("reports/{name}")
     Call<ReportShowList> getReportHistory(@Path("name") String name);
+
+    // *********************************************************************************************
+
+    // 联系人列表
+//    @GET("contacts")
+
 }

@@ -11,12 +11,10 @@ import android.widget.TextView;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
-import com.tallty.smart_life_android.model.Address;
+import com.tallty.smart_life_android.model.Contact;
 import com.tallty.smart_life_android.model.CartItem;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -26,17 +24,17 @@ public class PayOrder extends BaseBackFragment {
     // 结算数据
     private ArrayList<CartItem> selected_cart_items = new ArrayList<>();
     private float total_price = 0.0f;
-    private Address order_address = new Address();
+    private Contact order_contact = new Contact();
 
     private TextView order_price_text;
 
     public static PayOrder newInstance(float total_price,
                                        ArrayList<CartItem> selected_cart_items,
-                                       Address order_address) {
+                                       Contact order_contact) {
         Bundle args = new Bundle();
         args.putFloat(Const.TOTAL_PRICE, total_price);
         args.putSerializable(Const.OBJECT_List, selected_cart_items);
-        args.putSerializable(Const.OBJECT, order_address);
+        args.putSerializable(Const.OBJECT, order_contact);
         PayOrder fragment = new PayOrder();
         fragment.setArguments(args);
         return fragment;
@@ -49,7 +47,7 @@ public class PayOrder extends BaseBackFragment {
         if (args != null) {
             total_price = args.getFloat(Const.TOTAL_PRICE);
             selected_cart_items = (ArrayList<CartItem>) args.getSerializable(Const.OBJECT_List);
-            order_address = (Address) args.getSerializable(Const.OBJECT);
+            order_contact = (Contact) args.getSerializable(Const.OBJECT);
         }
     }
 
