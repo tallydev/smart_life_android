@@ -36,10 +36,13 @@ public class Const {
     public static final String USER_NICKNAME = "user_nickname";
     public static final String USER_AVATAR = "user_avatar";
     // Contact
-    public static final String ADDRESS_AREA = "address_area";
-    public static final String ADDRESS_DETAIL = "address_detail";
-    public static final String ADDRESS_PHONE = "address_phone";
-    public static final String ADDRESS_NAME = "address_name";
+    public static final String CONTACT_ID = "contact_ID";
+    public static final String CONTACT_AREA = "contact_area";
+    public static final String CONTACT_STREET = "contact_street";
+    public static final String CONTACT_COMMUNITY = "contact_community";
+    public static final String CONTACT_ADDRESS = "contact_address";
+    public static final String CONTACT_PHONE = "contact_phone";
+    public static final String CONTACT_NAME = "contact_name";
 
     /**
      * 创建Fragment

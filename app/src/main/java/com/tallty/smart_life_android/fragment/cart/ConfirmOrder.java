@@ -97,21 +97,25 @@ public class ConfirmOrder extends BaseBackFragment {
 
     // 设置订单地址, 获取SharedPreferences保存的默认地址
     private void setDefaultAddress(){
-        String area = sharedPre.getString(Const.ADDRESS_AREA, Const.EMPTY_STRING);
-        String address_detail = sharedPre.getString(Const.ADDRESS_DETAIL, Const.EMPTY_STRING);
-        String name = sharedPre.getString(Const.ADDRESS_NAME, Const.EMPTY_STRING);
-        String phone = sharedPre.getString(Const.ADDRESS_PHONE, Const.EMPTY_STRING);
+        String area = sharedPre.getString(Const.CONTACT_AREA, Const.EMPTY_STRING);
+        String street = sharedPre.getString(Const.CONTACT_STREET, Const.EMPTY_STRING);
+        String community = sharedPre.getString(Const.CONTACT_COMMUNITY, Const.EMPTY_STRING);
+        String address = sharedPre.getString(Const.CONTACT_ADDRESS, Const.EMPTY_STRING);
+        String name = sharedPre.getString(Const.CONTACT_NAME, Const.EMPTY_STRING);
+        String phone = sharedPre.getString(Const.CONTACT_PHONE, Const.EMPTY_STRING);
 
-        if (Const.EMPTY_STRING.equals(area) && Const.EMPTY_STRING.equals(address_detail)){
+        if (Const.EMPTY_STRING.equals(name) && Const.EMPTY_STRING.equals(phone)){
             order_address_text.setText("选择收货地址");
         }else{
             // 保存到对象
             order_contact.setName(name);
             order_contact.setPhone(phone);
             order_contact.setArea(area);
-            order_contact.setAddress(address_detail);
+            order_contact.setStreet(street);
+            order_contact.setCommunity(community);
+            order_contact.setAddress(address);
             // 显示
-            order_address_text.setText(area+address_detail);
+            order_address_text.setText(area+street+community+address);
         }
     }
 
@@ -139,7 +143,12 @@ public class ConfirmOrder extends BaseBackFragment {
             order_contact = (Contact) data.getSerializable(Const.OBJECT);
             // 显示
             if (order_contact != null){
-                order_address_text.setText(order_contact.getArea()+ order_contact.getAddress());
+                order_address_text.setText(
+                        order_contact.getArea()+
+                        order_contact.getStreet()+
+                        order_contact.getCommunity()+
+                        order_contact.getAddress()
+                );
             }
         }
     }

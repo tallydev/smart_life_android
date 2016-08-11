@@ -14,6 +14,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.MyWheelViewAdapter;
 import com.tallty.smart_life_android.event.ConfirmDialogEvent;
@@ -31,9 +32,9 @@ import java.util.List;
 public class AddressDialogFragment extends DialogFragment implements View.OnClickListener {
     private TextView cancel_btn;
     private TextView confirm_btn;
-    private WheelView communityWheel;
-    private WheelView streetWheel;
     private WheelView areaWheel;
+    private WheelView streetWheel;
+    private WheelView communityWheel;
     // tag
     private String caller;
 
@@ -95,9 +96,9 @@ public class AddressDialogFragment extends DialogFragment implements View.OnClic
     private void initView(View view) {
         cancel_btn = (TextView) view.findViewById(R.id.cancel_btn);
         confirm_btn = (TextView) view.findViewById(R.id.confirm_btn);
-        communityWheel = (WheelView) view.findViewById(R.id.wheel_view_community);
+        areaWheel = (WheelView) view.findViewById(R.id.wheel_view_community);
         streetWheel = (WheelView) view.findViewById(R.id.wheel_view_street);
-        areaWheel = (WheelView) view.findViewById(R.id.wheel_view_area);
+        communityWheel = (WheelView) view.findViewById(R.id.wheel_view_area);
     }
 
     private void setListener() {
@@ -112,28 +113,28 @@ public class AddressDialogFragment extends DialogFragment implements View.OnClic
         style.textSize = 14;
         style.holoBorderColor = Color.parseColor("#E7E7E7");
         // 社区
-        communityWheel.setWheelAdapter(new MyWheelViewAdapter(getActivity().getApplicationContext()));
-        communityWheel.setSkin(WheelView.Skin.Holo);
-        communityWheel.setWheelData(communityDatas());
-        communityWheel.setStyle(style);
+        areaWheel.setWheelAdapter(new MyWheelViewAdapter(getActivity().getApplicationContext()));
+        areaWheel.setSkin(WheelView.Skin.Holo);
+        areaWheel.setWheelData(communityDatas());
+        areaWheel.setStyle(style);
         // 街道
         streetWheel.setWheelAdapter(new MyWheelViewAdapter(getActivity().getApplicationContext()));
         streetWheel.setSkin(WheelView.Skin.Holo);
-        streetWheel.setWheelData(streetDatas().get(communityDatas().get(communityWheel.getSelection())));
+        streetWheel.setWheelData(streetDatas().get(communityDatas().get(areaWheel.getSelection())));
         streetWheel.setStyle(style);
-        communityWheel.join(streetWheel);
-        communityWheel.joinDatas(streetDatas());
+        areaWheel.join(streetWheel);
+        areaWheel.joinDatas(streetDatas());
         // 小区
-        areaWheel.setWheelAdapter(new MyWheelViewAdapter(getActivity().getApplicationContext()));
-        areaWheel.setSkin(WheelView.Skin.Holo);
-        areaWheel.setWheelData(
+        communityWheel.setWheelAdapter(new MyWheelViewAdapter(getActivity().getApplicationContext()));
+        communityWheel.setSkin(WheelView.Skin.Holo);
+        communityWheel.setWheelData(
                 areaDatas().get(
-                        streetDatas().get(communityDatas().get(communityWheel.getSelection()))
+                        streetDatas().get(communityDatas().get(areaWheel.getSelection()))
                         .get(streetWheel.getSelection())
                 )
         );
-        areaWheel.setStyle(style);
-        streetWheel.join(areaWheel);
+        communityWheel.setStyle(style);
+        streetWheel.join(communityWheel);
         streetWheel.joinDatas(areaDatas());
     }
 
@@ -186,10 +187,13 @@ public class AddressDialogFragment extends DialogFragment implements View.OnClic
             case R.id.confirm_btn:
                 Bundle bundle = new Bundle();
                 bundle.putString("小区",
-                        communityWheel.getSelectionItem().toString()+
+                        areaWheel.getSelectionItem().toString()+
                         streetWheel.getSelectionItem().toString()+
-                        areaWheel.getSelectionItem().toString()
+                        communityWheel.getSelectionItem().toString()
                 );
+                bundle.putString(Const.CONTACT_AREA, areaWheel.getSelectionItem().toString());
+                bundle.putString(Const.CONTACT_STREET, streetWheel.getSelectionItem().toString());
+                bundle.putString(Const.CONTACT_COMMUNITY, communityWheel.getSelectionItem().toString());
                 EventBus.getDefault().post(new ConfirmDialogEvent(getDialog(), caller, bundle));
                 break;
         }

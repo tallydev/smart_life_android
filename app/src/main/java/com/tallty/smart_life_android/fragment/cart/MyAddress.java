@@ -1,9 +1,11 @@
 package com.tallty.smart_life_android.fragment.cart;
 
 
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -14,14 +16,22 @@ import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.AddressListAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
+import com.tallty.smart_life_android.custom.RecyclerVIewItemTouchListener;
 import com.tallty.smart_life_android.event.SelectAddress;
 import com.tallty.smart_life_android.event.SetDefaultAddress;
 import com.tallty.smart_life_android.model.Contact;
+import com.tallty.smart_life_android.model.ContactList;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * 购物车-确认订单-收货地址
@@ -33,20 +43,10 @@ public class MyAddress extends BaseBackFragment {
     private TextView new_address_text;
     private RecyclerView recyclerView;
     private AddressListAdapter adapter;
-    // 临时data
-    private boolean checkeds[] = {true, false};
-    private String names[] = {"Stark", "Mark"};
-    private String phones[] = {"15216666666", "15217777777"};
-    private String areas[] = {"XX区", "YY区"};
-    private String details[] = {"XX街道XX (小区名称) XX栋XX单元XXX室", "YY街道YY (小区名称) YY栋YY单元YYY室"};
-    private boolean default_address[] = {true, false};
-    // 实例
-    private ArrayList<Contact> contacts = new ArrayList<>();
-    // sharePreferences 相关
-    private Contact shareDefaultContact = null;
-    private int defaultAddressPosition;
-    // 新增
-    private Contact new_contact = new Contact();
+    // 地址列表
+    private List<Contact> contacts = new ArrayList<>();
+    // 默认地址position
+    private int defaultContactListPosition = -1;
 
 
     public static MyAddress newInstance(int from) {
@@ -92,36 +92,100 @@ public class MyAddress extends BaseBackFragment {
     @Override
     protected void afterAnimationLogic() {
         // 载入数据并加载列表
-        loadAddressData();
+        loadContactData();
     }
 
-    private void loadAddressData() {
-        // 获取数据
-        for (int i = 0; i < names.length; i++){
-            Contact contact = new Contact();
-            contact.setChecked(checkeds[i]);
-            contact.setName(names[i]);
-            contact.setPhone(phones[i]);
-            contact.setArea(areas[i]);
-            contact.setAddress(details[i]);
-            contact.setDefault(default_address[i]);
-            contacts.add(contact);
-            // 取出默认地址
-            if (default_address[i] && shareDefaultContact == null){
-                shareDefaultContact = contact;
-                // 记录下标
-                defaultAddressPosition = i;
+    private void loadContactData() {
+        showProgress(showString(R.string.progress_normal));
+        mApp.headerEngine().getContacts().enqueue(new Callback<ContactList>() {
+            @Override
+            public void onResponse(Call<ContactList> call, Response<ContactList> response) {
+                if (response.code() == 200) {
+                    contacts.clear();
+                    contacts.addAll(response.body().getContacts());
+                    // 整理数据
+                    for (int i = 0; i < contacts.size(); i++) {
+                        if (contacts.get(i).isDefault()) {
+                            // 存储默认地址
+                            saveDefaultAddress(contacts.get(i));
+                            // 设置为选择状态
+                            contacts.get(i).setChecked(true);
+                            // 保存默认地址下标,用于设置默认地址功能
+                            defaultContactListPosition = i;
+                        } else {
+                            // 非默认的,设置选择状态为false
+                            contacts.get(i).setChecked(false);
+                        }
+                    }
+
+                    // 载入列表
+                    setList();
+                    hideProgress();
+                } else {
+                    hideProgress();
+                    showToast(showString(R.string.response_error));
+                }
             }
-        }
 
-        // 载入列表
-        processList();
+            @Override
+            public void onFailure(Call<ContactList> call, Throwable t) {
+                hideProgress();
+                showToast(showString(R.string.network_error));
+            }
+        });
     }
 
-    private void processList() {
+    // 更新SharedPreferences中的默认地址
+    // 已存在,则不保存
+    private void saveDefaultAddress(Contact contact) {
+        if (sharedPre.getInt(Const.CONTACT_ID, -1) != contact.getId() ) {
+            SharedPreferences.Editor editor = sharedPre.edit();
+            editor.putInt(Const.CONTACT_ID, contact.getId());
+            editor.putString(Const.CONTACT_PHONE, contact.getPhone());
+            editor.putString(Const.CONTACT_NAME, contact.getName());
+            editor.putString(Const.CONTACT_AREA, contact.getArea());
+            editor.putString(Const.CONTACT_STREET, contact.getStreet());
+            editor.putString(Const.CONTACT_COMMUNITY, contact.getCommunity());
+            editor.putString(Const.CONTACT_ADDRESS, contact.getAddress());
+            editor.commit();
+        }
+    }
+
+    private void setList() {
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         adapter = new AddressListAdapter(context, contacts);
         recyclerView.setAdapter(adapter);
+        recyclerView.addOnItemTouchListener(new RecyclerVIewItemTouchListener(recyclerView) {
+            @Override
+            public void onItemClick(RecyclerView.ViewHolder vh, int position) throws ParseException {
+
+            }
+
+            @Override
+            public void onItemLongPress(RecyclerView.ViewHolder vh, final int position) {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(_mActivity, R.style.CustomAlertDialogTheme);
+                builder.setMessage("确认删除吗")
+                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (contacts.get(position).isDefault()) {
+                                    // 如果删除的是默认地址, 则取第一个地址为默认地址
+                                    contacts.get(0).setDefault(true);
+                                    contacts.get(0).setChecked(true);
+                                }
+                                contacts.remove(position);
+                                adapter.notifyItemRemoved(position);
+                                adapter.notifyItemRangeChanged(position, contacts.size()-position);
+                            }
+                        })
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).create().show();
+            }
+        });
     }
 
     @Override
@@ -141,7 +205,7 @@ public class MyAddress extends BaseBackFragment {
     protected void onFragmentResult(int requestCode, int resultCode, Bundle data) {
         super.onFragmentResult(requestCode, resultCode, data);
         if (requestCode == REQ_CODE && resultCode == RESULT_OK) {
-            new_contact = (Contact) data.getSerializable(Const.OBJECT);
+            Contact new_contact = (Contact) data.getSerializable(Const.OBJECT);
             if (new_contact != null) {
                 contacts.add(new_contact);
                 adapter.notifyDataSetChanged();
@@ -149,40 +213,29 @@ public class MyAddress extends BaseBackFragment {
         }
     }
 
-
-    /**
-     * 设置传给上个ConfirmOrderFragment的数据
-     * 保存默认地址到SharedPreferences
-     * 未设置默认地址,取首个地址为默认地址
-     */
-    private void setAddressResult(){
-        Bundle bundle = new Bundle();
-        setFramgentResult(RESULT_OK, bundle);
-    }
-
-
     /**
      * 接收事件: SetDefaultAddress
+     * 设置默认地址
      */
     @Subscribe
     public void onSetDefaultAddress(SetDefaultAddress event) {
-        SharedPreferences.Editor editor = sharedPre.edit();
-        editor.putString(Const.ADDRESS_AREA, event.getContact().getArea());
-        editor.putString(Const.ADDRESS_DETAIL, event.getContact().getAddress());
-        editor.putString(Const.ADDRESS_NAME, event.getContact().getName());
-        editor.putString(Const.ADDRESS_PHONE, event.getContact().getPhone());
-        editor.commit();
+        // 更新SharedPreferences中的默认地址
+        saveDefaultAddress(event.getContact());
+
         // 取消原来的默认地址
-        Contact cache_contact = contacts.get(defaultAddressPosition);
+        Contact cache_contact = contacts.get(defaultContactListPosition);
         cache_contact.setDefault(false);
-        contacts.set(defaultAddressPosition, cache_contact);
-        adapter.notifyItemChanged(defaultAddressPosition);
-        // 设置新的默认地址 && 重置 defaultAddressPosition 为新的position
+        contacts.set(defaultContactListPosition, cache_contact);
+        adapter.notifyItemChanged(defaultContactListPosition);
+
+        // 设置新的默认地址 && 重置 defaultContactListPosition 为新的position
         cache_contact = contacts.get(event.getPosition());
         cache_contact.setDefault(true);
         contacts.set(event.getPosition(), cache_contact);
         adapter.notifyItemChanged(event.getPosition());
-        defaultAddressPosition = event.getPosition();
+
+        // 更新默认地址下标
+        defaultContactListPosition = event.getPosition();
     }
 
     /**
@@ -192,16 +245,17 @@ public class MyAddress extends BaseBackFragment {
     public void onSelectAddress(SelectAddress event) {
         Contact cache_contact;
         // 取消原来的选中地址
-        cache_contact = contacts.get(defaultAddressPosition);
+        cache_contact = contacts.get(defaultContactListPosition);
         cache_contact.setChecked(false);
-        contacts.set(defaultAddressPosition, cache_contact);
-        adapter.notifyItemChanged(defaultAddressPosition);
-        // 设置新的选中地址 && 重置 defaultAddressPosition 为新的position
+        contacts.set(defaultContactListPosition, cache_contact);
+        adapter.notifyItemChanged(defaultContactListPosition);
+
+        // 设置新的选中地址 && 重置 defaultContactListPosition 为新的position
         cache_contact = contacts.get(event.getPosition());
         cache_contact.setChecked(true);
         contacts.set(event.getPosition(), cache_contact);
         adapter.notifyItemChanged(event.getPosition());
-        defaultAddressPosition = event.getPosition();
+        defaultContactListPosition = event.getPosition();
 
         // 把选中的地址回传给上一个页面
         Bundle bundle = new Bundle();

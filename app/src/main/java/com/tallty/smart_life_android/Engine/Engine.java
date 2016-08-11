@@ -3,6 +3,7 @@ package com.tallty.smart_life_android.Engine;
 import com.tallty.smart_life_android.model.Appointment;
 import com.tallty.smart_life_android.model.AppointmentList;
 import com.tallty.smart_life_android.model.CartList;
+import com.tallty.smart_life_android.model.ContactList;
 import com.tallty.smart_life_android.model.ProductList;
 import com.tallty.smart_life_android.model.ReportList;
 import com.tallty.smart_life_android.model.ReportShowList;
@@ -122,6 +123,17 @@ public interface Engine {
     // *********************************************************************************************
 
     // 联系人列表
-//    @GET("contacts")
+    @GET("contacts")
+    Call<ContactList> getContacts();
 
+    // 新增联系人
+    @FormUrlEncoded
+    @POST("contacts")
+    Call<ContactList> newContact(@Field("contact[name]") String name,
+                                 @Field("contact[phone]") String phone,
+                                 @Field("contact[area]") String area,
+                                 @Field("contact[street]") String street,
+                                 @Field("contact[conmunity]") String community,
+                                 @Field("contact[address]") String address,
+                                 @Field("contact[is_default]") boolean is_default);
 }

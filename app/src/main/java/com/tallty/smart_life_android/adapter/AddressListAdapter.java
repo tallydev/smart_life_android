@@ -15,7 +15,7 @@ import com.tallty.smart_life_android.model.Contact;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by kang on 16/7/24.
@@ -24,9 +24,9 @@ import java.util.ArrayList;
 
 public class AddressListAdapter extends RecyclerView.Adapter<AddressListAdapter.AddressViewHolder>{
     private Context context;
-    private ArrayList<Contact> contacts;
+    private List<Contact> contacts;
 
-    public AddressListAdapter(Context context, ArrayList<Contact> contacts) {
+    public AddressListAdapter(Context context, List<Contact> contacts) {
         this.context = context;
         this.contacts = contacts;
     }
@@ -41,7 +41,12 @@ public class AddressListAdapter extends RecyclerView.Adapter<AddressListAdapter.
         final Contact contact = contacts.get(position);
 
         holder.name.setText(contact.getName());
-        holder.address.setText(contact.getArea()+ contact.getAddress());
+        holder.address.setText(
+                contact.getArea() +
+                contact.getStreet() +
+                contact.getCommunity() +
+                contact.getAddress()
+        );
         holder.phone.setText(contact.getPhone());
 
         holder.checkBox.setChecked(contact.isChecked());

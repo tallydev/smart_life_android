@@ -14,12 +14,17 @@ import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.event.ConfirmDialogEvent;
 import com.tallty.smart_life_android.fragment.Pop.AddressDialogFragment;
 import com.tallty.smart_life_android.model.Contact;
+import com.tallty.smart_life_android.model.ContactList;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * 收货地址-新建地址
@@ -30,6 +35,10 @@ public class NewAddressFragment extends BaseBackFragment {
     private EditText edit_area;
     private EditText edit_detail;
     private TextView save_address;
+    // 数据
+    private String contact_area;
+    private String contact_street;
+    private String contact_community;
 
     public static NewAddressFragment newInstance() {
 
@@ -103,8 +112,8 @@ public class NewAddressFragment extends BaseBackFragment {
 
         String name = edit_name.getText().toString();
         String phone = edit_phone.getText().toString();
-        String area = edit_area.getText().toString();
         String detail = edit_detail.getText().toString();
+        String area = edit_area.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -137,18 +146,40 @@ public class NewAddressFragment extends BaseBackFragment {
         if (cancel) {
             focusView.requestFocus();
         } else {
-            // TODO: 16/8/1 向服务器提交新地址
-
             // 提交成功: 返回数据
-            Contact cache_contact = new Contact();
-            cache_contact.setName(name);
-            cache_contact.setPhone(phone);
-            cache_contact.setArea(area);
-            cache_contact.setAddress(detail);
-            Bundle bundle = new Bundle();
-            bundle.putSerializable(Const.OBJECT, cache_contact);
-            setFramgentResult(RESULT_OK, bundle);
-            pop();
+            final Contact new_contact = new Contact();
+            new_contact.setName(name);
+            new_contact.setPhone(phone);
+            new_contact.setArea(contact_area);
+            new_contact.setStreet(contact_street);
+            new_contact.setCommunity(contact_community);
+            new_contact.setAddress(detail);
+            // 向服务器提交新联系人
+            showProgress(showString(R.string.progress_normal));
+            mApp.headerEngine()
+                    .newContact(name, phone, area, contact_street, contact_community, detail, false)
+                    .enqueue(new Callback<ContactList>() {
+                        @Override
+                        public void onResponse(Call<ContactList> call, Response<ContactList> response) {
+                            if (response.code() == 201) {
+                                // 新地址创建成功, 传递给上级, 并退出当前页
+                                Bundle bundle = new Bundle();
+                                bundle.putSerializable(Const.OBJECT, new_contact);
+                                setFramgentResult(RESULT_OK, bundle);
+                                hideProgress();
+                                pop();
+                            } else {
+                                hideProgress();
+                                showToast(showString(R.string.response_error));
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ContactList> call, Throwable t) {
+                            hideProgress();
+                            showToast(showString(R.string.network_error));
+                        }
+                    });
         }
     }
 
@@ -167,6 +198,9 @@ public class NewAddressFragment extends BaseBackFragment {
     public void onConfirmDialogEvnet(ConfirmDialogEvent event) {
         event.dialog.dismiss();
         edit_area.setText(event.data.getString("小区"));
+        contact_area = event.data.getString(Const.CONTACT_AREA);
+        contact_street = event.data.getString(Const.CONTACT_STREET);
+        contact_community = event.data.getString(Const.CONTACT_COMMUNITY);
     }
 
     /**

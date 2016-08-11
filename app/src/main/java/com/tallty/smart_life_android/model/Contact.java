@@ -40,7 +40,7 @@ public class Contact implements Serializable {
     // 社区
     @SerializedName("conmunity")
     @Expose
-    private String conmunity;
+    private String community;
     // 详细地址
     @SerializedName("address")
     @Expose
@@ -123,12 +123,12 @@ public class Contact implements Serializable {
         this.street = street;
     }
 
-    public String getConmunity() {
-        return conmunity;
+    public String getCommunity() {
+        return community;
     }
 
-    public void setConmunity(String conmunity) {
-        this.conmunity = conmunity;
+    public void setCommunity(String community) {
+        this.community = community;
     }
 
     public int getOrder() {

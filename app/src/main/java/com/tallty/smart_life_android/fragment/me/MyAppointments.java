@@ -115,7 +115,6 @@ public class MyAppointments extends BaseBackFragment {
                         .setPositiveButton("确认", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                showToast(""+position);
                                 appointments.remove(position);
                                 adapter.notifyItemRemoved(position);
                                 adapter.notifyItemRangeChanged(position, appointments.size()-position);
