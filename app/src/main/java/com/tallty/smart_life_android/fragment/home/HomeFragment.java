@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -45,6 +46,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -162,6 +165,15 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
 
         @Override
         public void onTick(long millisUntilFinished) {
+            // 每分钟判断一次时间
+            // 整点 ? 保存步数 : continue
+            String time = getNowTime();
+            if (time.substring(3).equals("00")) {
+                SharedPreferences.Editor editor = sharedPre.edit();
+                editor.putFloat(time.substring(0, 2), (float) step);
+                editor.commit();
+                Log.d("tick", "整点"+time.substring(3)+"保存了"+time.substring(0, 2)+"步数"+step);
+            }
         }
 
         @Override
@@ -195,7 +207,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
     }
 
     private void setUploadStepTimer() {
-        timer = new UploadStepTimer(uploadStepInterval, 1000);
+        timer = new UploadStepTimer(uploadStepInterval, 60000);
         timer.start();
     }
 
@@ -225,6 +237,13 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         return sdf.format(date);
     }
+
+    private String getNowTime() {
+        Date date = new Date(System.currentTimeMillis());
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        return sdf.format(date);
+    }
+
 
     /**
      * 启动计步器服务

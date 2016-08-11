@@ -275,10 +275,26 @@ public class SportMoreData extends BaseBackFragment {
 
     // 设置图表数据(日)
     private void setDayChartData(LineChartView chart) {
-        // TODO: 16/8/8 整理本地步数数据显示
-        String[] labels = {"8:00","9:00","10:00","11:00","12:00","13:00"};
-        float[] counts = {123f,160f,90f,100f,140f,100f};
-        int max = 200;
+        String[] labels = new String[24];
+        float[] counts = new float[24];
+
+        String sharedKey;
+        int max = 0;
+
+        for (int i = 0; i < 24; i++) {
+            if (i < 10) {
+                sharedKey = "0" + i;
+            } else {
+                sharedKey = String.valueOf(i);
+            }
+            labels[i] = sharedKey + ":00";
+            counts[i] = sharedPre.getFloat(sharedKey, 0.0f);
+            max = max > counts[i] ? max : (int) counts[i];
+        }
+
+        // 增加一定比例的最大值, 是图表不会顶住天
+        max += (max / 4);
+
         // 载入图表
         loadChart(chart, labels, counts, max);
     }
@@ -319,6 +335,7 @@ public class SportMoreData extends BaseBackFragment {
         chart.setBorderSpacing(Tools.fromDpToPx(15))
                 .setAxisBorderValues(0, max)
                 .setYLabels(AxisController.LabelPosition.NONE)
+                .setXLabels(AxisController.LabelPosition.NONE)
                 .setLabelsColor(getResources().getColor(R.color.orange))
                 .setXAxis(false)
                 .setYAxis(false)
