@@ -7,6 +7,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -150,6 +151,10 @@ public class ConfirmOrder extends BaseBackFragment {
                         order_contact.getAddress()
                 );
             }
+        } else {
+            // 当用户直接点击返回时
+            // 获取SharedPreferences保存的默认地址
+            setDefaultAddress();
         }
     }
 }

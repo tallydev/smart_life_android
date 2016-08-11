@@ -167,6 +167,7 @@ public class NewAddressFragment extends BaseBackFragment {
                                 bundle.putSerializable(Const.OBJECT, new_contact);
                                 setFramgentResult(RESULT_OK, bundle);
                                 hideProgress();
+                                hideSoftInput();
                                 pop();
                             } else {
                                 hideProgress();

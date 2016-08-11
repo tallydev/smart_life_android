@@ -3,6 +3,7 @@ package com.tallty.smart_life_android.Engine;
 import com.tallty.smart_life_android.model.Appointment;
 import com.tallty.smart_life_android.model.AppointmentList;
 import com.tallty.smart_life_android.model.CartList;
+import com.tallty.smart_life_android.model.Contact;
 import com.tallty.smart_life_android.model.ContactList;
 import com.tallty.smart_life_android.model.ProductList;
 import com.tallty.smart_life_android.model.ReportList;
@@ -16,7 +17,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import okhttp3.MultipartBody;
+import okhttp3.Response;
 import retrofit2.Call;
+import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
@@ -136,4 +139,8 @@ public interface Engine {
                                  @Field("contact[conmunity]") String community,
                                  @Field("contact[address]") String address,
                                  @Field("contact[is_default]") boolean is_default);
+
+    // 删除联系人
+    @DELETE("contacts/{id}")
+    Call<Contact> deleteContact(@Path("id") int contact_id);
 }

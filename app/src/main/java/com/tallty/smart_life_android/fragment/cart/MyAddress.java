@@ -9,6 +9,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -32,6 +33,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.http.Path;
 
 /**
  * 购物车-确认订单-收货地址
@@ -168,14 +170,7 @@ public class MyAddress extends BaseBackFragment {
                         .setPositiveButton("确认", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                if (contacts.get(position).isDefault()) {
-                                    // 如果删除的是默认地址, 则取第一个地址为默认地址
-                                    contacts.get(0).setDefault(true);
-                                    contacts.get(0).setChecked(true);
-                                }
-                                contacts.remove(position);
-                                adapter.notifyItemRemoved(position);
-                                adapter.notifyItemRangeChanged(position, contacts.size()-position);
+                                deleteContact(position);
                             }
                         })
                         .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -184,6 +179,49 @@ public class MyAddress extends BaseBackFragment {
                                 dialog.dismiss();
                             }
                         }).create().show();
+            }
+        });
+    }
+
+    private void deleteContact(final int position) {
+        showProgress("正在删除...");
+        mApp.headerEngine()
+                .deleteContact(contacts.get(position).getId())
+                .enqueue(new Callback<Contact>() {
+            @Override
+            public void onResponse(Call<Contact> call, Response<Contact> response) {
+                if (response.code() == 204) {
+                    boolean is_removed = false;
+                    if (contacts.size() > 1 && contacts.get(position).isDefault()) {
+                        contacts.remove(position);
+                        is_removed = true;
+                        // 如果删除的是默认地址, 则取第一个地址为默认地址
+                        contacts.get(0).setDefault(true);
+                        contacts.get(0).setChecked(true);
+                        // 更新本地默认地址
+                        saveDefaultAddress(contacts.get(0));
+                    } else if (contacts.size() <= 1) {
+                        // 当删除的地址为最后一条时,置空shared中的默认地址
+                        Contact contact = new Contact();
+                        saveDefaultAddress(contact);
+                    }
+
+                    if (!is_removed) {
+                        contacts.remove(position);
+                    }
+                    adapter.notifyItemRemoved(position);
+                    adapter.notifyItemRangeChanged(position, contacts.size()-position);
+                    hideProgress();
+                } else {
+                    hideProgress();
+                    showToast("删除失败,请重试");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Contact> call, Throwable t) {
+                hideProgress();
+                showToast(showString(R.string.network_error));
             }
         });
     }
@@ -225,12 +263,14 @@ public class MyAddress extends BaseBackFragment {
         // 取消原来的默认地址
         Contact cache_contact = contacts.get(defaultContactListPosition);
         cache_contact.setDefault(false);
+        cache_contact.setChecked(false);
         contacts.set(defaultContactListPosition, cache_contact);
         adapter.notifyItemChanged(defaultContactListPosition);
 
         // 设置新的默认地址 && 重置 defaultContactListPosition 为新的position
         cache_contact = contacts.get(event.getPosition());
         cache_contact.setDefault(true);
+        cache_contact.setChecked(true);
         contacts.set(event.getPosition(), cache_contact);
         adapter.notifyItemChanged(event.getPosition());
 
