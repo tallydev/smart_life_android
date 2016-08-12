@@ -155,14 +155,14 @@ public abstract class BaseLazyMainFragment extends BaseFragment implements View.
      * 获取字符串资源
      */
     public String showString(int ResId) {
-        return context.getString(ResId);
+        return getActivity().getApplicationContext().getString(ResId);
     }
 
     /**
      * 获取颜色资源
      */
     public int showColor(int ResId) {
-        return context.getResources().getColor(R.color.alpha_white);
+        return getActivity().getApplicationContext().getResources().getColor(R.color.alpha_white);
     }
 
 

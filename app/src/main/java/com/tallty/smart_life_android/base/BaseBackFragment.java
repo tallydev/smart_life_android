@@ -38,7 +38,7 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
     protected Context context;
     protected SharedPreferences sharedPre;
     // tag
-    private static final String TAG = "Fragmentation";
+    protected static final String TAG = "Fragmentation";
     // UI
     private View view;
     protected Toolbar toolbar;
@@ -255,14 +255,14 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
      * 获取字符串资源
      */
     public String showString(int ResId) {
-        return context.getString(ResId);
+        return getActivity().getApplicationContext().getString(ResId);
     }
 
     /**
      * 获取颜色资源
      */
     public int showColor(int ResId) {
-        return context.getResources().getColor(R.color.alpha_white);
+        return getActivity().getApplicationContext().getResources().getColor(R.color.alpha_white);
     }
 
     /**
