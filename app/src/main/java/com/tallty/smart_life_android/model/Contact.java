@@ -38,7 +38,7 @@ public class Contact implements Serializable {
     @Expose
     private String street;
     // 社区
-    @SerializedName("conmunity")
+    @SerializedName("community")
     @Expose
     private String community;
     // 详细地址

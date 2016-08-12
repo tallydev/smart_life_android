@@ -5,6 +5,7 @@ import com.tallty.smart_life_android.model.AppointmentList;
 import com.tallty.smart_life_android.model.CartList;
 import com.tallty.smart_life_android.model.Contact;
 import com.tallty.smart_life_android.model.ContactList;
+import com.tallty.smart_life_android.model.Home;
 import com.tallty.smart_life_android.model.ProductList;
 import com.tallty.smart_life_android.model.ReportList;
 import com.tallty.smart_life_android.model.ReportShowList;
@@ -85,6 +86,25 @@ public interface Engine {
     Call<CartList> getCartList(@Query("page") Integer page,
                                @Query("per_page") Integer per_page);
 
+    // 联系人列表
+    @GET("contacts")
+    Call<ContactList> getContacts();
+
+    // 新增联系人
+    @FormUrlEncoded
+    @POST("contacts")
+    Call<ContactList> newContact(@Field("contact[name]") String name,
+                                 @Field("contact[phone]") String phone,
+                                 @Field("contact[area]") String area,
+                                 @Field("contact[street]") String street,
+                                 @Field("contact[community]") String community,
+                                 @Field("contact[address]") String address,
+                                 @Field("contact[is_default]") boolean is_default);
+
+    // 删除联系人
+    @DELETE("contacts/{id}")
+    Call<Contact> deleteContact(@Path("id") int contact_id);
+
     // *********************************************************************************************
 
     // 上传运动步数
@@ -125,22 +145,7 @@ public interface Engine {
 
     // *********************************************************************************************
 
-    // 联系人列表
-    @GET("contacts")
-    Call<ContactList> getContacts();
-
-    // 新增联系人
-    @FormUrlEncoded
-    @POST("contacts")
-    Call<ContactList> newContact(@Field("contact[name]") String name,
-                                 @Field("contact[phone]") String phone,
-                                 @Field("contact[area]") String area,
-                                 @Field("contact[street]") String street,
-                                 @Field("contact[conmunity]") String community,
-                                 @Field("contact[address]") String address,
-                                 @Field("contact[is_default]") boolean is_default);
-
-    // 删除联系人
-    @DELETE("contacts/{id}")
-    Call<Contact> deleteContact(@Path("id") int contact_id);
+    // 获取首页信息
+    @GET("home")
+    Call<Home> getHomeData();
 }

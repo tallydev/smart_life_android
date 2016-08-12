@@ -118,7 +118,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
             viewHolder.countdownView.setOnCountdownEndListener(new CountdownView.OnCountdownEndListener() {
                 @Override
                 public void onEnd(CountdownView cv) {
-                    cv.start(95000000);
+                    cv.restart();
                 }
             });
         }

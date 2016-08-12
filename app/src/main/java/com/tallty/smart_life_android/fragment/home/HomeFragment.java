@@ -33,6 +33,7 @@ import com.tallty.smart_life_android.event.TabSelectedEvent;
 import com.tallty.smart_life_android.fragment.MainFragment;
 import com.tallty.smart_life_android.holder.BannerHolderView;
 import com.tallty.smart_life_android.holder.HomeViewHolder;
+import com.tallty.smart_life_android.model.Home;
 import com.tallty.smart_life_android.model.Step;
 import com.tallty.smart_life_android.service.StepService;
 import com.tallty.smart_life_android.utils.ToastUtil;
@@ -40,14 +41,12 @@ import com.tallty.smart_life_android.utils.ToastUtil;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -65,16 +64,16 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
     private Messenger mGetReplyMessenger = new Messenger(new Handler(this));
     private Handler delayHandler;
     private static int step = 0;
+    private static int rank = 0;
     // 计时器: 15分钟上传步数
     private static final int uploadStepInterval = 900000;
     private UploadStepTimer timer;
     // 组件
     private ConvenientBanner<Integer> banner;
     private MyRecyclerView recyclerView;
-    private HomeRecyclerAdapter homeRecyclerAdapter;
     private RecyclerView.LayoutManager layoutManager;
     // 运动达人的ViewHolder
-    private HomeViewHolder homeViewHolder;
+    private HomeViewHolder homeViewHolder = null;
     // banner图数据
     private Integer[] imagesUrl = { R.drawable.banner_one, R.drawable.banner_two };
     // 列表数据
@@ -149,7 +148,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
         // 设置计步服务
         setupService();
         // 第一次进入应用时, 先上传一次步数
-
+        uploadStepAndGetRank();
         // 设置步数上传计时器(15分钟)
         setUploadStepTimer();
     }
@@ -180,7 +179,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
         public void onFinish() {
             // 计时器正常结束时,取消上一个计时器,上传步数,开始新的计时器
             timer.cancel();
-            uploadStep();
+            uploadStepAndGetRank();
             setUploadStepTimer();
         }
     }
@@ -200,7 +199,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
 
     private void setList() {
         recyclerView.setLayoutManager(layoutManager);
-        homeRecyclerAdapter = new HomeRecyclerAdapter(context, titles, images, itemButtons, itemIcons);
+        HomeRecyclerAdapter homeRecyclerAdapter = new HomeRecyclerAdapter(context, titles, images, itemButtons, itemIcons);
         recyclerView.setAdapter(homeRecyclerAdapter);
         // ScrollView嵌套RecyclerView,设置屏幕从顶部开始
         recyclerView.setFocusable(false);
@@ -211,10 +210,10 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
         timer.start();
     }
 
-    private void uploadStep() {
+    private void uploadStepAndGetRank() {
         String current_date = getTodayDate();
-        Log.d(TAG, "开始上传步数任务"+current_date+","+step);
 
+        Log.d(TAG, "开始上传步数任务"+current_date+","+step);
         mApp.headerEngine().uploadStep(current_date, step).enqueue(new Callback<Step>() {
             @Override
             public void onResponse(Call<Step> call, Response<Step> response) {
@@ -228,6 +227,23 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
             @Override
             public void onFailure(Call<Step> call, Throwable t) {
                 Log.d(TAG, "上传步数链接服务器失败");
+            }
+        });
+
+        // 每次上传步数时,获取首页信息
+        mApp.headerEngine().getHomeData().enqueue(new Callback<Home>() {
+            @Override
+            public void onResponse(Call<Home> call, Response<Home> response) {
+                if (response.code() == 200) {
+                    rank = response.body().getFitness().get("rank");
+                } else {
+                    Log.d(TAG, "获取首页信息失败");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Home> call, Throwable t) {
+                Log.d(TAG, "链接服务器失败");
             }
         });
     }
@@ -318,6 +334,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
                     homeViewHolder = (HomeViewHolder) recyclerView.findViewHolderForAdapterPosition(1);
                 } else {
                     homeViewHolder.steps.setText(""+step);
+                    homeViewHolder.rank.setText(""+rank);
                 }
 
                 // 延时0.5s 发送 REQUEST_SERVER 消息
