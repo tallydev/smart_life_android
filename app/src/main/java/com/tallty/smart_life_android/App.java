@@ -5,6 +5,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.orhanobut.logger.Logger;
+import com.pgyersdk.crash.PgyCrashManager;
 import com.tallty.smart_life_android.Engine.Engine;
 
 import java.io.IOException;
@@ -33,6 +34,8 @@ public class App extends Application{
         sInstance = this;
         Logger.init();
         setNoHeaderEngine();
+        // 注册蒲公英Crash接口
+        PgyCrashManager.register(this);
     }
 
     public static App getInstance() {

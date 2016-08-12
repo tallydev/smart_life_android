@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.pgyersdk.update.PgyUpdateManager;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseFragment;
 import com.tallty.smart_life_android.custom.TabBar;
@@ -83,6 +84,9 @@ public class MainFragment extends BaseFragment {
         }
 
         initView(view);
+        // 检查更新
+        PgyUpdateManager.register(getActivity());
+
         return view;
     }
 
@@ -117,6 +121,7 @@ public class MainFragment extends BaseFragment {
                 EventBus.getDefault().post(new TabSelectedEvent(position));
             }
         });
+
     }
 
     /**

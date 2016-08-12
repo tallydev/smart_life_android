@@ -2,6 +2,7 @@ package com.tallty.smart_life_android.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,9 +25,11 @@ import com.tallty.smart_life_android.holder.HomeViewHolder;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import cn.iwgang.countdownview.CountdownView;
 
@@ -41,6 +44,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
     private List<Integer> images;
     private String[][] buttons;
     private Integer[][] icons;
+    private long countDownSecond;
     // 模板类型
     private static final int IS_NORMAL = 0;
     private static final int IS_STEPS = 1;
@@ -63,6 +67,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
         this.buttons = buttons;
         this.icons = icons;
         this.images = images;
+        this.countDownSecond = 648000;
     }
 
     @Override
@@ -109,18 +114,35 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
             viewHolder.rank.setText("1");
             viewHolder.steps.setText("0");
             // 当前日期
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd");
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd", Locale.getDefault());
             Date date = new Date(System.currentTimeMillis());
             String str = simpleDateFormat.format(date);
             viewHolder.date.setText(str);
+            System.out.println();
         } else if (titles.get(position).equals("新品上市") && viewHolder.viewType == IS_PRODUCT) {
-            viewHolder.countdownView.start(15550000);
+            // 设置倒计时
+            viewHolder.countdownView.start(countDownSecond);
             viewHolder.countdownView.setOnCountdownEndListener(new CountdownView.OnCountdownEndListener() {
                 @Override
                 public void onEnd(CountdownView cv) {
                     cv.restart();
                 }
             });
+        }
+    }
+
+    public void setCountDownTimer(String time) {
+        Log.d("时间", time);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        try {
+            Date date = format.parse(time);
+            countDownSecond = date.getTime() - System.currentTimeMillis();
+            Log.d("时间", date.getTime() +"");
+            Log.d("当前", System.currentTimeMillis() +"");
+            Log.d("差值", countDownSecond +"");
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
     }
 

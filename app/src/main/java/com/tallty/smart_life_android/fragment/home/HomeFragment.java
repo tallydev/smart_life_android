@@ -72,6 +72,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
     private ConvenientBanner<Integer> banner;
     private MyRecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
+    private HomeRecyclerAdapter homeRecyclerAdapter;
     // 运动达人的ViewHolder
     private HomeViewHolder homeViewHolder = null;
     // banner图数据
@@ -147,10 +148,12 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
         setList();
         // 设置计步服务
         setupService();
-        // 第一次进入应用时, 先上传一次步数
-        uploadStepAndGetRank();
         // 设置步数上传计时器(15分钟)
         setUploadStepTimer();
+        // 获取首页信息,更新列表
+        getHomeData();
+        // 第一次进入应用时, 先上传一次步数
+        uploadStep();
     }
 
 
@@ -158,7 +161,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
      * 自定义计时器
      */
     private class UploadStepTimer extends CountDownTimer {
-        public UploadStepTimer(long millisInFuture, long countDownInterval) {
+        UploadStepTimer(long millisInFuture, long countDownInterval) {
             super(millisInFuture, countDownInterval);
         }
 
@@ -179,7 +182,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
         public void onFinish() {
             // 计时器正常结束时,取消上一个计时器,上传步数,开始新的计时器
             timer.cancel();
-            uploadStepAndGetRank();
+            uploadStep();
             setUploadStepTimer();
         }
     }
@@ -197,9 +200,31 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
                 .setOnItemClickListener(this);
     }
 
+    private void getHomeData() {
+        // 每次上传步数时,获取首页信息
+        mApp.headerEngine().getHomeData().enqueue(new Callback<Home>() {
+            @Override
+            public void onResponse(Call<Home> call, Response<Home> response) {
+                if (response.code() == 200) {
+                    rank = response.body().getFitness().get("rank");
+                    homeRecyclerAdapter.setCountDownTimer(response.body().getNewer().get("end_time"));
+                    homeRecyclerAdapter.notifyItemChanged(6);
+                    Log.d(TAG, "更新了倒计时");
+                } else {
+                    Log.d(TAG, "获取首页信息失败");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Home> call, Throwable t) {
+                Log.d(TAG, "链接服务器失败");
+            }
+        });
+    }
+
     private void setList() {
         recyclerView.setLayoutManager(layoutManager);
-        HomeRecyclerAdapter homeRecyclerAdapter = new HomeRecyclerAdapter(context, titles, images, itemButtons, itemIcons);
+        homeRecyclerAdapter = new HomeRecyclerAdapter(context, titles, images, itemButtons, itemIcons);
         recyclerView.setAdapter(homeRecyclerAdapter);
         // ScrollView嵌套RecyclerView,设置屏幕从顶部开始
         recyclerView.setFocusable(false);
@@ -210,7 +235,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
         timer.start();
     }
 
-    private void uploadStepAndGetRank() {
+    private void uploadStep() {
         String current_date = getTodayDate();
 
         Log.d(TAG, "开始上传步数任务"+current_date+","+step);
@@ -227,23 +252,6 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
             @Override
             public void onFailure(Call<Step> call, Throwable t) {
                 Log.d(TAG, "上传步数链接服务器失败");
-            }
-        });
-
-        // 每次上传步数时,获取首页信息
-        mApp.headerEngine().getHomeData().enqueue(new Callback<Home>() {
-            @Override
-            public void onResponse(Call<Home> call, Response<Home> response) {
-                if (response.code() == 200) {
-                    rank = response.body().getFitness().get("rank");
-                } else {
-                    Log.d(TAG, "获取首页信息失败");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Home> call, Throwable t) {
-                Log.d(TAG, "链接服务器失败");
             }
         });
     }
