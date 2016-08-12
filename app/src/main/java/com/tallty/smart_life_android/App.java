@@ -6,6 +6,7 @@ import android.content.Context;
 
 import com.orhanobut.logger.Logger;
 import com.pgyersdk.crash.PgyCrashManager;
+import com.squareup.leakcanary.LeakCanary;
 import com.tallty.smart_life_android.Engine.Engine;
 
 import java.io.IOException;
@@ -33,6 +34,9 @@ public class App extends Application{
         super.onCreate();
         sInstance = this;
         Logger.init();
+        // 内存泄露测试
+        LeakCanary.install(this);
+        // 网络服务
         setNoHeaderEngine();
         // 注册蒲公英Crash接口
         PgyCrashManager.register(this);

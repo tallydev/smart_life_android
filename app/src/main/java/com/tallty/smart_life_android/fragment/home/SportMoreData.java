@@ -23,6 +23,8 @@ import com.tallty.smart_life_android.model.SportDetail;
 import com.tallty.smart_life_android.model.SportInfo;
 import com.tallty.smart_life_android.model.SportRank;
 import com.tallty.smart_life_android.model.SportRankItem;
+import com.tallty.smart_life_android.model.Step;
+import com.tallty.smart_life_android.service.StepCreator;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -66,11 +68,14 @@ public class SportMoreData extends BaseBackFragment {
     private ArrayList<SportRankItem> sportRankItems = new ArrayList<>();
     // 列表控制
     private boolean isLoadRank = false;
+    // 步数
+    private int step = 0;
 
 
-    public static SportMoreData newInstance(String title) {
+    public static SportMoreData newInstance(String title, int step) {
         Bundle args = new Bundle();
         args.putString(Const.FRAGMENT_NAME, title);
+        args.putInt(Const.INT, step);
         SportMoreData fragment = new SportMoreData();
         fragment.setArguments(args);
         return fragment;
@@ -81,6 +86,7 @@ public class SportMoreData extends BaseBackFragment {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         mName = args.getString(Const.FRAGMENT_NAME);
+        step = args.getInt(Const.INT);
     }
 
     @Override
@@ -160,7 +166,37 @@ public class SportMoreData extends BaseBackFragment {
         chartTabReset();
         tab.setSelected(true);
         chart.setVisibility(View.VISIBLE);
-        initChartAndRank(timeLine, chart);
+        if (timeLine.equals("daily")) {
+            // 每日步数, 先上传最新的步数, 再载入图表和列表
+            updateStepAndInitChartRank(timeLine, chart, isLoad);
+        } else {
+            initChartAndRank(timeLine, chart, isLoad);
+        }
+
+    }
+
+    private void updateStepAndInitChartRank(final String timeLine,
+                                            final LineChartView chart, final boolean isLoad) {
+        String current_date = getTodayDate();
+
+        Log.d(TAG, "开始上传步数任务"+current_date+","+ step);
+        mApp.headerEngine().uploadStep(current_date, step).enqueue(new Callback<Step>() {
+            @Override
+            public void onResponse(Call<Step> call, Response<Step> response) {
+                if (response.code() == 201) {
+                    Log.d(TAG, "上传步数成功"+response.body().getCount());
+                    // 载入图表和列表
+                    initChartAndRank(timeLine, chart, isLoad);
+                } else {
+                    Log.d(TAG, "上传步数失败");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Step> call, Throwable t) {
+                Log.d(TAG, "上传步数链接服务器失败");
+            }
+        });
     }
 
     /**
@@ -168,7 +204,7 @@ public class SportMoreData extends BaseBackFragment {
      * @param timeLine
      * @param chart
      */
-    private void initChartAndRank(final String timeLine, final LineChartView chart) {
+    private void initChartAndRank(final String timeLine, final LineChartView chart, final boolean isLoad) {
         showProgress(showString(R.string.progress_normal));
         // 获取时间段运动图表数据和个人统计信息
         mApp.headerEngine().getSportsData(timeLine).enqueue(new Callback<SportData>() {
@@ -182,10 +218,10 @@ public class SportMoreData extends BaseBackFragment {
                     // 加载图表
                     if (sportChartData.isEmpty()) {
                         // 整理每日图表数据
-                        setDayChartData(chart);
+                        setDayChartData(chart, isLoad);
                     } else {
                         // 整理周、月、年图表数据
-                        setChartData(chart);
+                        setChartData(chart, isLoad);
                     }
                     // 加载rank
                     initRankList(timeLine);
@@ -274,7 +310,7 @@ public class SportMoreData extends BaseBackFragment {
     }
 
     // 设置图表数据(日)
-    private void setDayChartData(LineChartView chart) {
+    private void setDayChartData(LineChartView chart, boolean isLoad) {
         String[] labels = new String[24];
         float[] counts = new float[24];
 
@@ -292,15 +328,16 @@ public class SportMoreData extends BaseBackFragment {
             max = max > counts[i] ? max : (int) counts[i];
         }
 
-        // 增加一定比例的最大值, 是图表不会顶住天
+        // 增加一定比例的最大值, 使图表不会顶住天
         max += (max / 4);
 
         // 载入图表
-        loadChart(chart, labels, counts, max);
+        if (!isLoad)
+            loadChart(chart, labels, counts, max);
     }
 
     // 设置图表数据(周, 月, 年)
-    private void setChartData(LineChartView chart) {
+    private void setChartData(LineChartView chart, boolean isLoad) {
         int max = 0;
         String[] labels = new String[sportChartData.size()];
         float[] counts = new float[sportChartData.size()];
@@ -313,7 +350,8 @@ public class SportMoreData extends BaseBackFragment {
             max = sportDetail.getCount() > max ? sportDetail.getCount() : max;
         }
         // 载入图表
-        loadChart(chart, labels, counts, max);
+        if (!isLoad)
+            loadChart(chart, labels, counts, max);
     }
 
     /**
@@ -324,6 +362,7 @@ public class SportMoreData extends BaseBackFragment {
      * @param max
      */
     private void loadChart(LineChartView chart, String[] labels, float[] datas, int max) {
+        Log.d("chart", "实例化图表");
         chart.reset();
         LineSet dataSet = new LineSet(labels, datas);
 
@@ -356,5 +395,11 @@ public class SportMoreData extends BaseBackFragment {
         chartWeek.setVisibility(View.GONE);
         chartMonth.setVisibility(View.GONE);
         chartYear.setVisibility(View.GONE);
+    }
+
+    private String getTodayDate() {
+        Date date = new Date(System.currentTimeMillis());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return sdf.format(date);
     }
 }

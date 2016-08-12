@@ -17,6 +17,7 @@ import com.tallty.smart_life_android.fragment.home.CommunityIt;
 import com.tallty.smart_life_android.fragment.home.CountOrder;
 import com.tallty.smart_life_android.fragment.home.HealthyCheckReport;
 import com.tallty.smart_life_android.fragment.home.HealthyOrderCheck;
+import com.tallty.smart_life_android.fragment.home.HomeFragment;
 import com.tallty.smart_life_android.fragment.home.HouseCatEye;
 import com.tallty.smart_life_android.fragment.home.HouseRemoteControl;
 import com.tallty.smart_life_android.fragment.home.LimitSail;
@@ -184,7 +185,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
                 // 健身达人
                 else if (tag == 1) {
                     if (position == 0) {
-                        EventBus.getDefault().post(new StartBrotherEvent(SportMoreData.newInstance("健身达人")));
+                        EventBus.getDefault().post(new StartBrotherEvent(SportMoreData.newInstance("健身达人", HomeFragment.step)));
                     }
                 }
                 // 市政大厅

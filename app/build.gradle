@@ -100,10 +100,16 @@ dependencies {
     compile 'com.android.support:support-v4:23.3.0'
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.android.support:design:23.3.0'
+
     compile 'com.squareup.okhttp3:okhttp:3.3.1'
     compile 'com.google.code.gson:gson:2.7'
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
+    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
+
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'me.yokeyword:fragmentation:0.7.9'
     compile 'me.yokeyword:fragmentation-swipeback:0.7.9'

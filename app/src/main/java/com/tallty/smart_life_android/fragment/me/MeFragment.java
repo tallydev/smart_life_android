@@ -23,6 +23,7 @@ import com.tallty.smart_life_android.event.TabSelectedEvent;
 import com.tallty.smart_life_android.event.TransferDataEvent;
 import com.tallty.smart_life_android.fragment.MainFragment;
 import com.tallty.smart_life_android.fragment.home.HealthyCheckReport;
+import com.tallty.smart_life_android.fragment.home.HomeFragment;
 import com.tallty.smart_life_android.fragment.home.SportMoreData;
 import com.tallty.smart_life_android.model.User;
 
@@ -194,7 +195,7 @@ public class MeFragment extends BaseLazyMainFragment {
                 EventBus.getDefault().post(new StartBrotherEvent(HealthyCheckReport.newInstance("健康报告")));
                 break;
             case R.id.me_sport:
-                EventBus.getDefault().post(new StartBrotherEvent(SportMoreData.newInstance("健身达人")));
+                EventBus.getDefault().post(new StartBrotherEvent(SportMoreData.newInstance("健身达人", HomeFragment.step)));
                 break;
             case R.id.me_appointment:
                 EventBus.getDefault().post(new StartBrotherEvent(MyAppointments.newInstance()));
