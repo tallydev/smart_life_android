@@ -30,6 +30,7 @@ import com.tallty.smart_life_android.base.BaseLazyMainFragment;
 import com.tallty.smart_life_android.custom.MyRecyclerView;
 import com.tallty.smart_life_android.event.ShowSnackbarEvent;
 import com.tallty.smart_life_android.event.TabSelectedEvent;
+import com.tallty.smart_life_android.event.TransferDataEvent;
 import com.tallty.smart_life_android.fragment.MainFragment;
 import com.tallty.smart_life_android.holder.BannerHolderView;
 import com.tallty.smart_life_android.holder.HomeViewHolder;
@@ -40,6 +41,7 @@ import com.tallty.smart_life_android.utils.ToastUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -59,7 +61,7 @@ import retrofit2.Response;
 public class HomeFragment extends BaseLazyMainFragment implements OnItemClickListener, Handler.Callback{
     // 计步器相关
     private ServiceConnection conn;
-    private static final int TIME_INTERVAL = 500;
+    private static final int TIME_INTERVAL = 1000;
     private Messenger messenger;
     private Messenger mGetReplyMessenger = new Messenger(new Handler(this));
     private Handler delayHandler;
@@ -68,6 +70,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
     // 计时器: 15分钟上传步数
     private static final int uploadStepInterval = 900000;
     private UploadStepTimer timer;
+    private static boolean firstUse = true;
     // 组件
     private ConvenientBanner<Integer> banner;
     private MyRecyclerView recyclerView;
@@ -152,8 +155,6 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
         setUploadStepTimer();
         // 获取首页信息,更新列表
         getHomeData();
-        // 第一次进入应用时, 先上传一次步数
-        uploadStep();
     }
 
 
@@ -345,7 +346,12 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
                     homeViewHolder.rank.setText(""+rank);
                 }
 
-                // 延时0.5s 发送 REQUEST_SERVER 消息
+                // 第一次接受数据时,发布事件,通知初次上传步数
+                if (firstUse) {
+                    EventBus.getDefault().post(new TransferDataEvent(new Bundle(), "初次进入"));
+                    firstUse = false;
+                }
+                // 延时1s 发送 REQUEST_SERVER 消息
                 delayHandler.sendEmptyMessageDelayed(Const.REQUEST_SERVER,TIME_INTERVAL);
                 break;
             case Const.REQUEST_SERVER:
@@ -416,5 +422,12 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
 
             }
         });
+    }
+
+    @Subscribe
+    public void onTransferDataEvent(TransferDataEvent event) {
+        if (event.tag.equals("初次进入")) {
+            uploadStep();
+        }
     }
 }

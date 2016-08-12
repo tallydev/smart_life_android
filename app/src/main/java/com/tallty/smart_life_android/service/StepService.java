@@ -9,6 +9,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -335,7 +336,6 @@ public class StepService extends Service implements SensorEventListener {
             Step data = list.get(0);
             data.setCount(tempStep + "");
             DbUtils.update(data);
-
             Log.d(TAG, "更新"+current_date+"今天步数记录:"+list.get(0).getCount()+", 总记录数:"+DbUtils.getQueryAll(Step.class).size());
         }
     }
