@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.orhanobut.logger.Logger;
 import com.tallty.smart_life_android.Const;
+import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.event.ConfirmDialogEvent;
@@ -179,7 +180,7 @@ public class RegisterFragment extends BaseBackFragment {
             getCodeBtn.setClickable(false);
             timer.start();
             // 获取
-            mApp.noHeaderEngine().getSms(phone).enqueue(new Callback<HashMap<String, String>>() {
+            Engine.noAuthService().getSms(phone).enqueue(new Callback<HashMap<String, String>>() {
                 @Override
                 public void onResponse(Call<HashMap<String, String>> call, Response<HashMap<String, String>> response) {
                     if (response.code() == 201) {
@@ -271,7 +272,7 @@ public class RegisterFragment extends BaseBackFragment {
         registerBtn.setClickable(false);
         showProgress(showString(R.string.progress_register));
 
-        mApp.noHeaderEngine().registerUser(
+        Engine.noAuthService().registerUser(
                 user_edit.getPhone(),
                 user_edit.getPassword(),
                 sms).enqueue(new Callback<User>() {
@@ -337,7 +338,7 @@ public class RegisterFragment extends BaseBackFragment {
         Map<String, String> fields = new HashMap<>();
         fields.put("user_info[nickname]", user_edit.getNickname());
 
-        mApp.noHeaderEngine().updateUser(
+        Engine.noAuthService().updateUser(
                 user.getToken(),
                 user.getPhone(),
                 fields)

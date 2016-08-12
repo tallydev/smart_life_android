@@ -142,7 +142,7 @@ public class CartFragment extends BaseLazyMainFragment {
         // TODO: 16/8/5 LimitSailShow传来的死数据,待处理
 //        showProgress(showString(R.string.progress_normal));
 //        // 获取网络数据
-//        mApp.headerEngine().getCartList(1, 10).enqueue(new Callback<CartList>() {
+//        Engine.authService().getCartList(1, 10).enqueue(new Callback<CartList>() {
 //            @Override
 //            public void onResponse(Call<CartList> call, Response<CartList> response) {
 //                if (response.code() == 200) {

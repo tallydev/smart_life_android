@@ -19,7 +19,6 @@ import com.tallty.smart_life_android.utils.ToastUtil;
  */
 public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener {
     protected String TAG;
-    protected static final App mApp = App.getInstance();
     protected SharedPreferences sharedPre;
 
     @Override

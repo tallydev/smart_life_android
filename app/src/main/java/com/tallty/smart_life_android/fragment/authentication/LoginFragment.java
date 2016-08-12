@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
 import com.tallty.smart_life_android.Const;
+import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.activity.MainActivity;
 import com.tallty.smart_life_android.base.BaseLazyMainFragment;
@@ -66,8 +67,6 @@ public class LoginFragment extends BaseLazyMainFragment {
         Logger.d(phone);
         Logger.d(token);
         if (!phone.isEmpty() && !token.isEmpty()) {
-            // 初始化retrofit服务
-            mApp.setHeaderEngine(phone, token);
             // 进入首页, 不再登录
             Intent intent = new Intent(getActivity(), MainActivity.class);
             startActivity(intent);
@@ -173,7 +172,7 @@ public class LoginFragment extends BaseLazyMainFragment {
         login_btn.setClickable(false);
         showProgress(showString(R.string.progress_login));
 
-        mApp.noHeaderEngine().login(phone, password).enqueue(new Callback<User>() {
+        Engine.noAuthService().login(phone, password).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 User user = response.body();
@@ -184,11 +183,6 @@ public class LoginFragment extends BaseLazyMainFragment {
                     editor.putString(Const.USER_PHONE, user.getPhone());
                     editor.putString(Const.USER_TOKEN, user.getToken());
                     editor.commit();
-
-                    /**
-                     * 登陆成功, 使用phone和token初始化headerEngine, 避免登录成功后接口调用时的重复初始化
-                     */
-                    mApp.setHeaderEngine(user.getPhone(), user.getToken());
                     // 进入首页
                     Intent intent = new Intent(getActivity(), MainActivity.class);
                     startActivity(intent);

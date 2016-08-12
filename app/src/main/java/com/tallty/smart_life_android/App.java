@@ -7,16 +7,8 @@ import android.content.Context;
 import com.orhanobut.logger.Logger;
 import com.pgyersdk.crash.PgyCrashManager;
 import com.squareup.leakcanary.LeakCanary;
-import com.tallty.smart_life_android.Engine.Engine;
 
-import java.io.IOException;
 import java.util.List;
-
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by kang on 16/6/14.
@@ -24,10 +16,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class App extends Application{
     private static App sInstance;
-    // 网络请求实例
-    private static String baseUrl = "http://220.163.125.158:8081/";
-    private static Engine noHeaderEngine;
-    private static Engine headerEngine;
 
     @Override
     public void onCreate() {
@@ -36,8 +24,6 @@ public class App extends Application{
         Logger.init();
         // 内存泄露测试
         LeakCanary.install(this);
-        // 网络服务
-        setNoHeaderEngine();
         // 注册蒲公英Crash接口
         PgyCrashManager.register(this);
     }
@@ -60,65 +46,5 @@ public class App extends Application{
             }
         }
         return false;
-    }
-
-    /**
-     * 无Header数据请求服务
-     */
-    public Engine noHeaderEngine() {
-        return noHeaderEngine;
-    }
-
-    /**
-     * 有Header数据请求服务
-     */
-    public Engine headerEngine() {
-        return headerEngine;
-    }
-
-    // 设置无header数据的通用链接
-    private void setNoHeaderEngine() {
-        // 定义拦截器,添加headers
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
-            @Override
-            public okhttp3.Response intercept(Chain chain) throws IOException {
-                Request newRequest = chain.request().newBuilder()
-                        .addHeader("Accept", "application/json")
-                        .build();
-                return chain.proceed(newRequest);
-            }
-        }).build();
-
-        noHeaderEngine = new Retrofit.Builder()
-                .baseUrl(baseUrl)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(client)
-                .build()
-                .create(Engine.class);
-    }
-
-    // 设置有header数据的通用链接
-    // (登录成功时,初始化)
-    public void setHeaderEngine(final String phone, final String token) {
-        // 定义拦截器,添加headers
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
-            @Override
-            public okhttp3.Response intercept(Chain chain) throws IOException {
-                Request newRequest = chain.request().newBuilder()
-                        .addHeader("Accept", "application/json")
-                        .addHeader("X-User-Token", token)
-                        .addHeader("X-User-Phone", phone)
-                        .build();
-                return chain.proceed(newRequest);
-            }
-        }).build();
-
-        // 创建Retrofit实例
-        headerEngine = new Retrofit.Builder()
-                .baseUrl(baseUrl)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(client)
-                .build()
-                .create(Engine.class);
     }
 }

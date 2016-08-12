@@ -1,151 +1,84 @@
 package com.tallty.smart_life_android.Engine;
 
-import com.tallty.smart_life_android.model.Appointment;
-import com.tallty.smart_life_android.model.AppointmentList;
-import com.tallty.smart_life_android.model.CartList;
-import com.tallty.smart_life_android.model.Contact;
-import com.tallty.smart_life_android.model.ContactList;
-import com.tallty.smart_life_android.model.Home;
-import com.tallty.smart_life_android.model.ProductList;
-import com.tallty.smart_life_android.model.ReportList;
-import com.tallty.smart_life_android.model.ReportShowList;
-import com.tallty.smart_life_android.model.SportData;
-import com.tallty.smart_life_android.model.SportRank;
-import com.tallty.smart_life_android.model.Step;
-import com.tallty.smart_life_android.model.User;
+import android.util.Log;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOException;
 
-import okhttp3.MultipartBody;
-import okhttp3.Response;
-import retrofit2.Call;
-import retrofit2.http.DELETE;
-import retrofit2.http.Field;
-import retrofit2.http.FieldMap;
-import retrofit2.http.FormUrlEncoded;
-import retrofit2.http.GET;
-import retrofit2.http.Header;
-import retrofit2.http.Multipart;
-import retrofit2.http.POST;
-import retrofit2.http.PUT;
-import retrofit2.http.Part;
-import retrofit2.http.Path;
-import retrofit2.http.Query;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * Created by kang on 16/8/1.
- * base_url: http://220.163.125.158:8081
- * 业务接口
+ * Created by kang on 16/8/13.
+ * Retrofit 网络引擎
  */
 
-public interface Engine {
-    // 登录
-    @FormUrlEncoded
-    @POST("users/sign_in")
-    Call<User> login(@Field("user[phone]") String phone,
-                     @Field("user[password]") String password);
+public class Engine {
+    private static final String baseUrl = "http://220.163.125.158:8081/";
+    private static DataAPI authService = null;
+    private static DataAPI noAuthService = null;
 
-    // 获取验证码
-    @FormUrlEncoded
-    @POST("sms_tokens/register")
-    Call<HashMap<String, String>> getSms(@Field("sms_token[phone]") String phone);
+    // 未鉴权的网络服务
+    public static DataAPI noAuthService() {
+        if (noAuthService == null) {
+            setNoAuthService();
+            Log.d("Engine", "初始化了NoAuth");
+        }
+        return noAuthService;
+    }
 
-    // 注册
-    @FormUrlEncoded
-    @POST("users")
-    Call<User> registerUser(@Field("user[phone]") String phone,
-                            @Field("user[password]") String password,
-                            @Field("user[sms_token]") String sms);
+    // 鉴权的网络服务
+    public static DataAPI authService(String token, String phone) {
+        if (authService == null) {
+            setAuthService(token, phone);
+            Log.d("Engine", "初始化了Auth");
+        }
+        return authService;
+    }
 
-    // 更新用户信息(不包括头像)
-    @FormUrlEncoded
-    @PUT("user_info")
-    Call<User> updateUser(@Header("X-User-Token") String token,
-                          @Header("X-User-Phone") String phone,
-                          @FieldMap(encoded = true) Map<String, String> fields);
 
-    // 更新用户头像
-    @Multipart
-    @PUT("user_info")
-    Call<User> updateUserPhoto(@Part MultipartBody.Part file);
+    private static void setAuthService(final String token, final String phone) {
+        // 定义拦截器,添加headers
+        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                Request newRequest = chain.request().newBuilder()
+                        .addHeader("Accept", "application/json")
+                        .addHeader("X-User-Token", token)
+                        .addHeader("X-User-Phone", phone)
+                        .build();
+                return chain.proceed(newRequest);
+            }
+        }).build();
 
-    // 查询用户信息
-    @GET("user_info")
-    Call<User> getUser();
+        // 创建Retrofit实例
+        authService = new Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build()
+                .create(DataAPI.class);
+    }
 
-    // 获取商品列表
-    @GET("products")
-    Call<ProductList> getProductList(@Query("page") Integer page,
-                                     @Query("per_page") Integer per_page);
+    private static void setNoAuthService() {
+        // 定义拦截器,添加headers
+        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                Request newRequest = chain.request().newBuilder()
+                        .addHeader("Accept", "application/json")
+                        .build();
+                return chain.proceed(newRequest);
+            }
+        }).build();
 
-    // *********************************************************************************************
-
-    // 获取购物车列表
-    @GET("cart_items")
-    Call<CartList> getCartList(@Query("page") Integer page,
-                               @Query("per_page") Integer per_page);
-
-    // 联系人列表
-    @GET("contacts")
-    Call<ContactList> getContacts();
-
-    // 新增联系人
-    @FormUrlEncoded
-    @POST("contacts")
-    Call<ContactList> newContact(@Field("contact[name]") String name,
-                                 @Field("contact[phone]") String phone,
-                                 @Field("contact[area]") String area,
-                                 @Field("contact[street]") String street,
-                                 @Field("contact[community]") String community,
-                                 @Field("contact[address]") String address,
-                                 @Field("contact[is_default]") boolean is_default);
-
-    // 删除联系人
-    @DELETE("contacts/{id}")
-    Call<Contact> deleteContact(@Path("id") int contact_id);
-
-    // *********************************************************************************************
-
-    // 上传运动步数
-    @FormUrlEncoded
-    @POST("sports")
-    Call<Step> uploadStep(@Field("sport[date]") String date, @Field("sport[count]") int count);
-
-    // 基于时间线的运动统计信息
-    @GET("sports/{timeLine}")
-    Call<SportData> getSportsData(@Path("timeLine") String timeLine);
-
-    // 基于时间线的运动rank信息
-    @GET("ranks/{timeLine}")
-    Call<SportRank> getSportRanks(@Path("timeLine") String timeLine);
-
-    // *********************************************************************************************
-
-    // 提交预约
-    @FormUrlEncoded
-    @POST("appointments")
-    Call<Appointment> submitAppointment(@Field("appointment[type]") String type,
-                                        @Field("appointment[count]") int count);
-
-    // 预约列表
-    @GET("appointments")
-    Call<AppointmentList> getAppointments(@Query("page") int page,
-                                          @Query("per_page") int per_page);
-
-    // *********************************************************************************************
-
-    // 健康报告
-    @GET("reports")
-    Call<ReportList> getCheckReport();
-
-    // 单项历史数据
-    @GET("reports/{name}")
-    Call<ReportShowList> getReportHistory(@Path("name") String name);
-
-    // *********************************************************************************************
-
-    // 获取首页信息
-    @GET("home")
-    Call<Home> getHomeData();
+        noAuthService = new Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build()
+                .create(DataAPI.class);
+    }
 }

@@ -12,6 +12,7 @@ import com.db.chart.model.LineSet;
 import com.db.chart.view.AxisController;
 import com.db.chart.view.LineChartView;
 import com.tallty.smart_life_android.Const;
+import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.HomeCheckReportShowAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
@@ -87,7 +88,7 @@ public class HealthyCheckReportShow extends BaseBackFragment {
         chart_name.setText(report.getAlias());
         // 获取单项历史数据
         showProgress(showString(R.string.progress_normal));
-        mApp.headerEngine().getReportHistory(report.getName()).enqueue(new Callback<ReportShowList>() {
+        Engine.authService(shared_token, shared_phone).getReportHistory(report.getName()).enqueue(new Callback<ReportShowList>() {
             @Override
             public void onResponse(Call<ReportShowList> call, Response<ReportShowList> response) {
                 if (response.code() == 200) {

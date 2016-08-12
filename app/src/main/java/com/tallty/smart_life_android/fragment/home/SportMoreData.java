@@ -14,6 +14,7 @@ import com.db.chart.model.LineSet;
 import com.db.chart.view.AxisController;
 import com.db.chart.view.LineChartView;
 import com.tallty.smart_life_android.Const;
+import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.HomeSportRankAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
@@ -180,7 +181,7 @@ public class SportMoreData extends BaseBackFragment {
         String current_date = getTodayDate();
 
         Log.d(TAG, "开始上传步数任务"+current_date+","+ step);
-        mApp.headerEngine().uploadStep(current_date, step).enqueue(new Callback<Step>() {
+        Engine.authService(shared_token, shared_phone).uploadStep(current_date, step).enqueue(new Callback<Step>() {
             @Override
             public void onResponse(Call<Step> call, Response<Step> response) {
                 if (response.code() == 201) {
@@ -207,7 +208,7 @@ public class SportMoreData extends BaseBackFragment {
     private void initChartAndRank(final String timeLine, final LineChartView chart, final boolean isLoad) {
         showProgress(showString(R.string.progress_normal));
         // 获取时间段运动图表数据和个人统计信息
-        mApp.headerEngine().getSportsData(timeLine).enqueue(new Callback<SportData>() {
+        Engine.authService(shared_token, shared_phone).getSportsData(timeLine).enqueue(new Callback<SportData>() {
             @Override
             public void onResponse(Call<SportData> call, Response<SportData> response) {
                 if (response.code() == 200) {
@@ -245,7 +246,7 @@ public class SportMoreData extends BaseBackFragment {
      */
     private void initRankList(String timeLine) {
         // 获取rank数据
-        mApp.headerEngine().getSportRanks(timeLine).enqueue(new Callback<SportRank>() {
+        Engine.authService(shared_token, shared_phone).getSportRanks(timeLine).enqueue(new Callback<SportRank>() {
             @Override
             public void onResponse(Call<SportRank> call, Response<SportRank> response) {
                 if (response.code() == 200) {

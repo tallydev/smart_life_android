@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.orhanobut.logger.Logger;
+import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseLazyMainFragment;
 import com.tallty.smart_life_android.custom.GlideCircleTransform;
@@ -126,7 +127,7 @@ public class MeFragment extends BaseLazyMainFragment {
         setListener();
         setView();
         // 查询用户信息
-        mApp.headerEngine().getUser().enqueue(new Callback<User>() {
+        Engine.authService(shared_token, shared_phone).getUser().enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 user = response.body();

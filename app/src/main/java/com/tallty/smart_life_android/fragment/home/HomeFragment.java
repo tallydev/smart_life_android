@@ -24,6 +24,7 @@ import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.tallty.smart_life_android.Const;
+import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.HomeRecyclerAdapter;
 import com.tallty.smart_life_android.base.BaseLazyMainFragment;
@@ -200,7 +201,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
 
     private void getHomeData() {
         // 每次上传步数时,获取首页信息
-        mApp.headerEngine().getHomeData().enqueue(new Callback<Home>() {
+        Engine.authService(shared_token, shared_phone).getHomeData().enqueue(new Callback<Home>() {
             @Override
             public void onResponse(Call<Home> call, Response<Home> response) {
                 if (response.code() == 200) {
@@ -237,7 +238,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
         String current_date = getTodayDate();
 
         Log.d(TAG, "开始上传步数任务"+current_date+","+step);
-        mApp.headerEngine().uploadStep(current_date, step).enqueue(new Callback<Step>() {
+        Engine.authService(shared_token, shared_phone).uploadStep(current_date, step).enqueue(new Callback<Step>() {
             @Override
             public void onResponse(Call<Step> call, Response<Step> response) {
                 if (response.code() == 201) {

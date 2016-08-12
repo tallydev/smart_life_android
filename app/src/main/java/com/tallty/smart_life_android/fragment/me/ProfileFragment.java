@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
 import com.tallty.smart_life_android.Const;
+import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.activity.LoginActivity;
 import com.tallty.smart_life_android.adapter.ProfileListAdapter;
@@ -124,7 +125,7 @@ public class ProfileFragment extends BaseBackFragment {
     protected void afterAnimationLogic() {
         showProgress(showString(R.string.progress_normal));
         // 查询用户信息, 更新列表
-        mApp.headerEngine().getUser().enqueue(new Callback<User>() {
+        Engine.authService(shared_token, shared_phone).getUser().enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.code() == 200) {
@@ -326,7 +327,7 @@ public class ProfileFragment extends BaseBackFragment {
         MultipartBody.Part body = MultipartBody.Part
                 .createFormData("user_info[avatar_attributes][photo]", file.getName(), requestBody);
         // 上传
-        mApp.headerEngine().updateUserPhoto(body).enqueue(new Callback<User>() {
+        Engine.authService(shared_token, shared_phone).updateUserPhoto(body).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.code() == 200) {
@@ -431,7 +432,7 @@ public class ProfileFragment extends BaseBackFragment {
             fields.put("user_info[sex]", parse_sex);
         }
 
-        mApp.noHeaderEngine().updateUser(
+        Engine.noAuthService().updateUser(
                 sharedPre.getString("user_token", Const.EMPTY_STRING),
                 sharedPre.getString("user_phone", Const.EMPTY_STRING),
                 fields

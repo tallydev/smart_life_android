@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.tallty.smart_life_android.Const;
+import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.event.ConfirmDialogEvent;
@@ -156,7 +157,7 @@ public class NewAddressFragment extends BaseBackFragment {
             new_contact.setAddress(detail);
             // 向服务器提交新联系人
             showProgress(showString(R.string.progress_normal));
-            mApp.headerEngine()
+            Engine.authService(shared_token, shared_phone)
                     .newContact(name, phone, area, contact_street, contact_community, detail, false)
                     .enqueue(new Callback<ContactList>() {
                         @Override

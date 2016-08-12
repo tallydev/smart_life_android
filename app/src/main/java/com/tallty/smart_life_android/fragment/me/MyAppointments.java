@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
+import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.MyAppointmentsAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
@@ -76,7 +77,7 @@ public class MyAppointments extends BaseBackFragment {
     protected void afterAnimationLogic() {
         // 获取数据
         showProgress(showString(R.string.progress_normal));
-        mApp.headerEngine().getAppointments(1, 10).enqueue(new Callback<AppointmentList>() {
+        Engine.authService(shared_token, shared_phone).getAppointments(1, 10).enqueue(new Callback<AppointmentList>() {
             @Override
             public void onResponse(Call<AppointmentList> call, Response<AppointmentList> response) {
                 if (response.code() == 200) {

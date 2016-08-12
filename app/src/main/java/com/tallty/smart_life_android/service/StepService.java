@@ -9,7 +9,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -265,11 +264,11 @@ public class StepService extends Service implements SensorEventListener {
         Sensor countSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
         if (countSensor != null) {
             stepSensor = 0;
-            Log.d(TAG, "countSensor");
+            Log.d(TAG, "使用了countSensor");
             sensorManager.registerListener(StepService.this, countSensor, SensorManager.SENSOR_DELAY_UI);
         } else if (detectorSensor != null) {
             stepSensor = 1;
-            Log.d(TAG, "detector");
+            Log.d(TAG, "使用了detector");
             sensorManager.registerListener(StepService.this, detectorSensor, SensorManager.SENSOR_DELAY_UI);
         } else {
             Log.d(TAG, "Count sensor not available!");
@@ -286,6 +285,7 @@ public class StepService extends Service implements SensorEventListener {
         sensorManager.registerListener(stepDetector, sensor, SensorManager.SENSOR_DELAY_UI);
         // 反注册计步器
         // sensorManager.unregisterListener(stepDetector);
+        Log.d(TAG, "使用了BasePedo");
         // 计步器事件监听器
         stepDetector.setOnSensorChangeListener(new StepCreator.OnSensorChangeListener() {
                     @Override

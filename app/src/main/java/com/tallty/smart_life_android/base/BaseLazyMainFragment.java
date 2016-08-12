@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.utils.SnackbarUtil;
 import com.tallty.smart_life_android.utils.ToastUtil;
@@ -24,8 +25,11 @@ import com.tallty.smart_life_android.utils.ToastUtil;
  * 使用时, 直接继承此类即可
  */
 public abstract class BaseLazyMainFragment extends BaseFragment implements View.OnClickListener {
+    protected static String TAG;
     protected Context context;
     protected SharedPreferences sharedPre;
+    protected String shared_phone;
+    protected String shared_token;
     // 状态
     private boolean mInited = false;
     private Bundle mSavedInstanceState;
@@ -41,6 +45,9 @@ public abstract class BaseLazyMainFragment extends BaseFragment implements View.
         mSavedInstanceState = savedInstanceState;
         context = getActivity();
         sharedPre = context.getSharedPreferences("SmartLife", Context.MODE_PRIVATE);
+        shared_phone = sharedPre.getString(Const.USER_PHONE, Const.EMPTY_STRING);
+        shared_token = sharedPre.getString(Const.USER_TOKEN, Const.EMPTY_STRING);
+        TAG = getTag();
         // 拦截调用
         fragmentInterceptor();
     }

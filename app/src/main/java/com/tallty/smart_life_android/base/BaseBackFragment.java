@@ -14,7 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.tallty.smart_life_android.App;
+import com.tallty.smart_life_android.Const;
+import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.model.Appointment;
 import com.tallty.smart_life_android.utils.SnackbarUtil;
@@ -34,11 +35,12 @@ import retrofit2.Response;
  * 使用SwipeBackFragment开源库
  */
 public abstract class BaseBackFragment extends SwipeBackFragment implements View.OnClickListener {
-    protected static final App mApp = App.getInstance();
     protected Context context;
     protected SharedPreferences sharedPre;
+    protected String shared_phone;
+    protected String shared_token;
     // tag
-    protected static final String TAG = "Fragmentation";
+    protected static String TAG;
     // UI
     private View view;
     protected Toolbar toolbar;
@@ -57,6 +59,9 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
         super.onCreate(savedInstanceState);
         context = getActivity();
         sharedPre = context.getSharedPreferences("SmartLife", Context.MODE_PRIVATE);
+        shared_phone = sharedPre.getString(Const.USER_PHONE, Const.EMPTY_STRING);
+        shared_token = sharedPre.getString(Const.USER_TOKEN, Const.EMPTY_STRING);
+        TAG = getTag();
     }
 
     @Nullable
@@ -185,7 +190,7 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
         this.onAppointListener = listener;
 
         showProgress(showString(R.string.progress_normal));
-        mApp.headerEngine().submitAppointment(type, count).enqueue(new Callback<Appointment>() {
+        Engine.authService(shared_token, shared_phone).submitAppointment(type, count).enqueue(new Callback<Appointment>() {
             @Override
             public void onResponse(Call<Appointment> call, Response<Appointment> response) {
                 if (201 == response.code()) {

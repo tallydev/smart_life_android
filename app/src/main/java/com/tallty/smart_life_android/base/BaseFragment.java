@@ -14,7 +14,6 @@ import me.yokeyword.fragmentation.SupportFragment;
  * 使用Fragmentation开源库
  */
 public class BaseFragment extends SupportFragment {
-    protected static final String TAG = "Fragmentation";
     protected static final App mApp = App.getInstance();
 
     protected void initToolbarMenu(Toolbar toolbar) {
@@ -26,7 +25,7 @@ public class BaseFragment extends SupportFragment {
                     case R.id.action_hierarchy:
                         // 调试使用,release版本要去除掉
                         _mActivity.showFragmentStackHierarchyView();
-                        _mActivity.logFragmentStackHierarchy(TAG);
+                        _mActivity.logFragmentStackHierarchy("FromBaseFragment");
                         break;
                 }
                 return true;

@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.tallty.smart_life_android.Const;
+import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.HomeCheckReportAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
@@ -80,7 +81,7 @@ public class HealthyCheckReport extends BaseBackFragment {
     protected void afterAnimationLogic() {
         // 获取报告
         showProgress(showString(R.string.progress_normal));
-        mApp.headerEngine().getCheckReport().enqueue(new Callback<ReportList>() {
+        Engine.authService(shared_token, shared_phone).getCheckReport().enqueue(new Callback<ReportList>() {
             @Override
             public void onResponse(Call<ReportList> call, Response<ReportList> response) {
                 if (response.code() == 200) {

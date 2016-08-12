@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.tallty.smart_life_android.Const;
+import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.AddressListAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
@@ -99,7 +100,7 @@ public class MyAddress extends BaseBackFragment {
 
     private void loadContactData() {
         showProgress(showString(R.string.progress_normal));
-        mApp.headerEngine().getContacts().enqueue(new Callback<ContactList>() {
+        Engine.authService(shared_token, shared_phone).getContacts().enqueue(new Callback<ContactList>() {
             @Override
             public void onResponse(Call<ContactList> call, Response<ContactList> response) {
                 if (response.code() == 200) {
@@ -185,7 +186,7 @@ public class MyAddress extends BaseBackFragment {
 
     private void deleteContact(final int position) {
         showProgress("正在删除...");
-        mApp.headerEngine()
+        Engine.authService(shared_token, shared_phone)
                 .deleteContact(contacts.get(position).getId())
                 .enqueue(new Callback<Contact>() {
             @Override
