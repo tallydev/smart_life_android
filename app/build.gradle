@@ -6,14 +6,14 @@ def releaseTime() {
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    buildToolsVersion "24.0.1"
 
     defaultConfig {
         applicationId "com.tallty.smart_life_android"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 5
-        versionName "0.5"
+        versionCode 6
+        versionName "0.6"
         // dex突破65535的限制
         multiDexEnabled true
         // umeng的渠道

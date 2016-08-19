@@ -6,6 +6,7 @@ import com.litesuits.orm.LiteOrm;
 import com.litesuits.orm.db.assit.QueryBuilder;
 import com.litesuits.orm.db.model.ConflictAlgorithm;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -81,7 +82,7 @@ public class DbUtils {
      * @param length
      * @return
      */
-    public static <T> List<T> getQueryByWhereLength(Class<T> cla, String field, String[] value, int start, int length) {
+    public static <T> ArrayList getQueryByWhereLength(Class<T> cla, String field, String[] value, int start, int length) {
         return liteOrm.<T>query(new QueryBuilder(cla).where(field + "=?", value).limit(start, length));
     }
 
