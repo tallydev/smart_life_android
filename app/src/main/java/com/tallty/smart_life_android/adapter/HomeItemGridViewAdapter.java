@@ -58,7 +58,7 @@ public class HomeItemGridViewAdapter extends BaseAdapter {
         TextView text = BaseViewHolder.get(convertView, R.id.home_item_girdView_text);
         // 赋值
         if (position <= texts.length - 1) {
-            text.setText(texts[position].equals("更多") ? "• • •" : texts[position]);
+            text.setText("更多".equals(texts[position]) ? "• • •" : texts[position]);
             if (position <= icons.length - 1 ) {
                 Glide.with(context).load(icons[position]).centerCrop().into(icon);
             } else {

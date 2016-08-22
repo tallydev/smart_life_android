@@ -47,9 +47,9 @@ public class HomeCheckReportAdapter extends RecyclerView.Adapter<HomeCheckReport
         }
         holder.range.setText(report.getHint());
         // 高低
-        if (report.getState().equals("low")) {
+        if ("low".equals(report.getState())) {
             holder.status.setText("{fa-caret-down}");
-        } else if (report.getState().equals("high")) {
+        } else if ("high".equals(report.getState())) {
             holder.status.setText("{fa-caret-up}");
         }
         // 斑马线背景

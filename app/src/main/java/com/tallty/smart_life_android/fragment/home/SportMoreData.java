@@ -167,7 +167,7 @@ public class SportMoreData extends BaseBackFragment {
         chartTabReset();
         tab.setSelected(true);
         chart.setVisibility(View.VISIBLE);
-        if (timeLine.equals("daily")) {
+        if ("daily".equals(timeLine)) {
             // 每日步数, 先上传最新的步数, 再载入图表和列表
             updateStepAndInitChartRank(timeLine, chart, isLoad);
         } else {

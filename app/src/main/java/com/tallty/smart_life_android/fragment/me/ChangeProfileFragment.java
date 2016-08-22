@@ -85,9 +85,9 @@ public class ChangeProfileFragment extends BaseBackFragment {
     protected void afterAnimationLogic() {
         change_input.setText(value);
         change_input.setHint("请输入"+key);
-        if (!key.equals("昵称")) {
+        if (!"昵称".equals(key)) {
             change_tips.setText(null);
-        } else if (key.equals("设置支付密码")) {
+        } else if ("设置支付密码".equals(key)) {
             change_tips.setText("密码长度不小于8位");
         }
     }
@@ -105,11 +105,11 @@ public class ChangeProfileFragment extends BaseBackFragment {
                     change_input.requestFocus();
                     begin = false;
                 } else {
-                    if (key.equals("身份证号") && text.length() != 18) {
+                    if ("身份证号".equals(key) && text.length() != 18) {
                         change_input.setError("身份证号码格式错误");
                         change_input.requestFocus();
                         begin = false;
-                    } else if (key.equals("设置支付密码") && text.length() < 8) {
+                    } else if ("设置支付密码".equals(key) && text.length() < 8) {
                         change_input.setError("密码长度小于8位");
                         change_input.requestFocus();
                         begin = false;
@@ -131,13 +131,13 @@ public class ChangeProfileFragment extends BaseBackFragment {
 
         Map<String, String> fields = new HashMap<>();
 
-        if (key.equals("昵称")) {
+        if ("昵称".equals(key)) {
             fields.put("user_info[nickname]", text);
-        } else if (key.equals("身份证号")) {
+        } else if ("身份证号".equals(key)) {
             fields.put("user_info[identity_card]", text);
-        } else if (key.equals("个性签名")) {
+        } else if ("个性签名".equals(key)) {
             fields.put("user_info[slogan]", text);
-        } else if (key.equals("设置支付密码")) {
+        } else if ("设置支付密码".equals(key)) {
             fields.put("user_info[pay_password]", text);
         }
 

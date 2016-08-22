@@ -425,10 +425,10 @@ public class ProfileFragment extends BaseBackFragment {
         // TODO: 16/8/3 后台暂无字段 ,模拟更新
         // 更新字段
         Map<String, String> fields = new HashMap<>();
-        if (tag.equals("生日")) {
+        if ("生日".equals(tag)) {
             fields.put("user_info[birth]", value);
-        } else if (tag.equals("性别")){
-            String parse_sex = value.equals("男") ? "male" : "female";
+        } else if ("性别".equals(tag)){
+            String parse_sex = "男".equals(value) ? "male" : "female";
             fields.put("user_info[sex]", parse_sex);
         }
 

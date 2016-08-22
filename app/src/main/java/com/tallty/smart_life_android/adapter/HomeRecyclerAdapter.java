@@ -110,7 +110,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
         gridItemClickListener(viewHolder);
 
         // "健身达人"布局
-        if (titles.get(position).equals("健身达人") && viewHolder.viewType == IS_STEPS) {
+        if ("健身达人".equals(titles.get(position)) && viewHolder.viewType == IS_STEPS) {
             Glide.with(context).load(R.drawable.step_weather).into(viewHolder.weather);
             viewHolder.rank.setText("1");
             viewHolder.steps.setText("0");
@@ -120,7 +120,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
             String str = simpleDateFormat.format(date);
             viewHolder.date.setText(str);
             System.out.println();
-        } else if (titles.get(position).equals("新品上市") && viewHolder.viewType == IS_PRODUCT) {
+        } else if ("新品上市".equals(titles.get(position)) && viewHolder.viewType == IS_PRODUCT) {
             // 设置倒计时
             viewHolder.countdownView.start(countDownSecond);
             viewHolder.countdownView.setOnCountdownEndListener(new CountdownView.OnCountdownEndListener() {
@@ -149,9 +149,9 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        if (titles.get(position).equals("健身达人")) {
+        if ("健身达人".equals(titles.get(position))) {
             return IS_STEPS;
-        } else if (titles.get(position).equals("新品上市")) {
+        } else if ("新品上市".equals(titles.get(position))) {
             return IS_PRODUCT;
         } else {
             return IS_NORMAL;

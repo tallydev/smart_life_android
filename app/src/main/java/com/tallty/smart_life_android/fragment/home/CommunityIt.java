@@ -96,7 +96,7 @@ public class CommunityIt extends BaseBackFragment {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.do_event:
-                if (!mName.equals("在线冲印")) {
+                if (!"在线冲印".equals(mName)) {
                     HintDialogFragment fragment = HintDialogFragment.newInstance(
                             "预约后由<慧生活>服务专员和您电话联系,请保持手机畅通.", mName);
                     fragment.show(getActivity().getFragmentManager(), "HintDialog");

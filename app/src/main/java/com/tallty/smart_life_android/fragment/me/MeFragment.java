@@ -240,7 +240,7 @@ public class MeFragment extends BaseLazyMainFragment {
     @Subscribe
     public void onTransferDataEvent(TransferDataEvent event) {
         // 更新UI
-        if (event.tag.equals("ProfileFragment")) {
+        if ("ProfileFragment".equals(event.tag)) {
             Glide.with(context).load(event.bundle.getString("user_avatar"))
                     .placeholder(R.drawable.user_default)
                     .transform(new GlideCircleTransform(context)).into(photo);

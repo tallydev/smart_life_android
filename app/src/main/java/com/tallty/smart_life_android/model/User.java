@@ -180,7 +180,7 @@ public class User implements Serializable{
     }
 
     public String getSex() {
-        return sex.equals("male") ? "男" : "女";
+        return "male".equals(sex) ? "男" : "女";
     }
 
     public void setSex(String sex) {

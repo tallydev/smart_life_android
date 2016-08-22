@@ -169,7 +169,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
             // 每分钟判断一次时间
             // 整点 ? 保存步数 : continue
             String time = getNowTime();
-            if (time.substring(3).equals("00")) {
+            if ("00".equals(time.substring(3))) {
                 SharedPreferences.Editor editor = sharedPre.edit();
                 editor.putFloat(time.substring(0, 2), (float) step);
                 editor.commit();

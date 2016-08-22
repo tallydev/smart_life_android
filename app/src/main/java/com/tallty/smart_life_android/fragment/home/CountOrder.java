@@ -86,7 +86,7 @@ public class CountOrder extends BaseBackFragment {
 
     @Override
     protected void afterAnimationLogic() {
-        if (mName.equals("新品上市")) {
+        if ("新品上市".equals(mName)) {
             count_text.setText("预约人数: ");
             apply.setText("我要预约");
         }
