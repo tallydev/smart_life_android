@@ -24,7 +24,7 @@ public class HomeViewHolder extends RecyclerView.ViewHolder {
     public TextView textView;
     public ImageView imageView;
     public MyGridView gridView;
-    // "健身达人"布局
+    // "健步达人"布局
     public ImageView weather;
     public TextView date;
     public TextView rank;

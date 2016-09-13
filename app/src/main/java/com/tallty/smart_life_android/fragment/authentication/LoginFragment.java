@@ -64,8 +64,6 @@ public class LoginFragment extends BaseLazyMainFragment {
         super.fragmentInterceptor();
         String phone = sharedPre.getString(Const.USER_PHONE, Const.EMPTY_STRING);
         String token = sharedPre.getString(Const.USER_TOKEN, Const.EMPTY_STRING);
-        Logger.d(phone);
-        Logger.d(token);
         if (!phone.isEmpty() && !token.isEmpty()) {
             // 进入首页, 不再登录
             Intent intent = new Intent(getActivity(), MainActivity.class);

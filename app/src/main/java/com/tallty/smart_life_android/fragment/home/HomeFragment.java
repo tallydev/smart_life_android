@@ -48,6 +48,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.logging.Logger;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -81,7 +82,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
     // 列表数据
     private List<String> titles = new ArrayList<String>() {
         {
-            add("智慧健康");add("健身达人");add("市政大厅");add("社区活动");
+            add("智慧健康");add("健步达人");add("市政大厅");add("社区活动");
             add("智慧家居");add("社区IT");add("新品上市");add("限量发售");
         }
     };
@@ -172,7 +173,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
             if ("00".equals(time.substring(3))) {
                 SharedPreferences.Editor editor = sharedPre.edit();
                 editor.putFloat(time.substring(0, 2), (float) step);
-                editor.commit();
+                editor.apply();
                 Log.d("tick", "整点"+time.substring(3)+"保存了"+time.substring(0, 2)+"步数"+step);
             }
         }
@@ -200,7 +201,6 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
     }
 
     private void getHomeData() {
-        // 每次上传步数时,获取首页信息
         Engine.authService(shared_token, shared_phone).getHomeData().enqueue(new Callback<Home>() {
             @Override
             public void onResponse(Call<Home> call, Response<Home> response) {
@@ -339,9 +339,11 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
                 // 更新首页视图
                 if (homeViewHolder == null) {
                     homeViewHolder = (HomeViewHolder) recyclerView.findViewHolderForAdapterPosition(1);
+                    Log.d(TAG, homeViewHolder+"");
                 } else {
                     homeViewHolder.steps.setText(""+step);
                     homeViewHolder.rank.setText(""+rank);
+                    Log.d(TAG, homeViewHolder+"");
                 }
                 // 延时1s 发送 REQUEST_SERVER 消息
                 delayHandler.sendEmptyMessageDelayed(Const.REQUEST_SERVER,TIME_INTERVAL);

@@ -43,7 +43,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="16dp"
                 android:gravity="center"
-                android:text="2016.06.20"
                 android:layout_toRightOf="@id/step_weather"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_10"/>
@@ -61,7 +60,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
                 android:gravity="center_vertical|right"
-                android:text="3"
                 android:layout_toRightOf="@id/steps_rank_text"
                 android:layout_below="@id/steps_date"
                 android:textColor="@color/home_steps_text"
@@ -89,7 +87,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
                 android:gravity="center_vertical|right"
-                android:text="9202"
                 android:layout_toRightOf="@id/steps_number_text"
                 android:layout_below="@id/step_divider"
                 android:textSize="@dimen/text_12"

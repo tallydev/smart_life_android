@@ -38,7 +38,9 @@ public class MyOrdersCommodityAdapter extends RecyclerView.Adapter<MyOrdersCommo
     @Override
     public void onBindViewHolder(OrderCommodityViewHolder holder, int position) {
         CartItem cartItem = commodities.get(position);
-        Glide.with(context).load(cartItem.getThumb()).skipMemoryCache(true).into(holder.image);
+        // 调用接口时修改
+//        Glide.with(context).load(cartItem.getThumb()).skipMemoryCache(true).into(holder.image);
+        Glide.with(context).load(cartItem.getImage_id()).skipMemoryCache(true).into(holder.image);
         holder.name.setText(cartItem.getName());
         holder.price.setText("￥ "+ cartItem.getPrice());
         holder.count.setText("x "+ cartItem.getCount());

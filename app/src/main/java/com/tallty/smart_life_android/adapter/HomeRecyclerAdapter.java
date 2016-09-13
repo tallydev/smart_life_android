@@ -81,7 +81,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
             holder = new HomeViewHolder(itemView, IS_NORMAL);
             return holder;
         }
-        // "健身达人"布局
+        // "健步达人"布局
         else if (viewType == IS_STEPS) {
             itemView = LayoutInflater.from(context).inflate(R.layout.item_home_steps, viewGroup, false);
             holder = new HomeViewHolder(itemView, IS_STEPS);
@@ -109,8 +109,8 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
         viewHolder.gridView.setTag(position);
         gridItemClickListener(viewHolder);
 
-        // "健身达人"布局
-        if ("健身达人".equals(titles.get(position)) && viewHolder.viewType == IS_STEPS) {
+        // "健步达人"布局
+        if ("健步达人".equals(titles.get(position)) && viewHolder.viewType == IS_STEPS) {
             Glide.with(context).load(R.drawable.step_weather).into(viewHolder.weather);
             viewHolder.rank.setText("1");
             viewHolder.steps.setText("0");
@@ -149,7 +149,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        if ("健身达人".equals(titles.get(position))) {
+        if ("健步达人".equals(titles.get(position))) {
             return IS_STEPS;
         } else if ("新品上市".equals(titles.get(position))) {
             return IS_PRODUCT;
@@ -182,7 +182,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
                         EventBus.getDefault().post(new ShowSnackbarEvent("即将上线，敬请期待"));
                     }
                 }
-                // 健身达人
+                // 健步达人
                 else if (tag == 1) {
                     if (position == 0) {
                         EventBus.getDefault().post(new StartBrotherEvent(SportMoreData.newInstance("健身达人", HomeFragment.step)));

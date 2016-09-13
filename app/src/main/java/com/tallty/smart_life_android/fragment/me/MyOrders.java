@@ -1,6 +1,7 @@
 package com.tallty.smart_life_android.fragment.me;
 
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -29,13 +30,15 @@ public class MyOrders extends BaseBackFragment {
     // 临时数据
     // 订单的两个商品
     private String thumb[] = {"",""};
+    // 调用接口时去掉
+    private Integer images[] = {R.drawable.product_pineapple_one, R.drawable.product_honey_one};
     private String name[] = {"西双版纳生态无眼凤梨","西双版纳生态蜂蜜"};
     private int count[] = {2,1};
     private float price[] = {10.00f, 100.00f};
     // 订单信息
     private String numbers[] = {"201607221234","201607231234"};
     private String times[] = {"2016-07-22", "2016-07-23"};
-    private String states[] = {"代发货", "已发货"};
+    private String states[] = {"待发货", "已发货"};
     private String pay_way[] = {"支付宝", "微信"};
     private float prices[] = {120.00f, 100.00f};
 
@@ -91,7 +94,8 @@ public class MyOrders extends BaseBackFragment {
             for (int j=i;j<count.length;j++) {
                 CartItem cartItem = new CartItem();
                 cartItem.setCount(count[j]);
-                cartItem.setThumb(thumb[j]);
+                // 调接口时去掉
+                cartItem.setImage_id(images[j]);
                 cartItem.setName(name[j]);
                 cartItem.setPrice(price[j]);
                 commodities.add(cartItem);

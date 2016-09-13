@@ -229,6 +229,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true"/>
             </RelativeLayout>
+
             <!--步数排名-->
             <com.tallty.smart_life_android.custom.MyRecyclerView
                 android:id="@+id/step_rank"
@@ -236,6 +237,15 @@
                 android:layout_height="wrap_content"
                 android:scrollbars="none"/>
 
+            <TextView
+                android:id="@+id/rank_load_more"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@color/white"
+                android:textColor="@color/global_text"
+                android:visibility="gone"
+                android:gravity="center"
+                android:text="加载更多"/>
         </LinearLayout>
     </ScrollView>
 </android.support.design.widget.CoordinatorLayout>

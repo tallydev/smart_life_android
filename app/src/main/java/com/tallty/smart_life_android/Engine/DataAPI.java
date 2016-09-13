@@ -118,7 +118,7 @@ public interface DataAPI {
 
     // 基于时间线的运动rank信息
     @GET("ranks/{timeLine}")
-    Call<SportRank> getSportRanks(@Path("timeLine") String timeLine);
+    Call<SportRank> getSportRanks(@Path("timeLine") String timeLine, @Query("page") Integer page);
 
     // *********************************************************************************************
 

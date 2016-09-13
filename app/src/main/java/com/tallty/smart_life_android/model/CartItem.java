@@ -48,6 +48,10 @@ public class CartItem implements Serializable{
     @Expose
     private String thumb;
 
+    @SerializedName ("image_id")
+    @Expose
+    private Integer image_id;
+
     // 前端已计算,可不使用
     @SerializedName ("amount")
     @Expose
@@ -60,6 +64,7 @@ public class CartItem implements Serializable{
     private boolean checked;
 
     private int thumbID;
+
 
 
     public int getId() {
@@ -148,5 +153,14 @@ public class CartItem implements Serializable{
 
     public void setThumbID(int thumbID) {
         this.thumbID = thumbID;
+    }
+
+
+    public Integer getImage_id() {
+        return image_id;
+    }
+
+    public void setImage_id(Integer image_id) {
+        this.image_id = image_id;
     }
 }
