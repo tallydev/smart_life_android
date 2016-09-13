@@ -40,7 +40,7 @@ public class LoginFragment extends BaseLazyMainFragment {
     private AutoCompleteTextView phone_edit;
     private EditText password_edit;
     private Button login_btn;
-    private Button link_to_register;
+    private Button free_register;
 
     public static LoginFragment newInstance() {
         Bundle args = new Bundle();
@@ -87,17 +87,16 @@ public class LoginFragment extends BaseLazyMainFragment {
     @Override
     protected void initView() {
         EventBus.getDefault().register(this);
-
         phone_edit = getViewById(R.id.login_phone);
         password_edit = getViewById(R.id.login_password);
         login_btn = getViewById(R.id.login_btn);
-        link_to_register = getViewById(R.id.free_register);
+        free_register = getViewById(R.id.free_register);
     }
 
     @Override
     protected void initLazyView(@Nullable Bundle savedInstanceState) {
         login_btn.setOnClickListener(this);
-        link_to_register.setOnClickListener(this);
+        free_register.setOnClickListener(this);
 
         initFormEdit();
     }
