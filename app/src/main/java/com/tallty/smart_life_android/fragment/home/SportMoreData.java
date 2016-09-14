@@ -286,6 +286,7 @@ public class SportMoreData extends BaseBackFragment {
                     // 是否显示点击加载更多按钮
                     if (current_page < total_pages) {
                         rank_load_more.setVisibility(View.VISIBLE);
+                        current_page++;
                     }
 
                     // 更新列表
