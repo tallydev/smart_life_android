@@ -29,7 +29,9 @@ import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.HomeRecyclerAdapter;
 import com.tallty.smart_life_android.base.BaseLazyMainFragment;
 import com.tallty.smart_life_android.custom.MyRecyclerView;
+import com.tallty.smart_life_android.custom.RecyclerVIewItemTouchListener;
 import com.tallty.smart_life_android.event.ShowSnackbarEvent;
+import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.event.TabSelectedEvent;
 import com.tallty.smart_life_android.fragment.MainFragment;
 import com.tallty.smart_life_android.holder.BannerHolderView;
@@ -42,6 +44,7 @@ import com.tallty.smart_life_android.utils.ToastUtil;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -227,6 +230,49 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
         recyclerView.setAdapter(homeRecyclerAdapter);
         // ScrollView嵌套RecyclerView,设置屏幕从顶部开始
         recyclerView.setFocusable(false);
+        // 设置点击事件
+        recyclerView.addOnItemTouchListener(new RecyclerVIewItemTouchListener(recyclerView) {
+            @Override
+            public void onItemClick(RecyclerView.ViewHolder vh, int position) throws ParseException {
+                // 智慧健康
+                if (position == 0) {
+                    EventBus.getDefault().post(new StartBrotherEvent(HealthyOrderCheck.newInstance("预约体检")));
+                }
+                // 健步达人
+                else if (position == 1) {
+                    EventBus.getDefault().post(new StartBrotherEvent(SportMoreData.newInstance("健身达人", HomeFragment.step)));
+                }
+                // 市政大厅
+                else if (position == 2) {
+                    EventBus.getDefault().post(new ShowSnackbarEvent("即将上线，敬请期待"));
+                }
+                // 社区活动
+                else if (position == 3) {
+                    EventBus.getDefault().post(new StartBrotherEvent(CountOrder.newInstance("社区活动", R.drawable.four_detail)));
+                }
+                // 智慧家居
+                else if (position == 4) {
+                    EventBus.getDefault().post(new StartBrotherEvent(HouseRemoteControl.newInstance("施耐德智能家居")));
+                }
+                // 社区IT
+                else if (position == 5) {
+                    EventBus.getDefault().post(new StartBrotherEvent(CommunityIt.newInstance("IT学堂")));
+                }
+                // 新品上市
+                else if (position == 6) {
+                    EventBus.getDefault().post(new StartBrotherEvent(CountOrder.newInstance("新品上市", R.drawable.new_product_detail)));
+                }
+                // 限量发售
+                else if (position == 7) {
+                    EventBus.getDefault().post(new StartBrotherEvent(LimitSail.newInstance("限量销售")));
+                }
+            }
+
+            @Override
+            public void onItemLongPress(RecyclerView.ViewHolder vh, int position) {
+
+            }
+        });
     }
 
     private void setUploadStepTimer() {
@@ -371,7 +417,6 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
     public void onItemClick(int position) {
         ToastUtil.show("点击了第"+position+"个banner");
     }
-
 
     @Override
     public void onResume() {
