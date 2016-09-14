@@ -2,6 +2,8 @@ package com.tallty.smart_life_android.Engine;
 
 import android.util.Log;
 
+import com.tallty.smart_life_android.App;
+
 import java.io.IOException;
 
 import okhttp3.Interceptor;
@@ -24,7 +26,7 @@ public class Engine {
     public static DataAPI noAuthService() {
         if (noAuthService == null) {
             setNoAuthService();
-            Log.d("Engine", "初始化了NoAuth");
+            Log.d(App.TAG, "初始化了NoAuth");
         }
         return noAuthService;
     }
@@ -33,7 +35,7 @@ public class Engine {
     public static DataAPI authService(String token, String phone) {
         if (authService == null) {
             setAuthService(token, phone);
-            Log.d("Engine", "初始化了Auth");
+            Log.d(App.TAG, "初始化了Auth");
         }
         return authService;
     }

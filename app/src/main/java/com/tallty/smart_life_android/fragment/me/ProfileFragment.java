@@ -22,6 +22,7 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
+import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
@@ -279,7 +280,7 @@ public class ProfileFragment extends BaseBackFragment {
      */
     private void startPhotoZoom(Uri uri) {
         if (uri == null) {
-            Log.i("tag", "The uri is not exist.");
+            Log.i(App.TAG, "The uri is not exist.");
         }
         tempUri = uri;
         Intent intent = new Intent("com.android.camera.action.CROP");

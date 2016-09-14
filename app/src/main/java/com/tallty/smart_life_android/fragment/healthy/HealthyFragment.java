@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseLazyMainFragment;
 import com.tallty.smart_life_android.event.TabSelectedEvent;
@@ -62,7 +63,7 @@ public class HealthyFragment extends BaseLazyMainFragment {
     @Subscribe
     public void onTabSelectedEvent(TabSelectedEvent event) {
         if (event.position == MainFragment.HEALTHY)
-            Log.d("tab-reselected", "智慧健康被重复点击了");
+            Log.d(App.TAG, "智慧健康被重复点击了");
     }
 
     @Override

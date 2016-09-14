@@ -10,7 +10,6 @@ import android.view.Window;
 
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
-import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.utils.ToastUtil;
 
 /**
@@ -18,7 +17,6 @@ import com.tallty.smart_life_android.utils.ToastUtil;
  * 公用基础Activity
  */
 public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener {
-    protected String TAG;
     protected SharedPreferences sharedPre;
 
     @Override
@@ -27,7 +25,6 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         // 设置样式为无actionBar样式
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         // 基础数据
-        TAG = this.getClass().getSimpleName();
         sharedPre = getSharedPreferences("SmartLife", Activity.MODE_PRIVATE);
         // 加载图标
         Iconify.with(new FontAwesomeModule());

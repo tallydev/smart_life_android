@@ -16,6 +16,7 @@ import java.util.List;
  */
 public class App extends Application{
     private static App sInstance;
+    public static final String TAG = "smart_life";
 
     @Override
     public void onCreate() {

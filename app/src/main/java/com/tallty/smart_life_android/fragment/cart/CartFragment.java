@@ -14,6 +14,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
+import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.CartListAdapter;
@@ -25,18 +26,12 @@ import com.tallty.smart_life_android.event.TabSelectedEvent;
 import com.tallty.smart_life_android.event.TransferDataEvent;
 import com.tallty.smart_life_android.fragment.MainFragment;
 import com.tallty.smart_life_android.model.CartItem;
-import com.tallty.smart_life_android.model.CartList;
 import com.tallty.smart_life_android.model.Product;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by kang on 16/6/20.
@@ -227,7 +222,6 @@ public class CartFragment extends BaseLazyMainFragment {
      */
     @Subscribe
     public void onCartUpdateItem(CartUpdateItem event){
-        Log.d("接受了事件", "===》");
         cartItems.set(event.position, event.cartItem);
         adapter.notifyItemChanged(event.position, event.cartItem);
         // 处理【合计】【全选】逻辑
@@ -253,7 +247,7 @@ public class CartFragment extends BaseLazyMainFragment {
     @Subscribe
     public void onTabSelectedEvent(TabSelectedEvent event) {
         if (event.position == MainFragment.CART)
-            Log.d("tab-reselected", "购物车被重复点击了");
+            Log.d(App.TAG, "购物车被重复点击了");
     }
 
     @Override

@@ -23,15 +23,14 @@ import android.widget.TextView;
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
+import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.HomeRecyclerAdapter;
 import com.tallty.smart_life_android.base.BaseLazyMainFragment;
 import com.tallty.smart_life_android.custom.MyRecyclerView;
-import com.tallty.smart_life_android.custom.RecyclerVIewItemTouchListener;
 import com.tallty.smart_life_android.event.ShowSnackbarEvent;
-import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.event.TabSelectedEvent;
 import com.tallty.smart_life_android.fragment.MainFragment;
 import com.tallty.smart_life_android.holder.BannerHolderView;
@@ -44,14 +43,12 @@ import com.tallty.smart_life_android.utils.ToastUtil;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.logging.Logger;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -173,11 +170,12 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
             // 每分钟判断一次时间
             // 整点 ? 保存步数 : continue
             String time = getNowTime();
+            Log.i(App.TAG, "一分钟轮询"+time);
             if ("00".equals(time.substring(3))) {
                 SharedPreferences.Editor editor = sharedPre.edit();
                 editor.putFloat(time.substring(0, 2), (float) step);
                 editor.apply();
-                Log.d("tick", "整点"+time.substring(3)+"保存了"+time.substring(0, 2)+"步数"+step);
+                Log.d(App.TAG, "整点"+time.substring(3)+"保存了"+time.substring(0, 2)+"步数"+step);
             }
         }
 
@@ -211,15 +209,15 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
                     rank = response.body().getFitness().get("rank");
                     homeRecyclerAdapter.setCountDownTimer(response.body().getNewer().get("end_time"));
                     homeRecyclerAdapter.notifyItemChanged(6);
-                    Log.d(TAG, "更新了倒计时");
+                    Log.d(App.TAG, "更新了倒计时");
                 } else {
-                    Log.d(TAG, "获取首页信息失败");
+                    Log.d(App.TAG, "获取首页信息失败");
                 }
             }
 
             @Override
             public void onFailure(Call<Home> call, Throwable t) {
-                Log.d(TAG, "链接服务器失败");
+                Log.d(App.TAG, "链接服务器失败");
             }
         });
     }
@@ -230,49 +228,6 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
         recyclerView.setAdapter(homeRecyclerAdapter);
         // ScrollView嵌套RecyclerView,设置屏幕从顶部开始
         recyclerView.setFocusable(false);
-        // 设置点击事件
-        recyclerView.addOnItemTouchListener(new RecyclerVIewItemTouchListener(recyclerView) {
-            @Override
-            public void onItemClick(RecyclerView.ViewHolder vh, int position) throws ParseException {
-                // 智慧健康
-                if (position == 0) {
-                    EventBus.getDefault().post(new StartBrotherEvent(HealthyOrderCheck.newInstance("预约体检")));
-                }
-                // 健步达人
-                else if (position == 1) {
-                    EventBus.getDefault().post(new StartBrotherEvent(SportMoreData.newInstance("健身达人", HomeFragment.step)));
-                }
-                // 市政大厅
-                else if (position == 2) {
-                    EventBus.getDefault().post(new ShowSnackbarEvent("即将上线，敬请期待"));
-                }
-                // 社区活动
-                else if (position == 3) {
-                    EventBus.getDefault().post(new StartBrotherEvent(CountOrder.newInstance("社区活动", R.drawable.four_detail)));
-                }
-                // 智慧家居
-                else if (position == 4) {
-                    EventBus.getDefault().post(new StartBrotherEvent(HouseRemoteControl.newInstance("施耐德智能家居")));
-                }
-                // 社区IT
-                else if (position == 5) {
-                    EventBus.getDefault().post(new StartBrotherEvent(CommunityIt.newInstance("IT学堂")));
-                }
-                // 新品上市
-                else if (position == 6) {
-                    EventBus.getDefault().post(new StartBrotherEvent(CountOrder.newInstance("新品上市", R.drawable.new_product_detail)));
-                }
-                // 限量发售
-                else if (position == 7) {
-                    EventBus.getDefault().post(new StartBrotherEvent(LimitSail.newInstance("限量销售")));
-                }
-            }
-
-            @Override
-            public void onItemLongPress(RecyclerView.ViewHolder vh, int position) {
-
-            }
-        });
     }
 
     private void setUploadStepTimer() {
@@ -282,21 +237,20 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
 
     private void uploadStep() {
         String current_date = getTodayDate();
-
-        Log.d(TAG, "开始上传步数任务"+current_date+","+step);
+        Log.d(App.TAG, "开始上传步数任务"+current_date+","+step);
         Engine.authService(shared_token, shared_phone).uploadStep(current_date, step).enqueue(new Callback<Step>() {
             @Override
             public void onResponse(Call<Step> call, Response<Step> response) {
                 if (response.code() == 201) {
-                    Log.d(TAG, "上传步数成功"+response.body().getCount());
+                    Log.d(App.TAG, "上传步数成功"+response.body().getCount());
                 } else {
-                    Log.d(TAG, "上传步数失败");
+                    Log.d(App.TAG, "上传步数失败");
                 }
             }
 
             @Override
             public void onFailure(Call<Step> call, Throwable t) {
-                Log.d(TAG, "上传步数链接服务器失败");
+                Log.d(App.TAG, "上传步数链接服务器失败");
             }
         });
     }
@@ -385,11 +339,11 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
                 // 更新首页视图
                 if (homeViewHolder == null) {
                     homeViewHolder = (HomeViewHolder) recyclerView.findViewHolderForAdapterPosition(1);
-                    Log.d(TAG, homeViewHolder+"");
+                    Log.d(App.TAG, homeViewHolder+"");
                 } else {
                     homeViewHolder.steps.setText(""+step);
                     homeViewHolder.rank.setText(""+rank);
-                    Log.d(TAG, homeViewHolder+"");
+                    Log.d(App.TAG, homeViewHolder+"");
                 }
                 // 延时1s 发送 REQUEST_SERVER 消息
                 delayHandler.sendEmptyMessageDelayed(Const.REQUEST_SERVER,TIME_INTERVAL);
@@ -449,7 +403,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
     public void onTabSelectedEvent(TabSelectedEvent event) {
         // Tab Home按钮被重复点击时执行的操作
         if (event.position == MainFragment.HOME) {
-            Log.d("tab-reselected", "首页被重复点击了");
+            Log.d(App.TAG, "首页被重复点击了");
         }
     }
 

@@ -14,7 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.orhanobut.logger.Logger;
+import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseLazyMainFragment;
@@ -229,7 +229,7 @@ public class MeFragment extends BaseLazyMainFragment {
     @Subscribe
     public void onTabSelectedEvent(TabSelectedEvent event) {
         if (event.position == MainFragment.ME)
-            Log.d("tab-reselected", "个人中心被重复点击了");
+            Log.d(App.TAG, "个人中心被重复点击了");
     }
 
     /**

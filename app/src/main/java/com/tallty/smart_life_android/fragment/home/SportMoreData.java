@@ -13,6 +13,7 @@ import com.db.chart.Tools;
 import com.db.chart.model.LineSet;
 import com.db.chart.view.AxisController;
 import com.db.chart.view.LineChartView;
+import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
@@ -204,22 +205,22 @@ public class SportMoreData extends BaseBackFragment {
                                             final boolean isLoad) {
         String current_date = getTodayDate();
 
-        Log.d(TAG, "开始上传步数任务"+current_date+","+ step);
+        Log.d(App.TAG, "开始上传步数任务"+current_date+","+ step);
         Engine.authService(shared_token, shared_phone).uploadStep(current_date, step).enqueue(new Callback<Step>() {
             @Override
             public void onResponse(Call<Step> call, Response<Step> response) {
                 if (response.code() == 201) {
-                    Log.d(TAG, "上传步数成功"+response.body().getCount());
+                    Log.d(App.TAG, "上传步数成功"+response.body().getCount());
                     // 载入图表和列表
                     initChartAndRank(chart, isLoad);
                 } else {
-                    Log.d(TAG, "上传步数失败");
+                    Log.d(App.TAG, "上传步数失败");
                 }
             }
 
             @Override
             public void onFailure(Call<Step> call, Throwable t) {
-                Log.d(TAG, "上传步数链接服务器失败");
+                Log.d(App.TAG, "上传步数链接服务器失败");
             }
         });
     }
@@ -252,7 +253,7 @@ public class SportMoreData extends BaseBackFragment {
                 } else {
                     hideProgress();
                     showToast(showString(R.string.response_error));
-                    Log.d("运动", "初始化chart&rank列表,请求错误"+response.errorBody().toString());
+                    Log.d(App.TAG, "初始化chart&rank列表,请求错误"+response.errorBody().toString());
                 }
             }
 
@@ -260,7 +261,7 @@ public class SportMoreData extends BaseBackFragment {
             public void onFailure(Call<SportData> call, Throwable t) {
                 hideProgress();
                 showToast(showString(R.string.network_error));
-                Log.d("运动", "初始化chart&rank列表,网络错误"+now_timeline);
+                Log.d(App.TAG, "初始化chart&rank列表,网络错误"+now_timeline);
             }
         });
     }
@@ -292,7 +293,7 @@ public class SportMoreData extends BaseBackFragment {
                     // 更新列表
                     if (isLoadRank) {
                         // 以后采取更新列表
-                        Log.d("运动", "开始更新列表");
+                        Log.d(App.TAG, "开始更新列表");
                         adapter.notifyDataSetChanged();
                     } else {
                         // 第一次初始化列表
@@ -304,7 +305,7 @@ public class SportMoreData extends BaseBackFragment {
                 } else {
                     hideProgress();
                     showToast(showString(R.string.response_error));
-                    Log.d("运动", "初始化rank列表,请求错误"+current_page+"/"+now_timeline);
+                    Log.d(App.TAG, "初始化rank列表,请求错误"+current_page+"/"+now_timeline);
                 }
             }
 
@@ -312,7 +313,7 @@ public class SportMoreData extends BaseBackFragment {
             public void onFailure(Call<SportRank> call, Throwable t) {
                 hideProgress();
                 showToast(showString(R.string.response_error));
-                Log.d("运动", "初始化rank列表,网络错误");
+                Log.d(App.TAG, "初始化rank列表,网络错误");
             }
         });
     }
@@ -321,7 +322,7 @@ public class SportMoreData extends BaseBackFragment {
      * 操作列表
      */
     private void setRankList(ArrayList<SportRankItem> sportRankItems) {
-        Log.d("运动", "初始化列表");
+        Log.d(App.TAG, "初始化列表");
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(linearLayoutManager);
         adapter = new HomeSportRankAdapter(context, sportRankItems);
@@ -452,7 +453,7 @@ public class SportMoreData extends BaseBackFragment {
      * @param max
      */
     private void loadChart(LineChartView chart, String[] labels, float[] datas, int max) {
-        Log.d("chart", "实例化图表");
+        Log.d(App.TAG, "实例化图表");
         chart.reset();
         LineSet dataSet = new LineSet(labels, datas);
 

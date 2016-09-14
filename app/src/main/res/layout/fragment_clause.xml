@@ -1,6 +1,5 @@
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:fitsSystemWindows="false"
@@ -10,28 +9,26 @@
 
     <!--主体部分-->
     <ScrollView
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:requiresFadingEdge="vertical"
+        android:scrollbars="vertical"
+        android:layout_marginTop="48dp"
         android:padding="4dp">
-        <LinearLayout
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:paddingTop="16dp"
-                android:paddingBottom="16dp"
-                android:paddingLeft="24dp"
-                android:paddingRight="24dp"
-                android:lineSpacingExtra="4sp"
-                android:textSize="@dimen/text_12"
-                android:textColor="@color/global_text"
-                android:text="@string/clause_text"
-                android:textAllCaps="false"
-                />
-        </LinearLayout>
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
+            android:lineSpacingExtra="4sp"
+            android:textSize="@dimen/text_12"
+            android:textColor="@color/global_text"
+            android:text="@string/clause_text"
+            android:textAllCaps="true"
+            android:id="@+id/clause_text"/>
     </ScrollView>
 
 </android.support.design.widget.CoordinatorLayout>

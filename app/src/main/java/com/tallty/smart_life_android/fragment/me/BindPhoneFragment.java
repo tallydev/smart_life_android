@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
@@ -262,7 +263,7 @@ public class BindPhoneFragment extends BaseBackFragment {
                 @Override
                 public void onResponse(Call<HashMap<String, String>> call, Response<HashMap<String, String>> response) {
                     if (response.code() == 201) {
-                        Log.d("验证码", response.body().get("token"));
+                        Log.d(App.TAG, "验证码" + response.body().get("token"));
                         showToast("验证码已发送");
                     } else {
                         timer.cancel();

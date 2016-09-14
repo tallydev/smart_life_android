@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
@@ -39,8 +40,6 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
     protected SharedPreferences sharedPre;
     protected String shared_phone;
     protected String shared_token;
-    // tag
-    protected static String TAG;
     // UI
     private View view;
     protected Toolbar toolbar;
@@ -61,7 +60,6 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
         sharedPre = context.getSharedPreferences("SmartLife", Context.MODE_PRIVATE);
         shared_phone = sharedPre.getString(Const.USER_PHONE, Const.EMPTY_STRING);
         shared_token = sharedPre.getString(Const.USER_TOKEN, Const.EMPTY_STRING);
-        TAG = getTag();
     }
 
     @Nullable
@@ -167,7 +165,7 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
                     case R.id.action_hierarchy:
                         // 调试使用,release版本去除
                         _mActivity.showFragmentStackHierarchyView();
-                        _mActivity.logFragmentStackHierarchy(TAG);
+                        _mActivity.logFragmentStackHierarchy(App.TAG);
                 }
                 return true;
             }

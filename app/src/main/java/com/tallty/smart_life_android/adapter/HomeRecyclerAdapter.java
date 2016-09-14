@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.event.ShowSnackbarEvent;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
@@ -97,10 +98,16 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(HomeViewHolder viewHolder, int position) {
+    public void onBindViewHolder(HomeViewHolder viewHolder, final int position) {
         // 公用布局: 标题图片按钮
         viewHolder.textView.setText("— "+titles.get(position)+" —");
         Glide.with(context).load(images.get(position)).into(viewHolder.imageView);
+        viewHolder.imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setImageClickListener(position);
+            }
+        });
         // 设置item里面的GridView
         if (buttons[position].length == 1) {
             viewHolder.gridView.setHorizontalSpacing(0);
@@ -132,16 +139,51 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
         }
     }
 
+    private void setImageClickListener(int position) {
+        // 智慧健康
+        if (position == 0) {
+            EventBus.getDefault().post(new StartBrotherEvent(HealthyOrderCheck.newInstance("预约体检")));
+        }
+        // 健步达人
+        else if (position == 1) {
+            EventBus.getDefault().post(new StartBrotherEvent(SportMoreData.newInstance("健身达人", HomeFragment.step)));
+        }
+        // 市政大厅
+        else if (position == 2) {
+            EventBus.getDefault().post(new ShowSnackbarEvent("即将上线，敬请期待"));
+        }
+        // 社区活动
+        else if (position == 3) {
+            EventBus.getDefault().post(new StartBrotherEvent(CountOrder.newInstance("社区活动", R.drawable.four_detail)));
+        }
+        // 智慧家居
+        else if (position == 4) {
+            EventBus.getDefault().post(new StartBrotherEvent(HouseRemoteControl.newInstance("施耐德智能家居")));
+        }
+        // 社区IT
+        else if (position == 5) {
+            EventBus.getDefault().post(new StartBrotherEvent(CommunityIt.newInstance("IT学堂")));
+        }
+        // 新品上市
+        else if (position == 6) {
+            EventBus.getDefault().post(new StartBrotherEvent(CountOrder.newInstance("新品上市", R.drawable.new_product_detail)));
+        }
+        // 限量发售
+        else if (position == 7) {
+            EventBus.getDefault().post(new StartBrotherEvent(LimitSail.newInstance("限量销售")));
+        }
+    }
+
     public void setCountDownTimer(String time) {
-        Log.d("时间", time);
+        Log.d(App.TAG, "时间"+time);
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         try {
             Date date = format.parse(time);
             countDownSecond = date.getTime() - System.currentTimeMillis();
-            Log.d("时间", date.getTime() +"");
-            Log.d("当前", System.currentTimeMillis() +"");
-            Log.d("差值", countDownSecond +"");
+            Log.d(App.TAG, "时间"+date.getTime() +"");
+            Log.d(App.TAG, "当前"+System.currentTimeMillis() +"");
+            Log.d(App.TAG, "差值"+countDownSecond +"");
         } catch (ParseException e) {
             e.printStackTrace();
         }

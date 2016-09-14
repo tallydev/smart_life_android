@@ -6,6 +6,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.util.Log;
 
+import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.utils.CountDownTimer;
 
 import java.util.Timer;
@@ -140,10 +141,10 @@ public class StepCreator implements SensorEventListener{
             time = new TimeCount(duration, 700);
             time.start();
             CountTimeState = 1;
-            Log.v(TAG, "开启计时器");
+            Log.v(App.TAG, "开启计时器");
         } else if (CountTimeState == 1) {
             TEMP_STEP++;
-            Log.v(TAG, "计步中 TEMP_STEP:" + TEMP_STEP);
+            Log.v(App.TAG, "计步中 TEMP_STEP:" + TEMP_STEP);
         } else if (CountTimeState == 2) {
             CURRENT_STEP++;
             if (onSensorChangeListener != null) {
@@ -173,8 +174,8 @@ public class StepCreator implements SensorEventListener{
             continueUpCount = 0;
             isDirectionUp = false;
         }
-
-        Log.v(TAG, "oldValue:" + oldValue);
+        // 调试加速度传感器使用
+        // Log.v(App.TAG, "oldValue:" + oldValue);
         if (!isDirectionUp && lastStatus
                 && (continueUpFormerCount >= 2 && (oldValue >= minValue && oldValue < maxValue))) {
             peakOfWave = oldValue;
@@ -221,19 +222,19 @@ public class StepCreator implements SensorEventListener{
         }
         ave = ave / valueNum;
         if (ave >= 8) {
-            Log.v(TAG, "超过8");
+            Log.v(App.TAG, "超过8");
             ave = (float) 4.3;
         } else if (ave >= 7 && ave < 8) {
-            Log.v(TAG, "7-8");
+            Log.v(App.TAG, "7-8");
             ave = (float) 3.3;
         } else if (ave >= 4 && ave < 7) {
-            Log.v(TAG, "4-7");
+            Log.v(App.TAG, "4-7");
             ave = (float) 2.3;
         } else if (ave >= 3 && ave < 4) {
-            Log.v(TAG, "3-4");
+            Log.v(App.TAG, "3-4");
             ave = (float) 2.0;
         } else {
-            Log.v(TAG, "else");
+            Log.v(App.TAG, "else");
             ave = (float) 1.7;
         }
         return ave;
@@ -251,7 +252,7 @@ public class StepCreator implements SensorEventListener{
             CURRENT_STEP += TEMP_STEP;
             lastStep = -1;
 //            CountTimeState = 2;
-            Log.v(TAG, "计时正常结束");
+            Log.v(App.TAG, "计时正常结束");
 
             timer = new Timer(true);
             TimerTask task = new TimerTask() {
@@ -261,7 +262,7 @@ public class StepCreator implements SensorEventListener{
                         CountTimeState = 0;
                         lastStep = -1;
                         TEMP_STEP = 0;
-                        Log.v(TAG, "停止计步：" + CURRENT_STEP);
+                        Log.v(App.TAG, "停止计步：" + CURRENT_STEP);
                     } else {
                         lastStep = CURRENT_STEP;
                     }
@@ -274,7 +275,7 @@ public class StepCreator implements SensorEventListener{
         @Override
         public void onTick(long millisUntilFinished) {
             if (lastStep == TEMP_STEP) {
-                Log.v(TAG, "onTick 计时停止");
+                Log.v(App.TAG, "onTick 计时停止");
                 time.cancel();
                 CountTimeState = 0;
                 lastStep = -1;
