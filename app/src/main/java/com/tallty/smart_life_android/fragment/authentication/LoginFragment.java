@@ -179,7 +179,9 @@ public class LoginFragment extends BaseLazyMainFragment {
                     editor.putInt(Const.USER_ID, user.getId());
                     editor.putString(Const.USER_PHONE, user.getPhone());
                     editor.putString(Const.USER_TOKEN, user.getToken());
-                    editor.commit();
+                    editor.apply();
+                    // 运行一下Auth, 防止第一次使用Auth Engine, 或异步执行初始化服务, 此时调用接口会一直失败
+                    Engine.authService(user.getToken(), user.getPhone());
                     // 进入首页
                     Intent intent = new Intent(getActivity(), MainActivity.class);
                     startActivity(intent);

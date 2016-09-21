@@ -66,7 +66,8 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
     private Messenger mGetReplyMessenger = new Messenger(new Handler(this));
     private Handler delayHandler;
     public static int step = 0;
-    public static int rank = 0;
+    public static String rank = "0";
+    public static String server_today = "";
     // 计时器: 15分钟上传步数
     private static final int uploadStepInterval = 900000;
     private UploadStepTimer timer;
@@ -177,6 +178,8 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
                 editor.apply();
                 Log.d(App.TAG, "整点"+time.substring(3)+"保存了"+time.substring(0, 2)+"步数"+step);
             }
+            // 每分钟获取一次首页数据
+            getHomeData();
         }
 
         @Override
@@ -202,11 +205,15 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
     }
 
     private void getHomeData() {
+        Log.d(App.TAG, shared_phone+"");
+        Log.d(App.TAG, shared_token+"");
         Engine.authService(shared_token, shared_phone).getHomeData().enqueue(new Callback<Home>() {
             @Override
             public void onResponse(Call<Home> call, Response<Home> response) {
                 if (response.code() == 200) {
                     rank = response.body().getFitness().get("rank");
+                    server_today = response.body().getFitness().get("today");
+                    Log.i(App.TAG, rank+"排名");
                     homeRecyclerAdapter.setCountDownTimer(response.body().getNewer().get("end_time"));
                     homeRecyclerAdapter.notifyItemChanged(6);
                     Log.d(App.TAG, "更新了倒计时");
@@ -218,6 +225,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
             @Override
             public void onFailure(Call<Home> call, Throwable t) {
                 Log.d(App.TAG, "链接服务器失败");
+                Log.e(App.TAG, t.getMessage()+"");
             }
         });
     }
@@ -342,8 +350,8 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
                     Log.d(App.TAG, homeViewHolder+"");
                 } else {
                     homeViewHolder.steps.setText(""+step);
-                    homeViewHolder.rank.setText(""+rank);
-                    Log.d(App.TAG, homeViewHolder+"");
+                    homeViewHolder.rank.setText(rank);
+                    homeViewHolder.date.setText(server_today);
                 }
                 // 延时1s 发送 REQUEST_SERVER 消息
                 delayHandler.sendEmptyMessageDelayed(Const.REQUEST_SERVER,TIME_INTERVAL);

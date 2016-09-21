@@ -121,11 +121,11 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
             Glide.with(context).load(R.drawable.step_weather).into(viewHolder.weather);
             viewHolder.rank.setText("1");
             viewHolder.steps.setText("0");
-            // 当前日期
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd", Locale.getDefault());
-            Date date = new Date(System.currentTimeMillis());
-            String str = simpleDateFormat.format(date);
-            viewHolder.date.setText(str);
+            // 当前日期 (改用首页调用接口获取)
+//            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd", Locale.getDefault());
+//            Date date = new Date(System.currentTimeMillis());
+//            String str = simpleDateFormat.format(date);
+//            viewHolder.date.setText(str);
             System.out.println();
         } else if ("新品上市".equals(titles.get(position)) && viewHolder.viewType == IS_PRODUCT) {
             // 设置倒计时
@@ -146,7 +146,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
         }
         // 健步达人
         else if (position == 1) {
-            EventBus.getDefault().post(new StartBrotherEvent(SportMoreData.newInstance("健身达人", HomeFragment.step)));
+            EventBus.getDefault().post(new StartBrotherEvent(SportMoreData.newInstance("健步达人", HomeFragment.step)));
         }
         // 市政大厅
         else if (position == 2) {
@@ -227,7 +227,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
                 // 健步达人
                 else if (tag == 1) {
                     if (position == 0) {
-                        EventBus.getDefault().post(new StartBrotherEvent(SportMoreData.newInstance("健身达人", HomeFragment.step)));
+                        EventBus.getDefault().post(new StartBrotherEvent(SportMoreData.newInstance("健步达人", HomeFragment.step)));
                     }
                 }
                 // 市政大厅

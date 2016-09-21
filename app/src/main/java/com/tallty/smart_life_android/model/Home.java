@@ -14,7 +14,7 @@ import java.util.HashMap;
 public class Home implements Serializable {
     @SerializedName("fitness")
     @Expose
-    private HashMap<String, Integer> fitness = new HashMap<>();
+    private HashMap<String, String> fitness = new HashMap<>();
 
     @SerializedName("newer")
     @Expose
@@ -24,11 +24,11 @@ public class Home implements Serializable {
     @Expose
     private HashMap<String, String> product = new HashMap<>();
 
-    public HashMap<String, Integer> getFitness() {
+    public HashMap<String, String> getFitness() {
         return fitness;
     }
 
-    public void setFitness(HashMap<String, Integer> fitness) {
+    public void setFitness(HashMap<String, String> fitness) {
         this.fitness = fitness;
     }
 

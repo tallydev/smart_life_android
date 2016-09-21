@@ -55,6 +55,7 @@ public class SportMoreData extends BaseBackFragment {
     private TextView now_time;
     private TextView total_step;
     private TextView rank_percent;
+    private TextView rank_position;
     private TextView rank_load_more;
     // 列表
     private MyRecyclerView recyclerView;
@@ -125,6 +126,7 @@ public class SportMoreData extends BaseBackFragment {
         now_time = getViewById(R.id.now_time);
         total_step = getViewById(R.id.total_step);
         rank_percent = getViewById(R.id.rank_percent);
+        rank_position = getViewById(R.id.rank_position);
 
         recyclerView = getViewById(R.id.step_rank);
         rank_load_more = getViewById(R.id.rank_load_more);
@@ -150,28 +152,30 @@ public class SportMoreData extends BaseBackFragment {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tab_day:
-                tabSelectedTask(tab_day, chartDay, isLoadDay);
-                isLoadDay = true;
                 now_timeline = DAY;
                 current_page = 1;
+                tabSelectedTask(tab_day, chartDay, isLoadDay);
+                isLoadDay = true;
                 break;
             case R.id.tab_week:
-                tabSelectedTask(tab_week, chartWeek, isLoadWeek);
-                isLoadWeek = true;
                 now_timeline = WEEK;
                 current_page = 1;
+                tabSelectedTask(tab_week, chartWeek, isLoadWeek);
+                isLoadWeek = true;
+
+
                 break;
             case R.id.tab_month:
-                tabSelectedTask(tab_month, chartMonth, isLoadMonth);
-                isLoadMonth = true;
                 now_timeline = MONTH;
                 current_page = 1;
+                tabSelectedTask(tab_month, chartMonth, isLoadMonth);
+                isLoadMonth = true;
                 break;
             case R.id.tab_year:
-                tabSelectedTask(tab_year, chartYear, isLoadYear);
-                isLoadYear = true;
                 now_timeline = YEAR;
                 current_page = 1;
+                tabSelectedTask(tab_year, chartYear, isLoadYear);
+                isLoadYear = true;
                 break;
             case R.id.rank_load_more:
                 rank_load_more.setText("加载中…");
@@ -190,7 +194,7 @@ public class SportMoreData extends BaseBackFragment {
     private void tabSelectedTask(TextView tab, LineChartView chart, boolean isLoad) {
         chartTabReset();
         // 重置加载更多按钮
-        resetRankMoreBtn();
+        resetRankMoreBtn("点击加载更多");
         tab.setSelected(true);
         chart.setVisibility(View.VISIBLE);
         if (DAY.equals(now_timeline)) {
@@ -356,28 +360,30 @@ public class SportMoreData extends BaseBackFragment {
                             sportRankItems.addAll(sportRank.getTop());
                             total_pages = sportRank.getTotal_pages();
                             current_page = sportRank.getCurrent_page();
-
                             // 点击加载更多
                             adapter.notifyDataSetChanged();
-                            resetRankMoreBtn();
-                            if (current_page < total_pages) {
-                                rank_load_more.setVisibility(View.VISIBLE);
-                                current_page++;
-                            } else {
-                                rank_load_more.setVisibility(View.GONE);
-                            }
-
-                            hideProgress();
+                            resetRankMoreBtn("点击加载更多");
                         } else {
-                            hideProgress();
-                            showToast(showString(R.string.response_error));
+                            resetRankMoreBtn("点击重新加载");
+                        }
+                        // 显示与数量控制
+                        if (current_page < total_pages) {
+                            rank_load_more.setVisibility(View.VISIBLE);
+                            current_page++;
+                        } else {
+                            rank_load_more.setVisibility(View.GONE);
                         }
                     }
 
                     @Override
                     public void onFailure(Call<SportRank> call, Throwable t) {
-                        hideProgress();
-                        showToast(showString(R.string.response_error));
+                        resetRankMoreBtn("点击重新加载");
+                        if (current_page < total_pages) {
+                            rank_load_more.setVisibility(View.VISIBLE);
+                            current_page++;
+                        } else {
+                            rank_load_more.setVisibility(View.GONE);
+                        }
                     }
                 });
     }
@@ -396,6 +402,7 @@ public class SportMoreData extends BaseBackFragment {
             avg_step.setText("平均步数: "+ sportInfo.getAvgCount());
             now_time.setText("今天: "+sdf.format(date));
             total_step.setText(sportInfo.getCount()+"");
+            rank_position.setText(sportInfo.getRank()+"");
             rank_percent.setText(Math.round(sportInfo.getRankPercent() * 100) + "%");
         }
     }
@@ -489,10 +496,10 @@ public class SportMoreData extends BaseBackFragment {
     }
 
     // 重置点击加载更多按钮
-    private void resetRankMoreBtn() {
+    private void resetRankMoreBtn(String text) {
         rank_load_more.setVisibility(View.GONE);
         rank_load_more.setClickable(true);
-        rank_load_more.setText("点击加载更多");
+        rank_load_more.setText(text);
     }
 
     private String getTodayDate() {
