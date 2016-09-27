@@ -29,6 +29,7 @@ import com.tallty.smart_life_android.model.Step;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
 
@@ -412,7 +413,14 @@ public class SportMoreData extends BaseBackFragment {
         String[] labels = new String[24];
         float[] counts = new float[24];
 
+        // 当前key
         String sharedKey;
+        float nowStep;
+        // 前一小时key
+        String lastKey;
+        float lastStep;
+        // 差值
+        float d_value;
         int max = 0;
 
         for (int i = 0; i < 24; i++) {
@@ -421,8 +429,28 @@ public class SportMoreData extends BaseBackFragment {
             } else {
                 sharedKey = String.valueOf(i);
             }
+
+            if (i < 11) {
+                if (i == 0) {
+                    lastKey = "00";
+                } else {
+                    lastKey = "0" + (i - 1);
+                }
+            } else {
+                lastKey = String.valueOf(i-1);
+            }
+
+            // 计算每小时之间的差值
+            nowStep = sharedPre.getFloat(sharedKey, 0.0f);
+            lastStep = sharedPre.getFloat(lastKey, 0.0f);
+            if (nowStep >= lastStep) {
+                d_value = nowStep - lastStep;
+            } else {
+                d_value = nowStep;
+            }
+            // 保存图表数据
             labels[i] = sharedKey + ":00";
-            counts[i] = sharedPre.getFloat(sharedKey, 0.0f);
+            counts[i] = d_value;
 
             Log.d(App.TAG, sharedKey + "=====>" + counts[i]);
 
@@ -432,6 +460,7 @@ public class SportMoreData extends BaseBackFragment {
         // 增加一定比例的最大值, 使图表不会顶住天
         max += (max / 4);
 
+        Log.d(App.TAG, Arrays.toString(counts) +"");
         // 载入图表
         if (!isLoad)
             loadChart(chart, labels, counts, max);

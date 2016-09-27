@@ -144,7 +144,6 @@ public class MainFragment extends BaseFragment {
     @Override
     public void onDestroyView() {
         EventBus.getDefault().unregister(this);
-        PgyUpdateManager.unregister();
         super.onDestroyView();
     }
 }

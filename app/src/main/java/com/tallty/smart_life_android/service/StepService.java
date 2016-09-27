@@ -102,7 +102,6 @@ public class StepService extends Service implements SensorEventListener {
 
     @Override
     public void onCreate() {
-        EventBus.getDefault().register(this);
         // 注册广播接收器, 监听手机状态, 并做相应处理
         initBroadcastReceiver();
         // 启动计步器
@@ -379,7 +378,6 @@ public class StepService extends Service implements SensorEventListener {
         unregisterReceiver(phoneStatusReceiver);
         Intent intent = new Intent(this, StepService.class);
         startService(intent);
-        EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
 

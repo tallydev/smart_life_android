@@ -41,6 +41,7 @@
                     android:layout_height="match_parent"
                     android:background="@drawable/chart_tab_bg"
                     android:textColor="@drawable/chart_tab_text"
+                    android:visibility="gone"
                     android:gravity="center"
                     android:text="周"/>
                 <TextView
@@ -200,7 +201,7 @@
                         android:layout_height="28dp"
                         android:gravity="center_horizontal"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/text_16"
+                        android:textSize="@dimen/text_18"
                         android:textStyle="bold"/>
                 </LinearLayout>
                 <View
@@ -226,7 +227,7 @@
                         android:layout_height="28dp"
                         android:gravity="center_horizontal"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/text_16"
+                        android:textSize="@dimen/text_18"
                         android:textStyle="bold"/>
                 </LinearLayout>
                 <View
@@ -252,7 +253,7 @@
                         android:layout_height="28dp"
                         android:gravity="center_horizontal"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/text_16"
+                        android:textSize="@dimen/text_18"
                         android:textStyle="bold"
                         android:id="@+id/rank_percent"/>
                 </LinearLayout>
