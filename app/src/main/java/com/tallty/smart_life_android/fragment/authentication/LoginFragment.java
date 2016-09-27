@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -15,6 +16,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
+import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
@@ -180,6 +182,7 @@ public class LoginFragment extends BaseLazyMainFragment {
                     editor.putString(Const.USER_PHONE, user.getPhone());
                     editor.putString(Const.USER_TOKEN, user.getToken());
                     editor.apply();
+
                     // 运行一下Auth, 防止第一次使用Auth Engine, 或异步执行初始化服务, 此时调用接口会一直失败
                     Engine.authService(user.getToken(), user.getPhone());
                     // 进入首页

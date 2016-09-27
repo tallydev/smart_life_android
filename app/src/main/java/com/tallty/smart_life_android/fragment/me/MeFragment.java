@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.tallty.smart_life_android.App;
+import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseLazyMainFragment;
@@ -40,6 +41,9 @@ import retrofit2.Response;
  * 个人中心
  */
 public class MeFragment extends BaseLazyMainFragment {
+    private String shared_token;
+    private String shared_phone;
+
     private RelativeLayout profile;
     private ImageView photo;
     private TextView name;
@@ -91,6 +95,9 @@ public class MeFragment extends BaseLazyMainFragment {
 
     @Override
     protected void initView() {
+        shared_token = sharedPre.getString(Const.USER_TOKEN, Const.EMPTY_STRING);
+        shared_phone = sharedPre.getString(Const.USER_PHONE, Const.EMPTY_STRING);
+
         EventBus.getDefault().register(this);
 
         profile = getViewById(R.id.me_profile);
@@ -127,6 +134,8 @@ public class MeFragment extends BaseLazyMainFragment {
         setListener();
         setView();
         // 查询用户信息
+        Log.i(App.TAG, shared_phone);
+        Log.i(App.TAG, shared_token);
         Engine.authService(shared_token, shared_phone).getUser().enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
@@ -137,6 +146,11 @@ public class MeFragment extends BaseLazyMainFragment {
                             .placeholder(R.drawable.user_default)
                             .transform(new GlideCircleTransform(context)).into(photo);
                     name.setText(user.getNickname());
+
+                    Log.i(App.TAG, "接口数据,昵称"+response.body().getNickname());
+
+                    Log.i(App.TAG, "用户昵称"+user.getNickname());
+                    Log.i(App.TAG, "设置了个人中心名称图片");
                 } else {
                     showToast("获取用户信息失败");
                 }

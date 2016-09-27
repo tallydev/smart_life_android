@@ -19,7 +19,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Engine {
     private static final String baseUrl = "http://elive.clfsj.com:8081/";
-    private static DataAPI authService = null;
+    // 退出时, 需要重置authService
+    public static DataAPI authService = null;
     private static DataAPI noAuthService = null;
 
     // 未鉴权的网络服务

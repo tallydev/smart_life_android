@@ -423,6 +423,9 @@ public class SportMoreData extends BaseBackFragment {
             }
             labels[i] = sharedKey + ":00";
             counts[i] = sharedPre.getFloat(sharedKey, 0.0f);
+
+            Log.d(App.TAG, sharedKey + "=====>" + counts[i]);
+
             max = max > counts[i] ? max : (int) counts[i];
         }
 

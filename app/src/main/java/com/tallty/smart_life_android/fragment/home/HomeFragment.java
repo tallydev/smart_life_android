@@ -30,6 +30,7 @@ import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.HomeRecyclerAdapter;
 import com.tallty.smart_life_android.base.BaseLazyMainFragment;
 import com.tallty.smart_life_android.custom.MyRecyclerView;
+import com.tallty.smart_life_android.event.ClearDayStepEvent;
 import com.tallty.smart_life_android.event.ShowSnackbarEvent;
 import com.tallty.smart_life_android.event.TabSelectedEvent;
 import com.tallty.smart_life_android.fragment.MainFragment;
@@ -38,6 +39,7 @@ import com.tallty.smart_life_android.holder.HomeViewHolder;
 import com.tallty.smart_life_android.model.Home;
 import com.tallty.smart_life_android.model.Step;
 import com.tallty.smart_life_android.service.StepService;
+import com.tallty.smart_life_android.utils.DbUtils;
 import com.tallty.smart_life_android.utils.ToastUtil;
 
 import org.greenrobot.eventbus.EventBus;
@@ -59,6 +61,9 @@ import retrofit2.Response;
  * 首页
  */
 public class HomeFragment extends BaseLazyMainFragment implements OnItemClickListener, Handler.Callback{
+    private String shared_token;
+    private String shared_phone;
+    private CountDownTimer delayTimer;
     // 计步器相关
     private ServiceConnection conn;
     private static final int TIME_INTERVAL = 1000;
@@ -143,6 +148,8 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
         delayHandler = new Handler(this);
 
         EventBus.getDefault().register(this);
+        shared_token = sharedPre.getString(Const.USER_TOKEN, Const.EMPTY_STRING);
+        shared_phone = sharedPre.getString(Const.USER_PHONE, Const.EMPTY_STRING);
     }
 
     @Override
@@ -151,15 +158,56 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
         setList();
         // 设置计步服务
         setupService();
-        // 设置步数上传计时器(15分钟)
+        // 设置步数上传计时器(15分钟倒计时: 每分钟判断整点并获取首页数据, 结束上传步数)
         setUploadStepTimer();
-        // 获取首页信息,更新列表
-        getHomeData();
+        // 计入页面, 延时3秒上传一次步数, 然后再获取首页信息
+        delayUploadStep();
+    }
+
+    /**
+     * 因为计步服务使用handleMessage来传递step数据
+     * 进入页面, 可能还没有接受到计步器发来的步数, 因此也无法使用接口上传步数
+     * 导致【健步达人】浮窗排名为空
+     * 解决: 延时三秒, 以确保已接受了step, 然后先上传步数, 再获取首页信息
+     */
+    private void delayUploadStep() {
+        delayTimer = new CountDownTimer(3000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                Log.d(App.TAG, "首次进入首页,先上传step,再获取HomeData, 倒计时"+ millisUntilFinished / 1000);
+            }
+
+            @Override
+            public void onFinish() {
+                String current_date = getTodayDate();
+                Log.d(App.TAG, "首次进入页面,上传步数任务,并获取首页数据"+current_date+","+step);
+                Engine.authService(shared_token, shared_phone).uploadStep(current_date, step).enqueue(new Callback<Step>() {
+                    @Override
+                    public void onResponse(Call<Step> call, Response<Step> response) {
+                        if (response.code() == 201) {
+                            // 获取首页信息,更新列表
+                            getHomeData();
+                        } else {
+                            Log.d(App.TAG, "上传步数失败");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Step> call, Throwable t) {
+                        Log.d(App.TAG, "上传步数链接服务器失败");
+                    }
+                });
+            }
+        };
+        delayTimer.start();
     }
 
 
     /**
      * 自定义计时器
+     * 每分钟判断一次时间, 是否是整点
+     * 整点 ? 保存步数 : continue
+     * 并获取一次首页数据
      */
     private class UploadStepTimer extends CountDownTimer {
         UploadStepTimer(long millisInFuture, long countDownInterval) {
@@ -168,10 +216,9 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
 
         @Override
         public void onTick(long millisUntilFinished) {
-            // 每分钟判断一次时间
-            // 整点 ? 保存步数 : continue
             String time = getNowTime();
             Log.i(App.TAG, "一分钟轮询"+time);
+
             if ("00".equals(time.substring(3))) {
                 SharedPreferences.Editor editor = sharedPre.edit();
                 editor.putFloat(time.substring(0, 2), (float) step);
@@ -184,7 +231,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
 
         @Override
         public void onFinish() {
-            // 计时器正常结束时,取消上一个计时器,上传步数,开始新的计时器
+            // 15分钟结束, 计时器正常结束时,取消上一个计时器,上传步数,开始新的计时器
             timer.cancel();
             uploadStep();
             setUploadStepTimer();
@@ -205,17 +252,24 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
     }
 
     private void getHomeData() {
-        Log.d(App.TAG, shared_phone+"");
-        Log.d(App.TAG, shared_token+"");
         Engine.authService(shared_token, shared_phone).getHomeData().enqueue(new Callback<Home>() {
             @Override
             public void onResponse(Call<Home> call, Response<Home> response) {
                 if (response.code() == 200) {
                     rank = response.body().getFitness().get("rank");
                     server_today = response.body().getFitness().get("today");
-                    Log.i(App.TAG, rank+"排名");
+                    // 更新健步达人浮窗
+                    if (homeViewHolder == null) {
+                        homeViewHolder = (HomeViewHolder) recyclerView.findViewHolderForAdapterPosition(1);
+                    }
+                    homeViewHolder.rank.setText(rank);
+                    homeViewHolder.date.setText(server_today);
+
+                    // 更新新品上市倒计时
                     homeRecyclerAdapter.setCountDownTimer(response.body().getNewer().get("end_time"));
                     homeRecyclerAdapter.notifyItemChanged(6);
+
+                    Log.i(App.TAG, rank+"排名");
                     Log.d(App.TAG, "更新了倒计时");
                 } else {
                     Log.d(App.TAG, "获取首页信息失败");
@@ -402,11 +456,30 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
     public void onDestroyView() {
         super.onDestroyView();
         EventBus.getDefault().unregister(this);
+        timer.onFinish();
+        delayTimer.onFinish();
     }
 
+    // 订阅事件
     /**
-     * 订阅事件
+     * 清空逐小时步数
      */
+    @Subscribe
+    public void onClearSahredStep(ClearDayStepEvent event) {
+        String sharedKey;
+        for (int i = 0; i < 24; i++) {
+            if (i < 10) {
+                sharedKey = "0" + i;
+            } else {
+                sharedKey = String.valueOf(i);
+            }
+            SharedPreferences.Editor editor = sharedPre.edit();
+            editor.putFloat(sharedKey, 0.0f);
+            editor.apply();
+        }
+        Log.i(App.TAG, "旧的逐小时步数被清空了");
+    }
+
     @Subscribe
     public void onTabSelectedEvent(TabSelectedEvent event) {
         // Tab Home按钮被重复点击时执行的操作

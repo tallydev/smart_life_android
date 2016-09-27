@@ -403,7 +403,9 @@ public class ProfileFragment extends BaseBackFragment {
                         // 从数据源删除数
                         SharedPreferences.Editor editor = sharedPre.edit();
                         editor.putString(Const.USER_TOKEN, Const.EMPTY_STRING);
-                        editor.commit();
+                        editor.apply();
+                        // 重置网络请求, 否则退出账号,authService 还保留着上一账号的phone 和 token
+                        Engine.authService = null;
                         Intent intent = new Intent(getActivity(), LoginActivity.class);
                         startActivity(intent);
                         getActivity().finish();

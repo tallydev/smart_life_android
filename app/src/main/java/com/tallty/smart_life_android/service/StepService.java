@@ -9,6 +9,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -29,9 +30,13 @@ import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.activity.MainActivity;
+import com.tallty.smart_life_android.event.ClearDayStepEvent;
+import com.tallty.smart_life_android.fragment.MainFragment;
 import com.tallty.smart_life_android.model.Step;
 import com.tallty.smart_life_android.utils.CountDownTimer;
 import com.tallty.smart_life_android.utils.DbUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -97,6 +102,7 @@ public class StepService extends Service implements SensorEventListener {
 
     @Override
     public void onCreate() {
+        EventBus.getDefault().register(this);
         // 注册广播接收器, 监听手机状态, 并做相应处理
         initBroadcastReceiver();
         // 启动计步器
@@ -237,6 +243,7 @@ public class StepService extends Service implements SensorEventListener {
         sensorManager = (SensorManager) this.getSystemService(SENSOR_SERVICE);
         //android4.4以后可以使用计步传感器
         int VERSION_CODES = android.os.Build.VERSION.SDK_INT;
+        Log.i(App.TAG, "系统版本号: "+VERSION_CODES);
         if (VERSION_CODES >= 19) {
             addCountStepListener();
         } else {
@@ -334,14 +341,20 @@ public class StepService extends Service implements SensorEventListener {
         List<Step> list = DbUtils.getQueryByWhere(Step.class, "date", new String[]{CURRENT_DATE});
         if (list.size() == 0 || list.isEmpty()) {
             /**
-             * 自己补充: 如果保存时,数据库没有今天的记录,说明今天已经结束,重置步数,更新通知
-             * 插入新的一天的步数记录
+             * 自己补充:
+             * 如果保存时,数据库没有今天的记录,说明今天已经结束:
+             * 1、重置步数,
+             * 2、更新通知
+             * 3、插入新的一天的步数记录,
+             * 4、清空逐小时步数数据
              */
             Step data = new Step();
             data.setDate(CURRENT_DATE);
             data.setCount(tempStep + "");
             DbUtils.insert(data);
             updateNotification("今日步数：" + StepCreator.CURRENT_STEP + " 步");
+            // 4、清空逐小时步数数据
+            EventBus.getDefault().post(new ClearDayStepEvent(true));
             Log.d(App.TAG, "插入"+CURRENT_DATE+"新步数记录,总记录数:"+DbUtils.getQueryAll(Step.class).size());
         } else if (list.size() == 1) {
             Step data = list.get(0);
@@ -366,6 +379,7 @@ public class StepService extends Service implements SensorEventListener {
         unregisterReceiver(phoneStatusReceiver);
         Intent intent = new Intent(this, StepService.class);
         startService(intent);
+        EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
 
