@@ -101,6 +101,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
     public void onBindViewHolder(HomeViewHolder viewHolder, final int position) {
         // 公用布局: 标题图片按钮
         viewHolder.textView.setText("— "+titles.get(position)+" —");
+        Log.d(App.TAG, "— "+titles.get(position)+" —");
         Glide.with(context).load(images.get(position)).into(viewHolder.imageView);
         viewHolder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,27 +150,27 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
             EventBus.getDefault().post(new StartBrotherEvent(SportMoreData.newInstance("健步达人", HomeFragment.step)));
         }
         // 市政大厅
-        else if (position == 2) {
-            EventBus.getDefault().post(new ShowSnackbarEvent("即将上线，敬请期待"));
-        }
+//        else if (position == 2) {
+//            EventBus.getDefault().post(new ShowSnackbarEvent("即将上线，敬请期待"));
+//        }
         // 社区活动
-        else if (position == 3) {
+        else if (position == 2) {
             EventBus.getDefault().post(new StartBrotherEvent(CountOrder.newInstance("社区活动", R.drawable.four_detail)));
         }
         // 智慧家居
-        else if (position == 4) {
+        else if (position == 3) {
             EventBus.getDefault().post(new StartBrotherEvent(HouseRemoteControl.newInstance("施耐德智能家居")));
         }
         // 社区IT
-        else if (position == 5) {
+        else if (position == 4) {
             EventBus.getDefault().post(new StartBrotherEvent(CommunityIt.newInstance("IT学堂")));
         }
         // 新品上市
-        else if (position == 6) {
+        else if (position == 5) {
             EventBus.getDefault().post(new StartBrotherEvent(CountOrder.newInstance("新品上市", R.drawable.new_product_detail)));
         }
         // 限量发售
-        else if (position == 7) {
+        else if (position == 6) {
             EventBus.getDefault().post(new StartBrotherEvent(LimitSail.newInstance("限量销售")));
         }
     }
@@ -231,29 +232,29 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
                     }
                 }
                 // 市政大厅
-                else if (tag == 2) {
-                    if (position == 0) {
-                        EventBus.getDefault().post(new ShowSnackbarEvent("即将上线，敬请期待"));
-                    } else if (position == 1) {
-                        EventBus.getDefault().post(new ShowSnackbarEvent("即将上线，敬请期待"));
-                    } else if (position == 2) {
-                        EventBus.getDefault().post(new ShowSnackbarEvent("即将上线，敬请期待"));
-                    } else if (position == 3) {
-                        EventBus.getDefault().post(new ShowSnackbarEvent("即将上线，敬请期待"));
-                    } else if (position == 4) {
-                        EventBus.getDefault().post(new ShowSnackbarEvent("即将上线，敬请期待"));
-                    } else if (position == 5){
-                        EventBus.getDefault().post(new ShowSnackbarEvent("即将上线，敬请期待"));
-                    }
-                }
+//                else if (tag == 2) {
+//                    if (position == 0) {
+//                        EventBus.getDefault().post(new ShowSnackbarEvent("即将上线，敬请期待"));
+//                    } else if (position == 1) {
+//                        EventBus.getDefault().post(new ShowSnackbarEvent("即将上线，敬请期待"));
+//                    } else if (position == 2) {
+//                        EventBus.getDefault().post(new ShowSnackbarEvent("即将上线，敬请期待"));
+//                    } else if (position == 3) {
+//                        EventBus.getDefault().post(new ShowSnackbarEvent("即将上线，敬请期待"));
+//                    } else if (position == 4) {
+//                        EventBus.getDefault().post(new ShowSnackbarEvent("即将上线，敬请期待"));
+//                    } else if (position == 5){
+//                        EventBus.getDefault().post(new ShowSnackbarEvent("即将上线，敬请期待"));
+//                    }
+//                }
                 // 社区活动
-                else if (tag == 3) {
+                else if (tag == 2) {
                     if (position == 0) {
                         EventBus.getDefault().post(new StartBrotherEvent(CountOrder.newInstance("社区活动", R.drawable.four_detail)));
                     }
                 }
                 // 智慧家居
-                else if (tag == 4) {
+                else if (tag == 3) {
                     if (position == 0) {
                         EventBus.getDefault().post(new StartBrotherEvent(HouseRemoteControl.newInstance("施耐德智能家居")));
                     } else if (position == 1) {
@@ -261,25 +262,26 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
                     }
                 }
                 // 社区IT
-                else if (tag == 5) {
+                else if (tag == 4) {
                     if (position == 0) {
                         EventBus.getDefault().post(new StartBrotherEvent(CommunityIt.newInstance("IT学堂")));
                     } else if (position == 1) {
                         EventBus.getDefault().post(new StartBrotherEvent(CommunityIt.newInstance("在线冲印")));
                     } else if (position == 2) {
                         EventBus.getDefault().post(new StartBrotherEvent(CommunityIt.newInstance("IT服务")));
-                    } else if (position == 3) {
-                        EventBus.getDefault().post(new StartBrotherEvent(CommunityIt.newInstance("更多服务")));
                     }
+//                    else if (position == 3) {
+//                        EventBus.getDefault().post(new StartBrotherEvent(CommunityIt.newInstance("更多服务")));
+//                    }
                 }
                 // 新品上市
-                else if (tag == 6) {
+                else if (tag == 5) {
                     if (position == 0) {
                         EventBus.getDefault().post(new StartBrotherEvent(CountOrder.newInstance("新品上市", R.drawable.new_product_detail)));
                     }
                 }
                 // 限量发售
-                else if (tag == 7) {
+                else if (tag == 6) {
                     if (position == 0) {
                         EventBus.getDefault().post(new StartBrotherEvent(LimitSail.newInstance("限量销售")));
                     }

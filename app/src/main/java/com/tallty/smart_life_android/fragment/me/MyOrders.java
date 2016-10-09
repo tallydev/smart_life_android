@@ -83,26 +83,26 @@ public class MyOrders extends BaseBackFragment {
     @Override
     protected void afterAnimationLogic() {
         // 整理数据
-        for (int i=0;i<numbers.length;i++) {
-            Order order = new Order();
-            order.setNumber(numbers[i]);
-            order.setTime(times[i]);
-            order.setState(states[i]);
-            order.setPayWay(pay_way[i]);
-            order.setPrice(prices[i]);
-            List<CartItem> commodities = new ArrayList<>();
-            for (int j=i;j<count.length;j++) {
-                CartItem cartItem = new CartItem();
-                cartItem.setCount(count[j]);
-                // 调接口时去掉
-                cartItem.setImage_id(images[j]);
-                cartItem.setName(name[j]);
-                cartItem.setPrice(price[j]);
-                commodities.add(cartItem);
-            }
-            order.setCommodities(commodities);
-            orders.add(order);
-        }
+//        for (int i=0;i<numbers.length;i++) {
+//            Order order = new Order();
+//            order.setNumber(numbers[i]);
+//            order.setTime(times[i]);
+//            order.setState(states[i]);
+//            order.setPayWay(pay_way[i]);
+//            order.setPrice(prices[i]);
+//            List<CartItem> commodities = new ArrayList<>();
+//            for (int j=i;j<count.length;j++) {
+//                CartItem cartItem = new CartItem();
+//                cartItem.setCount(count[j]);
+//                // 调接口时去掉
+//                cartItem.setImage_id(images[j]);
+//                cartItem.setName(name[j]);
+//                cartItem.setPrice(price[j]);
+//                commodities.add(cartItem);
+//            }
+//            order.setCommodities(commodities);
+//            orders.add(order);
+//        }
         // 加载列表
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         adapter = new MyOrdersAdapter(context, orders);

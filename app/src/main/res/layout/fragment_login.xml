@@ -112,7 +112,7 @@
             android:textColor="@color/orange"
             android:textSize="@dimen/text_14"
             android:background="@drawable/register_btn_bg"
-            android:text="忘记密码?"
+            android:text="找回密码"
             android:layout_below="@id/login_btn"
             android:layout_alignParentRight="true"/>
     </RelativeLayout>

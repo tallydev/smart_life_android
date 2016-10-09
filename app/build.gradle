@@ -12,8 +12,8 @@ android {
         applicationId "com.tallty.smart_life_android"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 11
-        versionName "0.9.2"
+        versionCode 12
+        versionName "0.9.3"
         // dex突破65535的限制
         multiDexEnabled true
         // umeng的渠道

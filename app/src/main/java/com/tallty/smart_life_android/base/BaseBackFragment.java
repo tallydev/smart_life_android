@@ -258,7 +258,7 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
      * 获取字符串资源
      */
     public String showString(int ResId) {
-        return getActivity().getApplicationContext().getString(ResId);
+        return _mActivity.getApplicationContext().getString(ResId);
     }
 
     /**
