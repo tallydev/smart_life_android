@@ -95,12 +95,26 @@
             android:layout_width="wrap_content"
             android:layout_height="32dp"
             android:layout_marginTop="36dp"
+            android:layout_marginLeft="20dp"
             android:textColor="@color/orange"
             android:textSize="@dimen/text_14"
             android:background="@drawable/register_btn_bg"
             android:text="免费注册"
             android:layout_below="@id/login_btn"
-            android:layout_centerHorizontal="true"/>
+            android:layout_alignParentLeft="true"/>
+
+        <Button
+            android:id="@+id/reset_password"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_marginTop="36dp"
+            android:layout_marginRight="20dp"
+            android:textColor="@color/orange"
+            android:textSize="@dimen/text_14"
+            android:background="@drawable/register_btn_bg"
+            android:text="忘记密码?"
+            android:layout_below="@id/login_btn"
+            android:layout_alignParentRight="true"/>
     </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

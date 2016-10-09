@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -15,8 +14,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.orhanobut.logger.Logger;
-import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
@@ -43,6 +40,7 @@ public class LoginFragment extends BaseLazyMainFragment {
     private EditText password_edit;
     private Button login_btn;
     private Button free_register;
+    private Button find_password;
 
     public static LoginFragment newInstance() {
         Bundle args = new Bundle();
@@ -91,12 +89,14 @@ public class LoginFragment extends BaseLazyMainFragment {
         password_edit = getViewById(R.id.login_password);
         login_btn = getViewById(R.id.login_btn);
         free_register = getViewById(R.id.free_register);
+        find_password = getViewById(R.id.reset_password);
     }
 
     @Override
     protected void initLazyView(@Nullable Bundle savedInstanceState) {
         login_btn.setOnClickListener(this);
         free_register.setOnClickListener(this);
+        find_password.setOnClickListener(this);
 
         initFormEdit();
     }
@@ -110,6 +110,10 @@ public class LoginFragment extends BaseLazyMainFragment {
             case R.id.free_register:
                 hideSoftInput();
                 start(RegisterFragment.newInstance());
+                break;
+            case R.id.reset_password:
+                hideSoftInput();
+                start(ResetFragment.newInstance());
                 break;
         }
     }

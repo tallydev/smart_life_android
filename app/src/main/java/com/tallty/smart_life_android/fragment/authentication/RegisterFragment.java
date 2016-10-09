@@ -272,7 +272,8 @@ public class RegisterFragment extends BaseBackFragment {
         Engine.noAuthService().registerUser(
                 user_edit.getPhone(),
                 user_edit.getPassword(),
-                sms).enqueue(new Callback<User>() {
+                sms)
+                .enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.code() == 201) {
@@ -280,7 +281,7 @@ public class RegisterFragment extends BaseBackFragment {
                     // 保存手机号,方便登陆页自动显示
                     SharedPreferences.Editor editor = sharedPre.edit();
                     editor.putString(Const.USER_PHONE, user.getPhone());
-                    editor.commit();
+                    editor.apply();
                     // 更新用户信息
                     updateUser(user);
                 } else if (response.code() == 422) {

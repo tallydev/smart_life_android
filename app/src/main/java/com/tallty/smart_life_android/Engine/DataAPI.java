@@ -58,6 +58,13 @@ public interface DataAPI {
                             @Field("user[password]") String password,
                             @Field("user[sms_token]") String sms);
 
+    // 重置
+    @FormUrlEncoded
+    @POST("user_info/reset")
+    Call<User> resetPassword(@Field("user[phone]") String phone,
+                             @Field("user[password]") String password,
+                             @Field("user[sms_token]") String sms);
+
     // 更新用户信息(不包括头像)
     @FormUrlEncoded
     @PUT("user_info")
@@ -74,12 +81,12 @@ public interface DataAPI {
     @GET("user_info")
     Call<User> getUser();
 
+    // *********************************************************************************************
+
     // 获取商品列表
     @GET("products")
     Call<ProductList> getProductList(@Query("page") Integer page,
                                      @Query("per_page") Integer per_page);
-
-    // *********************************************************************************************
 
     // 获取购物车列表
     @GET("cart_items")
