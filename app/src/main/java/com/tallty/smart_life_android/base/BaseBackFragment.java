@@ -178,6 +178,7 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
     @Override
     public boolean onBackPressedSupport() {
         pop();
+        onFragmentPop();
         return true;
     }
 

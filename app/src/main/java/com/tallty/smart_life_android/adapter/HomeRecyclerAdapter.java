@@ -14,6 +14,7 @@ import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.event.ShowSnackbarEvent;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
+import com.tallty.smart_life_android.fragment.Common.WebViewFragment;
 import com.tallty.smart_life_android.fragment.community.ComeService;
 import com.tallty.smart_life_android.fragment.home.CommunityIt;
 import com.tallty.smart_life_android.fragment.home.CountOrder;
@@ -140,7 +141,8 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
     private void setImageClickListener(int position) {
         // 智慧健康
         if (position == 0) {
-            EventBus.getDefault().post(new StartBrotherEvent(HealthyOrderCheck.newInstance("预约体检")));
+            String url = "http://closet-work.tallty.com/smart_life_banner?action=healthy";
+            EventBus.getDefault().post(new StartBrotherEvent(WebViewFragment.newInstance(url, "智慧健康")));
         }
         // 健步达人
         else if (position == 1) {

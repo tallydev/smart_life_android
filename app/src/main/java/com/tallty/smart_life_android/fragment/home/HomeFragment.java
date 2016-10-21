@@ -32,8 +32,11 @@ import com.tallty.smart_life_android.base.BaseLazyMainFragment;
 import com.tallty.smart_life_android.custom.MyRecyclerView;
 import com.tallty.smart_life_android.event.ClearDayStepEvent;
 import com.tallty.smart_life_android.event.ShowSnackbarEvent;
+import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.event.TabSelectedEvent;
+import com.tallty.smart_life_android.fragment.Common.WebViewFragment;
 import com.tallty.smart_life_android.fragment.MainFragment;
+import com.tallty.smart_life_android.fragment.community.ComeService;
 import com.tallty.smart_life_android.holder.BannerHolderView;
 import com.tallty.smart_life_android.holder.HomeViewHolder;
 import com.tallty.smart_life_android.model.Home;
@@ -448,8 +451,11 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
      */
     @Override
     public void onItemClick(int position) {
-        if (1 == position) {
-
+        switch (position) {
+            case 1:
+                String url = "http://closet-work.tallty.com/smart_life_banner?action=sport";
+                EventBus.getDefault().post(new StartBrotherEvent(WebViewFragment.newInstance(url, "健步达人")));
+                break;
         }
     }
 

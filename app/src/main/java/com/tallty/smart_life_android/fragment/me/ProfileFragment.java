@@ -6,6 +6,8 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,6 +24,9 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
+import com.pgyersdk.javabean.AppBean;
+import com.pgyersdk.update.PgyUpdateManager;
+import com.pgyersdk.update.UpdateManagerListener;
 import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.Engine.Engine;
@@ -73,7 +78,7 @@ public class ProfileFragment extends BaseBackFragment {
             add("头像");add("昵称");add("登录手机号");
             add("出生日期");add("性别");add("个性签名");
             add("身份证号");add("收货地址");add("变更绑定手机号");
-            add("设置支付密码");add("退出当前账号");
+            add("设置支付密码");add("版本更新");add("退出当前账号");
         }
     };
     private ArrayList<String> values = new ArrayList<String>(){
@@ -81,7 +86,7 @@ public class ProfileFragment extends BaseBackFragment {
             add("");add("");add("");
             add("未设置");add("未设置");add("未设置");
             add("");add("");add("");
-            add("");add("");
+            add("");add("");add("");
         }
     };
 
@@ -124,6 +129,15 @@ public class ProfileFragment extends BaseBackFragment {
 
     @Override
     protected void afterAnimationLogic() {
+        values.set(10, getVersion());
+        getUserInfo();
+    }
+
+
+    /**
+     * 获取用户信息,并显示
+     */
+    private void getUserInfo() {
         showProgress(showString(R.string.progress_normal));
         // 查询用户信息, 更新列表
         Engine.authService(shared_token, shared_phone).getUser().enqueue(new Callback<User>() {
@@ -156,6 +170,9 @@ public class ProfileFragment extends BaseBackFragment {
         });
     }
 
+    /**
+     * 退出事件
+     */
     @Override
     protected void onFragmentPop() {
         super.onFragmentPop();
@@ -171,6 +188,9 @@ public class ProfileFragment extends BaseBackFragment {
 
     }
 
+    /**
+     * 加载列表
+     */
     private void processRecyclerView() {
         // 加载列表
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
@@ -200,6 +220,8 @@ public class ProfileFragment extends BaseBackFragment {
 //                    startForResult(BindPhoneFragment.newInstance(
 //                            keys.get(position), values.get(position), position), REQ_CODE);
                 } else if (position == 10) {
+                    updateVersion();
+                } else if (position == 11) {
                     // 用户退出
                     processSignOut();
                 } else {
@@ -215,6 +237,38 @@ public class ProfileFragment extends BaseBackFragment {
             }
         });
         hideProgress();
+    }
+
+    /**
+     * 版本更新
+     */
+    private void updateVersion() {
+        PgyUpdateManager.register(getActivity(), new UpdateManagerListener() {
+            @Override
+            public void onNoUpdateAvailable() {
+                showToast("已经是最新版本了");
+            }
+
+            @Override
+            public void onUpdateAvailable(String s) {
+                final AppBean appBean = getAppBeanFromString(s);
+                new AlertDialog.Builder(context)
+                    .setTitle("更新提醒")
+                    .setMessage(appBean.getReleaseNote())
+                    .setPositiveButton("更新", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            startDownloadTask(getActivity(), appBean.getDownloadURL());
+                        }
+                    })
+                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    }).show();
+            }
+        });
     }
 
     /**
@@ -472,6 +526,21 @@ public class ProfileFragment extends BaseBackFragment {
             int position = data.getInt(RESULT_POSITION);
             values.set(position, text);
             adapter.notifyItemChanged(position);
+        }
+    }
+
+    /**
+     * 获取版本号
+     * @return 当前应用的版本号
+     */
+    public String getVersion() {
+        try {
+            PackageManager manager = context.getPackageManager();
+            PackageInfo info = manager.getPackageInfo(context.getPackageName(), 0);
+            return info.versionName;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
         }
     }
 }
