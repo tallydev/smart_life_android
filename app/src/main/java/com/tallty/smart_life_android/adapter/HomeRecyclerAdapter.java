@@ -14,6 +14,7 @@ import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.event.ShowSnackbarEvent;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
+import com.tallty.smart_life_android.fragment.community.ComeService;
 import com.tallty.smart_life_android.fragment.home.CommunityIt;
 import com.tallty.smart_life_android.fragment.home.CountOrder;
 import com.tallty.smart_life_android.fragment.home.HealthyCheckReport;
@@ -88,7 +89,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
             holder = new HomeViewHolder(itemView, IS_STEPS);
             return holder;
         }
-        // "新品上市"布局
+        // "限量发售"布局
         else if (viewType == IS_PRODUCT) {
             itemView = LayoutInflater.from(context).inflate(R.layout.item_home_timer, viewGroup, false);
             holder = new HomeViewHolder(itemView, IS_PRODUCT);
@@ -118,17 +119,13 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
         gridItemClickListener(viewHolder);
 
         // "健步达人"布局
-        if ("健步达人".equals(titles.get(position)) && viewHolder.viewType == IS_STEPS) {
+        if (viewHolder.viewType == IS_STEPS) {
             Glide.with(context).load(R.drawable.step_weather).into(viewHolder.weather);
             viewHolder.rank.setText("1");
             viewHolder.steps.setText("0");
-            // 当前日期 (改用首页调用接口获取)
-//            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd", Locale.getDefault());
-//            Date date = new Date(System.currentTimeMillis());
-//            String str = simpleDateFormat.format(date);
-//            viewHolder.date.setText(str);
-            System.out.println();
-        } else if ("新品上市".equals(titles.get(position)) && viewHolder.viewType == IS_PRODUCT) {
+        }
+        // 限量发售布局
+        else if (viewHolder.viewType == IS_PRODUCT) {
             // 设置倒计时
             viewHolder.countdownView.start(countDownSecond);
             viewHolder.countdownView.setOnCountdownEndListener(new CountdownView.OnCountdownEndListener() {
@@ -149,10 +146,6 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
         else if (position == 1) {
             EventBus.getDefault().post(new StartBrotherEvent(SportMoreData.newInstance("健步达人", HomeFragment.step)));
         }
-        // 市政大厅
-//        else if (position == 2) {
-//            EventBus.getDefault().post(new ShowSnackbarEvent("即将上线，敬请期待"));
-//        }
         // 社区活动
         else if (position == 2) {
             EventBus.getDefault().post(new StartBrotherEvent(CountOrder.newInstance("社区活动", R.drawable.four_detail)));
@@ -163,15 +156,19 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
         }
         // 社区IT
         else if (position == 4) {
-            EventBus.getDefault().post(new StartBrotherEvent(CommunityIt.newInstance("IT学堂")));
+            EventBus.getDefault().post(new StartBrotherEvent(ComeService.newInstance("上门服务")));
         }
         // 新品上市
         else if (position == 5) {
-            EventBus.getDefault().post(new StartBrotherEvent(CountOrder.newInstance("新品上市", R.drawable.new_product_detail)));
+            EventBus.getDefault().post(new StartBrotherEvent(CommunityIt.newInstance("IT学堂")));
         }
         // 限量发售
         else if (position == 6) {
             EventBus.getDefault().post(new StartBrotherEvent(LimitSail.newInstance("限量销售")));
+        }
+        // 上门服务
+        else if (position == 7) {
+            EventBus.getDefault().post(new StartBrotherEvent(CountOrder.newInstance("精品超市", R.drawable.new_product_detail)));
         }
     }
 
@@ -194,8 +191,8 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
     public int getItemViewType(int position) {
         if ("健步达人".equals(titles.get(position))) {
             return IS_STEPS;
-        } else if ("新品上市".equals(titles.get(position))) {
-            return IS_PRODUCT;
+        } else if ("限量发售".equals(titles.get(position))) {
+             return IS_PRODUCT;
         } else {
             return IS_NORMAL;
         }
@@ -231,22 +228,6 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
                         EventBus.getDefault().post(new StartBrotherEvent(SportMoreData.newInstance("健步达人", HomeFragment.step)));
                     }
                 }
-                // 市政大厅
-//                else if (tag == 2) {
-//                    if (position == 0) {
-//                        EventBus.getDefault().post(new ShowSnackbarEvent("即将上线，敬请期待"));
-//                    } else if (position == 1) {
-//                        EventBus.getDefault().post(new ShowSnackbarEvent("即将上线，敬请期待"));
-//                    } else if (position == 2) {
-//                        EventBus.getDefault().post(new ShowSnackbarEvent("即将上线，敬请期待"));
-//                    } else if (position == 3) {
-//                        EventBus.getDefault().post(new ShowSnackbarEvent("即将上线，敬请期待"));
-//                    } else if (position == 4) {
-//                        EventBus.getDefault().post(new ShowSnackbarEvent("即将上线，敬请期待"));
-//                    } else if (position == 5){
-//                        EventBus.getDefault().post(new ShowSnackbarEvent("即将上线，敬请期待"));
-//                    }
-//                }
                 // 社区活动
                 else if (tag == 2) {
                     if (position == 0) {
@@ -264,26 +245,29 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
                 // 社区IT
                 else if (tag == 4) {
                     if (position == 0) {
+                        EventBus.getDefault().post(new StartBrotherEvent(ComeService.newInstance("上门服务")));
+                    }
+                }
+                // 新品上市
+                else if (tag == 5) {
+                    if (position == 0) {
                         EventBus.getDefault().post(new StartBrotherEvent(CommunityIt.newInstance("IT学堂")));
                     } else if (position == 1) {
                         EventBus.getDefault().post(new StartBrotherEvent(CommunityIt.newInstance("在线冲印")));
                     } else if (position == 2) {
                         EventBus.getDefault().post(new StartBrotherEvent(CommunityIt.newInstance("IT服务")));
                     }
-//                    else if (position == 3) {
-//                        EventBus.getDefault().post(new StartBrotherEvent(CommunityIt.newInstance("更多服务")));
-//                    }
-                }
-                // 新品上市
-                else if (tag == 5) {
-                    if (position == 0) {
-                        EventBus.getDefault().post(new StartBrotherEvent(CountOrder.newInstance("新品上市", R.drawable.new_product_detail)));
-                    }
                 }
                 // 限量发售
                 else if (tag == 6) {
                     if (position == 0) {
                         EventBus.getDefault().post(new StartBrotherEvent(LimitSail.newInstance("限量销售")));
+                    }
+                }
+                // 上门服务
+                else if (tag == 7) {
+                    if (position == 0) {
+                        EventBus.getDefault().post(new StartBrotherEvent(CountOrder.newInstance("精品超市", R.drawable.new_product_detail)));
                     }
                 }
             }

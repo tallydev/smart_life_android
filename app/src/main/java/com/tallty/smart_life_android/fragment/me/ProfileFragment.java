@@ -335,7 +335,7 @@ public class ProfileFragment extends BaseBackFragment {
                     // 更新头像地址
                     SharedPreferences.Editor editor = sharedPre.edit();
                     editor.putString(Const.USER_AVATAR, response.body().getAvatar());
-                    editor.commit();
+                    editor.apply();
                     // 更新UI
                     values.set(0, file.getAbsolutePath());
                     adapter.notifyItemChanged(0);

@@ -123,7 +123,7 @@ public class CommunityFragment extends BaseLazyMainFragment{
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.community_service:
-                EventBus.getDefault().post(new StartBrotherEvent(ComeService.newInstance()));
+                EventBus.getDefault().post(new StartBrotherEvent(ComeService.newInstance("上门服务")));
                 break;
             case R.id.community_government:
                 showToast("政府信息平台(暂未开放)");

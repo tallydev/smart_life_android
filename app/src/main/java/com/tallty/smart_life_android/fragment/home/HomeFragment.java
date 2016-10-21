@@ -39,8 +39,6 @@ import com.tallty.smart_life_android.holder.HomeViewHolder;
 import com.tallty.smart_life_android.model.Home;
 import com.tallty.smart_life_android.model.Step;
 import com.tallty.smart_life_android.service.StepService;
-import com.tallty.smart_life_android.utils.DbUtils;
-import com.tallty.smart_life_android.utils.ToastUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -84,41 +82,51 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
     // 运动达人的ViewHolder
     private HomeViewHolder homeViewHolder = null;
     // banner图数据
-    private Integer[] imagesUrl = { R.drawable.banner_one, R.drawable.banner_two };
+    private Integer[] imagesUrl = { R.drawable.banner_one, R.drawable.banner_two, R.drawable.banner_three};
     // 列表数据
     private List<String> titles = new ArrayList<String>() {
         {
-            add("智慧健康");add("健步达人");//add("市政大厅");
+            add("智慧健康");
+            add("健步达人");
             add("社区活动");
-            add("智慧家居");add("社区IT");add("新品上市");add("限量发售");
+            add("智慧家居");
+            add("上门服务");
+            add("社区IT");
+            add("限量发售");
+            add("精品超市");
         }
     };
     private List<Integer> images = new ArrayList<Integer>() {
         {
-            add(R.drawable.smart_healthy);add(R.drawable.fitness_people);//add(R.drawable.government);
-            add(R.drawable.community_activity);add(R.drawable.smart_home);add(R.drawable.community_it);
-            add(R.drawable.new_product);add(R.drawable.on_sail);
+            add(R.drawable.smart_healthy);
+            add(R.drawable.fitness_people);
+            add(R.drawable.community_activity);
+            add(R.drawable.smart_home);
+            add(R.drawable.come_service);
+            add(R.drawable.community_it);
+            add(R.drawable.on_sail);
+            add(R.drawable.supermarket);
         }
     };
     private String[][] itemButtons = {
         {"预约体检", "健康报告", "预约专家"},
         {"更多数据"},
-        //{"天气查询", "违章查询", "公积金", "医保卡", "预约办证", "更多查询"},
         {"活动详情"},
         {"远程控制", "电子猫眼"},
+        {"上门服务"},
         {"IT学堂", "在线冲印", "IT服务"},
-        {"我要预约"},
+        {"我要参团"},
         {"更多臻品"}
     };
     private Integer[][] itemIcons = {
         {R.mipmap.smart_healthy_one, R.mipmap.smart_healthy_two, R.mipmap.smart_healthy_three},
         {R.mipmap.fitness_people_one},
-        //{R.mipmap.goverment_one, R.mipmap.goverment_two, R.mipmap.goverment_three, R.mipmap.goverment_four, R.mipmap.goverment_five, R.mipmap.goverment_six},
         {R.mipmap.community_activity_one},
         {R.mipmap.smart_home_one, R.mipmap.smart_home_two},
+        {R.mipmap.service_one},
         {R.mipmap.community_it_one, R.mipmap.community_it_two, R.mipmap.community_it_three},
-        {R.mipmap.new_product_one},
-        {R.mipmap.on_sail_one}
+        {R.mipmap.supermarket_one},
+        {R.mipmap.more_icon}
     };
 
 
@@ -242,14 +250,16 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
     // ========================业务逻辑=========================
     private void setBanner() {
         List<Integer> networkImages = Arrays.asList(imagesUrl);
-        banner.setPages(new CBViewHolderCreator() {
-            @Override
-            public Object createHolder() {
-                return new BannerHolderView();
-            }
-        }, networkImages)
-                .setPageIndicator(new int[] {R.mipmap.banner_indicator, R.mipmap.banner_indicator_focused})
-                .setOnItemClickListener(this);
+        banner.setPages(
+            new CBViewHolderCreator() {
+                @Override
+                public Object createHolder() {
+                    return new BannerHolderView();
+                }
+            }, networkImages
+        )
+        .setPageIndicator(new int[] {R.mipmap.banner_indicator, R.mipmap.banner_indicator_focused})
+        .setOnItemClickListener(this);
     }
 
     private void getHomeData() {
@@ -432,9 +442,15 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
 
     }
 
+    /**
+     * banner 图点击事件
+     * @param position
+     */
     @Override
     public void onItemClick(int position) {
-        ToastUtil.show("点击了第"+position+"个banner");
+        if (1 == position) {
+
+        }
     }
 
     @Override

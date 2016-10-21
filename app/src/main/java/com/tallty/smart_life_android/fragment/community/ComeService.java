@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.event.ConfirmDialogEvent;
@@ -22,12 +23,13 @@ import org.greenrobot.eventbus.Subscribe;
  * 社区 - 上门服务
  */
 public class ComeService extends BaseBackFragment {
+    private String mName;
     private ImageView service_image;
     private TextView appointment;
 
-    public static ComeService newInstance() {
+    public static ComeService newInstance(String title) {
         Bundle args = new Bundle();
-
+        args.putString(Const.FRAGMENT_NAME, title);
         ComeService fragment = new ComeService();
         fragment.setArguments(args);
         return fragment;
@@ -38,7 +40,7 @@ public class ComeService extends BaseBackFragment {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
-
+            mName = args.getString(Const.FRAGMENT_NAME);
         }
     }
 
@@ -49,7 +51,7 @@ public class ComeService extends BaseBackFragment {
 
     @Override
     public void initToolbar(Toolbar toolbar, TextView toolbar_title) {
-        toolbar_title.setText("上门服务");
+        toolbar_title.setText(mName);
     }
 
     @Override
