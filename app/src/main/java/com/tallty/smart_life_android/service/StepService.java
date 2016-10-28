@@ -70,8 +70,9 @@ public class StepService extends Service implements SensorEventListener {
     private static int stepSensor = -1;
 
     /**
-     * 传递步数消息
-     * 通知接收者,更新页面
+     * 消息处理:
+     * 1、MSG_FROM_CLIENT, 来自业务部分的步数请求, -> 发送: 步数 + MSG_FROM_SERVER
+     * 2、CLEAR_STEP, 来自业务部分的计步器重置请求, -> 重置计步器、发送: 步数 + MSG_FROM_SERVER
      */
     private static class MessengerHandler extends Handler {
         @Override
@@ -97,7 +98,6 @@ public class StepService extends Service implements SensorEventListener {
                 Message replyMsg = Message.obtain(null, Const.MSG_FROM_SERVER);
                 Bundle bundle = new Bundle();
                 bundle.putInt("step", StepCreator.CURRENT_STEP);
-                Log.w(App.TAG, "===》发送到的step: "+ StepCreator.CURRENT_STEP);
                 replyMsg.setData(bundle);
                 messenger.send(replyMsg);
             } catch (RemoteException e) {
@@ -110,13 +110,13 @@ public class StepService extends Service implements SensorEventListener {
     public void onCreate() {
         // 注册广播接收器, 监听手机状态, 并做相应处理
         initBroadcastReceiver();
-        // 启动计步器
+        // 开启一个新的线程启动计步器
         new Thread(new Runnable() {
             public void run() {
                 startStepDetector();
             }
         }).start();
-        // 启动倒计时
+        // 启动倒计时, 每个周期结束, 执行save() 创建或更新数据
         startTimeCount();
     }
 

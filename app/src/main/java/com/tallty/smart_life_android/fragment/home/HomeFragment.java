@@ -12,7 +12,6 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
-import android.support.annotation.IntegerRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -31,7 +30,6 @@ import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.HomeRecyclerAdapter;
 import com.tallty.smart_life_android.base.BaseLazyMainFragment;
 import com.tallty.smart_life_android.custom.MyRecyclerView;
-import com.tallty.smart_life_android.event.ClearDayStepEvent;
 import com.tallty.smart_life_android.event.ShowSnackbarEvent;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.event.TabSelectedEvent;
@@ -41,7 +39,6 @@ import com.tallty.smart_life_android.holder.BannerHolderView;
 import com.tallty.smart_life_android.holder.HomeViewHolder;
 import com.tallty.smart_life_android.model.Home;
 import com.tallty.smart_life_android.model.Step;
-import com.tallty.smart_life_android.service.StepCreator;
 import com.tallty.smart_life_android.service.StepService;
 import com.tallty.smart_life_android.utils.DbUtils;
 
@@ -177,7 +174,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
         setupService();
         // 设置步数上传计时器(15分钟倒计时: 每分钟判断整点并获取首页数据, 结束上传步数)
         setUploadStepTimer();
-        // 进入页面, 延时3秒上传一次步数, 然后再获取首页信息
+        // 进入页面, 延时3秒, 先上传一次步数, 然后再获取首页信息(优化首页信息的实时性)
         delayUploadStep();
     }
 
@@ -482,11 +479,10 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
             case Const.MSG_FROM_SERVER:
                 // 保存步数
                 step = msg.getData().getInt("step");
-                Log.v(App.TAG, "接收到的step《===: "+step);
                 // 更新首页视图
                 if (homeViewHolder == null) {
                     homeViewHolder = (HomeViewHolder) recyclerView.findViewHolderForAdapterPosition(1);
-                    Log.d(App.TAG, homeViewHolder+"");
+                    Log.d(App.TAG, "获取到了【健步达人】item: "+homeViewHolder+"");
                 } else {
                     homeViewHolder.steps.setText("" + step);
                     homeViewHolder.rank.setText(rank);

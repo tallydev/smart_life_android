@@ -78,6 +78,11 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
     protected void onEnterAnimationEnd(Bundle savedInstanceState) {
         super.onEnterAnimationEnd(savedInstanceState);
         // 设置监听器
