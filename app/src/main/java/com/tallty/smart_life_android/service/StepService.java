@@ -9,7 +9,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -31,7 +30,6 @@ import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.activity.MainActivity;
 import com.tallty.smart_life_android.event.ClearDayStepEvent;
-import com.tallty.smart_life_android.fragment.MainFragment;
 import com.tallty.smart_life_android.model.Step;
 import com.tallty.smart_life_android.utils.CountDownTimer;
 import com.tallty.smart_life_android.utils.DbUtils;
@@ -46,12 +44,11 @@ import java.util.List;
 /**
  * 计步服务
  * 监听器: OnSensorChangeListener
- */
-// TODO: 16/8/8 存在问题
-/**
- * 1、当手机处于裤子口袋时,步数为实际步数的一半
- * 2、当手机处于手中时,步数等于实际步数
- * 3、当手机处于上半身口袋时,步数待测试
+ *
+ * 流程: 1、注册广播器; 2、启动计步器; 3、启动计时器; 4、初始化当天数据; 5、更新通知栏
+ * 计时器: 定时save();
+ *
+ * 结果,产出唯一对外数据: ==> StepCreator.current_step
  */
 
 @TargetApi(Build.VERSION_CODES.CUPCAKE)
@@ -72,8 +69,6 @@ public class StepService extends Service implements SensorEventListener {
     // 系统计步传感器类型 0-counter 1-detector
     private static int stepSensor = -1;
 
-
-
     /**
      * 传递步数消息
      * 通知接收者,更新页面
@@ -83,19 +78,30 @@ public class StepService extends Service implements SensorEventListener {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case Const.MSG_FROM_CLIENT:
-                    try {
-                        Messenger messenger = msg.replyTo;
-                        Message replyMsg = Message.obtain(null, Const.MSG_FROM_SERVER);
-                        Bundle bundle = new Bundle();
-                        bundle.putInt("step", StepCreator.CURRENT_STEP);
-                        replyMsg.setData(bundle);
-                        messenger.send(replyMsg);
-                    } catch (RemoteException e) {
-                        e.printStackTrace();
-                    }
+                    sendStepAndMsg(msg);
+                    break;
+                case Const.CLEAR_STEP:
+                    StepCreator.CURRENT_STEP = 0;
+                    sendStepAndMsg(msg);
+                    Log.i(App.TAG, "StepService 清空了计步器步数:  "+StepCreator.CURRENT_STEP);
                     break;
                 default:
                     super.handleMessage(msg);
+            }
+        }
+
+        // 发送step 和 msg
+        private void sendStepAndMsg(Message msg) {
+            try {
+                Messenger messenger = msg.replyTo;
+                Message replyMsg = Message.obtain(null, Const.MSG_FROM_SERVER);
+                Bundle bundle = new Bundle();
+                bundle.putInt("step", StepCreator.CURRENT_STEP);
+                Log.w(App.TAG, "===》发送到的step: "+ StepCreator.CURRENT_STEP);
+                replyMsg.setData(bundle);
+                messenger.send(replyMsg);
+            } catch (RemoteException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -129,14 +135,22 @@ public class StepService extends Service implements SensorEventListener {
         return START_STICKY;
     }
 
+    /**
+     * 初始化当天数据:
+     * 查询到值: 赋值给step
+     * 未查询到: step = 0
+     */
     private void initTodayData() {
         CURRENT_DATE = getTodayDate();
         DbUtils.createDb(this, DB_NAME);
         //获取当天的数据，用于展示
         List<Step> list = DbUtils.getQueryByWhere(Step.class, "date", new String[]{CURRENT_DATE});
+
         if (list.size() == 0 || list.isEmpty()) {
+            // 查不到今天的记录 => 新的一天: step = 0
             StepCreator.CURRENT_STEP = 0;
         } else if (list.size() == 1) {
+            // 查询到当天数据, step = data
             StepCreator.CURRENT_STEP = Integer.parseInt(list.get(0).getCount());
         } else {
             Log.v(TAG, "出错了！");
@@ -184,17 +198,12 @@ public class StepService extends Service implements SensorEventListener {
                     save();
                     Log.d(App.TAG, "手机关机");
                 } else if (Intent.ACTION_TIME_CHANGED.equals(intent.getAction())) {
-                    Log.v(TAG, "系统时间变化");
+                    Log.v(TAG, "系统时间被设置");
                     initTodayData();
-                    clearStepData();
                 }
             }
         };
         registerReceiver(phoneStatusReceiver, filter);
-    }
-
-    private void clearStepData() {
-        StepService.CURRENT_DATE = "0";
     }
 
     private void startTimeCount() {
@@ -243,14 +252,12 @@ public class StepService extends Service implements SensorEventListener {
         //android4.4以后可以使用计步传感器
         int VERSION_CODES = android.os.Build.VERSION.SDK_INT;
         Log.i(App.TAG, "系统版本号: "+VERSION_CODES);
+
         if (VERSION_CODES >= 19) {
             addCountStepListener();
         } else {
             addBasePedoListener();
         }
-        // 尝试系统计步器和BasePedo计步器, 成功则正常使用,不成的忽略
-        // addBasePedoListener();
-        // addCountStepListener();
     }
 
     // 使用系统计步器
@@ -266,7 +273,7 @@ public class StepService extends Service implements SensorEventListener {
             Log.d(App.TAG, "使用了detector");
             sensorManager.registerListener(StepService.this, detectorSensor, SensorManager.SENSOR_DELAY_UI);
         } else {
-            Log.d(App.TAG, "Count sensor not available!");
+            Log.d(App.TAG, "系统计步服务获取失败, 使用BasePedo计步器");
             addBasePedoListener();
         }
     }
@@ -278,8 +285,6 @@ public class StepService extends Service implements SensorEventListener {
         Sensor sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         // 此方法用来注册，只有注册过才会生效，参数：SensorEventListener的实例，Sensor的实例，更新速率
         sensorManager.registerListener(stepCreator, sensor, SensorManager.SENSOR_DELAY_UI);
-        // 反注册计步器
-        // sensorManager.unregisterListener(stepCreator);
         // BasePedo计步器事件监听器
         stepCreator.setOnSensorChangeListener(new StepCreator.OnSensorChangeListener() {
                     @Override
@@ -290,20 +295,23 @@ public class StepService extends Service implements SensorEventListener {
                 });
     }
 
-    // 系统计步器监听
+
+    /**
+     * 系统计步器监听, 步数发生变化调用接口
+     * @param event
+     */
     public void onSensorChanged(SensorEvent event) {
-        // 按传感器类型不同,处理逻辑
-        // if(stepSensor == 0){
-        //     取出上次开机至今所有的步数
-        //      StepCreator.CURRENT_STEP = (int)event.values[0];
-        // }else if(stepSensor == 1){
-        //      StepCreator.CURRENT_STEP++;
-        // }
-        StepCreator.CURRENT_STEP++;
+        // 变化一次算作两步, 弥补误差
+        StepCreator.CURRENT_STEP += 2;
         updateNotification("今日步数：" + StepCreator.CURRENT_STEP + " 步");
         Log.i(App.TAG, "系统计步器改变");
     }
 
+    /**
+     * 系统传感器精度
+     * @param sensor
+     * @param accuracy
+     */
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
@@ -335,31 +343,34 @@ public class StepService extends Service implements SensorEventListener {
      * 保存步数到数据库中
      */
     private void save() {
-        int tempStep = StepCreator.CURRENT_STEP;
+        /**
+         * 每次保存步数的时候, 都获取一下日期, 做成跨天的时候, StepCreator.current_step 未重置。
+         */
+        CURRENT_DATE = getTodayDate();
         // 保存到数据库
         List<Step> list = DbUtils.getQueryByWhere(Step.class, "date", new String[]{CURRENT_DATE});
         if (list.size() == 0 || list.isEmpty()) {
             /**
              * 自己补充:
-             * 如果保存时,数据库没有今天的记录,说明今天已经结束:
-             * 1、重置步数,
-             * 2、更新通知
-             * 3、插入新的一天的步数记录,
-             * 4、清空逐小时步数数据
+             * 如果保存时,数据库没有今天的记录,说明今天已经结束, 执行如下操作:
              */
+            // 1、重置步数
+            StepCreator.CURRENT_STEP = 0;
+            // 2、更新通知
+            updateNotification("今日步数：" + StepCreator.CURRENT_STEP + " 步");
+            // 3、插入新的一天的步数记录
             Step data = new Step();
             data.setDate(CURRENT_DATE);
-            data.setCount(tempStep + "");
+            data.setCount(StepCreator.CURRENT_STEP + "");
             DbUtils.insert(data);
-            updateNotification("今日步数：" + StepCreator.CURRENT_STEP + " 步");
             // 4、清空逐小时步数数据
             EventBus.getDefault().post(new ClearDayStepEvent(true));
-            Log.d(App.TAG, "插入"+CURRENT_DATE+"新步数记录,总记录数:"+DbUtils.getQueryAll(Step.class).size());
+            Log.d(App.TAG, "插入"+CURRENT_DATE+"新步数记录, 总记录数:"+DbUtils.getQueryAll(Step.class).size());
         } else if (list.size() == 1) {
             Step data = list.get(0);
-            data.setCount(tempStep + "");
+            data.setCount(StepCreator.CURRENT_STEP + "");
             DbUtils.update(data);
-            Log.d(App.TAG, "更新"+CURRENT_DATE+"今天步数记录:"+list.get(0).getCount()+", 总记录数:"+DbUtils.getQueryAll(Step.class).size());
+            Log.d(App.TAG, "更新"+CURRENT_DATE+"步数记录:"+list.get(0).getCount()+", 总记录数:"+DbUtils.getQueryAll(Step.class).size());
         }
     }
 
@@ -402,20 +413,18 @@ public class StepService extends Service implements SensorEventListener {
             mWakeLock = null;
         }
 
-        if (mWakeLock == null) {
-            PowerManager mgr = (PowerManager) context
-                    .getSystemService(Context.POWER_SERVICE);
-            mWakeLock = mgr.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
-                    StepService.class.getName());
-            mWakeLock.setReferenceCounted(true);
-            Calendar c = Calendar.getInstance();
-            c.setTimeInMillis(System.currentTimeMillis());
-            int hour = c.get(Calendar.HOUR_OF_DAY);
-            if (hour >= 23 || hour <= 6) {
-                mWakeLock.acquire(5000);
-            } else {
-                mWakeLock.acquire(300000);
-            }
+        PowerManager mgr = (PowerManager) context
+                .getSystemService(Context.POWER_SERVICE);
+        mWakeLock = mgr.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
+                StepService.class.getName());
+        mWakeLock.setReferenceCounted(true);
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(System.currentTimeMillis());
+        int hour = c.get(Calendar.HOUR_OF_DAY);
+        if (hour >= 23 || hour <= 6) {
+            mWakeLock.acquire(5000);
+        } else {
+            mWakeLock.acquire(300000);
         }
 
         return (mWakeLock);

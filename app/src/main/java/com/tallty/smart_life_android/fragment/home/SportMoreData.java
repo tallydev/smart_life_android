@@ -65,6 +65,7 @@ public class SportMoreData extends BaseBackFragment {
     private boolean isLoadRank = false;
     private Integer total_pages = 1;
     private Integer current_page = 1;
+    private Integer per_page = 20;
     // 切换加载控制
     private boolean isLoadDay = false;
     private boolean isLoadWeek = false;
@@ -81,12 +82,14 @@ public class SportMoreData extends BaseBackFragment {
     private ArrayList<SportRankItem> sportRankItems = new ArrayList<>();
     // 步数
     private int step = 0;
+    private int uploadedStep = 0;
 
 
-    public static SportMoreData newInstance(String title, int step) {
+    public static SportMoreData newInstance(String title, int step, int uploadedStep) {
         Bundle args = new Bundle();
         args.putString(Const.FRAGMENT_NAME, title);
         args.putInt(Const.INT, step);
+        args.putInt("uploadedStep", uploadedStep);
         SportMoreData fragment = new SportMoreData();
         fragment.setArguments(args);
         return fragment;
@@ -98,6 +101,7 @@ public class SportMoreData extends BaseBackFragment {
         Bundle args = getArguments();
         mName = args.getString(Const.FRAGMENT_NAME);
         step = args.getInt(Const.INT);
+        uploadedStep = args.getInt("uploadedStep");
     }
 
     @Override
@@ -144,8 +148,6 @@ public class SportMoreData extends BaseBackFragment {
 
     @Override
     protected void afterAnimationLogic() {
-        now_timeline = DAY;
-        current_page = 1;
         tab_day.performClick();
     }
 
@@ -163,8 +165,6 @@ public class SportMoreData extends BaseBackFragment {
                 current_page = 1;
                 tabSelectedTask(tab_week, chartWeek, isLoadWeek);
                 isLoadWeek = true;
-
-
                 break;
             case R.id.tab_month:
                 now_timeline = MONTH;
@@ -209,18 +209,20 @@ public class SportMoreData extends BaseBackFragment {
     private void updateStepAndInitChartRank(final LineChartView chart,
                                             final boolean isLoad) {
         String current_date = getTodayDate();
+        // 用户当前步数可能小于已上传的步数, 处理:
+        int _step = step > uploadedStep ? step : uploadedStep;
 
-        Log.d(App.TAG, "开始上传步数任务"+current_date+","+ step);
-        Engine.authService(shared_token, shared_phone).uploadStep(current_date, step).enqueue(new Callback<Step>() {
+        Log.d(App.TAG, "开始上传步数任务"+current_date+","+ _step);
+        Engine.authService(shared_token, shared_phone).uploadStep(current_date, _step).enqueue(new Callback<Step>() {
             @Override
             public void onResponse(Call<Step> call, Response<Step> response) {
                 if (response.code() == 201) {
                     Log.d(App.TAG, "上传步数成功"+response.body().getCount());
-                    // 载入图表和列表
-                    initChartAndRank(chart, isLoad);
                 } else {
                     Log.d(App.TAG, "上传步数失败");
                 }
+                // 载入图表和列表
+                initChartAndRank(chart, isLoad);
             }
 
             @Override
@@ -277,7 +279,7 @@ public class SportMoreData extends BaseBackFragment {
     private void initRankList() {
         // 获取rank数据
         Engine.authService(shared_token, shared_phone)
-                .getSportRanks(now_timeline, current_page)
+                .getSportRanks(now_timeline, current_page, per_page)
                 .enqueue(new Callback<SportRank>() {
             @Override
             public void onResponse(Call<SportRank> call, Response<SportRank> response) {
@@ -352,7 +354,7 @@ public class SportMoreData extends BaseBackFragment {
      */
     private void getMoreRank() {
         Engine.authService(shared_token, shared_phone)
-                .getSportRanks(now_timeline, current_page)
+                .getSportRanks(now_timeline, current_page, per_page)
                 .enqueue(new Callback<SportRank>() {
                     @Override
                     public void onResponse(Call<SportRank> call, Response<SportRank> response) {

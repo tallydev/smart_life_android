@@ -210,7 +210,7 @@ public class MeFragment extends BaseLazyMainFragment {
                 EventBus.getDefault().post(new StartBrotherEvent(HealthyCheckReport.newInstance("健康报告")));
                 break;
             case R.id.me_sport:
-                EventBus.getDefault().post(new StartBrotherEvent(SportMoreData.newInstance("健步达人", HomeFragment.step)));
+                EventBus.getDefault().post(new StartBrotherEvent(SportMoreData.newInstance("健步达人", HomeFragment.step, HomeFragment.uploadedStep)));
                 break;
             case R.id.me_appointment:
                 EventBus.getDefault().post(new StartBrotherEvent(MyAppointments.newInstance()));

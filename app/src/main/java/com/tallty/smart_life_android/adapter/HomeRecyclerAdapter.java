@@ -103,7 +103,6 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
     public void onBindViewHolder(HomeViewHolder viewHolder, final int position) {
         // 公用布局: 标题图片按钮
         viewHolder.textView.setText("— "+titles.get(position)+" —");
-        Log.d(App.TAG, "— "+titles.get(position)+" —");
         Glide.with(context).load(images.get(position)).into(viewHolder.imageView);
         viewHolder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,7 +145,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
         }
         // 健步达人
         else if (position == 1) {
-            EventBus.getDefault().post(new StartBrotherEvent(SportMoreData.newInstance("健步达人", HomeFragment.step)));
+            EventBus.getDefault().post(new StartBrotherEvent(SportMoreData.newInstance("健步达人", HomeFragment.step, HomeFragment.uploadedStep)));
         }
         // 社区活动
         else if (position == 2) {
@@ -175,15 +174,15 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
     }
 
     public void setCountDownTimer(String time) {
-        Log.d(App.TAG, "时间"+time);
+        Log.d(App.TAG, "设置倒计时时间为: "+time);
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         try {
             Date date = format.parse(time);
             countDownSecond = date.getTime() - System.currentTimeMillis();
-            Log.d(App.TAG, "时间"+date.getTime() +"");
-            Log.d(App.TAG, "当前"+System.currentTimeMillis() +"");
-            Log.d(App.TAG, "差值"+countDownSecond +"");
+//            Log.d(App.TAG, "限量发售: 时间"+date.getTime() +"");
+//            Log.d(App.TAG, "限量发售: 当前"+System.currentTimeMillis() +"");
+//            Log.d(App.TAG, "限量发售: 差值"+countDownSecond +"");
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -227,7 +226,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
                 // 健步达人
                 else if (tag == 1) {
                     if (position == 0) {
-                        EventBus.getDefault().post(new StartBrotherEvent(SportMoreData.newInstance("健步达人", HomeFragment.step)));
+                        EventBus.getDefault().post(new StartBrotherEvent(SportMoreData.newInstance("健步达人", HomeFragment.step, HomeFragment.uploadedStep)));
                     }
                 }
                 // 社区活动

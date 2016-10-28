@@ -24,6 +24,7 @@ public class Const {
     public static final int MSG_FROM_CLIENT = 0;
     public static final int MSG_FROM_SERVER = 1;
     public static final int REQUEST_SERVER = 2;
+    public static final int CLEAR_STEP = 3;
 
     /**
      * SharedPreferences
@@ -69,7 +70,7 @@ public class Const {
             put("ITFW", "IT服务");
             put("ITXT", "IT学堂");
             put("SQHD", "社区活动");
-            put("XPSS", "新品上市");
+            put("XPSS", "精品超市");
             put("ZNJJ", "智能家居");
         }
     };

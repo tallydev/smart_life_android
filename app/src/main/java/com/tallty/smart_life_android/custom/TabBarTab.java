@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.tallty.smart_life_android.R;
 
 /**
@@ -105,7 +106,7 @@ public class TabBarTab extends FrameLayout {
         mIcon = new ImageView(context);
         int size = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 32, getResources().getDisplayMetrics());
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(size, size);
-        mIcon.setImageResource(icon);
+        Glide.with(context).load(icon).into(mIcon);
         mIcon.setLayoutParams(params);
         mIcon.setColorFilter(ContextCompat.getColor(context, R.color.tab_normal));
         lLContainer.addView(mIcon);

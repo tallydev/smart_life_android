@@ -222,19 +222,19 @@ public class StepCreator implements SensorEventListener{
         }
         ave = ave / valueNum;
         if (ave >= 8) {
-            Log.v(App.TAG, "超过8");
+            Log.v(App.TAG, "波动范围: 超过8");
             ave = (float) 4.3;
         } else if (ave >= 7 && ave < 8) {
-            Log.v(App.TAG, "7-8");
+            Log.v(App.TAG, "波动范围: 7-8");
             ave = (float) 3.3;
         } else if (ave >= 4 && ave < 7) {
-            Log.v(App.TAG, "4-7");
+            Log.v(App.TAG, "波动范围: 4-7");
             ave = (float) 2.3;
         } else if (ave >= 3 && ave < 4) {
-            Log.v(App.TAG, "3-4");
+            Log.v(App.TAG, "波动范围: 3-4");
             ave = (float) 2.0;
         } else {
-            Log.v(App.TAG, "else");
+            Log.v(App.TAG, "波动范围: < 3");
             ave = (float) 1.7;
         }
         return ave;

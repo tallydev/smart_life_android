@@ -12,6 +12,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
+import android.support.annotation.IntegerRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -36,12 +37,13 @@ import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.event.TabSelectedEvent;
 import com.tallty.smart_life_android.fragment.Common.WebViewFragment;
 import com.tallty.smart_life_android.fragment.MainFragment;
-import com.tallty.smart_life_android.fragment.community.ComeService;
 import com.tallty.smart_life_android.holder.BannerHolderView;
 import com.tallty.smart_life_android.holder.HomeViewHolder;
 import com.tallty.smart_life_android.model.Home;
 import com.tallty.smart_life_android.model.Step;
+import com.tallty.smart_life_android.service.StepCreator;
 import com.tallty.smart_life_android.service.StepService;
+import com.tallty.smart_life_android.utils.DbUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -72,8 +74,10 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
     private Messenger mGetReplyMessenger = new Messenger(new Handler(this));
     private Handler delayHandler;
     public static int step = 0;
+    public static int uploadedStep = 0;
     public static String rank = "0";
     public static String server_today = "";
+    private String DB_NAME = "smart_life";
     // 计时器: 15分钟上传步数
     private static final int uploadStepInterval = 900000;
     private UploadStepTimer timer;
@@ -153,27 +157,43 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
 
     @Override
     protected void initView() {
+        EventBus.getDefault().register(this);
         banner = getViewById(R.id.home_banner);
         recyclerView = getViewById(R.id.home_recycler);
         layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-        // 计步器相关
-        delayHandler = new Handler(this);
-
-        EventBus.getDefault().register(this);
         shared_token = sharedPre.getString(Const.USER_TOKEN, Const.EMPTY_STRING);
         shared_phone = sharedPre.getString(Const.USER_PHONE, Const.EMPTY_STRING);
+        // 计步器相关
+        delayHandler = new Handler(this);
     }
 
     @Override
     protected void initLazyView(@Nullable Bundle savedInstanceState) {
         setBanner();
         setList();
+        // 检查是否为新的一天, 并处理步数
+        checkStepWithDate();
         // 设置计步服务
         setupService();
         // 设置步数上传计时器(15分钟倒计时: 每分钟判断整点并获取首页数据, 结束上传步数)
         setUploadStepTimer();
-        // 计入页面, 延时3秒上传一次步数, 然后再获取首页信息
+        // 进入页面, 延时3秒上传一次步数, 然后再获取首页信息
         delayUploadStep();
+    }
+
+    /**
+     * 检查是否为新的一天
+     */
+    private void checkStepWithDate() {
+        String current_date = getTodayDate();
+        DbUtils.createDb(context, DB_NAME);
+        //获取当天的数据，用于展示
+        List<Step> list = DbUtils.getQueryByWhere(Step.class, "date", new String[]{current_date});
+
+        if (list.size() == 0 || list.isEmpty()) {
+            // 查不到今天的记录 => 新的一天
+            clearSharedStep();
+        }
     }
 
     /**
@@ -217,7 +237,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
 
     /**
      * 自定义计时器
-     * 每分钟判断一次时间, 是否是整点
+     * 每分钟判断一次时间, 是否是整点 (取每个小时的50分作为模拟整点00)
      * 整点 ? 保存步数 : continue
      * 并获取一次首页数据
      */
@@ -228,22 +248,15 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
 
         @Override
         public void onTick(long millisUntilFinished) {
-            String time = getNowTime();
-            Log.i(App.TAG, "一分钟轮询"+time);
-
-            if ("00".equals(time.substring(3))) {
-                SharedPreferences.Editor editor = sharedPre.edit();
-                editor.putFloat(time.substring(0, 2), (float) step);
-                editor.apply();
-                Log.d(App.TAG, "整点"+time.substring(3)+"保存了"+time.substring(0, 2)+"步数"+step);
-            }
+            // 到达整点, 保存
+            processClock();
             // 每分钟获取一次首页数据
             getHomeData();
         }
 
         @Override
         public void onFinish() {
-            // 15分钟结束, 计时器正常结束时,取消上一个计时器,上传步数,开始新的计时器
+            // 每分钟结束, 计时器正常结束时,取消上一个计时器,上传步数,开始新的计时器
             timer.cancel();
             uploadStep();
             setUploadStepTimer();
@@ -265,6 +278,56 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
         .setOnItemClickListener(this);
     }
 
+    /**
+     * 时间整点业务, 处理步数
+     */
+    private void processClock() {
+        SharedPreferences.Editor editor = sharedPre.edit();
+        String time = getNowTime();
+        Log.i(App.TAG, "一分钟轮询"+time);
+        String hour = time.substring(0, 2);
+
+        // 每个小时存储步数
+        if ("55".equals(time.substring(3))) {
+            editor.putFloat(hour, step);
+            editor.apply();
+            Log.d(App.TAG, time.substring(0, 2)+"点"+time.substring(3)+"分"+", 保存整点步数: "+step);
+        }
+
+        // 如果是 00:00
+        if ("00:00".equals(time)) {
+            // 清除昨天的逐小时步数
+            clearSharedStep();
+            // 清除计步器步数
+            try {
+                Message msg = Message.obtain(null, Const.CLEAR_STEP);
+                msg.replyTo = mGetReplyMessenger;
+                messenger.send(msg);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+            Log.d(App.TAG, "迎来新的一天");
+        }
+    }
+
+    /**
+     * 清楚sharePreferences保存的逐小时步数
+     */
+    public void clearSharedStep() {
+        String sharedKey;
+        for (int i = 0; i < 24; i++) {
+            if (i < 10) {
+                sharedKey = "0" + i;
+            } else {
+                sharedKey = String.valueOf(i);
+            }
+            SharedPreferences.Editor editor = sharedPre.edit();
+            editor.putFloat(sharedKey, 0.0f);
+            editor.apply();
+        }
+        Log.i(App.TAG, "旧的逐小时步数被清空了");
+    }
+
     private void getHomeData() {
         Engine.authService(shared_token, shared_phone).getHomeData().enqueue(new Callback<Home>() {
             @Override
@@ -272,6 +335,8 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
                 if (response.code() == 200) {
                     if (response.body().getFitness() != null) {
                         rank = response.body().getFitness().get("rank");
+                        String step = response.body().getFitness().get("step");
+                        uploadedStep = Integer.parseInt(step);
                         server_today = response.body().getFitness().get("today");
                     }
                     // 更新健步达人浮窗
@@ -285,16 +350,17 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
                     homeRecyclerAdapter.setCountDownTimer(response.body().getNewer().get("end_time"));
                     homeRecyclerAdapter.notifyItemChanged(6);
 
-                    Log.i(App.TAG, rank+"排名");
-                    Log.d(App.TAG, "更新了倒计时");
+                    Log.i(App.TAG, "获取首页信息成功");
+                    Log.i(App.TAG, "浮窗排名: "+rank);
+                    Log.i(App.TAG, "更新限量发售倒计时");
                 } else {
-                    Log.d(App.TAG, "获取首页信息失败");
+                    Log.w(App.TAG, "获取首页信息失败");
                 }
             }
 
             @Override
             public void onFailure(Call<Home> call, Throwable t) {
-                Log.d(App.TAG, "链接服务器失败");
+                Log.e(App.TAG, "链接服务器失败");
                 Log.e(App.TAG, t.getMessage()+"");
             }
         });
@@ -314,6 +380,8 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
     }
 
     private void uploadStep() {
+        // TODO: 2016/10/27 如果是新的一天, 重置数据
+
         String current_date = getTodayDate();
         Log.d(App.TAG, "开始上传步数任务"+current_date+","+step);
         Engine.authService(shared_token, shared_phone).uploadStep(current_date, step).enqueue(new Callback<Step>() {
@@ -350,7 +418,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
      * 启动计步器服务
      * 发送消息: 【MSG_FROM_CLIENT】
      * 作用: 启动计步服务, 【MSG_FROM_CLIENT】 消息为催化剂,
-     *      通知StepService发送: 步数 + 【MSG_FROM_Server】消息
+     *      通知StepService发送: 步数 + 【MSG_FROM_SERVER】消息
      */
     private void setupService() {
         conn = new ServiceConnection() {
@@ -381,8 +449,8 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
      * 获取计步器数据
      * 接收消息: 【MSG_FROM_SERVER】|| 【REQUEST_SERVER】
      * if 【MSG_FROM_SERVER】: 1、接收计步服务发来的数据 -> 处理业务逻辑
-     *                        2、延时0.5秒发送【REQUEST_SERVER】
-     * if 【REQUEST_SERVER】: 发送【MSG_FROM_CLIENT】通知计步服务发送: 步数 + 【MSG_FROM_Server】消息
+     *                        2、延时 TIME_INTERVAL 秒发送【REQUEST_SERVER】
+     * if 【REQUEST_SERVER】: 发送【MSG_FROM_CLIENT】通知计步服务发送: 步数 + 【MSG_FROM_SERVER】消息
      *
      * 逻辑图:
      *
@@ -395,16 +463,16 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
      *                      StepService -------<----------
      *                      |                            |
      *                      |                            |
-     *                      |SERVER                      | 延时 0.5 s
+     *                      |MSG_FROM_SERVER             | 延时 TIME_INTERVAL 秒
      *                      | +                          | +
-     *                      |step                        | CLIENT消息
+     *                      |step                        | REQUEST_SERVER 消息 -> Home(handleMessage) 接收 REQUEST_SERVER -> 发送 CLIENT 消息
      *                      |                            |
      *                      V                            |
      *                      |                            |
      *                      Home(handleMessage) ---->-----
      *                      |
      *                      |
-     *                      步数(0.5秒获得一次数据)
+     *                      步数(TIME_INTERVAL秒获得一次数据)
      *
      *
      */
@@ -414,17 +482,18 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
             case Const.MSG_FROM_SERVER:
                 // 保存步数
                 step = msg.getData().getInt("step");
+                Log.v(App.TAG, "接收到的step《===: "+step);
                 // 更新首页视图
                 if (homeViewHolder == null) {
                     homeViewHolder = (HomeViewHolder) recyclerView.findViewHolderForAdapterPosition(1);
                     Log.d(App.TAG, homeViewHolder+"");
                 } else {
-                    homeViewHolder.steps.setText(""+step);
+                    homeViewHolder.steps.setText("" + step);
                     homeViewHolder.rank.setText(rank);
                     homeViewHolder.date.setText(server_today);
                 }
                 // 延时1s 发送 REQUEST_SERVER 消息
-                delayHandler.sendEmptyMessageDelayed(Const.REQUEST_SERVER,TIME_INTERVAL);
+                delayHandler.sendEmptyMessageDelayed(Const.REQUEST_SERVER, TIME_INTERVAL);
                 break;
             case Const.REQUEST_SERVER:
                 try {
@@ -483,26 +552,6 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
         EventBus.getDefault().unregister(this);
         timer.onFinish();
         delayTimer.onFinish();
-    }
-
-    // 订阅事件
-    /**
-     * 清空逐小时步数
-     */
-    @Subscribe
-    public void onClearSahredStep(ClearDayStepEvent event) {
-        String sharedKey;
-        for (int i = 0; i < 24; i++) {
-            if (i < 10) {
-                sharedKey = "0" + i;
-            } else {
-                sharedKey = String.valueOf(i);
-            }
-            SharedPreferences.Editor editor = sharedPre.edit();
-            editor.putFloat(sharedKey, 0.0f);
-            editor.apply();
-        }
-        Log.i(App.TAG, "旧的逐小时步数被清空了");
     }
 
     @Subscribe
