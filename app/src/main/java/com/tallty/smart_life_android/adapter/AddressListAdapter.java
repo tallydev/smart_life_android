@@ -1,6 +1,7 @@
 package com.tallty.smart_life_android.adapter;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,7 +62,7 @@ public class AddressListAdapter extends RecyclerView.Adapter<AddressListAdapter.
             holder.isDefault.setText("默认地址");
         }else{
             holder.isDefault.setText("设为默认地址");
-            holder.isDefault.setTextColor(context.getResources().getColor(R.color.global_text));
+            holder.isDefault.setTextColor(ContextCompat.getColor(context, R.color.global_text));
             holder.isDefault.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

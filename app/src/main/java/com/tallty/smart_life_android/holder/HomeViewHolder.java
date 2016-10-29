@@ -41,16 +41,13 @@ public class HomeViewHolder extends RecyclerView.ViewHolder {
         textView = (TextView) itemView.findViewById(R.id.item_home_main_title);
         imageView = (ImageView) itemView.findViewById(R.id.item_home_main_image);
         gridView = (MyGridView) itemView.findViewById(R.id.item_home_main_gridView);
-        if (viewType == IS_STEPS) {
-            weather = (ImageView) itemView.findViewById(R.id.step_weather);
-            date = (TextView) itemView.findViewById(R.id.steps_date);
-            rank = (TextView) itemView.findViewById(R.id.steps_rank);
-            steps = (TextView) itemView.findViewById(R.id.steps_number);
-        } else if (viewType == IS_PRODUCT) {
-            timerLayout = (LinearLayout) itemView.findViewById(R.id.timer_ly);
-            countdownView = (CountdownView) itemView.findViewById(R.id.home_timer);
-        } else if (viewType == IS_NORMAL) {
-
-        }
+        // IS_STEPS
+        weather = (ImageView) itemView.findViewById(R.id.step_weather);
+        date = (TextView) itemView.findViewById(R.id.steps_date);
+        rank = (TextView) itemView.findViewById(R.id.steps_rank);
+        steps = (TextView) itemView.findViewById(R.id.steps_number);
+        // IS_PRODUCT
+        timerLayout = (LinearLayout) itemView.findViewById(R.id.timer_ly);
+        countdownView = (CountdownView) itemView.findViewById(R.id.home_timer);
     }
 }

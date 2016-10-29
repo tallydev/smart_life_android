@@ -185,7 +185,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
         String current_date = getTodayDate();
         DbUtils.createDb(context, DB_NAME);
         //获取当天的数据，用于展示
-        List<Step> list = DbUtils.getQueryByWhere(Step.class, "date", new String[]{current_date});
+        ArrayList list = DbUtils.getQueryByWhere(Step.class, "date", new String[]{current_date});
 
         if (list.size() == 0 || list.isEmpty()) {
             // 查不到今天的记录 => 新的一天

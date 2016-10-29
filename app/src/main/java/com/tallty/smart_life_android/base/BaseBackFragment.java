@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -264,14 +265,14 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
      * 获取字符串资源
      */
     public String showString(int ResId) {
-        return _mActivity.getApplicationContext().getString(ResId);
+        return _mActivity.getString(ResId);
     }
 
     /**
      * 获取颜色资源
      */
     public int showColor(int ResId) {
-        return getActivity().getApplicationContext().getResources().getColor(R.color.alpha_white);
+        return ContextCompat.getColor(_mActivity, ResId);
     }
 
     /**
@@ -279,10 +280,10 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
      * 调用
      */
     public void setSnackBar(View layout, String text, int duration, int layoutId, final View.OnClickListener listener) {
-        Snackbar snackbar = SnackbarUtil.IndefiniteSnackbar(
-                layout, text, duration,
-                getResources().getColor(R.color.white), getResources().getColor(R.color.orange))
-                .setActionTextColor(getResources().getColor(R.color.white));
+        int white = ContextCompat.getColor(_mActivity, R.color.white);
+        int orange = ContextCompat.getColor(_mActivity, R.color.orange);
+        Snackbar snackbar = SnackbarUtil.IndefiniteSnackbar(layout, text, duration, white, orange)
+                .setActionTextColor(white);
 
         if (listener != null) {
             snackbar.setAction("确定", listener);

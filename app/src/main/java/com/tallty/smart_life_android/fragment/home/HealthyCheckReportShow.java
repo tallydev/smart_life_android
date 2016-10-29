@@ -96,7 +96,7 @@ public class HealthyCheckReportShow extends BaseBackFragment {
                     // 加载列表
                     setList();
                     // 记载图表
-                    if (!reportShowItems.isEmpty())
+                    if (!reportShowItems.isEmpty() && isAdded())
                         setChart();
 
                     hideProgress();
@@ -137,15 +137,15 @@ public class HealthyCheckReportShow extends BaseBackFragment {
 
         LineSet dataSet = new LineSet(labels, values);
 
-        dataSet.setColor(getResources().getColor(R.color.white))
-                .setFill(getResources().getColor(R.color.transparent))
-                .setDotsColor(getResources().getColor(R.color.white))
+        dataSet.setColor(showColor(R.color.white))
+                .setFill(showColor(R.color.transparent))
+                .setDotsColor(showColor(R.color.white))
                 .setThickness(4);
 
         chart.setBorderSpacing(Tools.fromDpToPx(15))
                 .setAxisBorderValues(0, max)
                 .setYLabels(AxisController.LabelPosition.NONE)
-                .setLabelsColor(getResources().getColor(R.color.orange))
+                .setLabelsColor(showColor(R.color.orange))
                 .setXAxis(false)
                 .setYAxis(false)
                 .getChartAnimation();

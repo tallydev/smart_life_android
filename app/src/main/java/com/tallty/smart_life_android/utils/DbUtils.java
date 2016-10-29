@@ -68,7 +68,7 @@ public class DbUtils {
      * @param value
      * @return
      */
-    public static <T> List<T> getQueryByWhere(Class<T> cla, String field, String[] value) {
+    public static <T> ArrayList getQueryByWhere(Class<T> cla, String field, String[] value) {
         return liteOrm.<T>query(new QueryBuilder(cla).where(field + "=?", value));
     }
 

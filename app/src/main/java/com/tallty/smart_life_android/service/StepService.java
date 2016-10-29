@@ -37,6 +37,7 @@ import com.tallty.smart_life_android.utils.DbUtils;
 import org.greenrobot.eventbus.EventBus;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -348,7 +349,7 @@ public class StepService extends Service implements SensorEventListener {
          */
         CURRENT_DATE = getTodayDate();
         // 保存到数据库
-        List<Step> list = DbUtils.getQueryByWhere(Step.class, "date", new String[]{CURRENT_DATE});
+        ArrayList list = DbUtils.getQueryByWhere(Step.class, "date", new String[]{CURRENT_DATE});
         if (list.size() == 0 || list.isEmpty()) {
             /**
              * 自己补充:
@@ -367,10 +368,10 @@ public class StepService extends Service implements SensorEventListener {
             EventBus.getDefault().post(new ClearDayStepEvent(true));
             Log.d(App.TAG, "插入"+CURRENT_DATE+"新步数记录, 总记录数:"+DbUtils.getQueryAll(Step.class).size());
         } else if (list.size() == 1) {
-            Step data = list.get(0);
+            Step data = (Step) list.get(0);
             data.setCount(StepCreator.CURRENT_STEP + "");
             DbUtils.update(data);
-            Log.d(App.TAG, "更新"+CURRENT_DATE+"步数记录:"+list.get(0).getCount()+", 总记录数:"+DbUtils.getQueryAll(Step.class).size());
+            Log.d(App.TAG, "更新"+CURRENT_DATE+"步数记录:"+ ((Step) list.get(0)).getCount());
         }
     }
 
