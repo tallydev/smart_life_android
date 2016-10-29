@@ -414,51 +414,22 @@ public class SportMoreData extends BaseBackFragment {
     private void setDayChartData(LineChartView chart, boolean isLoad) {
         String[] labels = new String[24];
         float[] counts = new float[24];
-
         // 当前key
         String sharedKey;
         float nowStep;
-        // 前一小时key
-        String lastKey;
-        float lastStep;
         // 差值
-        float d_value;
         int max = 0;
-
+        // 去除24小时数据
         for (int i = 0; i < 24; i++) {
-            if (i < 10) {
-                sharedKey = "0" + i;
-            } else {
-                sharedKey = String.valueOf(i);
-            }
-
-            if (i < 11) {
-                if (i == 0) {
-                    lastKey = "00";
-                } else {
-                    lastKey = "0" + (i - 1);
-                }
-            } else {
-                lastKey = String.valueOf(i-1);
-            }
-
-            // 计算每小时之间的差值
+            sharedKey = i < 10 ? "0" + i : String.valueOf(i);
+            // 每一小时的步数
             nowStep = sharedPre.getFloat(sharedKey, 0.0f);
-            lastStep = sharedPre.getFloat(lastKey, 0.0f);
-            if (nowStep >= lastStep) {
-                d_value = nowStep - lastStep;
-            } else {
-                d_value = nowStep;
-            }
             // 保存图表数据
             labels[i] = sharedKey + ":00";
-            counts[i] = d_value;
-
-            Log.d(App.TAG, sharedKey + "=====>" + counts[i]);
-
+            counts[i] = nowStep;
             max = max > counts[i] ? max : (int) counts[i];
+            Log.d(App.TAG, sharedKey + "=====>" + counts[i]);
         }
-
         // 增加一定比例的最大值, 使图表不会顶住天
         max += (max / 4);
 

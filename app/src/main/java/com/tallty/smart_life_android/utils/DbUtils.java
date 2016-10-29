@@ -23,7 +23,7 @@ public class DbUtils {
         DB_NAME = DB_NAME + ".db";
         if (liteOrm == null) {
             liteOrm = LiteOrm.newCascadeInstance(_activity, DB_NAME);
-            liteOrm.setDebugged(true);
+            liteOrm.setDebugged(false);
         }
     }
 

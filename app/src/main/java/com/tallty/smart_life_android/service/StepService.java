@@ -29,18 +29,14 @@ import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.activity.MainActivity;
-import com.tallty.smart_life_android.event.ClearDayStepEvent;
 import com.tallty.smart_life_android.model.Step;
 import com.tallty.smart_life_android.utils.CountDownTimer;
 import com.tallty.smart_life_android.utils.DbUtils;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 /**
  * 计步服务
@@ -145,14 +141,15 @@ public class StepService extends Service implements SensorEventListener {
         CURRENT_DATE = getTodayDate();
         DbUtils.createDb(this, DB_NAME);
         //获取当天的数据，用于展示
-        List<Step> list = DbUtils.getQueryByWhere(Step.class, "date", new String[]{CURRENT_DATE});
+        ArrayList list = DbUtils.getQueryByWhere(Step.class, "date", new String[]{CURRENT_DATE});
 
         if (list.size() == 0 || list.isEmpty()) {
             // 查不到今天的记录 => 新的一天: step = 0
             StepCreator.CURRENT_STEP = 0;
         } else if (list.size() == 1) {
             // 查询到当天数据, step = data
-            StepCreator.CURRENT_STEP = Integer.parseInt(list.get(0).getCount());
+            Step step = (Step) list.get(0);
+            StepCreator.CURRENT_STEP = Integer.parseInt(step.getCount());
         } else {
             Log.v(TAG, "出错了！");
         }
@@ -349,6 +346,7 @@ public class StepService extends Service implements SensorEventListener {
          */
         CURRENT_DATE = getTodayDate();
         // 保存到数据库
+        DbUtils.createDb(this, Const.DB_NAME);
         ArrayList list = DbUtils.getQueryByWhere(Step.class, "date", new String[]{CURRENT_DATE});
         if (list.size() == 0 || list.isEmpty()) {
             /**
@@ -364,8 +362,6 @@ public class StepService extends Service implements SensorEventListener {
             data.setDate(CURRENT_DATE);
             data.setCount(StepCreator.CURRENT_STEP + "");
             DbUtils.insert(data);
-            // 4、清空逐小时步数数据
-            EventBus.getDefault().post(new ClearDayStepEvent(true));
             Log.d(App.TAG, "插入"+CURRENT_DATE+"新步数记录, 总记录数:"+DbUtils.getQueryAll(Step.class).size());
         } else if (list.size() == 1) {
             Step data = (Step) list.get(0);

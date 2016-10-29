@@ -40,17 +40,14 @@ import com.tallty.smart_life_android.holder.HomeViewHolder;
 import com.tallty.smart_life_android.model.Home;
 import com.tallty.smart_life_android.model.Step;
 import com.tallty.smart_life_android.service.StepService;
-import com.tallty.smart_life_android.utils.DbUtils;
+import com.tallty.smart_life_android.utils.Apputils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -74,7 +71,6 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
     public static int uploadedStep = 0;
     public static String rank = "0";
     public static String server_today = "";
-    private String DB_NAME = "smart_life";
     // 计时器: 15分钟上传步数
     private static final int uploadStepInterval = 900000;
     private UploadStepTimer timer;
@@ -168,29 +164,12 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
     protected void initLazyView(@Nullable Bundle savedInstanceState) {
         setBanner();
         setList();
-        // 检查是否为新的一天, 并处理步数
-        checkStepWithDate();
         // 设置计步服务
         setupService();
         // 设置步数上传计时器(15分钟倒计时: 每分钟判断整点并获取首页数据, 结束上传步数)
         setUploadStepTimer();
         // 进入页面, 延时3秒, 先上传一次步数, 然后再获取首页信息(优化首页信息的实时性)
         delayUploadStep();
-    }
-
-    /**
-     * 检查是否为新的一天
-     */
-    private void checkStepWithDate() {
-        String current_date = getTodayDate();
-        DbUtils.createDb(context, DB_NAME);
-        //获取当天的数据，用于展示
-        ArrayList list = DbUtils.getQueryByWhere(Step.class, "date", new String[]{current_date});
-
-        if (list.size() == 0 || list.isEmpty()) {
-            // 查不到今天的记录 => 新的一天
-            clearSharedStep();
-        }
     }
 
     /**
@@ -208,7 +187,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
 
             @Override
             public void onFinish() {
-                String current_date = getTodayDate();
+                String current_date = Apputils.getTodayDate();
                 Log.d(App.TAG, "首次进入页面,上传步数任务,并获取首页数据"+current_date+","+step);
                 Engine.authService(shared_token, shared_phone).uploadStep(current_date, step).enqueue(new Callback<Step>() {
                     @Override
@@ -246,7 +225,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
         @Override
         public void onTick(long millisUntilFinished) {
             // 到达整点, 保存
-            processClock();
+            processClockStep();
             // 每分钟获取一次首页数据
             getHomeData();
         }
@@ -278,23 +257,25 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
     /**
      * 时间整点业务, 处理步数
      */
-    private void processClock() {
-        SharedPreferences.Editor editor = sharedPre.edit();
-        String time = getNowTime();
-        Log.i(App.TAG, "一分钟轮询"+time);
+    private void processClockStep() {
+
+        String time = Apputils.getNowTime();
         String hour = time.substring(0, 2);
+        String minute = time.substring(3);
+        Log.i(App.TAG, "一分钟轮询"+time);
 
         // 每个小时存储步数
-        if ("55".equals(time.substring(3))) {
-            editor.putFloat(hour, step);
-            editor.apply();
-            Log.d(App.TAG, time.substring(0, 2)+"点"+time.substring(3)+"分"+", 保存整点步数: "+step);
+        if ("55".equals(minute)) {
+            // 保存当前一小时内的步数
+            saveStepByHour(hour);
+            // 清除当前小时以后的步数以及不是今天的步数
+            deleteWrongHourStep(hour);
         }
 
         // 如果是 00:00
         if ("00:00".equals(time)) {
             // 清除昨天的逐小时步数
-            clearSharedStep();
+            deleteWrongHourStep("00");
             // 清除计步器步数
             try {
                 Message msg = Message.obtain(null, Const.CLEAR_STEP);
@@ -308,21 +289,31 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
     }
 
     /**
-     * 清楚sharePreferences保存的逐小时步数
+     * 保存当前一小时内的步数
      */
-    public void clearSharedStep() {
-        String sharedKey;
-        for (int i = 0; i < 24; i++) {
-            if (i < 10) {
-                sharedKey = "0" + i;
-            } else {
-                sharedKey = String.valueOf(i);
-            }
-            SharedPreferences.Editor editor = sharedPre.edit();
-            editor.putFloat(sharedKey, 0.0f);
-            editor.apply();
+    private void saveStepByHour(String hour) {
+        int last_hour = Integer.parseInt(hour) - 1;
+        last_hour = last_hour < 0 ? 0 : last_hour;
+        String last_hour_str = last_hour < 10 ? "0"+last_hour : String.valueOf(last_hour);
+        float last_hour_step = sharedPre.getFloat(last_hour_str, 0.0f);
+
+        SharedPreferences.Editor editor = sharedPre.edit();
+        editor.putFloat(hour, step - last_hour_step);
+        editor.apply();
+        Log.i(App.TAG, hour + "点的步数以保存: " + (step - last_hour_step));
+    }
+
+    // 清除当前小时以后的步数以及不是今天的步数 (保证当前是最新的)
+    private void deleteWrongHourStep(String hour) {
+        SharedPreferences.Editor editor = sharedPre.edit();
+        int next_hour = Integer.parseInt(hour) + 1;
+        String key;
+        for(int i = next_hour; i < 24; i++) {
+            key = i < 10 ? "0" + i : String.valueOf(i);
+            editor.putFloat(key, 0.0f);
         }
-        Log.i(App.TAG, "旧的逐小时步数被清空了");
+        editor.apply();
+        Log.i(App.TAG, hour + "点之后逐小时步数被清空了");
     }
 
     private void getHomeData() {
@@ -379,7 +370,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
     private void uploadStep() {
         // TODO: 2016/10/27 如果是新的一天, 重置数据
 
-        String current_date = getTodayDate();
+        String current_date = Apputils.getTodayDate();
         Log.d(App.TAG, "开始上传步数任务"+current_date+","+step);
         Engine.authService(shared_token, shared_phone).uploadStep(current_date, step).enqueue(new Callback<Step>() {
             @Override
@@ -397,19 +388,6 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
             }
         });
     }
-
-    private String getTodayDate() {
-        Date date = new Date(System.currentTimeMillis());
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        return sdf.format(date);
-    }
-
-    private String getNowTime() {
-        Date date = new Date(System.currentTimeMillis());
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
-        return sdf.format(date);
-    }
-
 
     /**
      * 启动计步器服务

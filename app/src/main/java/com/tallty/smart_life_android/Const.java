@@ -27,8 +27,11 @@ public class Const {
     public static final int CLEAR_STEP = 3;
 
     /**
-     * SharedPreferences
+     * SharedPreferences & DB
      **/
+    // DB
+    public static final String DB_NAME = "smart_life";
+    // SharedPreferences
     public static final String EMPTY_STRING = "";
     // User
     public static final String USER_ID = "user_id";
