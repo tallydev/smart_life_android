@@ -155,6 +155,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
     @Override
     protected void initView() {
         versionCode = Apputils.getVersionCode(context);
+        Log.i(App.TAG, "APP 版本码: "+versionCode);
         EventBus.getDefault().register(this);
         banner = getViewById(R.id.home_banner);
         recyclerView = getViewById(R.id.home_recycler);
@@ -299,9 +300,17 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
     private void saveStepByHour(String hour) {
         int last_hour = Integer.parseInt(hour) - 1;
         last_hour = last_hour < 0 ? 0 : last_hour;
-        String last_hour_str = last_hour < 10 ? "0"+last_hour : String.valueOf(last_hour);
-        float last_hour_step = sharedPre.getFloat(last_hour_str, 0.0f);
-
+        String last_hour_str;
+        float last_hour_step = 0.0f;
+        // 找到之前最近一次不为0的记录
+        for (int h = last_hour; h >= 0; h--) {
+            last_hour_str = h < 10 ? "0"+h : String.valueOf(h);
+            last_hour_step = sharedPre.getFloat(last_hour_str, 0.0f);
+            if (last_hour_step > 0) {
+                break;
+            }
+        }
+        // 保存差值
         SharedPreferences.Editor editor = sharedPre.edit();
         editor.putFloat(hour, step - last_hour_step);
         editor.apply();
