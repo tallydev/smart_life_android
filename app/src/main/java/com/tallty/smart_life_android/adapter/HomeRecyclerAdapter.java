@@ -145,7 +145,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
         }
         // 健步达人
         else if (position == 1) {
-            EventBus.getDefault().post(new StartBrotherEvent(SportMoreData.newInstance("健步达人", HomeFragment.step, HomeFragment.uploadedStep)));
+            EventBus.getDefault().post(new StartBrotherEvent(SportMoreData.newInstance("健步达人", HomeFragment.step)));
         }
         // 社区活动
         else if (position == 2) {
@@ -226,7 +226,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
                 // 健步达人
                 else if (tag == 1) {
                     if (position == 0) {
-                        EventBus.getDefault().post(new StartBrotherEvent(SportMoreData.newInstance("健步达人", HomeFragment.step, HomeFragment.uploadedStep)));
+                        EventBus.getDefault().post(new StartBrotherEvent(SportMoreData.newInstance("健步达人", HomeFragment.step)));
                     }
                 }
                 // 社区活动

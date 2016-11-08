@@ -117,7 +117,10 @@ public interface DataAPI {
     // 上传运动步数
     @FormUrlEncoded
     @POST("sports")
-    Call<Step> uploadStep(@Field("sport[date]") String date, @Field("sport[count]") int count);
+    Call<Step> uploadStep(@Field("sport[date]") String date,
+                          @Field("sport[count]") int count,
+                          @Field("sport[platform]") String platform,
+                          @Field("sport[version]") int version);
 
     // 基于时间线的运动统计信息
     @GET("sports/{timeLine}")

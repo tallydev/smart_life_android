@@ -39,8 +39,10 @@ import com.tallty.smart_life_android.holder.BannerHolderView;
 import com.tallty.smart_life_android.holder.HomeViewHolder;
 import com.tallty.smart_life_android.model.Home;
 import com.tallty.smart_life_android.model.Step;
+import com.tallty.smart_life_android.service.StepCreator;
 import com.tallty.smart_life_android.service.StepService;
 import com.tallty.smart_life_android.utils.Apputils;
+import com.tallty.smart_life_android.utils.DbUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -61,6 +63,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
     private String shared_token;
     private String shared_phone;
     private CountDownTimer delayTimer;
+    private int versionCode;
     // 计步器相关
     private ServiceConnection conn;
     private static final int TIME_INTERVAL = 1000;
@@ -71,6 +74,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
     public static int uploadedStep = 0;
     public static String rank = "0";
     public static String server_today = "";
+    private String DB_NAME = "smart_life";
     // 计时器: 15分钟上传步数
     private static final int uploadStepInterval = 900000;
     private UploadStepTimer timer;
@@ -150,6 +154,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
 
     @Override
     protected void initView() {
+        versionCode = Apputils.getVersionCode(context);
         EventBus.getDefault().register(this);
         banner = getViewById(R.id.home_banner);
         recyclerView = getViewById(R.id.home_recycler);
@@ -189,22 +194,26 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
             public void onFinish() {
                 String current_date = Apputils.getTodayDate();
                 Log.d(App.TAG, "首次进入页面,上传步数任务,并获取首页数据"+current_date+","+step);
-                Engine.authService(shared_token, shared_phone).uploadStep(current_date, step).enqueue(new Callback<Step>() {
-                    @Override
-                    public void onResponse(Call<Step> call, Response<Step> response) {
-                        if (response.code() == 201) {
-                            // 获取首页信息,更新列表
-                            getHomeData();
-                        } else {
-                            Log.d(App.TAG, "上传步数失败");
+                Engine
+                    .authService(shared_token, shared_phone)
+                    .uploadStep(current_date, step, Const.PLATFORM, versionCode)
+                    .enqueue(new Callback<Step>() {
+                        @Override
+                        public void onResponse(Call<Step> call, Response<Step> response) {
+                            if (response.code() == 201) {
+                                Log.d(App.TAG, "首次进入页面,上传步数成功");
+                                // 获取首页信息,更新列表
+                                getHomeData();
+                            } else {
+                                Log.d(App.TAG, "上传步数失败");
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Call<Step> call, Throwable t) {
-                        Log.d(App.TAG, "上传步数链接服务器失败");
-                    }
-                });
+                        @Override
+                        public void onFailure(Call<Step> call, Throwable t) {
+                            Log.d(App.TAG, "上传步数链接服务器失败");
+                        }
+                    });
             }
         };
         delayTimer.start();
@@ -213,7 +222,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
 
     /**
      * 自定义计时器
-     * 每分钟判断一次时间, 是否是整点 (取每个小时的50分作为模拟整点00)
+     * 每分钟判断一次时间, 是否是整点
      * 整点 ? 保存步数 : continue
      * 并获取一次首页数据
      */
@@ -272,18 +281,14 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
             deleteWrongHourStep(hour);
         }
 
-        // 如果是 00:00
-        if ("00:00".equals(time)) {
+        // 如果是 00:00, 清除数据
+        // (提前两分钟容错, 防止15分钟结束刚好是00:00,
+        // 会造成先上传步数,再清零, 第二天服务器步数会比计步器大的情况)
+        if ("23:58".equals(time)) {
             // 清除昨天的逐小时步数
             deleteWrongHourStep("00");
             // 清除计步器步数
-            try {
-                Message msg = Message.obtain(null, Const.CLEAR_STEP);
-                msg.replyTo = mGetReplyMessenger;
-                messenger.send(msg);
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
+            resetPedometer();
             Log.d(App.TAG, "迎来新的一天");
         }
     }
@@ -316,6 +321,21 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
         Log.i(App.TAG, hour + "点之后逐小时步数被清空了");
     }
 
+    // 重置计步器步数
+    private void resetPedometer() {
+        // 清除计步器步数
+        try {
+            Message msg = Message.obtain(null, Const.SET_STEP);
+            Bundle bundle = new Bundle();
+            bundle.putInt("step", 0);
+            msg.setData(bundle);
+            msg.replyTo = mGetReplyMessenger;
+            messenger.send(msg);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void getHomeData() {
         Engine.authService(shared_token, shared_phone).getHomeData().enqueue(new Callback<Home>() {
             @Override
@@ -323,8 +343,22 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
                 if (response.code() == 200) {
                     if (response.body().getFitness() != null) {
                         rank = response.body().getFitness().get("rank");
-                        String step = response.body().getFitness().get("step");
-                        uploadedStep = Integer.parseInt(step);
+                        String step_str = response.body().getFitness().get("step");
+                        uploadedStep = Integer.parseInt(step_str);
+                        // 如果今天的计步器步数 小于  服务器步数, 使用服务器步数设置计步器步数
+                        if (step < uploadedStep) {
+                            try {
+                                Message msg = Message.obtain(null, Const.SET_STEP);
+                                Bundle bundle = new Bundle();
+                                bundle.putInt("step", uploadedStep);
+                                msg.setData(bundle);
+                                msg.replyTo = mGetReplyMessenger;
+                                messenger.send(msg);
+                            } catch (RemoteException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        // 设置浮窗时间
                         server_today = response.body().getFitness().get("today");
                     }
                     // 更新健步达人浮窗
@@ -368,25 +402,40 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
     }
 
     private void uploadStep() {
-        // TODO: 2016/10/27 如果是新的一天, 重置数据
-
         String current_date = Apputils.getTodayDate();
-        Log.d(App.TAG, "开始上传步数任务"+current_date+","+step);
-        Engine.authService(shared_token, shared_phone).uploadStep(current_date, step).enqueue(new Callback<Step>() {
-            @Override
-            public void onResponse(Call<Step> call, Response<Step> response) {
-                if (response.code() == 201) {
-                    Log.d(App.TAG, "上传步数成功"+response.body().getCount());
-                } else {
-                    Log.d(App.TAG, "上传步数失败");
-                }
-            }
+        /**
+         * 上传步数, 如果是新的一天, 重置步数后再上传
+         * 如果是新的一天, 重置数据
+         */
+        DbUtils.createDb(context, DB_NAME);
+        ArrayList list = DbUtils.getQueryByWhere(Step.class, "date", new String[]{current_date});
+        if (list.size() == 0 || list.isEmpty()) {
+            // 查不到今天的记录 => 新的一天
+            // 清除昨天的逐小时步数
+            deleteWrongHourStep("00");
+            // 清除计步器步数
+            resetPedometer();
+        }
 
-            @Override
-            public void onFailure(Call<Step> call, Throwable t) {
-                Log.d(App.TAG, "上传步数链接服务器失败");
-            }
-        });
+        Log.d(App.TAG, "开始上传步数任务"+current_date+","+step);
+        Engine
+            .authService(shared_token, shared_phone)
+            .uploadStep(current_date, step, Const.PLATFORM, versionCode)
+            .enqueue(new Callback<Step>() {
+                @Override
+                public void onResponse(Call<Step> call, Response<Step> response) {
+                    if (response.code() == 201) {
+                        Log.d(App.TAG, "上传步数成功"+response.body().getCount());
+                    } else {
+                        Log.d(App.TAG, "上传步数失败");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Step> call, Throwable t) {
+                    Log.d(App.TAG, "上传步数链接服务器失败");
+                }
+            });
     }
 
     /**

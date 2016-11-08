@@ -69,7 +69,7 @@ public class StepService extends Service implements SensorEventListener {
     /**
      * 消息处理:
      * 1、MSG_FROM_CLIENT, 来自业务部分的步数请求, -> 发送: 步数 + MSG_FROM_SERVER
-     * 2、CLEAR_STEP, 来自业务部分的计步器重置请求, -> 重置计步器、发送: 步数 + MSG_FROM_SERVER
+     * 2、SET_STEP, 来自业务部分的计步器重置请求, -> 重置计步器、发送: 步数 + MSG_FROM_SERVER
      */
     private static class MessengerHandler extends Handler {
         @Override
@@ -78,10 +78,10 @@ public class StepService extends Service implements SensorEventListener {
                 case Const.MSG_FROM_CLIENT:
                     sendStepAndMsg(msg);
                     break;
-                case Const.CLEAR_STEP:
-                    StepCreator.CURRENT_STEP = 0;
+                case Const.SET_STEP:
+                    StepCreator.CURRENT_STEP = msg.getData().getInt("step");
                     sendStepAndMsg(msg);
-                    Log.i(App.TAG, "StepService 清空了计步器步数:  "+StepCreator.CURRENT_STEP);
+                    Log.i(App.TAG, "StepService 设置了计步器步数:  "+StepCreator.CURRENT_STEP);
                     break;
                 default:
                     super.handleMessage(msg);

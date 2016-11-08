@@ -9,6 +9,7 @@ import java.util.HashMap;
  */
 
 public class Const {
+    public static final String PLATFORM = "android";
     /**
      * 通用数据
      */
@@ -24,7 +25,7 @@ public class Const {
     public static final int MSG_FROM_CLIENT = 0;
     public static final int MSG_FROM_SERVER = 1;
     public static final int REQUEST_SERVER = 2;
-    public static final int CLEAR_STEP = 3;
+    public static final int SET_STEP = 3;
 
     /**
      * SharedPreferences & DB

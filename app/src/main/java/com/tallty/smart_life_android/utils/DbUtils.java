@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class DbUtils {
     public static String DB_NAME;
-    public static LiteOrm liteOrm;
+    private static LiteOrm liteOrm;
 
 
 
@@ -69,7 +69,7 @@ public class DbUtils {
      * @return
      */
     public static <T> ArrayList getQueryByWhere(Class<T> cla, String field, String[] value) {
-        return liteOrm.<T>query(new QueryBuilder(cla).where(field + "=?", value));
+        return liteOrm.<T>query(new QueryBuilder(cla).where(field + "=?", (Object[]) value));
     }
 
     /**
@@ -83,7 +83,7 @@ public class DbUtils {
      * @return
      */
     public static <T> ArrayList getQueryByWhereLength(Class<T> cla, String field, String[] value, int start, int length) {
-        return liteOrm.<T>query(new QueryBuilder(cla).where(field + "=?", value).limit(start, length));
+        return liteOrm.<T>query(new QueryBuilder(cla).where(field + "=?", (Object[]) value).limit(start, length));
     }
 
     /**

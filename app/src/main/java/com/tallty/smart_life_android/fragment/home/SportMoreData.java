@@ -26,6 +26,7 @@ import com.tallty.smart_life_android.model.SportInfo;
 import com.tallty.smart_life_android.model.SportRank;
 import com.tallty.smart_life_android.model.SportRankItem;
 import com.tallty.smart_life_android.model.Step;
+import com.tallty.smart_life_android.utils.Apputils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -82,14 +83,11 @@ public class SportMoreData extends BaseBackFragment {
     private ArrayList<SportRankItem> sportRankItems = new ArrayList<>();
     // 步数
     private int step = 0;
-    private int uploadedStep = 0;
 
-
-    public static SportMoreData newInstance(String title, int step, int uploadedStep) {
+    public static SportMoreData newInstance(String title, int step) {
         Bundle args = new Bundle();
         args.putString(Const.FRAGMENT_NAME, title);
         args.putInt(Const.INT, step);
-        args.putInt("uploadedStep", uploadedStep);
         SportMoreData fragment = new SportMoreData();
         fragment.setArguments(args);
         return fragment;
@@ -101,7 +99,6 @@ public class SportMoreData extends BaseBackFragment {
         Bundle args = getArguments();
         mName = args.getString(Const.FRAGMENT_NAME);
         step = args.getInt(Const.INT);
-        uploadedStep = args.getInt("uploadedStep");
     }
 
     @Override
@@ -209,27 +206,29 @@ public class SportMoreData extends BaseBackFragment {
     private void updateStepAndInitChartRank(final LineChartView chart,
                                             final boolean isLoad) {
         String current_date = getTodayDate();
-        // 用户当前步数可能小于已上传的步数, 处理:
-        int _step = step > uploadedStep ? step : uploadedStep;
-
-        Log.d(App.TAG, "开始上传步数任务"+current_date+","+ _step);
-        Engine.authService(shared_token, shared_phone).uploadStep(current_date, _step).enqueue(new Callback<Step>() {
-            @Override
-            public void onResponse(Call<Step> call, Response<Step> response) {
-                if (response.code() == 201) {
-                    Log.d(App.TAG, "上传步数成功"+response.body().getCount());
-                } else {
-                    Log.d(App.TAG, "上传步数失败");
+        int versionCode = Apputils.getVersionCode(context);
+        // 步数少于服务器的步数,会上传失败
+        Log.d(App.TAG, "开始上传步数任务"+current_date+","+ step);
+        Engine
+            .authService(shared_token, shared_phone)
+            .uploadStep(current_date, step, "android", versionCode)
+            .enqueue(new Callback<Step>() {
+                @Override
+                public void onResponse(Call<Step> call, Response<Step> response) {
+                    if (response.code() == 201) {
+                        Log.d(App.TAG, "上传步数成功"+response.body().getCount());
+                    } else {
+                        Log.d(App.TAG, "上传步数失败");
+                    }
+                    // 载入图表和列表
+                    initChartAndRank(chart, isLoad);
                 }
-                // 载入图表和列表
-                initChartAndRank(chart, isLoad);
-            }
 
-            @Override
-            public void onFailure(Call<Step> call, Throwable t) {
-                Log.d(App.TAG, "上传步数链接服务器失败");
-            }
-        });
+                @Override
+                public void onFailure(Call<Step> call, Throwable t) {
+                    Log.d(App.TAG, "上传步数链接服务器失败");
+                }
+            });
     }
 
     /**

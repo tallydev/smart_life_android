@@ -44,7 +44,7 @@ public class HomeSportRankAdapter extends RecyclerView.Adapter<HomeSportRankAdap
     public void onBindViewHolder(RankViewHolder holder, final int position) {
         SportRankItem item = sportRankItems.get(position);
 
-        holder.index.setText(String.valueOf(position+1));
+        holder.index.setText(String.valueOf(item.getIndex()));
         Glide.with(context).load(item.getAvatar())
                 .placeholder(R.drawable.user_default)
                 .transform(new GlideCircleTransform(context))
