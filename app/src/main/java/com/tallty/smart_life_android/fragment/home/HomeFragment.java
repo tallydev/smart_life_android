@@ -39,7 +39,6 @@ import com.tallty.smart_life_android.holder.BannerHolderView;
 import com.tallty.smart_life_android.holder.HomeViewHolder;
 import com.tallty.smart_life_android.model.Home;
 import com.tallty.smart_life_android.model.Step;
-import com.tallty.smart_life_android.service.StepCreator;
 import com.tallty.smart_life_android.service.StepService;
 import com.tallty.smart_life_android.utils.Apputils;
 import com.tallty.smart_life_android.utils.DbUtils;
@@ -71,7 +70,6 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
     private Messenger mGetReplyMessenger = new Messenger(new Handler(this));
     private Handler delayHandler;
     public static int step = 0;
-    public static int uploadedStep = 0;
     public static String rank = "0";
     public static String server_today = "";
     private String DB_NAME = "smart_life";
@@ -285,11 +283,11 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
         // 如果是 00:00, 清除数据
         // (提前两分钟容错, 防止15分钟结束刚好是00:00,
         // 会造成先上传步数,再清零, 第二天服务器步数会比计步器大的情况)
-        if ("23:58".equals(time)) {
+        if ("23:59".equals(time) || "00:00".equals(time) || "00:01".equals(time)) {
             // 清除昨天的逐小时步数
             deleteWrongHourStep("00");
             // 清除计步器步数
-            resetPedometer();
+            resetPedometer(0);
             Log.d(App.TAG, "迎来新的一天");
         }
     }
@@ -331,17 +329,21 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
     }
 
     // 重置计步器步数
-    private void resetPedometer() {
+    private void resetPedometer(int step) {
         // 清除计步器步数
-        try {
-            Message msg = Message.obtain(null, Const.SET_STEP);
-            Bundle bundle = new Bundle();
-            bundle.putInt("step", 0);
-            msg.setData(bundle);
-            msg.replyTo = mGetReplyMessenger;
-            messenger.send(msg);
-        } catch (RemoteException e) {
-            e.printStackTrace();
+        if (messenger != null) {
+            try {
+                Message msg = Message.obtain(null, Const.SET_STEP);
+                Bundle bundle = new Bundle();
+                bundle.putInt("step", step);
+                msg.setData(bundle);
+                msg.replyTo = mGetReplyMessenger;
+                messenger.send(msg);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Log.e(App.TAG, "清除步数失败, messenger == null");
         }
     }
 
@@ -352,21 +354,6 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
                 if (response.code() == 200) {
                     if (response.body().getFitness() != null) {
                         rank = response.body().getFitness().get("rank");
-                        String step_str = response.body().getFitness().get("step");
-                        uploadedStep = Integer.parseInt(step_str);
-                        // 如果今天的计步器步数 小于  服务器步数, 使用服务器步数设置计步器步数
-                        if (step < uploadedStep) {
-                            try {
-                                Message msg = Message.obtain(null, Const.SET_STEP);
-                                Bundle bundle = new Bundle();
-                                bundle.putInt("step", uploadedStep);
-                                msg.setData(bundle);
-                                msg.replyTo = mGetReplyMessenger;
-                                messenger.send(msg);
-                            } catch (RemoteException e) {
-                                e.printStackTrace();
-                            }
-                        }
                         // 设置浮窗时间
                         server_today = response.body().getFitness().get("today");
                     }
@@ -423,7 +410,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
             // 清除昨天的逐小时步数
             deleteWrongHourStep("00");
             // 清除计步器步数
-            resetPedometer();
+            resetPedometer(0);
         }
 
         Log.d(App.TAG, "开始上传步数任务"+current_date+","+step);

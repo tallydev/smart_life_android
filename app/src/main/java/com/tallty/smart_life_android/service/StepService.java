@@ -9,6 +9,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -27,9 +28,12 @@ import android.util.Log;
 
 import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.Const;
+import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.activity.MainActivity;
+import com.tallty.smart_life_android.model.SportData;
 import com.tallty.smart_life_android.model.Step;
+import com.tallty.smart_life_android.utils.Apputils;
 import com.tallty.smart_life_android.utils.CountDownTimer;
 import com.tallty.smart_life_android.utils.DbUtils;
 
@@ -37,6 +41,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * 计步服务
@@ -51,6 +59,9 @@ import java.util.Date;
 @TargetApi(Build.VERSION_CODES.CUPCAKE)
 public class StepService extends Service implements SensorEventListener {
     private final String TAG = "StepService";
+    private String shared_token;
+    private String shared_phone;
+    private SharedPreferences sharedPre;
     //默认为30秒进行一次存储
     private static int duration = 30000;
     private static String CURRENT_DATE = "";
@@ -105,6 +116,9 @@ public class StepService extends Service implements SensorEventListener {
 
     @Override
     public void onCreate() {
+        sharedPre = this.getSharedPreferences("SmartLife", Context.MODE_PRIVATE);
+        shared_token = sharedPre.getString(Const.USER_TOKEN, Const.EMPTY_STRING);
+        shared_phone = sharedPre.getString(Const.USER_PHONE, Const.EMPTY_STRING);
         // 注册广播接收器, 监听手机状态, 并做相应处理
         initBroadcastReceiver();
         // 开启一个新的线程启动计步器
@@ -126,10 +140,54 @@ public class StepService extends Service implements SensorEventListener {
     public int onStartCommand(Intent intent, int flags, int startId) {
         // 初始化今天的数据
         initTodayData();
+        // 初始化第一次安装APP的计步器数据
+        initFirstStart();
         // 更新通知
         updateNotification("今日步数：" + StepCreator.CURRENT_STEP + " 步");
         Log.d(App.TAG, "创建了计步器服务");
         return START_STICKY;
+    }
+
+    /**
+     * 初次安装时的逻辑, 初始化计步器, 解决重装步数重置的问题
+     */
+    private void initFirstStart() {
+        if (sharedPre.getBoolean("first_start", true)) {
+            Engine.authService(shared_token, shared_phone).getSportsData("daily").enqueue(new Callback<SportData>() {
+                @Override
+                public void onResponse(Call<SportData> call, Response<SportData> response) {
+                    if (response.code() == 200) {
+                        int count = response.body().getSelf().getCount();
+                        String current_date = Apputils.getTodayDate();
+                        DbUtils.createDb(StepService.this, Const.DB_NAME);
+                        // 保存到数据库 (不保存, stepService中无记录是会重置 current_step);
+                        Step data = new Step();
+                        data.setDate(current_date);
+                        data.setCount(count + "");
+                        DbUtils.insert(data);
+                        Log.d(App.TAG, "插入"+current_date+"新步数记录, 总记录数:"+DbUtils.getQueryAll(Step.class).size());
+                        // 初始化计步器
+                        StepCreator.CURRENT_STEP = count;
+                        Log.i(App.TAG, "初次安装并登录, 更新本地步数");
+                        // 将登录标志位设置为false，下次登录时初始化计步器
+                        SharedPreferences.Editor editor = sharedPre.edit();
+                        editor.putBoolean("first_start", false);
+                        editor.apply();
+                    } else {
+                        Log.d(App.TAG, "首次安装, 获取步数信息失败");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<SportData> call, Throwable t) {
+                    Log.d(App.TAG, "上传步数链接服务器失败");
+                }
+            });
+            // 将登录标志位设置为false，下次登录时初始化计步器
+            SharedPreferences.Editor editor = sharedPre.edit();
+            editor.putBoolean("first_start", false);
+            editor.apply();
+        }
     }
 
     /**
@@ -251,11 +309,13 @@ public class StepService extends Service implements SensorEventListener {
         int VERSION_CODES = android.os.Build.VERSION.SDK_INT;
         Log.i(App.TAG, "系统版本号: "+VERSION_CODES);
 
-        if (VERSION_CODES >= 19) {
-            addCountStepListener();
-        } else {
-            addBasePedoListener();
-        }
+        // 系统自带计步器,会出现静止状态下计步的问题,(机型: 华为H60), 暂时统一使用BasePedometer
+//        if (VERSION_CODES >= 19) {
+//            addCountStepListener();
+//        } else {
+//            addBasePedoListener();
+//        }
+        addBasePedoListener();
     }
 
     // 使用系统计步器
@@ -288,7 +348,7 @@ public class StepService extends Service implements SensorEventListener {
                     @Override
                     public void onChange() {
                         updateNotification("今日步数：" + StepCreator.CURRENT_STEP + " 步");
-                        Log.i(App.TAG, "BasePedo计步器改变");
+                        Log.i(App.TAG, "BasePedo计步器改变" + StepCreator.CURRENT_STEP);
                     }
                 });
     }
@@ -300,9 +360,9 @@ public class StepService extends Service implements SensorEventListener {
      */
     public void onSensorChanged(SensorEvent event) {
         // 变化一次算作两步, 弥补误差
-        StepCreator.CURRENT_STEP += 2;
+        StepCreator.CURRENT_STEP ++;
         updateNotification("今日步数：" + StepCreator.CURRENT_STEP + " 步");
-        Log.i(App.TAG, "系统计步器改变");
+        Log.i(App.TAG, "系统计步器改变" + StepCreator.CURRENT_STEP);
     }
 
     /**
@@ -348,6 +408,7 @@ public class StepService extends Service implements SensorEventListener {
         // 保存到数据库
         DbUtils.createDb(this, Const.DB_NAME);
         ArrayList list = DbUtils.getQueryByWhere(Step.class, "date", new String[]{CURRENT_DATE});
+
         if (list.size() == 0 || list.isEmpty()) {
             /**
              * 自己补充:

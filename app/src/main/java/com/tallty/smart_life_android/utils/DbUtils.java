@@ -1,10 +1,12 @@
 package com.tallty.smart_life_android.utils;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.litesuits.orm.LiteOrm;
 import com.litesuits.orm.db.assit.QueryBuilder;
 import com.litesuits.orm.db.model.ConflictAlgorithm;
+import com.tallty.smart_life_android.App;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +26,7 @@ public class DbUtils {
         if (liteOrm == null) {
             liteOrm = LiteOrm.newCascadeInstance(_activity, DB_NAME);
             liteOrm.setDebugged(false);
+            Log.d(App.TAG, "新建数据库实例");
         }
     }
 

@@ -208,7 +208,7 @@ public class SportMoreData extends BaseBackFragment {
         String current_date = getTodayDate();
         int versionCode = Apputils.getVersionCode(context);
         // 步数少于服务器的步数,会上传失败
-        Log.d(App.TAG, "开始上传步数任务"+current_date+","+ step);
+        Log.i(App.TAG, "开始上传步数任务"+current_date+","+ step);
         Engine
             .authService(shared_token, shared_phone)
             .uploadStep(current_date, step, "android", versionCode)
@@ -216,9 +216,9 @@ public class SportMoreData extends BaseBackFragment {
                 @Override
                 public void onResponse(Call<Step> call, Response<Step> response) {
                     if (response.code() == 201) {
-                        Log.d(App.TAG, "上传步数成功"+response.body().getCount());
+                        Log.i(App.TAG, "上传步数成功"+response.body().getCount());
                     } else {
-                        Log.d(App.TAG, "上传步数失败");
+                        Log.i(App.TAG, "上传步数失败");
                     }
                     // 载入图表和列表
                     initChartAndRank(chart, isLoad);
