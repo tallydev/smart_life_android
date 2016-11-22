@@ -452,8 +452,9 @@ public class SportMoreData extends BaseBackFragment {
             max = sportDetail.getCount() > max ? sportDetail.getCount() : max;
         }
         // 载入图表
-        if (!isLoad && isAdded())
+        if (!isLoad && isAdded()) {
             loadChart(chart, labels, counts, max);
+        }
     }
 
     /**
@@ -510,5 +511,11 @@ public class SportMoreData extends BaseBackFragment {
         Date date = new Date(System.currentTimeMillis());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         return sdf.format(date);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
     }
 }
