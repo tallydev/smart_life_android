@@ -1,5 +1,6 @@
 package com.tallty.smart_life_android.Engine;
 
+import com.tallty.smart_life_android.model.Activities;
 import com.tallty.smart_life_android.model.Appointment;
 import com.tallty.smart_life_android.model.AppointmentList;
 import com.tallty.smart_life_android.model.CartList;
@@ -160,4 +161,9 @@ public interface DataAPI {
     // 获取首页信息
     @GET("home")
     Call<Home> getHomeData();
+
+    // *********************************************************************************************
+    // 活动列表
+    @GET("activity/sqhds")
+    Call<Activities> getActivities();
 }

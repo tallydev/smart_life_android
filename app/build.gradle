@@ -100,6 +100,11 @@ dependencies {
     })
 
     compile files('libs/lite-orm-1.9.2.jar')
+    // Ping++ 必须添加
+    //使用支付宝时添加
+    //使用银联支付时添加
+    //使用微信支付时添加
+
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.android.support:support-v4:24.2.1'
     compile 'com.nineoldandroids:library:2.4.0'
@@ -119,11 +124,10 @@ dependencies {
     compile 'com.joanzapata.iconify:android-iconify-fontawesome:2.2.2'
     compile 'com.wx.wheelview:wheelview:1.3.3'
     compile 'com.pgyersdk:sdk:2.4.5'
-    compile 'com.pingxx:pingpp-core:2.1.+' // Ping++ 必须添加
-    compile 'com.pingxx:pingpp-alipay:2.1.+' //使用支付宝时添加
-    compile 'com.pingxx:pingpp-upacp:2.1.+' //使用银联支付时添加
-    compile 'com.pingxx:pingpp-wxpay:2.1.+' //使用微信支付时添加
-    
+    compile 'com.pingxx:pingpp-core:2.1.+'
+    compile 'com.pingxx:pingpp-alipay:2.1.+'
+    compile 'com.pingxx:pingpp-upacp:2.1.+'
+    compile 'com.pingxx:pingpp-wxpay:2.1.+'
     testCompile 'junit:junit:4.12'
     testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'

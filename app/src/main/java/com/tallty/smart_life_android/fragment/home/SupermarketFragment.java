@@ -23,7 +23,7 @@ import org.greenrobot.eventbus.Subscribe;
  * 首页-社区活动-活动详情
  * 首页-社区活动-新品上市
  */
-public class CountOrder extends BaseBackFragment {
+public class SupermarketFragment extends BaseBackFragment {
     private String mName;
     private int imageId;
 
@@ -36,11 +36,11 @@ public class CountOrder extends BaseBackFragment {
     private TextView number;
     private TextView apply;
 
-    public static CountOrder newInstance(String title, int imageId) {
+    public static SupermarketFragment newInstance(String title, int imageId) {
         Bundle args = new Bundle();
         args.putString(Const.FRAGMENT_NAME, title);
         args.putInt("image", imageId);
-        CountOrder fragment = new CountOrder();
+        SupermarketFragment fragment = new SupermarketFragment();
         fragment.setArguments(args);
         return fragment;
     }

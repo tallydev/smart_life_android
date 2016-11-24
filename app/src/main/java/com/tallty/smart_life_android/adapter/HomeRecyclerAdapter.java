@@ -16,8 +16,9 @@ import com.tallty.smart_life_android.event.ShowSnackbarEvent;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.fragment.Common.WebViewFragment;
 import com.tallty.smart_life_android.fragment.community.ComeService;
+import com.tallty.smart_life_android.fragment.home.CommunityActivityFragment;
 import com.tallty.smart_life_android.fragment.home.CommunityIt;
-import com.tallty.smart_life_android.fragment.home.CountOrder;
+import com.tallty.smart_life_android.fragment.home.SupermarketFragment;
 import com.tallty.smart_life_android.fragment.home.HealthyCheckReport;
 import com.tallty.smart_life_android.fragment.home.HealthyOrderCheck;
 import com.tallty.smart_life_android.fragment.home.HomeFragment;
@@ -33,7 +34,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import cn.iwgang.countdownview.CountdownView;
 
@@ -149,7 +149,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
         }
         // 社区活动
         else if (position == 2) {
-            EventBus.getDefault().post(new StartBrotherEvent(CountOrder.newInstance("社区活动", R.drawable.four_detail)));
+            EventBus.getDefault().post(new StartBrotherEvent(CommunityActivityFragment.newInstance("社区活动")));
         }
         // 智慧家居
         else if (position == 3) {
@@ -169,7 +169,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
         }
         // 上门服务
         else if (position == 7) {
-            EventBus.getDefault().post(new StartBrotherEvent(CountOrder.newInstance("精品超市", R.drawable.new_product_detail)));
+            EventBus.getDefault().post(new StartBrotherEvent(SupermarketFragment.newInstance("精品超市", R.drawable.new_product_detail)));
         }
     }
 
@@ -232,7 +232,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
                 // 社区活动
                 else if (tag == 2) {
                     if (position == 0) {
-                        EventBus.getDefault().post(new StartBrotherEvent(CountOrder.newInstance("社区活动", R.drawable.four_detail)));
+                        EventBus.getDefault().post(new StartBrotherEvent(SupermarketFragment.newInstance("社区活动", R.drawable.four_detail)));
                     }
                 }
                 // 智慧家居
@@ -268,7 +268,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
                 // 上门服务
                 else if (tag == 7) {
                     if (position == 0) {
-                        EventBus.getDefault().post(new StartBrotherEvent(CountOrder.newInstance("精品超市", R.drawable.new_product_detail)));
+                        EventBus.getDefault().post(new StartBrotherEvent(SupermarketFragment.newInstance("精品超市", R.drawable.new_product_detail)));
                     }
                 }
             }
