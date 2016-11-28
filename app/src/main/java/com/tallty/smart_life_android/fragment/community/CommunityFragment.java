@@ -18,6 +18,7 @@ import com.tallty.smart_life_android.custom.MyGridView;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.event.TabSelectedEvent;
 import com.tallty.smart_life_android.fragment.MainFragment;
+import com.tallty.smart_life_android.fragment.Common.GlobalAppointFragment;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -123,7 +124,8 @@ public class CommunityFragment extends BaseLazyMainFragment{
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.community_service:
-                EventBus.getDefault().post(new StartBrotherEvent(ComeService.newInstance("上门服务")));
+                EventBus.getDefault().post(new StartBrotherEvent(GlobalAppointFragment
+                        .newInstance("上门服务", R.drawable.community_service, "SMFW", "我要预约", true)));
                 break;
             case R.id.community_government:
                 showToast("政府信息平台(暂未开放)");

@@ -541,7 +541,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
     public void onItemClick(int position) {
         switch (position) {
             case 1:
-                String url = "http://closet-work.tallty.com/smart_life_banner?action=sport";
+                String url = "http://elive.clfsj.com:8989/sport";
                 EventBus.getDefault().post(new StartBrotherEvent(WebViewFragment.newInstance(url, "健步达人")));
                 break;
         }

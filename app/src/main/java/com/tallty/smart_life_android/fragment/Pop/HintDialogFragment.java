@@ -85,13 +85,15 @@ public class HintDialogFragment extends DialogFragment implements View.OnClickLi
     public void onStart() {
         super.onStart();
         // 窗体大小,动画,弹出方向
-        WindowManager.LayoutParams layoutParams = getDialog().getWindow().getAttributes();
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
-        layoutParams.gravity = Gravity.BOTTOM;
-        layoutParams.windowAnimations = R.style.dialogStyle;
-        getDialog().getWindow().setAttributes(layoutParams);
+        if (getDialog().getWindow() != null) {
+            WindowManager.LayoutParams layoutParams = getDialog().getWindow().getAttributes();
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+            layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            layoutParams.gravity = Gravity.BOTTOM;
+            layoutParams.windowAnimations = R.style.dialogStyle;
+            getDialog().getWindow().setAttributes(layoutParams);
+        }
     }
 
     @Override

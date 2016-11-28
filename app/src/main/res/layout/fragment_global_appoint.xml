@@ -1,0 +1,45 @@
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:fitsSystemWindows="false"
+    android:background="@color/app_bg">
+
+    <include layout="@layout/toolbar"/>
+
+    <!--主体部分-->
+    <LinearLayout
+        android:id="@+id/web_view_actions"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="48dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+        <!--显示的webView-->
+        <ScrollView
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+            <ImageView
+                android:id="@+id/detail_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"/>
+        </ScrollView>
+        <!--(可选) 直接操作: [首页单独活动的预约] -->
+        <include android:id="@+id/single_action_include"
+                layout="@layout/include_action_layout"
+                android:visibility="gone"
+                android:layout_height="48dp"
+                android:layout_width="match_parent"/>
+        <!--(可选) 选择数量,进行操作【社区活动的预约,可选人数】 -->
+        <include android:id="@+id/count_action_include"
+                 layout="@layout/include_count_action_layout"
+                 android:visibility="gone"
+                 android:layout_width="match_parent"
+                 android:layout_height="48dp"/>
+    </LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

@@ -88,7 +88,7 @@ public class WebViewFragment extends BaseBackFragment {
      */
     @TargetApi (Build.VERSION_CODES.JELLY_BEAN)
     private void createWebView() {
-        RelativeLayout webView_container = getViewById(R.id.web_view_container);
+        RelativeLayout webView_container = getViewById(R.id.web_view);
         web_view = new WebView(App.getInstance());
         web_view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));

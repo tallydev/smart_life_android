@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/include_count_layout"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:orientation="horizontal"
+    android:visibility="visible"
+    android:background="@color/white"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_weight="1"
+        android:gravity="center"
+        android:layout_width="0dp"
+        android:orientation="horizontal"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/count_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/global_text"
+            android:textSize="@dimen/text_14"
+            android:text="选择人数: "/>
+        <TextView
+            android:id="@+id/count_add"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textColor="@color/global_text"
+            android:layout_marginLeft="10dp"
+            android:textSize="@dimen/text_20"
+            android:text="＋"/>
+        <TextView
+            android:id="@+id/number"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textColor="@color/orange"
+            android:textSize="@dimen/text_16"
+            android:textStyle="bold"
+            android:text="1"/>
+        <TextView
+            android:id="@+id/count_reduce"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textColor="@color/global_text"
+            android:textSize="@dimen/text_20"
+            android:text="—"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/apply_btn"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:background="@color/orange"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:text="我要报名"/>
+</LinearLayout>
