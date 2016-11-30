@@ -186,7 +186,7 @@ public class BindPhoneFragment extends BaseBackFragment {
                     .enqueue(new Callback<User>() {
                         @Override
                         public void onResponse(Call<User> call, Response<User> response) {
-                            if (response.code() == 200) {
+                            if (response.isSuccessful()) {
                                 // TODO: 16/8/3 暂时还不能绑定新手机号
                                 // 更新本地信息
                                 SharedPreferences.Editor editor = sharedPre.edit();
@@ -262,7 +262,7 @@ public class BindPhoneFragment extends BaseBackFragment {
             Engine.noAuthService().getSms(phone).enqueue(new Callback<HashMap<String, String>>() {
                 @Override
                 public void onResponse(Call<HashMap<String, String>> call, Response<HashMap<String, String>> response) {
-                    if (response.code() == 201) {
+                    if (response.isSuccessful()) {
                         Log.d(App.TAG, "验证码" + response.body().get("token"));
                         showToast("验证码已发送");
                     } else {

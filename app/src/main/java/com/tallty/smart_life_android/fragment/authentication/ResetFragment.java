@@ -146,7 +146,7 @@ public class ResetFragment extends BaseBackFragment {
             Engine.noAuthService().getSms(phone).enqueue(new Callback<HashMap<String, String>>() {
                 @Override
                 public void onResponse(Call<HashMap<String, String>> call, Response<HashMap<String, String>> response) {
-                    if (response.code() == 201) {
+                    if (response.isSuccessful()) {
                         showToast("验证码已发送");
                     } else {
                         timer.cancel();
@@ -226,7 +226,7 @@ public class ResetFragment extends BaseBackFragment {
                 .enqueue(new Callback<User>() {
                     @Override
                     public void onResponse(Call<User> call, Response<User> response) {
-                        if (response.code() == 200) {
+                        if (response.isSuccessful()) {
                             hideProgress();
                             pop();
                         } else if (response.code() == 422){

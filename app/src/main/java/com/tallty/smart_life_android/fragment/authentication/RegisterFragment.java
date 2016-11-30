@@ -181,7 +181,7 @@ public class RegisterFragment extends BaseBackFragment {
             Engine.noAuthService().getSms(phone).enqueue(new Callback<HashMap<String, String>>() {
                 @Override
                 public void onResponse(Call<HashMap<String, String>> call, Response<HashMap<String, String>> response) {
-                    if (response.code() == 201) {
+                    if (response.isSuccessful()) {
                         showToast("验证码已发送");
                     } else {
                         timer.cancel();
@@ -276,7 +276,7 @@ public class RegisterFragment extends BaseBackFragment {
                 .enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-                if (response.code() == 201) {
+                if (response.isSuccessful()) {
                     User user = response.body();
                     // 保存手机号,方便登陆页自动显示
                     SharedPreferences.Editor editor = sharedPre.edit();

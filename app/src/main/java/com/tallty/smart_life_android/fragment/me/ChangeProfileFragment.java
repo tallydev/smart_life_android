@@ -148,7 +148,7 @@ public class ChangeProfileFragment extends BaseBackFragment {
                 .enqueue(new Callback<User>() {
                     @Override
                     public void onResponse(Call<User> call, Response<User> response) {
-                        if (response.code() == 200) {
+                        if (response.isSuccessful()) {
                             Bundle bundle = new Bundle();
                             bundle.putString(RESULT_DATA, text);
                             bundle.putInt(RESULT_POSITION, position);

@@ -140,7 +140,7 @@ public class MeFragment extends BaseLazyMainFragment {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 user = response.body();
-                if (response.code() == 200) {
+                if (response.isSuccessful()) {
                     profile.setClickable(true);
                     Glide.with(context).load(user.getAvatar())
                             .placeholder(R.drawable.user_default)

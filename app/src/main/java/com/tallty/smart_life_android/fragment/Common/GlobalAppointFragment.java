@@ -181,10 +181,25 @@ public class GlobalAppointFragment extends BaseBackFragment {
         detail_image.setOnImageEventListener(new SubsamplingScaleImageView.OnImageEventListener() {
             @Override
             public void onReady() {
+                // 图片加载好, 之后显示操作按钮
+                if (hasButton) {
+                    if (isSingle) {
+                        singleLayout.setVisibility(View.VISIBLE);
+                        singleAppointBtn.setText(btn_text);
+                    } else {
+                        countLayout.setVisibility(View.VISIBLE);
+                        countAppointBtn.setText(btn_text);
+                    }
+                }
+
                 WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-                int width = wm.getDefaultDisplay().getWidth();//屏幕宽度
-                int image_w = detail_image.getSWidth(); // 图片宽度
+                // 屏幕宽度
+                int width = wm.getDefaultDisplay().getWidth();
+                // 图片宽度
+                int image_w = detail_image.getSWidth();
+                // 比例
                 float width_ratio = (float) (width * 1.0 / image_w);
+
                 Log.d(App.TAG, detail_image.getScale()+"缩放比例");
                 Log.d(App.TAG, width_ratio+"宽度比例");
 
@@ -200,16 +215,7 @@ public class GlobalAppointFragment extends BaseBackFragment {
 
             @Override
             public void onImageLoaded() {
-                // 图片加载好, 之后显示操作按钮
-                if (hasButton) {
-                    if (isSingle) {
-                        singleLayout.setVisibility(View.VISIBLE);
-                        singleAppointBtn.setText(btn_text);
-                    } else {
-                        countLayout.setVisibility(View.VISIBLE);
-                        countAppointBtn.setText(btn_text);
-                    }
-                }
+
             }
 
             @Override
@@ -286,7 +292,7 @@ public class GlobalAppointFragment extends BaseBackFragment {
                 .enqueue(new Callback<Appointment>() {
                     @Override
                     public void onResponse(Call<Appointment> call, Response<Appointment> response) {
-                        if (201 == response.code()) {
+                        if (response.isSuccessful()) {
                             hideProgress();
                             showToast("提交成功");
                         } else {
@@ -313,7 +319,7 @@ public class GlobalAppointFragment extends BaseBackFragment {
             .enqueue(new Callback<Appointment>() {
                 @Override
                 public void onResponse(Call<Appointment> call, Response<Appointment> response) {
-                    if (201 == response.code()) {
+                    if (response.isSuccessful()) {
                         hideProgress();
                         showToast("提交成功");
                     } else {

@@ -179,7 +179,7 @@ public class LoginFragment extends BaseLazyMainFragment {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 User user = response.body();
-                if (response.code() == 201) {
+                if (response.isSuccessful()) {
                     // 保存用户信息
                     SharedPreferences.Editor editor = sharedPre.edit();
                     editor.putInt(Const.USER_ID, user.getId());

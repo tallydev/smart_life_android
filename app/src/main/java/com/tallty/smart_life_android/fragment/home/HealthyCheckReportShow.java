@@ -91,7 +91,7 @@ public class HealthyCheckReportShow extends BaseBackFragment {
         Engine.authService(shared_token, shared_phone).getReportHistory(report.getName()).enqueue(new Callback<ReportShowList>() {
             @Override
             public void onResponse(Call<ReportShowList> call, Response<ReportShowList> response) {
-                if (response.code() == 200) {
+                if (response.isSuccessful()) {
                     reportShowItems = response.body().getList();
                     // 加载列表
                     setList();

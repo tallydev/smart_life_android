@@ -143,7 +143,7 @@ public class ProfileFragment extends BaseBackFragment {
         Engine.authService(shared_token, shared_phone).getUser().enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-                if (response.code() == 200) {
+                if (response.isSuccessful()) {
                     user = response.body();
 
                     values.set(0, user.getAvatar());
@@ -385,7 +385,7 @@ public class ProfileFragment extends BaseBackFragment {
         Engine.authService(shared_token, shared_phone).updateUserPhoto(body).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-                if (response.code() == 200) {
+                if (response.isSuccessful()) {
                     // 更新头像地址
                     SharedPreferences.Editor editor = sharedPre.edit();
                     editor.putString(Const.USER_AVATAR, response.body().getAvatar());

@@ -85,7 +85,7 @@ public class CommunityActivityFragment extends BaseBackFragment {
         Engine.authService(shared_token, shared_phone).getActivities().enqueue(new Callback<Activities>() {
             @Override
             public void onResponse(Call<Activities> call, Response<Activities> response) {
-                if (response.code() == 200) {
+                if (response.isSuccessful()) {
                     setList(response.body().getActivities());
                 } else {
                     showToast("获取活动列表失败");

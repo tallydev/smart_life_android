@@ -80,7 +80,7 @@ public class MyAppointments extends BaseBackFragment {
         Engine.authService(shared_token, shared_phone).getAppointments(1, 10).enqueue(new Callback<AppointmentList>() {
             @Override
             public void onResponse(Call<AppointmentList> call, Response<AppointmentList> response) {
-                if (response.code() == 200) {
+                if (response.isSuccessful()) {
                     appointments.addAll(response.body().getAppointments());
                     // 加载列表
                     setList();

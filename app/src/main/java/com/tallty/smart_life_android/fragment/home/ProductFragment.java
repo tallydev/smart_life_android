@@ -121,7 +121,7 @@ public class ProductFragment extends BaseBackFragment {
 //        Engine.noAuthService().getProductList(1, 10).enqueue(new Callback<ProductList>() {
 //            @Override
 //            public void onResponse(Call<ProductList> call, Response<ProductList> response) {
-//                if (response.code() == 200) {
+//                if (response.isSuccessful()) {
 //                    // 商品列表
 //                    ProductList productList = response.body();
 //                    products = productList.getProducts();

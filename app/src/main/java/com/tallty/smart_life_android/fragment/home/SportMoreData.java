@@ -215,7 +215,7 @@ public class SportMoreData extends BaseBackFragment {
             .enqueue(new Callback<Step>() {
                 @Override
                 public void onResponse(Call<Step> call, Response<Step> response) {
-                    if (response.code() == 201) {
+                    if (response.isSuccessful()) {
                         Log.i(App.TAG, "上传步数成功"+response.body().getCount());
                     } else {
                         Log.i(App.TAG, "上传步数失败");
@@ -241,7 +241,7 @@ public class SportMoreData extends BaseBackFragment {
         Engine.authService(shared_token, shared_phone).getSportsData(now_timeline).enqueue(new Callback<SportData>() {
             @Override
             public void onResponse(Call<SportData> call, Response<SportData> response) {
-                if (response.code() == 200) {
+                if (response.isSuccessful()) {
                     // 获取图表信息
                     sportChartData = response.body().getDetail();
                     // 加载个人统计信息
@@ -282,7 +282,7 @@ public class SportMoreData extends BaseBackFragment {
                 .enqueue(new Callback<SportRank>() {
             @Override
             public void onResponse(Call<SportRank> call, Response<SportRank> response) {
-                if (response.code() == 200) {
+                if (response.isSuccessful()) {
                     SportRank sportRank = response.body();
                     sportRankItems.clear();
                     sportRankItems.addAll(sportRank.getTop());
@@ -357,7 +357,7 @@ public class SportMoreData extends BaseBackFragment {
                 .enqueue(new Callback<SportRank>() {
                     @Override
                     public void onResponse(Call<SportRank> call, Response<SportRank> response) {
-                        if (response.code() == 200) {
+                        if (response.isSuccessful()) {
                             SportRank sportRank = response.body();
                             sportRankItems.addAll(sportRank.getTop());
                             total_pages = sportRank.getTotal_pages();

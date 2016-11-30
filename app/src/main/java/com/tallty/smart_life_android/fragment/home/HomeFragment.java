@@ -200,7 +200,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
                     .enqueue(new Callback<Step>() {
                         @Override
                         public void onResponse(Call<Step> call, Response<Step> response) {
-                            if (response.code() == 201) {
+                            if (response.isSuccessful()) {
                                 Log.d(App.TAG, "首次进入页面,上传步数成功");
                                 // 获取首页信息,更新列表
                                 getHomeData();
@@ -352,7 +352,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
         Engine.authService(shared_token, shared_phone).getHomeData().enqueue(new Callback<Home>() {
             @Override
             public void onResponse(Call<Home> call, Response<Home> response) {
-                if (response.code() == 200) {
+                if (response.isSuccessful()) {
                     if (response.body().getFitness() != null) {
                         rank = response.body().getFitness().get("rank");
                         // 设置浮窗时间
@@ -421,7 +421,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
             .enqueue(new Callback<Step>() {
                 @Override
                 public void onResponse(Call<Step> call, Response<Step> response) {
-                    if (response.code() == 201) {
+                    if (response.isSuccessful()) {
                         Log.d(App.TAG, "上传步数成功"+response.body().getCount());
                     } else {
                         Log.d(App.TAG, "上传步数失败");
