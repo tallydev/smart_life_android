@@ -30,7 +30,7 @@
 
     <string name="fa_angle_right">{fa-angle-right}</string>
 
-    <string name="appoint_success">预约成功</string>
+    <string name="appoint_success">提交成功</string>
 
     <!--网络操作相关-->
     <string name="progress_login">登录中…</string>

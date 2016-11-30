@@ -135,8 +135,8 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
     private void setImageClickListener(int position) {
         // 智慧健康
         if (position == 0) {
-            String url = "http://elive.clfsj.com:8989/healthy";
-            EventBus.getDefault().post(new StartBrotherEvent(WebViewFragment.newInstance(url, "智慧健康")));
+            String url = "http://elive.clfsj.com:8989/images/healthy_description.jpg";
+            EventBus.getDefault().post(new StartBrotherEvent(GlobalAppointFragment.newInstance("智慧健康", url)));
         }
         // 健步达人
         else if (position == 1) {
@@ -148,15 +148,18 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
         }
         // 智慧家居
         else if (position == 3) {
-            EventBus.getDefault().post(new StartBrotherEvent(GlobalAppointFragment.newInstance("智能家居", R.drawable.remote_control_01, "ZNJJ", "预约体验", true)));
+            String url = "http://elive.clfsj.com:8989/images/smart_home_house.jpg";
+            EventBus.getDefault().post(new StartBrotherEvent(GlobalAppointFragment.newInstance("智能家居", url, "ZNJJ", "预约体验", true)));
         }
         // 上门服务
         else if (position == 4) {
-            EventBus.getDefault().post(new StartBrotherEvent(GlobalAppointFragment.newInstance("上门服务", R.drawable.community_service, "SMFW", "我要预约", true)));
+            String url = "http://elive.clfsj.com:8989/images/come_service.jpg";
+            EventBus.getDefault().post(new StartBrotherEvent(GlobalAppointFragment.newInstance("上门服务", url, "SMFW", "我要预约", true)));
         }
         // 社区IT
         else if (position == 5) {
-            EventBus.getDefault().post(new StartBrotherEvent(GlobalAppointFragment.newInstance("IT学堂", R.drawable.it_class, "ITXT", "我要报名", true)));
+            String url = "http://elive.clfsj.com:8989/images/community_it_class.jpg";
+            EventBus.getDefault().post(new StartBrotherEvent(GlobalAppointFragment.newInstance("IT学堂", url, "ITXT", "我要报名", true)));
         }
         // 限量发售
         else if (position == 6) {
@@ -164,7 +167,8 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
         }
         // 精品超市
         else if (position == 7) {
-            EventBus.getDefault().post(new StartBrotherEvent(GlobalAppointFragment.newInstance("精品超市", R.drawable.new_product_detail, "XPSS", "我要购买", false)));
+            String url = "http://elive.clfsj.com:8989/images/community_it_class.jpg";
+            EventBus.getDefault().post(new StartBrotherEvent(GlobalAppointFragment.newInstance("精品超市", url, "XPSS", "我要购买", false)));
         }
     }
 
@@ -211,7 +215,8 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
                 // 智慧健康
                 if (tag == 0) {
                     if (position == 0) {
-                        EventBus.getDefault().post(new StartBrotherEvent(GlobalAppointFragment.newInstance("预约体检", R.drawable.order_check_text, "ZHJK", "我要预约", true)));
+                        String url = "http://elive.clfsj.com:8989/images/healthy_order_check.jpg";
+                        EventBus.getDefault().post(new StartBrotherEvent(GlobalAppointFragment.newInstance("预约体检", url, "ZHJK", "我要预约", true)));
                     } else if (position == 1) {
                         EventBus.getDefault().post(new StartBrotherEvent(HealthyCheckReport.newInstance("健康报告")));
                     } else if (position == 2) {
@@ -227,31 +232,37 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
                 // 社区活动
                 else if (tag == 2) {
                     if (position == 0) {
-                        EventBus.getDefault().post(new StartBrotherEvent(GlobalAppointFragment.newInstance("社区活动", R.drawable.four_detail, "SQHD", "我要报名", false)));
+                        EventBus.getDefault().post(new StartBrotherEvent(CommunityActivityFragment.newInstance("社区活动")));
                     }
                 }
                 // 智慧家居
                 else if (tag == 3) {
                     if (position == 0) {
-                        EventBus.getDefault().post(new StartBrotherEvent(GlobalAppointFragment.newInstance("智能家居", R.drawable.remote_control_01, "ZNJJ", "预约体验", true)));
+                        String url = "http://elive.clfsj.com:8989/images/smart_home_house.jpg";
+                        EventBus.getDefault().post(new StartBrotherEvent(GlobalAppointFragment.newInstance("智能家居", url, "ZNJJ", "预约体验", true)));
                     } else if (position == 1) {
-                        EventBus.getDefault().post(new StartBrotherEvent(GlobalAppointFragment.newInstance("电子猫眼", R.drawable.cat_eye_01, "DZMY", "预约体验", true)));
+                        String url = "http://elive.clfsj.com:8989/images/smart_home_cat_eye.jpg";
+                        EventBus.getDefault().post(new StartBrotherEvent(GlobalAppointFragment.newInstance("电子猫眼", url, "DZMY", "预约体验", true)));
                     }
                 }
-                // 上门服务true
+                // 上门服务
                 else if (tag == 4) {
                     if (position == 0) {
-                        EventBus.getDefault().post(new StartBrotherEvent(GlobalAppointFragment.newInstance("上门服务", R.drawable.community_service, "SMFW", "我要预约", true)));
+                        String url = "http://elive.clfsj.com:8989/images/come_service.jpg";
+                        EventBus.getDefault().post(new StartBrotherEvent(GlobalAppointFragment.newInstance("上门服务", url, "SMFW", "我要预约", true)));
                     }
                 }
                 // 社区IT
                 else if (tag == 5) {
                     if (position == 0) {
-                        EventBus.getDefault().post(new StartBrotherEvent(GlobalAppointFragment.newInstance("IT学堂", R.drawable.it_class, "ITXT", "我要报名", true)));
+                        String url = "http://elive.clfsj.com:8989/images/community_it_class.jpg";
+                        EventBus.getDefault().post(new StartBrotherEvent(GlobalAppointFragment.newInstance("IT学堂", url, "ITXT", "我要报名", true)));
                     } else if (position == 1) {
-                        EventBus.getDefault().post(new StartBrotherEvent(GlobalAppointFragment.newInstance("在线冲印", R.drawable.print_online, "ZXCY", "微我", true)));
+                        String url = "http://elive.clfsj.com:8989/images/community_it_print_online.jpg";
+                        EventBus.getDefault().post(new StartBrotherEvent(GlobalAppointFragment.newInstance("在线冲印", url, "ZXCY", "微我", true)));
                     } else if (position == 2) {
-                        EventBus.getDefault().post(new StartBrotherEvent(GlobalAppointFragment.newInstance("IT服务", R.drawable.it_service, "ITFW", "我要预约", true)));
+                        String url = "http://elive.clfsj.com:8989/images/community_it_service.jpg";
+                        EventBus.getDefault().post(new StartBrotherEvent(GlobalAppointFragment.newInstance("IT服务", url, "ITFW", "我要预约", true)));
                     }
                 }
                 // 限量发售
@@ -263,7 +274,8 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
                 // 精品超市
                 else if (tag == 7) {
                     if (position == 0) {
-                        EventBus.getDefault().post(new StartBrotherEvent(GlobalAppointFragment.newInstance("精品超市", R.drawable.new_product_detail, "XPSS", "我要购买", false)));
+                        String url = "http://elive.clfsj.com:8989/images/community_it_service.jpg";
+                        EventBus.getDefault().post(new StartBrotherEvent(GlobalAppointFragment.newInstance("精品超市", url, "XPSS", "我要购买", false)));
                     }
                 }
             }

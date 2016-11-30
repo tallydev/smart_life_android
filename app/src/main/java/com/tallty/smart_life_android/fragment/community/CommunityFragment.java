@@ -124,8 +124,9 @@ public class CommunityFragment extends BaseLazyMainFragment{
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.community_service:
+                String url = "http://elive.clfsj.com:8989/images/come_service.jpg";
                 EventBus.getDefault().post(new StartBrotherEvent(GlobalAppointFragment
-                        .newInstance("上门服务", R.drawable.community_service, "SMFW", "我要预约", true)));
+                        .newInstance("上门服务", url, "SMFW", "我要预约", true)));
                 break;
             case R.id.community_government:
                 showToast("政府信息平台(暂未开放)");

@@ -33,6 +33,7 @@ import com.tallty.smart_life_android.custom.MyRecyclerView;
 import com.tallty.smart_life_android.event.ShowSnackbarEvent;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.event.TabSelectedEvent;
+import com.tallty.smart_life_android.fragment.Common.GlobalAppointFragment;
 import com.tallty.smart_life_android.fragment.Common.WebViewFragment;
 import com.tallty.smart_life_android.fragment.MainFragment;
 import com.tallty.smart_life_android.holder.BannerHolderView;
@@ -541,8 +542,8 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
     public void onItemClick(int position) {
         switch (position) {
             case 1:
-                String url = "http://elive.clfsj.com:8989/sport";
-                EventBus.getDefault().post(new StartBrotherEvent(WebViewFragment.newInstance(url, "健步达人")));
+                String url = "http://elive.clfsj.com:8989/images/banner_sport.jpg";
+                EventBus.getDefault().post(new StartBrotherEvent(GlobalAppointFragment.newInstance("健步达人", url)));
                 break;
         }
     }
