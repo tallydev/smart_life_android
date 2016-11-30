@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.R;
-import com.tallty.smart_life_android.adapter.HomeLimitSailAdapter;
+import com.tallty.smart_life_android.adapter.HomeProductAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.model.Product;
 
@@ -20,11 +20,11 @@ import java.util.ArrayList;
 /**
  * 首页-限量销售
  */
-public class LimitSail extends BaseBackFragment {
+public class ProductFragment extends BaseBackFragment {
     private String mName;
 
     private RecyclerView recyclerView;
-    private HomeLimitSailAdapter adapter;
+    private HomeProductAdapter adapter;
 
     // 数据
     private ArrayList<Product> products = new ArrayList<>();
@@ -63,10 +63,10 @@ public class LimitSail extends BaseBackFragment {
         }
     };
 
-    public static LimitSail newInstance(String title) {
+    public static ProductFragment newInstance(String title) {
         Bundle args = new Bundle();
         args.putString(Const.FRAGMENT_NAME, title);
-        LimitSail fragment = new LimitSail();
+        ProductFragment fragment = new ProductFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -82,7 +82,7 @@ public class LimitSail extends BaseBackFragment {
 
     @Override
     public int getFragmentLayout() {
-        return R.layout.fragment_limit_sail;
+        return R.layout.fragment_product;
     }
 
     @Override
@@ -114,7 +114,7 @@ public class LimitSail extends BaseBackFragment {
         }
 
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        adapter = new HomeLimitSailAdapter(context, products);
+        adapter = new HomeProductAdapter(context, products);
         recyclerView.setAdapter(adapter);
 
 //        showProgress(showString(R.string.progress_normal));
@@ -127,7 +127,7 @@ public class LimitSail extends BaseBackFragment {
 //                    products = productList.getProducts();
 //                    // 加载列表
 //                    recyclerView.setLayoutManager(new LinearLayoutManager(context));
-//                    adapter = new HomeLimitSailAdapter(context, products);
+//                    adapter = new HomeProductAdapter(context, products);
 //                    recyclerView.setAdapter(adapter);
 //
 //                    hideProgress();

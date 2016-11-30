@@ -14,12 +14,11 @@ import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.event.ShowSnackbarEvent;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
-import com.tallty.smart_life_android.fragment.Common.WebViewFragment;
 import com.tallty.smart_life_android.fragment.home.CommunityActivityFragment;
 import com.tallty.smart_life_android.fragment.Common.GlobalAppointFragment;
 import com.tallty.smart_life_android.fragment.home.HealthyCheckReport;
 import com.tallty.smart_life_android.fragment.home.HomeFragment;
-import com.tallty.smart_life_android.fragment.home.LimitSail;
+import com.tallty.smart_life_android.fragment.home.ProductFragment;
 import com.tallty.smart_life_android.fragment.home.SportMoreData;
 import com.tallty.smart_life_android.holder.HomeViewHolder;
 
@@ -163,7 +162,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
         }
         // 限量发售
         else if (position == 6) {
-            EventBus.getDefault().post(new StartBrotherEvent(LimitSail.newInstance("限量销售")));
+            EventBus.getDefault().post(new StartBrotherEvent(ProductFragment.newInstance("限量销售")));
         }
         // 精品超市
         else if (position == 7) {
@@ -268,14 +267,13 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
                 // 限量发售
                 else if (tag == 6) {
                     if (position == 0) {
-                        EventBus.getDefault().post(new StartBrotherEvent(LimitSail.newInstance("限量销售")));
+                        EventBus.getDefault().post(new StartBrotherEvent(ProductFragment.newInstance("限量销售")));
                     }
                 }
                 // 精品超市
                 else if (tag == 7) {
                     if (position == 0) {
-                        String url = "http://elive.clfsj.com:8989/images/community_it_service.jpg";
-                        EventBus.getDefault().post(new StartBrotherEvent(GlobalAppointFragment.newInstance("精品超市", url, "XPSS", "我要购买", false)));
+                        EventBus.getDefault().post(new StartBrotherEvent(ProductFragment.newInstance("精品超市")));
                     }
                 }
             }

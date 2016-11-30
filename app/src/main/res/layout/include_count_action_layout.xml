@@ -20,16 +20,14 @@
             android:layout_height="wrap_content"
             android:textColor="@color/global_text"
             android:textSize="@dimen/text_14"
-            android:text="选择人数: "/>
-        <TextView
+            android:text="人数: "/>
+        <Button
             android:id="@+id/count_add"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:textColor="@color/global_text"
-            android:layout_marginLeft="10dp"
-            android:textSize="@dimen/text_20"
-            android:text="＋"/>
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@mipmap/ic_add"
+            android:layout_marginLeft="10dp"/>
+
         <TextView
             android:id="@+id/number"
             android:layout_width="40dp"
@@ -39,14 +37,12 @@
             android:textSize="@dimen/text_16"
             android:textStyle="bold"
             android:text="1"/>
-        <TextView
+
+        <Button
             android:id="@+id/count_reduce"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:textColor="@color/global_text"
-            android:textSize="@dimen/text_20"
-            android:text="—"/>
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@mipmap/ic_reduce"/>
     </LinearLayout>
 
     <TextView
@@ -56,6 +52,5 @@
         android:layout_height="match_parent"
         android:background="@color/orange"
         android:gravity="center"
-        android:textColor="@color/white"
-        android:text="我要报名"/>
+        android:textColor="@color/white"/>
 </LinearLayout>

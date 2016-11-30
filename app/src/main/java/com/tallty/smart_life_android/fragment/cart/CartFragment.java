@@ -262,7 +262,7 @@ public class CartFragment extends BaseLazyMainFragment {
      */
     @Subscribe
     public void onTransferDataEvent(TransferDataEvent event) {
-        if ("LimitSailShow".equals(event.tag)) {
+        if ("ProductShowFragment".equals(event.tag)) {
             Bundle bundle = event.bundle;
             int count = bundle.getInt(Const.INT);
             Product product = (Product) bundle.getSerializable(Const.OBJECT);

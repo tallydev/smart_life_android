@@ -208,7 +208,6 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
                         e.printStackTrace();
                     }
                     hideProgress();
-                    showToast(showString(R.string.response_error));
                 }
             }
 
@@ -216,7 +215,6 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
             public void onFailure(Call<Appointment> call, Throwable t) {
                 onAppointListener.onError();
                 hideProgress();
-                showToast(showString(R.string.network_error));
             }
         });
     }

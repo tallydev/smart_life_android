@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
-import com.tallty.smart_life_android.fragment.home.LimitSailShow;
+import com.tallty.smart_life_android.fragment.home.ProductShowFragment;
 import com.tallty.smart_life_android.model.Product;
 
 import org.greenrobot.eventbus.EventBus;
@@ -23,12 +23,12 @@ import java.util.ArrayList;
  * Created by kang on 16/7/14.
  * 首页-限量销售-适配器
  */
-public class HomeLimitSailAdapter extends RecyclerView.Adapter<HomeLimitSailAdapter.ProductViewHolder> {
+public class HomeProductAdapter extends RecyclerView.Adapter<HomeProductAdapter.ProductViewHolder> {
     private ArrayList<Product> products;
 
     private Context context;
 
-    public HomeLimitSailAdapter(Context context, ArrayList<Product> products) {
+    public HomeProductAdapter(Context context, ArrayList<Product> products) {
         this.context = context;
         this.products = products;
     }
@@ -51,7 +51,7 @@ public class HomeLimitSailAdapter extends RecyclerView.Adapter<HomeLimitSailAdap
         holder.detail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventBus.getDefault().post(new StartBrotherEvent(LimitSailShow.newInstance(product)));
+                EventBus.getDefault().post(new StartBrotherEvent(ProductShowFragment.newInstance(product)));
             }
         });
 

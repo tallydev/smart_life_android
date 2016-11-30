@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * 首页-限量销售-商品详情
  */
-public class LimitSailShow extends BaseBackFragment implements OnItemClickListener{
+public class ProductShowFragment extends BaseBackFragment implements OnItemClickListener{
     // 商品
     private Product product;
     // 修改数量
@@ -47,10 +47,10 @@ public class LimitSailShow extends BaseBackFragment implements OnItemClickListen
     private Integer[] secondImages = { R.drawable.product_honey_one, R.drawable.product_honey_two, R.drawable.product_honey_three };
     private Integer[] thirdImages = { R.drawable.product_egg_one, R.drawable.product_egg_two, R.drawable.product_egg_three };
 
-    public static LimitSailShow newInstance(Product product) {
+    public static ProductShowFragment newInstance(Product product) {
         Bundle args = new Bundle();
         args.putSerializable(Const.OBJECT, product);
-        LimitSailShow fragment = new LimitSailShow();
+        ProductShowFragment fragment = new ProductShowFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -66,7 +66,7 @@ public class LimitSailShow extends BaseBackFragment implements OnItemClickListen
 
     @Override
     public int getFragmentLayout() {
-        return R.layout.fragment_limit_sail_show;
+        return R.layout.fragment_product_show;
     }
 
     @Override
@@ -128,7 +128,7 @@ public class LimitSailShow extends BaseBackFragment implements OnItemClickListen
         Bundle bundle = new Bundle();
         bundle.putSerializable(Const.OBJECT, product);
         bundle.putInt(Const.INT, count);
-        EventBus.getDefault().post(new TransferDataEvent(bundle, "LimitSailShow"));
+        EventBus.getDefault().post(new TransferDataEvent(bundle, "ProductShowFragment"));
 
         toolbar.getMenu().clear();
         toolbar.inflateMenu(R.menu.cart_has);
