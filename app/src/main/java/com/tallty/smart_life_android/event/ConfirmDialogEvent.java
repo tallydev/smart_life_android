@@ -18,5 +18,4 @@ public class ConfirmDialogEvent {
         this.caller = caller;
         this.data = data;
     }
-
 }

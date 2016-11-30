@@ -6,9 +6,11 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
@@ -16,7 +18,7 @@ import com.tallty.smart_life_android.adapter.CommunityActivityAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.custom.RecyclerVIewItemTouchListener;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
-import com.tallty.smart_life_android.fragment.Common.WebViewFragment;
+import com.tallty.smart_life_android.fragment.Common.GlobalAppointFragment;
 import com.tallty.smart_life_android.model.Activities;
 import com.tallty.smart_life_android.model.Activity;
 
@@ -84,8 +86,7 @@ public class CommunityActivityFragment extends BaseBackFragment {
             @Override
             public void onResponse(Call<Activities> call, Response<Activities> response) {
                 if (response.code() == 200) {
-                    ArrayList<Activity> activities = response.body().getActivities();
-                    setList(activities);
+                    setList(response.body().getActivities());
                 } else {
                     showToast("获取活动列表失败");
                 }
@@ -107,8 +108,16 @@ public class CommunityActivityFragment extends BaseBackFragment {
         recyclerView.addOnItemTouchListener(new RecyclerVIewItemTouchListener(recyclerView) {
             @Override
             public void onItemClick(RecyclerView.ViewHolder vh, int position) throws ParseException {
-                String url = activities.get(position).getUrl();
-                EventBus.getDefault().post(new StartBrotherEvent(WebViewFragment.newInstance(url, "活动详情")));
+                Activity activity = activities.get(position);
+                EventBus.getDefault().post(new StartBrotherEvent(
+                    GlobalAppointFragment.newInstance(
+                            "活动详情",
+                            activity.getDetail_image(),
+                            activity.getId(),
+                            "我要报名",
+                            false
+                    )
+                ));
             }
 
             @Override

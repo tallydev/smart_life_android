@@ -37,7 +37,7 @@ public class CommunityActivityAdapter extends RecyclerView.Adapter<CommunityActi
 
     @Override
     public void onBindViewHolder(ActivityViewHolder holder, int position) {
-        String url = "http://elive.clfsj.com:8081/" + activities.get(position).getImage();
+        String url = activities.get(position).getImage();
         Glide.with(context).load(url).into(holder.image);
     }
 

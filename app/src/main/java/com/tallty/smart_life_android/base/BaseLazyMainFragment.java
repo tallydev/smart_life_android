@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -34,6 +35,7 @@ public abstract class BaseLazyMainFragment extends BaseFragment implements View.
     private View view;
     // 载入框
     private ProgressDialog progressDialog;
+    private CountDownTimer timer;
 
 
     @Override
@@ -139,6 +141,21 @@ public abstract class BaseLazyMainFragment extends BaseFragment implements View.
         progressDialog.setMessage(message);
         progressDialog.setCancelable(false);
         progressDialog.show();
+        // 增加timeout
+        setTimerCancel();
+        timer = new CountDownTimer(5000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {}
+
+            @Override
+            public void onFinish() {
+                hideProgress();
+                showToast("加载超时, 请稍后重试");
+                timer.cancel();
+                timer = null;
+            }
+        };
+        timer.start();
     }
 
     /**
@@ -147,8 +164,18 @@ public abstract class BaseLazyMainFragment extends BaseFragment implements View.
     public void hideProgress() {
         if (progressDialog != null) {
             if (progressDialog.isShowing()) {
+                setTimerCancel();
                 progressDialog.dismiss();
             }
+        }
+    }
+
+    /**
+     * 取消计时器
+     */
+    private void setTimerCancel() {
+        if (timer != null) {
+            timer.cancel();
         }
     }
 
@@ -192,5 +219,11 @@ public abstract class BaseLazyMainFragment extends BaseFragment implements View.
         }
 
         snackbar.show();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        setTimerCancel();
     }
 }

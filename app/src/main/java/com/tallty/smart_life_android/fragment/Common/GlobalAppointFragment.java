@@ -3,6 +3,7 @@ package com.tallty.smart_life_android.fragment.Common;
 
 import android.content.Context;
 import android.graphics.PointF;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,23 +15,27 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.ImageViewState;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.Const;
+import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
-import com.tallty.smart_life_android.event.ConfirmDialogEvent;
 import com.tallty.smart_life_android.fragment.Pop.HintDialogFragment;
 import com.tallty.smart_life_android.model.Appointment;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-
 import java.io.File;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView.SCALE_TYPE_CENTER_CROP;
 
@@ -44,7 +49,8 @@ public class GlobalAppointFragment extends BaseBackFragment {
     private String appointType;
     private Boolean isSingle;
     private String btn_text;
-    private Boolean hasAction;
+    private Boolean hasButton;
+    private int activityId;
     // 详情图
     private SubsamplingScaleImageView detail_image;
     private ImageView small_detail_image;
@@ -60,29 +66,39 @@ public class GlobalAppointFragment extends BaseBackFragment {
     // 计数
     private int count = 1;
 
-    // 带有预约操作的详情展示
-    public static GlobalAppointFragment newInstance(String title,
-                                                    String imageUrl,
-                                                    String appointType,
-                                                    String btn_text,
-                                                    Boolean isSingle) {
+    // (1) 首页特定服务预约的详情
+    // 预约的类型【ZHJK:智慧健康】【DZMY:电子猫眼】【ITFW:IT服务】【ITXT:IT学堂】【SQHD:社区活动】【XPSS:新品上市】【ZNJJ:智能家居】
+    public static GlobalAppointFragment newInstance(String title, String imageUrl, String appointType, String btn_text, Boolean isSingle) {
         Bundle args = new Bundle();
         args.putString(Const.FRAGMENT_NAME, title);
-        args.putString("详情图", imageUrl);
-        args.putString(Const.STRING, appointType);
-        args.putBoolean("是否是单人", isSingle);
-        args.putString("按钮文本", btn_text);
-        args.putBoolean("是否有按钮", true);
+        args.putString("detail_image", imageUrl);
+        args.putString("appoint_type", appointType);
+        args.putBoolean("is_single", isSingle);
+        args.putString("button_text", btn_text);
+        args.putBoolean("has_button", true);
         GlobalAppointFragment fragment = new GlobalAppointFragment();
         fragment.setArguments(args);
         return fragment;
     }
-    // 没有操作的详情展示
+    // (2) 社区活动的详情
+    public static GlobalAppointFragment newInstance(String title, String imageUrl, int activityId, String btn_text, Boolean isSingle) {
+        Bundle args = new Bundle();
+        args.putString(Const.FRAGMENT_NAME, title);
+        args.putString("detail_image", imageUrl);
+        args.putInt("activity_id", activityId);
+        args.putBoolean("is_single", isSingle);
+        args.putString("button_text", btn_text);
+        args.putBoolean("has_button", true);
+        GlobalAppointFragment fragment = new GlobalAppointFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+    // (3) 没有任何操作的详情
     public static GlobalAppointFragment newInstance(String title, String imageUrl) {
         Bundle args = new Bundle();
         args.putString(Const.FRAGMENT_NAME, title);
-        args.putString("详情图", imageUrl);
-        args.putBoolean("是否有按钮", false);
+        args.putString("detail_image", imageUrl);
+        args.putBoolean("has_button", false);
         GlobalAppointFragment fragment = new GlobalAppointFragment();
         fragment.setArguments(args);
         return fragment;
@@ -94,11 +110,12 @@ public class GlobalAppointFragment extends BaseBackFragment {
         Bundle args = getArguments();
         if (args != null) {
             fragmentTitle = args.getString(Const.FRAGMENT_NAME);
-            imageUrl = args.getString("详情图");
-            hasAction = args.getBoolean("是否有按钮");
-            appointType = args.getString(Const.STRING);
-            isSingle = args.getBoolean("是否是单人");
-            btn_text = args.getString("按钮文本");
+            imageUrl = args.getString("detail_image");
+            hasButton = args.getBoolean("has_button");
+            appointType = args.getString("appoint_type");
+            activityId = args.getInt("activity_id");
+            isSingle = args.getBoolean("is_single");
+            btn_text = args.getString("button_text");
         }
     }
 
@@ -114,7 +131,6 @@ public class GlobalAppointFragment extends BaseBackFragment {
 
     @Override
     protected void initView() {
-        EventBus.getDefault().register(this);
         // 详情图
         small_detail_image = getViewById(R.id.small_detail_image);
         detail_image = getViewById(R.id.detail_image);
@@ -141,69 +157,77 @@ public class GlobalAppointFragment extends BaseBackFragment {
 
     @Override
     protected void afterAnimationLogic() {
-        showProgress("正在加载...");
+        showProgress("正在加载详情...");
         Glide
             .with(context).load(imageUrl)
             .downloadOnly(new SimpleTarget<File>() {
                 @Override
-                public void onResourceReady(final File resource, GlideAnimation<? super File> glideAnimation) {
+                public void onResourceReady(File resource, GlideAnimation<? super File> glideAnimation) {
                     detail_image.setImage(ImageSource.uri(Uri.fromFile(resource)), new ImageViewState(1.0f, new PointF(0, 0), 0));
-                    detail_image.setOnImageEventListener(new SubsamplingScaleImageView.OnImageEventListener() {
-                        @Override
-                        public void onReady() {
-                            WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-                            int width = wm.getDefaultDisplay().getWidth();//屏幕宽度
-                            int image_w = detail_image.getSWidth(); // 图片宽度
-                            float width_ratio = (float) (width * 1.0 / image_w);
-                            Log.d(App.TAG, detail_image.getScale()+"缩放比例");
-                            Log.d(App.TAG, width_ratio+"宽度比例");
+                    onImageLoadListener(resource);
+                }
 
-                            if (detail_image.getScale() > width_ratio) {
-                                Log.d(App.TAG, "宽图");
-                                detail_image.recycle();
-                                detail_image.setVisibility(View.GONE);
-                                small_detail_image.setVisibility(View.VISIBLE);
-                                Glide.with(context).load(resource).into(small_detail_image);
-                            }
-                            hideProgress();
-                        }
-
-                        @Override
-                        public void onImageLoaded() {
-
-                        }
-
-                        @Override
-                        public void onPreviewLoadError(Exception e) {
-
-                        }
-
-                        @Override
-                        public void onImageLoadError(Exception e) {
-                            hideProgress();
-                        }
-
-                        @Override
-                        public void onTileLoadError(Exception e) {
-
-                        }
-
-                        @Override
-                        public void onPreviewReleased() {
-
-                        }
-                    });
+                @Override
+                public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                    super.onLoadFailed(e, errorDrawable);
+                    hideProgress();
+                    showToast("加载详情失败, 请稍后重试");
                 }
             });
-        if (hasAction) {
-            if (isSingle) {
-                singleLayout.setVisibility(View.VISIBLE);
-                singleAppointBtn.setText(btn_text);
-            } else {
-                countLayout.setVisibility(View.VISIBLE);
-                countAppointBtn.setText(btn_text);
+    }
+
+    // 图片载入监听
+    private void onImageLoadListener(final File resource) {
+        detail_image.setOnImageEventListener(new SubsamplingScaleImageView.OnImageEventListener() {
+            @Override
+            public void onReady() {
+                WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+                int width = wm.getDefaultDisplay().getWidth();//屏幕宽度
+                int image_w = detail_image.getSWidth(); // 图片宽度
+                float width_ratio = (float) (width * 1.0 / image_w);
+                Log.d(App.TAG, detail_image.getScale()+"缩放比例");
+                Log.d(App.TAG, width_ratio+"宽度比例");
+
+                if (detail_image.getScale() > width_ratio) {
+                    Log.d(App.TAG, "使用普通ImageView加载宽图");
+                    detail_image.recycle();
+                    detail_image.setVisibility(View.GONE);
+                    small_detail_image.setVisibility(View.VISIBLE);
+                    Glide.with(context).load(resource).into(small_detail_image);
+                }
+                hideProgress();
             }
-        }
+
+            @Override
+            public void onImageLoaded() {
+                // 图片加载好, 之后显示操作按钮
+                if (hasButton) {
+                    if (isSingle) {
+                        singleLayout.setVisibility(View.VISIBLE);
+                        singleAppointBtn.setText(btn_text);
+                    } else {
+                        countLayout.setVisibility(View.VISIBLE);
+                        countAppointBtn.setText(btn_text);
+                    }
+                }
+            }
+
+            @Override
+            public void onPreviewLoadError(Exception e) {
+            }
+
+            @Override
+            public void onImageLoadError(Exception e) {
+            }
+
+            @Override
+            public void onTileLoadError(Exception e) {
+            }
+
+            @Override
+            public void onPreviewReleased() {
+            }
+        });
     }
 
     @Override
@@ -220,49 +244,95 @@ public class GlobalAppointFragment extends BaseBackFragment {
                 }
                 break;
             case R.id.apply_btn:
-                HintDialogFragment fragment_one = HintDialogFragment.newInstance(
-                        "报名后由<慧生活>服务专员和您电话联系,请保持手机畅通.", appointType);
-                fragment_one.show(getActivity().getFragmentManager(), "HintDialog");
+                handleButtonEvent();
                 break;
             case R.id.appoint_btn:
-                HintDialogFragment fragment_two = HintDialogFragment.newInstance(
-                        "报名后由<慧生活>服务专员和您电话联系,请保持手机畅通.", appointType);
-                fragment_two.show(getActivity().getFragmentManager(), "HintDialog");
+                handleButtonEvent();
                 break;
         }
     }
 
+    private void handleButtonEvent() {
+        String text = "报名后由<慧生活>服务专员和您电话联系,请保持手机畅通.";
+        final HintDialogFragment hintDialog = HintDialogFragment.newInstance(text);
+        hintDialog.show(getActivity().getFragmentManager(), "HintDialog");
+        hintDialog.setOnHintDialogEventListener(new HintDialogFragment.OnHintDialogEventListener() {
+            @Override
+            public void onOk(TextView confirm_btn) {
+                hintDialog.dismiss();
+                if (appointType == null) {
+                    // 报名社区活动
+                    applyCommunityActivity();
+                } else {
+                    // 预约首页活动
+                    appointHomeActivity();
+                }
+            }
+
+            @Override
+            public void onCancel() {
+                showToast("已取消");
+            }
+        });
+    }
+
     /**
-     * 接收预约确认事件
-     * @param event
+     * 社区活动 - 活动报名
      */
-    @Subscribe
-    public void onConfirmDialogEvnet(ConfirmDialogEvent event) {
-        event.dialog.dismiss();
-        if (event.caller != null) {
-            submitAppointmentListener(event.caller, count, new OnAppointListener() {
+    private void applyCommunityActivity() {
+        showProgress("正在提交...");
+        Engine.authService(shared_token, shared_phone)
+                .applyCommunityActivity(activityId, count)
+                .enqueue(new Callback<Appointment>() {
+                    @Override
+                    public void onResponse(Call<Appointment> call, Response<Appointment> response) {
+                        if (201 == response.code()) {
+                            hideProgress();
+                            showToast("提交成功");
+                        } else {
+                            hideProgress();
+                            showToast("提交失败");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Appointment> call, Throwable t) {
+                        hideProgress();
+                        showToast("网络错误");
+                    }
+                });
+    }
+
+    /**
+     * 首页 - 服务活动预约
+     */
+    protected void appointHomeActivity() {
+        showProgress("正在提交...");
+        Engine.authService(shared_token, shared_phone)
+            .submitAppointment(appointType, count)
+            .enqueue(new Callback<Appointment>() {
                 @Override
-                public void onSuccess(Appointment appointment) {
-                    showToast("提交成功");
+                public void onResponse(Call<Appointment> call, Response<Appointment> response) {
+                    if (201 == response.code()) {
+                        hideProgress();
+                        showToast("提交成功");
+                    } else {
+                        hideProgress();
+                        showToast("提交失败");
+                    }
                 }
 
                 @Override
-                public void onFail(String errorMsg) {
-                    showToast("提交失败");
+                public void onFailure(Call<Appointment> call, Throwable t) {
+                    hideProgress();
+                    showToast("网络错误");
                 }
-
-                @Override
-                public void onError() {
-                    showToast("链接错误");
-                }
-            });
-        }
+        });
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        EventBus.getDefault().unregister(this);
         detail_image.recycle();
     }
 }

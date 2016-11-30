@@ -2,8 +2,10 @@ package com.tallty.smart_life_android.base;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -17,19 +19,14 @@ import android.widget.TextView;
 
 import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.Const;
-import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
-import com.tallty.smart_life_android.model.Appointment;
+import com.tallty.smart_life_android.activity.LoadingActivity;
+import com.tallty.smart_life_android.activity.LoginActivity;
 import com.tallty.smart_life_android.utils.SnackbarUtil;
 import com.tallty.smart_life_android.utils.ToastUtil;
 
-import java.io.IOException;
-
 import me.yokeyword.fragmentation.SwipeBackLayout;
 import me.yokeyword.fragmentation_swipeback.SwipeBackFragment;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by kang on 16/6/21.
@@ -41,6 +38,7 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
     protected SharedPreferences sharedPre;
     protected String shared_phone;
     protected String shared_token;
+    private CountDownTimer timer;
     // UI
     private View view;
     protected Toolbar toolbar;
@@ -50,9 +48,6 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
     protected static final int REQ_CODE = 0;
     protected static final String RESULT_DATA = "data";
     protected static final String RESULT_POSITION = "position";
-    // 接口
-    private OnAppointListener onAppointListener;
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -128,12 +123,10 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
     // 转场动画完成后执行(可选)(耗时的逻辑)
     protected abstract void afterAnimationLogic();
 
-    // ========================回调接口==============================
-
-    public interface OnAppointListener {
-        void onSuccess(Appointment appointment);
-        void onFail(String errorMsg);
-        void onError();
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        setTimerCancel();
     }
 
     // ========================通用逻辑==============================
@@ -146,6 +139,7 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                setTimerCancel();
                 // 隐藏软键盘
                 hideSoftInput();
                 // 出栈
@@ -185,38 +179,8 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
     public boolean onBackPressedSupport() {
         pop();
         onFragmentPop();
+        setTimerCancel();
         return true;
-    }
-
-    /**
-     * 通用预约
-     */
-    protected void submitAppointmentListener(String type, int count, OnAppointListener listener) {
-        this.onAppointListener = listener;
-
-        showProgress(showString(R.string.progress_normal));
-        Engine.authService(shared_token, shared_phone).submitAppointment(type, count).enqueue(new Callback<Appointment>() {
-            @Override
-            public void onResponse(Call<Appointment> call, Response<Appointment> response) {
-                if (201 == response.code()) {
-                    onAppointListener.onSuccess(response.body());
-                    hideProgress();
-                } else {
-                    try {
-                        onAppointListener.onFail(response.errorBody().string());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    hideProgress();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Appointment> call, Throwable t) {
-                onAppointListener.onError();
-                hideProgress();
-            }
-        });
     }
 
 
@@ -246,6 +210,21 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
         progressDialog.setMessage(message);
         progressDialog.setCancelable(false);
         progressDialog.show();
+        // 增加timeout
+        setTimerCancel();
+        timer = new CountDownTimer(5000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {}
+
+            @Override
+            public void onFinish() {
+                hideProgress();
+                showToast("加载超时, 请稍后重试");
+                timer.cancel();
+                timer = null;
+            }
+        };
+        timer.start();
     }
 
     /**
@@ -254,8 +233,18 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
     public void hideProgress() {
         if (progressDialog != null) {
             if (progressDialog.isShowing()) {
+                setTimerCancel();
                 progressDialog.dismiss();
             }
+        }
+    }
+
+    /**
+     * 取消计时器
+     */
+    private void setTimerCancel() {
+        if (timer != null) {
+            timer.cancel();
         }
     }
 

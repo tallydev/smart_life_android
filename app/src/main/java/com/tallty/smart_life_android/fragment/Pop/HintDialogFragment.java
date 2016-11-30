@@ -15,9 +15,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.tallty.smart_life_android.R;
-import com.tallty.smart_life_android.event.ConfirmDialogEvent;
-
-import org.greenrobot.eventbus.EventBus;
 
 /**
  * Created by kang on 16/7/30.
@@ -30,15 +27,20 @@ public class HintDialogFragment extends DialogFragment implements View.OnClickLi
     private TextView hint_text;
 
     private String hint;
-    private String caller;
 
-    public static HintDialogFragment newInstance(String hint, String caller) {
+    private OnHintDialogEventListener onHintDialogEventListener;
+
+    public static HintDialogFragment newInstance(String hint) {
         Bundle args = new Bundle();
         args.putString("提示", hint);
-        args.putString("调用者", caller);
         HintDialogFragment fragment = new HintDialogFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public interface OnHintDialogEventListener {
+        void onOk(TextView confirm_btn);
+        void onCancel();
     }
 
     @Override
@@ -47,7 +49,6 @@ public class HintDialogFragment extends DialogFragment implements View.OnClickLi
         Bundle args = getArguments();
         if (args != null) {
             hint = args.getString("提示");
-            caller = args.getString("调用者");
         }
     }
 
@@ -101,10 +102,15 @@ public class HintDialogFragment extends DialogFragment implements View.OnClickLi
         switch (v.getId()){
             case R.id.cancel_btn:
                 dismiss();
+                onHintDialogEventListener.onCancel();
                 break;
             case R.id.confirm_btn:
-                EventBus.getDefault().post(new ConfirmDialogEvent(getDialog(), caller, null));
+                onHintDialogEventListener.onOk(confirm_btn);
                 break;
         }
+    }
+
+    public void setOnHintDialogEventListener(OnHintDialogEventListener listener) {
+        this.onHintDialogEventListener = listener;
     }
 }

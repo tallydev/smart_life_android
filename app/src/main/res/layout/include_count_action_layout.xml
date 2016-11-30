@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/global_text"
             android:textSize="@dimen/text_14"
-            android:text="人数: "/>
+            android:text="选择人数: "/>
         <Button
             android:id="@+id/count_add"
             android:layout_width="20dp"

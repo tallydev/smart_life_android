@@ -51,5 +51,13 @@
             android:visibility="gone"
             android:scaleType="fitStart"
             android:layout_alignParentTop="true"/>
+        <!--重新加载-->
+        <TextView
+            android:id="@+id/reload_detail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:visibility="gone"
+            android:text="点击重新加载"/>
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

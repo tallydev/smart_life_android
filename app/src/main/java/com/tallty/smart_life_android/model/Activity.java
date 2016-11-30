@@ -23,6 +23,10 @@ public class Activity implements Serializable {
     @Expose
     private String image;
 
+    @SerializedName("detail_image")
+    @Expose
+    private String detail_image;
+
     @SerializedName("url")
     @Expose
     private String url;
@@ -58,5 +62,15 @@ public class Activity implements Serializable {
     public void setUrl(String url) {
         this.url = url;
     }
+
+    public String getDetail_image() {
+        return detail_image;
+    }
+
+    public void setDetail_image(String detail_image) {
+        this.detail_image = detail_image;
+    }
+
+
 }
 

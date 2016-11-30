@@ -135,13 +135,13 @@ public interface DataAPI {
 
     // *********************************************************************************************
 
-    // 提交预约
+    // 提交预约首页特定的服务或活动
     @FormUrlEncoded
     @POST("appointments")
     Call<Appointment> submitAppointment(@Field("appointment[type]") String type,
                                         @Field("appointment[count]") int count);
 
-    // 预约列表
+    // 我的预约列表
     @GET("appointments")
     Call<AppointmentList> getAppointments(@Query("page") int page,
                                           @Query("per_page") int per_page);
@@ -163,7 +163,13 @@ public interface DataAPI {
     Call<Home> getHomeData();
 
     // *********************************************************************************************
-    // 活动列表
+    // 社区活动列表
     @GET("activity/sqhds")
     Call<Activities> getActivities();
+
+    // 报名社区活动
+    @FormUrlEncoded
+    @POST("activity/sqhds/{id}/appoint")
+    Call<Appointment> applyCommunityActivity(@Path("id") int activity_id,
+                                             @Field("appointment[count]") int count);
 }
