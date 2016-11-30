@@ -24,6 +24,10 @@ public class CartItem implements Serializable{
     @Expose
     private int productId;
 
+    @SerializedName ("user_id")
+    @Expose
+    private int userId;
+
     @SerializedName ("title")
     @Expose
     private String name;
@@ -62,9 +66,6 @@ public class CartItem implements Serializable{
     @SerializedName ("checked")
     @Expose
     private boolean checked;
-
-    private int thumbID;
-
 
 
     public int getId() {
@@ -147,14 +148,6 @@ public class CartItem implements Serializable{
         this.amount = amount;
     }
 
-    public int getThumbID() {
-        return thumbID;
-    }
-
-    public void setThumbID(int thumbID) {
-        this.thumbID = thumbID;
-    }
-
 
     public Integer getImage_id() {
         return image_id;
@@ -162,5 +155,13 @@ public class CartItem implements Serializable{
 
     public void setImage_id(Integer image_id) {
         this.image_id = image_id;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 }

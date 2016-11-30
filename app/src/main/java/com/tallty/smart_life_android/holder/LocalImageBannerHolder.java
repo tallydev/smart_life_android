@@ -11,15 +11,15 @@ import com.tallty.smart_life_android.R;
 /**
  * Created by kang on 16/6/22.
  * 首页banner图HolderView
- * 使用Glide来显示网络图片
+ * 使用Glide来显示本地图片
  */
-public class BannerHolderView implements Holder<Integer> {
+public class LocalImageBannerHolder implements Holder<Integer> {
     private ImageView imageView;
 
     @Override
     public View createView(Context context) {
         imageView = new ImageView(context);
-        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
         return imageView;
     }

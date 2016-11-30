@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -56,8 +57,8 @@ public class GlobalAppointFragment extends BaseBackFragment {
     private ImageView small_detail_image;
     // 多人的操作
     private View countLayout;
-    private TextView add;
-    private TextView reduce;
+    private Button add;
+    private Button reduce;
     private TextView number;
     private TextView countAppointBtn;
     // 单人的操作
@@ -141,8 +142,8 @@ public class GlobalAppointFragment extends BaseBackFragment {
         singleAppointBtn = (TextView) singleLayout.findViewById(R.id.appoint_btn);
         // 多人操作按钮
         countLayout = getViewById(R.id.count_action_include);
-        add = (TextView) countLayout.findViewById(R.id.count_add);
-        reduce = (TextView) countLayout.findViewById(R.id.count_reduce);
+        add = (Button) countLayout.findViewById(R.id.count_add);
+        reduce = (Button) countLayout.findViewById(R.id.count_reduce);
         number = (TextView) countLayout.findViewById(R.id.number);
         countAppointBtn = (TextView) countLayout.findViewById(R.id.apply_btn);
     }

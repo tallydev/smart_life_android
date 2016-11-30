@@ -32,11 +32,10 @@ import com.tallty.smart_life_android.base.BaseLazyMainFragment;
 import com.tallty.smart_life_android.custom.MyRecyclerView;
 import com.tallty.smart_life_android.event.ShowSnackbarEvent;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
-import com.tallty.smart_life_android.event.TabSelectedEvent;
+import com.tallty.smart_life_android.event.TabReselectedEvent;
 import com.tallty.smart_life_android.fragment.Common.GlobalAppointFragment;
-import com.tallty.smart_life_android.fragment.Common.WebViewFragment;
 import com.tallty.smart_life_android.fragment.MainFragment;
-import com.tallty.smart_life_android.holder.BannerHolderView;
+import com.tallty.smart_life_android.holder.LocalImageBannerHolder;
 import com.tallty.smart_life_android.holder.HomeViewHolder;
 import com.tallty.smart_life_android.model.Home;
 import com.tallty.smart_life_android.model.Step;
@@ -255,7 +254,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
             new CBViewHolderCreator() {
                 @Override
                 public Object createHolder() {
-                    return new BannerHolderView();
+                    return new LocalImageBannerHolder();
                 }
             }, networkImages
         )
@@ -575,7 +574,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
     }
 
     @Subscribe
-    public void onTabSelectedEvent(TabSelectedEvent event) {
+    public void onTabSelectedEvent(TabReselectedEvent event) {
         // Tab Home按钮被重复点击时执行的操作
         if (event.position == MainFragment.HOME) {
             Log.d(App.TAG, "首页被重复点击了");

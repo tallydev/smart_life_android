@@ -27,37 +27,34 @@
                 android:orientation="horizontal"
                 android:layout_height="match_parent">
                 <TextView
+                    android:id="@+id/count_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/global_text"
-                    android:textSize="@dimen/text_18"
+                    android:textSize="@dimen/text_14"
                     android:text="数量: "/>
-                <TextView
+                <Button
                     android:id="@+id/add"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:textColor="@color/global_text"
-                    android:layout_marginLeft="10dp"
-                    android:textSize="@dimen/text_18"
-                    android:text="＋"/>
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@mipmap/ic_add"
+                    android:layout_marginLeft="10dp"/>
+
                 <TextView
                     android:id="@+id/number"
                     android:layout_width="40dp"
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:textColor="@color/orange"
-                    android:textSize="@dimen/text_20"
+                    android:textSize="@dimen/text_16"
                     android:textStyle="bold"
                     android:text="1"/>
-                <TextView
+
+                <Button
                     android:id="@+id/reduce"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:textColor="@color/global_text"
-                    android:textSize="@dimen/text_18"
-                    android:text="—"/>
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@mipmap/ic_reduce"/>
             </LinearLayout>
             <TextView
                 android:id="@+id/add_to_cart"
@@ -104,7 +101,7 @@
                     android:paddingLeft="16dp"
                     android:paddingRight="16dp"
                     android:paddingBottom="10dp"
-                    android:textSize="@dimen/text_16"
+                    android:textSize="@dimen/text_18"
                     android:textColor="@color/orange"
                     android:layout_below="@id/product_detail_title"
                     android:background="@color/white"/>
@@ -117,15 +114,26 @@
                     android:paddingLeft="16dp"
                     android:paddingRight="16dp"
                     android:paddingBottom="15dp"
+                    android:layout_marginBottom="2dp"
                     android:textColor="@color/global_text"
                     android:layout_below="@id/product_detail_price"
                     android:background="@color/white"/>
-
-                <View
+                <!--长图使用第三方库加载,防止OOM-->
+                <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
+                    android:id="@+id/product_detail_image"
                     android:layout_width="match_parent"
-                    android:layout_height="4dp"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@id/actions"
+                    android:visibility="visible"
+                    android:layout_below="@id/product_detail_description"/>
+                <!--短图使用正常的ImageView加载, 防止水平过度缩放问题-->
+                <ImageView
+                    android:id="@+id/small_product_detail_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_below="@id/product_detail_description"
-                    android:background="@color/app_bg"/>
+                    android:visibility="gone"
+                    android:scaleType="fitStart"/>
             </RelativeLayout>
         </ScrollView>
     </RelativeLayout>

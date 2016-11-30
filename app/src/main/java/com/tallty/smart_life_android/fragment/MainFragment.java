@@ -12,9 +12,10 @@ import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseFragment;
 import com.tallty.smart_life_android.custom.TabBar;
 import com.tallty.smart_life_android.custom.TabBarTab;
+import com.tallty.smart_life_android.event.TabSelectedEvent;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.event.SwitchTabFragment;
-import com.tallty.smart_life_android.event.TabSelectedEvent;
+import com.tallty.smart_life_android.event.TabReselectedEvent;
 import com.tallty.smart_life_android.fragment.cart.CartFragment;
 import com.tallty.smart_life_android.fragment.community.CommunityFragment;
 import com.tallty.smart_life_android.fragment.healthy.HealthyFragment;
@@ -106,6 +107,7 @@ public class MainFragment extends BaseFragment {
             public void onTabSelected(int position, int prePosition) {
                 showHideFragment(mFragments[position], mFragments[prePosition]);
                 currentPosition = position;
+                EventBus.getDefault().post(new TabSelectedEvent(position));
             }
 
             @Override
@@ -118,7 +120,7 @@ public class MainFragment extends BaseFragment {
                 // 这里推荐使用EventBus来实现 -> 解耦
                 // 在FirstPagerFragment,FirstHomeFragment中接收, 因为是嵌套的Fragment
                 // 主要为了交互: 重选tab 如果列表不在顶部则移动到顶部,如果已经在顶部,则刷新
-                EventBus.getDefault().post(new TabSelectedEvent(position));
+                EventBus.getDefault().post(new TabReselectedEvent(position));
             }
         });
 
@@ -139,6 +141,7 @@ public class MainFragment extends BaseFragment {
     public void onSwitchTabFragment(SwitchTabFragment event) {
         showHideFragment(mFragments[event.targetPosition], mFragments[currentPosition]);
         mTabBar.setCurrentItem(event.targetPosition);
+
     }
 
     @Override

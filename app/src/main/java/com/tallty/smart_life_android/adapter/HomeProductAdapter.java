@@ -43,8 +43,7 @@ public class HomeProductAdapter extends RecyclerView.Adapter<HomeProductAdapter.
     public void onBindViewHolder(ProductViewHolder holder, int position) {
         final Product product = products.get(position);
 
-//        Glide.with(context).load(product.getThumb()).into(holder.photo);
-        Glide.with(context).load(product.getThumbId()).into(holder.photo);
+        Glide.with(context).load(product.getThumb()).into(holder.photo);
         holder.name.setText(product.getTitle());
         holder.price.setText("今日价格: "+product.getPrice()+"0");
 
@@ -54,10 +53,6 @@ public class HomeProductAdapter extends RecyclerView.Adapter<HomeProductAdapter.
                 EventBus.getDefault().post(new StartBrotherEvent(ProductShowFragment.newInstance(product)));
             }
         });
-
-        if (position == getItemCount()-1) {
-            holder.line.setVisibility(View.GONE);
-        }
     }
 
     @Override
@@ -70,7 +65,6 @@ public class HomeProductAdapter extends RecyclerView.Adapter<HomeProductAdapter.
         private TextView name;
         private TextView price;
         private Button detail;
-        private View line;
 
         ProductViewHolder(View itemView) {
             super(itemView);
@@ -78,7 +72,6 @@ public class HomeProductAdapter extends RecyclerView.Adapter<HomeProductAdapter.
             price = (TextView) itemView.findViewById(R.id.product_price);
             detail = (Button) itemView.findViewById(R.id.detail_btn);
             photo = (ImageView) itemView.findViewById(R.id.product_photo);
-            line = itemView.findViewById(R.id.product_line);
         }
     }
 }

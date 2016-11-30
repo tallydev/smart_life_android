@@ -13,31 +13,38 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-import com.orhanobut.logger.Logger;
 import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.Const;
+import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.CartListAdapter;
 import com.tallty.smart_life_android.base.BaseLazyMainFragment;
 import com.tallty.smart_life_android.custom.RecyclerVIewItemTouchListener;
 import com.tallty.smart_life_android.event.CartUpdateItem;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
+import com.tallty.smart_life_android.event.TabReselectedEvent;
 import com.tallty.smart_life_android.event.TabSelectedEvent;
-import com.tallty.smart_life_android.event.TransferDataEvent;
 import com.tallty.smart_life_android.fragment.MainFragment;
 import com.tallty.smart_life_android.model.CartItem;
-import com.tallty.smart_life_android.model.Product;
+import com.tallty.smart_life_android.model.CartList;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 /**
  * Created by kang on 16/6/20.
  * 购物车
  */
 public class CartFragment extends BaseLazyMainFragment {
+    private String shared_token;
+    private String shared_phone;
+
     private TextView pay;
     private RecyclerView recyclerView;
     private CartListAdapter adapter;
@@ -71,7 +78,8 @@ public class CartFragment extends BaseLazyMainFragment {
     @Override
     protected void initView() {
         EventBus.getDefault().register(this);
-
+        shared_token = sharedPre.getString(Const.USER_TOKEN, Const.EMPTY_STRING);
+        shared_phone = sharedPre.getString(Const.USER_PHONE, Const.EMPTY_STRING);
         pay = getViewById(R.id.pay);
         recyclerView = getViewById(R.id.cart_list);
         select_all_btn = getViewById(R.id.select_all_btn);
@@ -91,7 +99,6 @@ public class CartFragment extends BaseLazyMainFragment {
     @Override
     public void onClick(View v) {
         float total;
-
         switch (v.getId()) {
             case R.id.pay:
                 // 初始化selected_commodities
@@ -134,37 +141,33 @@ public class CartFragment extends BaseLazyMainFragment {
     }
 
     private void getCartList() {
-        // TODO: 16/8/5 LimitSailShow传来的死数据,待处理
-//        showProgress(showString(R.string.progress_normal));
-//        // 获取网络数据
-//        Engine.authService().getCartList(1, 10).enqueue(new Callback<CartList>() {
-//            @Override
-//            public void onResponse(Call<CartList> call, Response<CartList> response) {
-//                if (response.code() == 200) {
-//                    CartList cartList = response.body();
-//                    cartItems = cartList.getCartItems();
-//                    // 设置业务参数Checked
-//                    for (CartItem item : cartItems) {
-//                        item.setChecked(false);
-//                    }
-//
-//                    processRecyclerVIew();
-//
-//                    hideProgress();
-//                } else {
-//                    hideProgress();
-//                    showToast(showString(R.string.response_error));
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<CartList> call, Throwable t) {
-//                hideProgress();
-//                showToast(showString(R.string.network_error));
-//            }
-//        });
+        showProgress(showString(R.string.progress_normal));
+        Engine.authService(shared_token, shared_phone)
+            .getCartList(1, 100)
+            .enqueue(new Callback<CartList>() {
+                @Override
+                public void onResponse(Call<CartList> call, Response<CartList> response) {
+                    if (response.isSuccessful()) {
+                        CartList cartList = response.body();
+                        cartItems.clear();
+                        cartItems.addAll(cartList.getCartItems());
+                        // 设置业务参数Checked
+                        for (CartItem item : cartItems) {
+                            item.setChecked(false);
+                        }
+                        processRecyclerVIew();
+                    } else {
+                        showToast(showString(R.string.response_error));
+                    }
+                    hideProgress();
+                }
 
-        processRecyclerVIew();
+                @Override
+                public void onFailure(Call<CartList> call, Throwable t) {
+                    hideProgress();
+                    showToast(showString(R.string.network_error));
+                }
+            });
     }
 
     private void processRecyclerVIew(){
@@ -181,41 +184,80 @@ public class CartFragment extends BaseLazyMainFragment {
 
             @Override
             public void onItemLongPress(RecyclerView.ViewHolder vh, final int position) {
-                // Use the Builder class for convenient dialog construction
-                builder = new AlertDialog.Builder(getActivity(), R.style.CustomAlertDialogTheme);
-                builder.setMessage("确定删除该商品吗?")
-                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                // 从数据源删除数据
-                                cartItems.remove(position);
-                                // 通知列表变化
-                                adapter.notifyItemRemoved(position);
-                                adapter.notifyItemRangeChanged(position, cartItems.size()-position);
-
-                                // 重新计算总价
-                                float total = 0.0f;
-                                if (cartItems.size() > 0){
-                                    for (CartItem cartItem : cartItems){
-                                        if (cartItem.isChecked()){
-                                            float item_total = cartItem.getCount() * cartItem.getPrice();
-                                            total += item_total;
-                                        }
-                                    }
-                                } else {
-                                    select_all_btn.setChecked(false);
-                                }
-                                total_price_text.setText("￥ "+total);
-                            }
-                        })
-                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.dismiss();
-                            }
-                        }).create();
-                builder.show();
+                showItemDeleteDialog(position);
             }
         });
     }
+
+    /**
+     * 显示长按删除购物车条目弹框
+     */
+    private void showItemDeleteDialog(final int position) {
+        builder = new AlertDialog.Builder(getActivity(), R.style.CustomAlertDialogTheme);
+        builder.setMessage("确定删除该商品吗?")
+                .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        deleteCartItem(position);
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                }).create();
+        builder.show();
+    }
+
+    /**
+     * 删除一个购物车条目
+     */
+    private void deleteCartItem(final int position) {
+        int id = cartItems.get(position).getId();
+        Engine.authService(shared_token, shared_phone)
+            .deleteCartItem(id)
+            .enqueue(new Callback<CartItem>() {
+                @Override
+                public void onResponse(Call<CartItem> call, Response<CartItem> response) {
+                    hideProgress();
+                    if (response.isSuccessful()) {
+                        // 从数据源删除数据
+                        cartItems.remove(position);
+                        // 通知列表变化
+                        adapter.notifyItemRemoved(position);
+                        adapter.notifyItemRangeChanged(position, cartItems.size()-position);
+                        // 重新计算总价
+                        setCartListState(cartItems);
+                    } else {
+                        showToast("删除失败");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<CartItem> call, Throwable t) {
+                    showToast(showString(R.string.network_error));
+                }
+            });
+    }
+
+    /**
+     * 购物车列表数据发生改变
+     */
+    private void setCartListState(ArrayList<CartItem> cartItems){
+        // 重新计算总价
+        float total = 0.0f;
+        if (cartItems.size() > 0){
+            for (CartItem cartItem : cartItems){
+                if (cartItem.isChecked()){
+                    float item_total = cartItem.getCount() * cartItem.getPrice();
+                    total += item_total;
+                }
+            }
+        } else {
+            select_all_btn.setChecked(false);
+        }
+        total_price_text.setText("￥ "+total);
+    }
+
 
     /**
      * 订阅事件: CartUpdateItem(int position, CartItem cartItem)
@@ -240,46 +282,25 @@ public class CartFragment extends BaseLazyMainFragment {
         select_all_btn.setChecked(isSelectAll);
     }
 
-    /**
-     * 订阅事件:
-     * Tab Cart按钮被重复点击时执行的操作
-     */
+    // 订阅事件:
+    // Tab被重复点击时执行的操作
     @Subscribe
-    public void onTabSelectedEvent(TabSelectedEvent event) {
+    public void onTabReselectedEvent(TabReselectedEvent event) {
         if (event.position == MainFragment.CART)
             Log.d(App.TAG, "购物车被重复点击了");
+    }
+
+    // tab页面被选中
+    @Subscribe
+    public void onTabSelectedEvent(TabSelectedEvent event) {
+        if (event.getPosition() == 3) {
+            getCartList();
+        }
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         EventBus.getDefault().unregister(this);
-    }
-
-    /**
-     * 订阅事件: TransferDataEvent
-     * 接收商品详情加入购物车事件
-     */
-    @Subscribe
-    public void onTransferDataEvent(TransferDataEvent event) {
-        if ("ProductShowFragment".equals(event.tag)) {
-            Bundle bundle = event.bundle;
-            int count = bundle.getInt(Const.INT);
-            Product product = (Product) bundle.getSerializable(Const.OBJECT);
-
-            CartItem cartItem = new CartItem();
-            cartItem.setChecked(false);
-            // TODO: 16/8/5 记得修改,
-            cartItem.setThumbID(product.getThumbId());
-            cartItem.setPrice(product.getPrice());
-            cartItem.setCount(count);
-            cartItem.setName(product.getTitle());
-
-            cartItems.add(cartItem);
-
-            adapter.notifyDataSetChanged();
-
-            Logger.d("接受数据");
-        }
     }
 }

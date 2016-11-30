@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Created by kang on 16/8/4.
@@ -23,9 +24,26 @@ public class Product implements Serializable {
     @Expose
     private float price;
 
-    @SerializedName("thumb")
+    @SerializedName("count")
+    @Expose
+    private int count;
+
+    @SerializedName("detail")
+    @Expose
+    private String detail;
+
+    @SerializedName("product_cover")
     @Expose
     private String thumb;
+
+    @SerializedName("product_detail")
+    @Expose
+    private String detailImage;
+
+    @SerializedName("product_banners")
+    @Expose
+    private ArrayList<Banner> banners;
+
 
     // 死数据使用
     private int tag;
@@ -87,5 +105,37 @@ public class Product implements Serializable {
 
     public void setTag(int tag) {
         this.tag = tag;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public String getDetail() {
+        return detail;
+    }
+
+    public void setDetail(String detail) {
+        this.detail = detail;
+    }
+
+    public ArrayList<Banner> getBanners() {
+        return banners;
+    }
+
+    public void setBanners(ArrayList<Banner> banners) {
+        this.banners = banners;
+    }
+
+    public String getDetailImage() {
+        return detailImage;
+    }
+
+    public void setDetailImage(String detailImage) {
+        this.detailImage = detailImage;
     }
 }

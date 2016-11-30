@@ -1,29 +1,54 @@
 package com.tallty.smart_life_android.fragment.home;
 
 
+import android.content.Context;
+import android.graphics.PointF;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.davemorrissey.labs.subscaleview.ImageSource;
+import com.davemorrissey.labs.subscaleview.ImageViewState;
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.Const;
+import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.event.SwitchTabFragment;
 import com.tallty.smart_life_android.event.TransferDataEvent;
 import com.tallty.smart_life_android.fragment.MainFragment;
-import com.tallty.smart_life_android.holder.BannerHolderView;
+import com.tallty.smart_life_android.holder.NetworkImageBannerHolder;
+import com.tallty.smart_life_android.model.Banner;
+import com.tallty.smart_life_android.model.CartItem;
 import com.tallty.smart_life_android.model.Product;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.util.Arrays;
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import static com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView.SCALE_TYPE_CENTER_CROP;
 
 /**
  * 首页-限量销售-商品详情
@@ -37,15 +62,13 @@ public class ProductShowFragment extends BaseBackFragment implements OnItemClick
     private TextView product_title;
     private TextView product_price;
     private TextView product_description;
-    private TextView add;
-    private TextView reduce;
+    private Button add;
+    private Button reduce;
     private TextView number;
     private TextView add_to_cart;
-    private ConvenientBanner<Integer> banner;
-    // banner图数据
-    private Integer[] firstImages = { R.drawable.product_pineapple_one, R.drawable.product_pineapple_two, R.drawable.product_pineapplie_three };
-    private Integer[] secondImages = { R.drawable.product_honey_one, R.drawable.product_honey_two, R.drawable.product_honey_three };
-    private Integer[] thirdImages = { R.drawable.product_egg_one, R.drawable.product_egg_two, R.drawable.product_egg_three };
+    private ConvenientBanner<String> banner;
+    private SubsamplingScaleImageView detail_image;
+    private ImageView small_detail_image;
 
     public static ProductShowFragment newInstance(Product product) {
         Bundle args = new Bundle();
@@ -84,6 +107,8 @@ public class ProductShowFragment extends BaseBackFragment implements OnItemClick
         number = getViewById(R.id.number);
         add_to_cart = getViewById(R.id.add_to_cart);
         banner = getViewById(R.id.product_detail_banner);
+        detail_image = getViewById(R.id.product_detail_image);
+        small_detail_image = getViewById(R.id.small_product_detail_image);
     }
 
     @Override
@@ -117,22 +142,34 @@ public class ProductShowFragment extends BaseBackFragment implements OnItemClick
                 }
                 break;
             case R.id.add_to_cart:
-                // TODO: 16/8/4 添加商品到购物车
                 addProductToCart();
                 break;
         }
     }
 
     private void addProductToCart() {
-        // TODO: 16/8/5 暂时使用事件传递, 后来要调用接口
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(Const.OBJECT, product);
-        bundle.putInt(Const.INT, count);
-        EventBus.getDefault().post(new TransferDataEvent(bundle, "ProductShowFragment"));
+        showProgress("正在添加...");
+        Engine.authService(shared_token, shared_phone)
+                .addProductToCart(product.getId(), count)
+                .enqueue(new Callback<CartItem>() {
+                    @Override
+                    public void onResponse(Call<CartItem> call, Response<CartItem> response) {
+                        hideProgress();
+                        if (response.isSuccessful()) {
+                            toolbar.getMenu().clear();
+                            toolbar.inflateMenu(R.menu.cart_has);
+                            showToast("已加入购物车");
+                        } else {
+                            showToast("加入购物车失败");
+                        }
+                    }
 
-        toolbar.getMenu().clear();
-        toolbar.inflateMenu(R.menu.cart_has);
-        showToast("加入成功");
+                    @Override
+                    public void onFailure(Call<CartItem> call, Throwable t) {
+                        hideProgress();
+                        showToast("网络链接错误");
+                    }
+                });
     }
 
     /**
@@ -143,7 +180,6 @@ public class ProductShowFragment extends BaseBackFragment implements OnItemClick
     private void setToolbarMenu(Toolbar toolbar) {
         boolean blank = true;
         // TODO: 16/8/1 调用接口判断购物车是否为空
-
         if (blank) {
             toolbar.inflateMenu(R.menu.cart_blank);
         } else {
@@ -171,27 +207,41 @@ public class ProductShowFragment extends BaseBackFragment implements OnItemClick
 
     private void showProduct() {
         product_title.setText(product.getTitle());
-        product_price.setText("￥ "+product.getPrice()+"0 (包邮)");
-        product_description.setText(" "+showString(product.getStringId()));
+        product_price.setText("￥ "+product.getPrice());
+        product_description.setText(product.getDetail());
+        // 加载详情图
+        detail_image.setZoomEnabled(false);
+        detail_image.setMinimumScaleType(SCALE_TYPE_CENTER_CROP);
+        detail_image.setFocusable(false);
+        Glide.with(context).load(product.getDetailImage())
+            .downloadOnly(new SimpleTarget<File>() {
+                @Override
+                public void onResourceReady(File resource, GlideAnimation<? super File> glideAnimation) {
+                    detail_image.setImage(ImageSource.uri(Uri.fromFile(resource)), new ImageViewState(1.0f, new PointF(0, 0), 0));
+                    onImageLoadListener(resource);
+                }
+
+                @Override
+                public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                    super.onLoadFailed(e, errorDrawable);
+                    hideProgress();
+                    showToast("加载详情失败, 请稍后重试");
+                }
+            });
     }
 
     private void setBanner() {
-        // TODO: 16/8/4 假数据
-        List<Integer> networkImages;
-        if (product.getTag() == 0) {
-            networkImages = Arrays.asList(firstImages);
-        } else if (product.getTag() == 1) {
-            networkImages = Arrays.asList(secondImages);
-        } else {
-            networkImages = Arrays.asList(thirdImages);
+        List<String> networkImages = new ArrayList<>();
+        ArrayList<Banner> banners = product.getBanners();
+        for(Banner banner : banners) {
+            networkImages.add(banner.getUrl());
         }
-
-        banner.setPages(new CBViewHolderCreator() {
-            @Override
-            public Object createHolder() {
-                return new BannerHolderView();
-            }
-        }, networkImages)
+        banner.setPages(new CBViewHolderCreator<NetworkImageBannerHolder>() {
+                @Override
+                public NetworkImageBannerHolder createHolder() {
+                    return new NetworkImageBannerHolder();
+                }
+            }, networkImages)
             .setPageIndicator(new int[] {R.mipmap.banner_indicator, R.mipmap.banner_indicator_focused})
             .setOnItemClickListener(this);
     }
@@ -211,5 +261,54 @@ public class ProductShowFragment extends BaseBackFragment implements OnItemClick
     public void onPause() {
         super.onPause();
         banner.stopTurning();
+    }
+
+    // 图片载入监听
+    private void onImageLoadListener(final File resource) {
+        detail_image.setOnImageEventListener(new SubsamplingScaleImageView.OnImageEventListener() {
+            @Override
+            public void onReady() {
+                WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+                // 屏幕宽度
+                int width = wm.getDefaultDisplay().getWidth();
+                // 图片宽度
+                int image_w = detail_image.getSWidth();
+                // 比例
+                float width_ratio = (float) (width * 1.0 / image_w);
+
+                Log.d(App.TAG, detail_image.getScale()+"缩放比例");
+                Log.d(App.TAG, width_ratio+"宽度比例");
+
+                if (detail_image.getScale() > width_ratio) {
+                    Log.d(App.TAG, "使用普通ImageView加载宽图");
+                    detail_image.recycle();
+                    detail_image.setVisibility(View.GONE);
+                    small_detail_image.setVisibility(View.VISIBLE);
+                    Glide.with(context).load(resource).into(small_detail_image);
+                }
+                hideProgress();
+            }
+
+            @Override
+            public void onImageLoaded() {
+
+            }
+
+            @Override
+            public void onPreviewLoadError(Exception e) {
+            }
+
+            @Override
+            public void onImageLoadError(Exception e) {
+            }
+
+            @Override
+            public void onTileLoadError(Exception e) {
+            }
+
+            @Override
+            public void onPreviewReleased() {
+            }
+        });
     }
 }

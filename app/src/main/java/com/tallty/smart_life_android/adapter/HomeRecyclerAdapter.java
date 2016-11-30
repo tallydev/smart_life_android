@@ -166,8 +166,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
         }
         // 精品超市
         else if (position == 7) {
-            String url = "http://elive.clfsj.com:8989/images/community_it_class.jpg";
-            EventBus.getDefault().post(new StartBrotherEvent(GlobalAppointFragment.newInstance("精品超市", url, "XPSS", "我要购买", false)));
+            EventBus.getDefault().post(new StartBrotherEvent(ProductFragment.newInstance("精品超市")));
         }
     }
 

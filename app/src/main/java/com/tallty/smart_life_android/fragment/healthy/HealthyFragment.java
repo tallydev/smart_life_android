@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseLazyMainFragment;
-import com.tallty.smart_life_android.event.TabSelectedEvent;
+import com.tallty.smart_life_android.event.TabReselectedEvent;
 import com.tallty.smart_life_android.fragment.MainFragment;
 
 import org.greenrobot.eventbus.EventBus;
@@ -61,7 +61,7 @@ public class HealthyFragment extends BaseLazyMainFragment {
      * Tab Healthy按钮被重复点击时执行的操作
      */
     @Subscribe
-    public void onTabSelectedEvent(TabSelectedEvent event) {
+    public void onTabSelectedEvent(TabReselectedEvent event) {
         if (event.position == MainFragment.HEALTHY)
             Log.d(App.TAG, "智慧健康被重复点击了");
     }

@@ -3,6 +3,7 @@ package com.tallty.smart_life_android.Engine;
 import com.tallty.smart_life_android.model.Activities;
 import com.tallty.smart_life_android.model.Appointment;
 import com.tallty.smart_life_android.model.AppointmentList;
+import com.tallty.smart_life_android.model.CartItem;
 import com.tallty.smart_life_android.model.CartList;
 import com.tallty.smart_life_android.model.Contact;
 import com.tallty.smart_life_android.model.ContactList;
@@ -93,6 +94,16 @@ public interface DataAPI {
     @GET("cart_items")
     Call<CartList> getCartList(@Query("page") Integer page,
                                @Query("per_page") Integer per_page);
+
+    // 添加商品到购物车
+    @FormUrlEncoded
+    @POST("cart_items")
+    Call<CartItem> addProductToCart(@Field("cart_item[product_id]") int product_id,
+                                    @Field("cart_item[count]") int count);
+
+    // 删除购物车的一个商品
+    @DELETE("cart_items/{id}")
+    Call<CartItem> deleteCartItem(@Path("id") int id);
 
     // 联系人列表
     @GET("contacts")

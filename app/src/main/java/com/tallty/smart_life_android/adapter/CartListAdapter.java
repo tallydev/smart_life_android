@@ -52,9 +52,7 @@ public class CartListAdapter extends RecyclerView.Adapter<CartListAdapter.CartLi
     public void onBindViewHolder(CartListViewHolder holder, int position) {
         CartItem cartItem = commodities.get(position);
         // Global
-        // TODO: 16/8/5 死数据,使用图片ID
-        Glide.with(context).load(cartItem.getThumbID()).into(holder.photo);
-//        Glide.with(context).load(cartItem.getThumb()).into(holder.photo);
+        Glide.with(context).load(cartItem.getThumb()).into(holder.photo);
         holder.name.setText(cartItem.getName());
         holder.price.setText("￥ " + cartItem.getPrice());
 
