@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -55,6 +56,7 @@ public class GlobalAppointFragment extends BaseBackFragment {
     // 详情图
     private SubsamplingScaleImageView detail_image;
     private ImageView small_detail_image;
+    private ScrollView scrollView;
     // 多人的操作
     private View countLayout;
     private Button add;
@@ -133,6 +135,7 @@ public class GlobalAppointFragment extends BaseBackFragment {
     @Override
     protected void initView() {
         // 详情图
+        scrollView = getViewById(R.id.small_product_detail_image_layout);
         small_detail_image = getViewById(R.id.small_detail_image);
         detail_image = getViewById(R.id.detail_image);
         detail_image.setZoomEnabled(false);
@@ -208,7 +211,7 @@ public class GlobalAppointFragment extends BaseBackFragment {
                     Log.d(App.TAG, "使用普通ImageView加载宽图");
                     detail_image.recycle();
                     detail_image.setVisibility(View.GONE);
-                    small_detail_image.setVisibility(View.VISIBLE);
+                    scrollView.setVisibility(View.VISIBLE);
                     Glide.with(context).load(resource).into(small_detail_image);
                 }
                 hideProgress();
@@ -278,7 +281,6 @@ public class GlobalAppointFragment extends BaseBackFragment {
 
             @Override
             public void onCancel() {
-                showToast("已取消");
             }
         });
     }

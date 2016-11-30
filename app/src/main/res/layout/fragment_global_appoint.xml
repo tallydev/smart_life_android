@@ -43,14 +43,19 @@
             android:visibility="visible"
             android:layout_alignParentTop="true"/>
         <!--短图使用正常的ImageView加载, 防止水平过度缩放问题-->
-        <ImageView
-            android:id="@+id/small_detail_image"
+        <ScrollView
+            android:id="@+id/small_product_detail_image_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@id/actions"
             android:visibility="gone"
-            android:scaleType="fitStart"
-            android:layout_alignParentTop="true"/>
+            android:layout_alignParentTop="true">
+            <ImageView
+                android:id="@+id/small_detail_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="fitStart"/>
+        </ScrollView>
         <!--重新加载-->
         <TextView
             android:id="@+id/reload_detail"
