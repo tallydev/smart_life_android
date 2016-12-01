@@ -17,11 +17,8 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.target.Target;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.ImageViewState;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
@@ -163,7 +160,7 @@ public class GlobalAppointFragment extends BaseBackFragment {
     protected void afterAnimationLogic() {
         showProgress("正在加载详情...");
         Glide
-            .with(context).load(imageUrl)
+            .with(_mActivity).load(imageUrl)
             .downloadOnly(new SimpleTarget<File>() {
                 @Override
                 public void onResourceReady(File resource, GlideAnimation<? super File> glideAnimation) {
@@ -196,7 +193,7 @@ public class GlobalAppointFragment extends BaseBackFragment {
                     }
                 }
 
-                WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+                WindowManager wm = (WindowManager) _mActivity.getSystemService(Context.WINDOW_SERVICE);
                 // 屏幕宽度
                 int width = wm.getDefaultDisplay().getWidth();
                 // 图片宽度
@@ -212,7 +209,7 @@ public class GlobalAppointFragment extends BaseBackFragment {
                     detail_image.recycle();
                     detail_image.setVisibility(View.GONE);
                     scrollView.setVisibility(View.VISIBLE);
-                    Glide.with(context).load(resource).into(small_detail_image);
+                    Glide.with(_mActivity).load(resource).into(small_detail_image);
                 }
                 hideProgress();
             }

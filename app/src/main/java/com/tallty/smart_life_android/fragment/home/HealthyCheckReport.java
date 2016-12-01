@@ -107,8 +107,8 @@ public class HealthyCheckReport extends BaseBackFragment {
     }
 
     private void setList() {
-        myRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-        adapter = new HomeCheckReportAdapter(context, reports);
+        myRecyclerView.setLayoutManager(new LinearLayoutManager(_mActivity));
+        adapter = new HomeCheckReportAdapter(_mActivity, reports);
         myRecyclerView.setAdapter(adapter);
         myRecyclerView.addOnItemTouchListener(new RecyclerVIewItemTouchListener(myRecyclerView) {
             @Override

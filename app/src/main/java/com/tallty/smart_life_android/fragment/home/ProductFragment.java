@@ -86,8 +86,8 @@ public class ProductFragment extends BaseBackFragment {
                     products.clear();
                     products.addAll(productList.getProducts());
                     // 加载列表
-                    recyclerView.setLayoutManager(new LinearLayoutManager(context));
-                    adapter = new HomeProductAdapter(context, products);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(_mActivity));
+                    adapter = new HomeProductAdapter(_mActivity, products);
                     recyclerView.setAdapter(adapter);
                     hideProgress();
                 } else {

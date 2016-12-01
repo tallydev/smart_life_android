@@ -100,8 +100,8 @@ public class MyAppointments extends BaseBackFragment {
     }
 
     private void setList() {
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        adapter = new MyAppointmentsAdapter(context, appointments);
+        recyclerView.setLayoutManager(new LinearLayoutManager(_mActivity));
+        adapter = new MyAppointmentsAdapter(_mActivity, appointments);
         recyclerView.setAdapter(adapter);
         recyclerView.addOnItemTouchListener(new RecyclerVIewItemTouchListener(recyclerView) {
             @Override

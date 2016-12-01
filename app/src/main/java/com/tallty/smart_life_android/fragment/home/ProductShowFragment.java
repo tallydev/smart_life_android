@@ -31,7 +31,6 @@ import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.event.SwitchTabFragment;
-import com.tallty.smart_life_android.event.TransferDataEvent;
 import com.tallty.smart_life_android.fragment.MainFragment;
 import com.tallty.smart_life_android.holder.NetworkImageBannerHolder;
 import com.tallty.smart_life_android.model.Banner;
@@ -213,7 +212,7 @@ public class ProductShowFragment extends BaseBackFragment implements OnItemClick
         detail_image.setZoomEnabled(false);
         detail_image.setMinimumScaleType(SCALE_TYPE_CENTER_CROP);
         detail_image.setFocusable(false);
-        Glide.with(context).load(product.getDetailImage())
+        Glide.with(_mActivity).load(product.getDetailImage())
             .downloadOnly(new SimpleTarget<File>() {
                 @Override
                 public void onResourceReady(File resource, GlideAnimation<? super File> glideAnimation) {
@@ -268,7 +267,7 @@ public class ProductShowFragment extends BaseBackFragment implements OnItemClick
         detail_image.setOnImageEventListener(new SubsamplingScaleImageView.OnImageEventListener() {
             @Override
             public void onReady() {
-                WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+                WindowManager wm = (WindowManager) _mActivity.getSystemService(Context.WINDOW_SERVICE);
                 // 屏幕宽度
                 int width = wm.getDefaultDisplay().getWidth();
                 // 图片宽度
@@ -284,7 +283,7 @@ public class ProductShowFragment extends BaseBackFragment implements OnItemClick
                     detail_image.recycle();
                     detail_image.setVisibility(View.GONE);
                     small_detail_image.setVisibility(View.VISIBLE);
-                    Glide.with(context).load(resource).into(small_detail_image);
+                    Glide.with(_mActivity).load(resource).into(small_detail_image);
                 }
                 hideProgress();
             }

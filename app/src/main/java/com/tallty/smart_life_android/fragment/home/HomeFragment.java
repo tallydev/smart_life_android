@@ -152,7 +152,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
 
     @Override
     protected void initView() {
-        versionCode = Apputils.getVersionCode(context);
+        versionCode = Apputils.getVersionCode(_mActivity);
         Log.i(App.TAG, "APP 版本码: "+versionCode);
         EventBus.getDefault().register(this);
         banner = getViewById(R.id.home_banner);
@@ -386,7 +386,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
 
     private void setList() {
         recyclerView.setLayoutManager(layoutManager);
-        homeRecyclerAdapter = new HomeRecyclerAdapter(context, titles, images, itemButtons, itemIcons);
+        homeRecyclerAdapter = new HomeRecyclerAdapter(_mActivity, titles, images, itemButtons, itemIcons);
         recyclerView.setAdapter(homeRecyclerAdapter);
         // ScrollView嵌套RecyclerView,设置屏幕从顶部开始
         recyclerView.setFocusable(false);
@@ -403,7 +403,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
          * 上传步数, 如果是新的一天, 重置步数后再上传
          * 如果是新的一天, 重置数据
          */
-        DbUtils.createDb(context, DB_NAME);
+        DbUtils.createDb(_mActivity, DB_NAME);
         ArrayList list = DbUtils.getQueryByWhere(Step.class, "date", new String[]{current_date});
         if (list.size() == 0 || list.isEmpty()) {
             // 查不到今天的记录 => 新的一天
@@ -460,9 +460,9 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
             }
         };
 
-        Intent intent = new Intent(context, StepService.class);
-        context.bindService(intent, conn, Context.BIND_AUTO_CREATE);
-        context.startService(intent);
+        Intent intent = new Intent(_mActivity, StepService.class);
+        _mActivity.bindService(intent, conn, Context.BIND_AUTO_CREATE);
+        _mActivity.startService(intent);
     }
 
     /**
@@ -562,7 +562,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
     @Override
     public void onDestroy() {
         super.onDestroy();
-        context.unbindService(conn);
+        _mActivity.unbindService(conn);
     }
 
     @Override

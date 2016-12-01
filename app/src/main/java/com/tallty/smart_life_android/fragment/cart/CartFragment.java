@@ -172,8 +172,8 @@ public class CartFragment extends BaseLazyMainFragment {
 
     private void processRecyclerVIew(){
         // 载入列表
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        adapter = new CartListAdapter(context, cartItems);
+        recyclerView.setLayoutManager(new LinearLayoutManager(_mActivity));
+        adapter = new CartListAdapter(_mActivity, cartItems);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
         recyclerView.addOnItemTouchListener(new RecyclerVIewItemTouchListener(recyclerView) {
@@ -184,7 +184,7 @@ public class CartFragment extends BaseLazyMainFragment {
 
             @Override
             public void onItemLongPress(RecyclerView.ViewHolder vh, final int position) {
-                showItemDeleteDialog(position);
+//                showItemDeleteDialog(position);
             }
         });
     }

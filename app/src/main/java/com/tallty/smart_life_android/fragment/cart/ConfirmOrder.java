@@ -7,7 +7,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -90,8 +89,8 @@ public class ConfirmOrder extends BaseBackFragment {
         // 设置订单地址
         setDefaultAddress();
         // 列表
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        CartListAdapter adapter = new CartListAdapter(context, selected_cart_items, "提交订单");
+        recyclerView.setLayoutManager(new LinearLayoutManager(_mActivity));
+        CartListAdapter adapter = new CartListAdapter(_mActivity, selected_cart_items, "提交订单");
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
     }

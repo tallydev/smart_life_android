@@ -26,7 +26,6 @@ import com.tallty.smart_life_android.utils.ToastUtil;
  * 使用时, 直接继承此类即可
  */
 public abstract class BaseLazyMainFragment extends BaseFragment implements View.OnClickListener {
-    protected Context context;
     protected SharedPreferences sharedPre;
     // 状态
     private boolean mInited = false;
@@ -42,8 +41,7 @@ public abstract class BaseLazyMainFragment extends BaseFragment implements View.
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mSavedInstanceState = savedInstanceState;
-        context = getActivity();
-        sharedPre = context.getSharedPreferences("SmartLife", Context.MODE_PRIVATE);
+        sharedPre = _mActivity.getSharedPreferences("SmartLife", Context.MODE_PRIVATE);
         // 拦截调用
         fragmentInterceptor();
     }
@@ -135,7 +133,7 @@ public abstract class BaseLazyMainFragment extends BaseFragment implements View.
      */
     public void showProgress(String message) {
         if (progressDialog == null) {
-            progressDialog = new ProgressDialog(context);
+            progressDialog = new ProgressDialog(_mActivity);
             progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         }
         progressDialog.setMessage(message);

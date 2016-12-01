@@ -205,7 +205,7 @@ public class LoginFragment extends BaseLazyMainFragment {
             public void onFailure(Call<User> call, Throwable t) {
                 login_btn.setClickable(true);
                 hideProgress();
-                showToast(context.getString(R.string.network_error));
+                showToast(_mActivity.getString(R.string.network_error));
             }
         });
     }

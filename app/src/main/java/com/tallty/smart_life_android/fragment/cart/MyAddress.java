@@ -9,7 +9,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -34,7 +33,6 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.http.Path;
 
 /**
  * 购物车-确认订单-收货地址
@@ -155,8 +153,8 @@ public class MyAddress extends BaseBackFragment {
     }
 
     private void setList() {
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        adapter = new AddressListAdapter(context, contacts);
+        recyclerView.setLayoutManager(new LinearLayoutManager(_mActivity));
+        adapter = new AddressListAdapter(_mActivity, contacts);
         recyclerView.setAdapter(adapter);
         recyclerView.addOnItemTouchListener(new RecyclerVIewItemTouchListener(recyclerView) {
             @Override

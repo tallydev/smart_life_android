@@ -119,8 +119,8 @@ public class HealthyCheckReportShow extends BaseBackFragment {
 
     private void setList() {
         // 初始化列表
-        myRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-        adapter = new HomeCheckReportShowAdapter(context, reportShowItems);
+        myRecyclerView.setLayoutManager(new LinearLayoutManager(_mActivity));
+        adapter = new HomeCheckReportShowAdapter(_mActivity, reportShowItems);
         myRecyclerView.setAdapter(adapter);
     }
 

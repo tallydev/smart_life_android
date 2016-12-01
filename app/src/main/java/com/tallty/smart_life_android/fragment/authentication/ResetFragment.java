@@ -160,7 +160,7 @@ public class ResetFragment extends BaseBackFragment {
                 public void onFailure(Call<HashMap<String, String>> call, Throwable t) {
                     code_btn.setClickable(true);
                     code_btn.setText("重新获取");
-                    showToast(context.getString(R.string.network_error));
+                    showToast(_mActivity.getString(R.string.network_error));
                 }
             });
         }
@@ -271,7 +271,7 @@ public class ResetFragment extends BaseBackFragment {
                     public void onFailure(Call<User> call, Throwable t) {
                         reset_password_btn.setClickable(true);
                         hideProgress();
-                        showToast(context.getString(R.string.network_error));
+                        showToast(_mActivity.getString(R.string.network_error));
                     }
                 });
     }

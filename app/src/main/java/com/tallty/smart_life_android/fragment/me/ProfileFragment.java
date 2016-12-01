@@ -193,8 +193,8 @@ public class ProfileFragment extends BaseBackFragment {
      */
     private void processRecyclerView() {
         // 加载列表
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        adapter = new ProfileListAdapter(context, keys, values);
+        recyclerView.setLayoutManager(new LinearLayoutManager(_mActivity));
+        adapter = new ProfileListAdapter(_mActivity, keys, values);
         recyclerView.setAdapter(adapter);
         recyclerView.addOnItemTouchListener(new RecyclerVIewItemTouchListener(recyclerView) {
             @Override
@@ -252,7 +252,7 @@ public class ProfileFragment extends BaseBackFragment {
             @Override
             public void onUpdateAvailable(String s) {
                 final AppBean appBean = getAppBeanFromString(s);
-                new AlertDialog.Builder(context)
+                new AlertDialog.Builder(_mActivity)
                     .setTitle("更新提醒")
                     .setMessage(appBean.getReleaseNote())
                     .setPositiveButton("更新", new DialogInterface.OnClickListener() {
@@ -404,7 +404,7 @@ public class ProfileFragment extends BaseBackFragment {
             @Override
             public void onFailure(Call<User> call, Throwable t) {
                 hideProgress();
-                showToast(context.getString(R.string.network_error));
+                showToast(_mActivity.getString(R.string.network_error));
             }
         });
     }
@@ -509,7 +509,7 @@ public class ProfileFragment extends BaseBackFragment {
             @Override
             public void onFailure(Call<User> call, Throwable t) {
                 hideProgress();
-                showToast(context.getString(R.string.network_error));
+                showToast(_mActivity.getString(R.string.network_error));
             }
         });
     }
@@ -535,8 +535,8 @@ public class ProfileFragment extends BaseBackFragment {
      */
     public String getVersion() {
         try {
-            PackageManager manager = context.getPackageManager();
-            PackageInfo info = manager.getPackageInfo(context.getPackageName(), 0);
+            PackageManager manager = _mActivity.getPackageManager();
+            PackageInfo info = manager.getPackageInfo(_mActivity.getPackageName(), 0);
             return info.versionName;
         } catch (Exception e) {
             e.printStackTrace();

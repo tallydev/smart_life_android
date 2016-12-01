@@ -2,7 +2,6 @@ package com.tallty.smart_life_android.base;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -20,8 +19,6 @@ import android.widget.TextView;
 import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.R;
-import com.tallty.smart_life_android.activity.LoadingActivity;
-import com.tallty.smart_life_android.activity.LoginActivity;
 import com.tallty.smart_life_android.utils.SnackbarUtil;
 import com.tallty.smart_life_android.utils.ToastUtil;
 
@@ -34,7 +31,6 @@ import me.yokeyword.fragmentation_swipeback.SwipeBackFragment;
  * 使用SwipeBackFragment开源库
  */
 public abstract class BaseBackFragment extends SwipeBackFragment implements View.OnClickListener {
-    protected Context context;
     protected SharedPreferences sharedPre;
     protected String shared_phone;
     protected String shared_token;
@@ -52,8 +48,7 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context = getActivity();
-        sharedPre = context.getSharedPreferences("SmartLife", Context.MODE_PRIVATE);
+        sharedPre = _mActivity.getSharedPreferences("SmartLife", Context.MODE_PRIVATE);
         shared_phone = sharedPre.getString(Const.USER_PHONE, Const.EMPTY_STRING);
         shared_token = sharedPre.getString(Const.USER_TOKEN, Const.EMPTY_STRING);
     }
@@ -204,7 +199,7 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
      */
     public void showProgress(String message) {
         if (progressDialog == null) {
-            progressDialog = new ProgressDialog(context);
+            progressDialog = new ProgressDialog(_mActivity);
             progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         }
         progressDialog.setMessage(message);

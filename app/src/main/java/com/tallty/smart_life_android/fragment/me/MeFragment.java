@@ -142,9 +142,9 @@ public class MeFragment extends BaseLazyMainFragment {
                 user = response.body();
                 if (response.isSuccessful()) {
                     profile.setClickable(true);
-                    Glide.with(context).load(user.getAvatar())
+                    Glide.with(_mActivity).load(user.getAvatar())
                             .placeholder(R.drawable.user_default)
-                            .transform(new GlideCircleTransform(context)).into(photo);
+                            .transform(new GlideCircleTransform(_mActivity)).into(photo);
                     name.setText(user.getNickname());
 
                     Log.i(App.TAG, "接口数据,昵称"+response.body().getNickname());
@@ -158,7 +158,7 @@ public class MeFragment extends BaseLazyMainFragment {
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-                showToast(context.getString(R.string.network_error));
+                showToast(_mActivity.getString(R.string.network_error));
             }
         });
     }
@@ -216,7 +216,7 @@ public class MeFragment extends BaseLazyMainFragment {
                 EventBus.getDefault().post(new StartBrotherEvent(MyAppointments.newInstance()));
                 break;
             case R.id.contact_service:
-                PackageManager pm = context.getPackageManager();
+                PackageManager pm = _mActivity.getPackageManager();
                 boolean permission = (PackageManager.PERMISSION_GRANTED == pm.checkPermission("android.permission.CALL_PHONE","com.tallty.smart_life_android"));
                 if (permission) {
                     Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+"087164589208"));
@@ -255,9 +255,9 @@ public class MeFragment extends BaseLazyMainFragment {
     public void onTransferDataEvent(TransferDataEvent event) {
         // 更新UI
         if ("ProfileFragment".equals(event.tag)) {
-            Glide.with(context).load(event.bundle.getString("user_avatar"))
+            Glide.with(_mActivity).load(event.bundle.getString("user_avatar"))
                     .placeholder(R.drawable.user_default)
-                    .transform(new GlideCircleTransform(context)).into(photo);
+                    .transform(new GlideCircleTransform(_mActivity)).into(photo);
             name.setText(event.bundle.getString("user_nickname"));
         }
     }

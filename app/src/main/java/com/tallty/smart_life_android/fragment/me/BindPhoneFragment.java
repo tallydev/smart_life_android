@@ -118,7 +118,7 @@ public class BindPhoneFragment extends BaseBackFragment {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.service:
-                PackageManager pm = context.getPackageManager();
+                PackageManager pm = _mActivity.getPackageManager();
                 boolean permission = (PackageManager.PERMISSION_GRANTED == pm.checkPermission("android.permission.CALL_PHONE","com.tallty.smart_life_android"));
                 if (permission) {
                     Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+"087164589208"));
@@ -213,7 +213,7 @@ public class BindPhoneFragment extends BaseBackFragment {
                         public void onFailure(Call<User> call, Throwable t) {
                             hideProgress();
                             bindBtn.setClickable(true);
-                            showToast(context.getString(R.string.network_error));
+                            showToast(_mActivity.getString(R.string.network_error));
                         }
                     });
 
@@ -277,7 +277,7 @@ public class BindPhoneFragment extends BaseBackFragment {
                 public void onFailure(Call<HashMap<String, String>> call, Throwable t) {
                     getCodeBtn.setClickable(true);
                     getCodeBtn.setText("重新获取");
-                    showToast(context.getString(R.string.network_error));
+                    showToast(_mActivity.getString(R.string.network_error));
                 }
             });
         }

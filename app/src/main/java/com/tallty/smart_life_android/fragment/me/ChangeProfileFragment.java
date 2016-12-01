@@ -10,7 +10,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.orhanobut.logger.Logger;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
@@ -169,7 +168,7 @@ public class ChangeProfileFragment extends BaseBackFragment {
                     public void onFailure(Call<User> call, Throwable t) {
                         hideProgress();
                         change_btn.setClickable(true);
-                        showToast(context.getString(R.string.network_error));
+                        showToast(_mActivity.getString(R.string.network_error));
                     }
                 });
     }

@@ -206,7 +206,7 @@ public class SportMoreData extends BaseBackFragment {
     private void updateStepAndInitChartRank(final LineChartView chart,
                                             final boolean isLoad) {
         String current_date = getTodayDate();
-        int versionCode = Apputils.getVersionCode(context);
+        int versionCode = Apputils.getVersionCode(_mActivity);
         // 步数少于服务器的步数,会上传失败
         Log.i(App.TAG, "开始上传步数任务"+current_date+","+ step);
         Engine
@@ -329,9 +329,9 @@ public class SportMoreData extends BaseBackFragment {
      */
     private void setRankList(ArrayList<SportRankItem> sportRankItems) {
         Log.d(App.TAG, "初始化列表");
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(_mActivity);
         recyclerView.setLayoutManager(linearLayoutManager);
-        adapter = new HomeSportRankAdapter(context, sportRankItems);
+        adapter = new HomeSportRankAdapter(_mActivity, sportRankItems);
         recyclerView.setAdapter(adapter);
 
         // 点击加载更多功能
@@ -353,41 +353,41 @@ public class SportMoreData extends BaseBackFragment {
      */
     private void getMoreRank() {
         Engine.authService(shared_token, shared_phone)
-                .getSportRanks(now_timeline, current_page, per_page)
-                .enqueue(new Callback<SportRank>() {
-                    @Override
-                    public void onResponse(Call<SportRank> call, Response<SportRank> response) {
-                        if (response.isSuccessful()) {
-                            SportRank sportRank = response.body();
-                            sportRankItems.addAll(sportRank.getTop());
-                            total_pages = sportRank.getTotal_pages();
-                            current_page = sportRank.getCurrent_page();
-                            // 点击加载更多
-                            adapter.notifyDataSetChanged();
-                            resetRankMoreBtn("点击加载更多");
-                        } else {
-                            resetRankMoreBtn("点击重新加载");
-                        }
-                        // 显示与数量控制
-                        if (current_page < total_pages) {
-                            rank_load_more.setVisibility(View.VISIBLE);
-                            current_page++;
-                        } else {
-                            rank_load_more.setVisibility(View.GONE);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<SportRank> call, Throwable t) {
+            .getSportRanks(now_timeline, current_page, per_page)
+            .enqueue(new Callback<SportRank>() {
+                @Override
+                public void onResponse(Call<SportRank> call, Response<SportRank> response) {
+                    if (response.isSuccessful()) {
+                        SportRank sportRank = response.body();
+                        sportRankItems.addAll(sportRank.getTop());
+                        total_pages = sportRank.getTotal_pages();
+                        current_page = sportRank.getCurrent_page();
+                        // 点击加载更多
+                        adapter.notifyDataSetChanged();
+                        resetRankMoreBtn("点击加载更多");
+                    } else {
                         resetRankMoreBtn("点击重新加载");
-                        if (current_page < total_pages) {
-                            rank_load_more.setVisibility(View.VISIBLE);
-                            current_page++;
-                        } else {
-                            rank_load_more.setVisibility(View.GONE);
-                        }
                     }
-                });
+                    // 显示与数量控制
+                    if (current_page < total_pages) {
+                        rank_load_more.setVisibility(View.VISIBLE);
+                        current_page++;
+                    } else {
+                        rank_load_more.setVisibility(View.GONE);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<SportRank> call, Throwable t) {
+                    resetRankMoreBtn("点击重新加载");
+                    if (current_page < total_pages) {
+                        rank_load_more.setVisibility(View.VISIBLE);
+                        current_page++;
+                    } else {
+                        rank_load_more.setVisibility(View.GONE);
+                    }
+                }
+            });
     }
 
 
@@ -398,7 +398,6 @@ public class SportMoreData extends BaseBackFragment {
         // 当前时间
         Date date = new Date(System.currentTimeMillis());
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
-
         if (sportInfo != null) {
             now_step.setText(sportInfo.getTodayCount()+"步");
             avg_step.setText("平均步数: "+ sportInfo.getAvgCount());
@@ -434,8 +433,9 @@ public class SportMoreData extends BaseBackFragment {
 
         Log.d(App.TAG, Arrays.toString(counts) +"");
         // 载入图表
-        if (!isLoad && isAdded())
+        if (!isLoad) {
             loadChart(chart, labels, counts, max);
+        }
     }
 
     // 设置图表数据(周, 月, 年)
@@ -452,7 +452,7 @@ public class SportMoreData extends BaseBackFragment {
             max = sportDetail.getCount() > max ? sportDetail.getCount() : max;
         }
         // 载入图表
-        if (!isLoad && isAdded()) {
+        if (!isLoad) {
             loadChart(chart, labels, counts, max);
         }
     }
@@ -465,6 +465,7 @@ public class SportMoreData extends BaseBackFragment {
      * @param max
      */
     private void loadChart(LineChartView chart, String[] labels, float[] datas, int max) {
+        if (!isAdded()) return ;
         Log.d(App.TAG, "实例化图表");
         chart.reset();
         LineSet dataSet = new LineSet(labels, datas);

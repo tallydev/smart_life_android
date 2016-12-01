@@ -14,8 +14,8 @@ import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 /**
  * Created by kang on 16/7/1.
  * 自定义Glide加载圆角图片
- * glideRequest.load("*.jpg").transform(new GlideRoundTransform(context)).into(imageView);
- * glideRequest.load("*.jpg").transform(new GlideRoundTransform(context, 10)).into(imageView);
+ * glideRequest.load("*.jpg").transform(new GlideRoundTransform(_mActivity)).into(imageView);
+ * glideRequest.load("*.jpg").transform(new GlideRoundTransform(_mActivity, 10)).into(imageView);
  */
 public class GlideRoundTransform extends BitmapTransformation {
     private static float radius = 0f;

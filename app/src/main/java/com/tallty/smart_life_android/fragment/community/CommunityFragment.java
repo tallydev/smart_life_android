@@ -97,7 +97,7 @@ public class CommunityFragment extends BaseLazyMainFragment{
     }
 
     private void initGridView() {
-        CommunityGridViewAdapter adapter = new CommunityGridViewAdapter(context, icons, names);
+        CommunityGridViewAdapter adapter = new CommunityGridViewAdapter(_mActivity, icons, names);
         gridView.setAdapter(adapter);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

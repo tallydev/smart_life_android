@@ -6,11 +6,9 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
@@ -102,8 +100,8 @@ public class CommunityActivityFragment extends BaseBackFragment {
     }
 
     private void setList(final ArrayList<Activity> activities) {
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        CommunityActivityAdapter adapter = new CommunityActivityAdapter(activities, context);
+        recyclerView.setLayoutManager(new LinearLayoutManager(_mActivity));
+        CommunityActivityAdapter adapter = new CommunityActivityAdapter(activities, _mActivity);
         recyclerView.setAdapter(adapter);
         recyclerView.addOnItemTouchListener(new RecyclerVIewItemTouchListener(recyclerView) {
             @Override

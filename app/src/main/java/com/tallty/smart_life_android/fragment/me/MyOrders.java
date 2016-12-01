@@ -67,8 +67,8 @@ public class MyOrders extends BaseBackFragment {
     protected void afterAnimationLogic() {
         // TODO: 2016/11/30 获取我的订单
         // 加载列表
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        adapter = new MyOrdersAdapter(context, orders);
+        recyclerView.setLayoutManager(new LinearLayoutManager(_mActivity));
+        adapter = new MyOrdersAdapter(_mActivity, orders);
         recyclerView.setAdapter(adapter);
     }
 
