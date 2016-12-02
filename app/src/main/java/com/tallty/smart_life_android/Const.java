@@ -57,8 +57,7 @@ public class Const {
     public static final String FROM = "from_fragment";
 
     /**
-     * 调用MyAddress的不同处理                    Log.i(App.TAG, "登录手机号: "+ sharedPre.getString(Const.USER_PHONE, ""));
-
+     * 调用MyAddress的不同处理
      */
     public static final int FROM_PROFILE = 2;
     public static final int FROM_ORDER = 3;

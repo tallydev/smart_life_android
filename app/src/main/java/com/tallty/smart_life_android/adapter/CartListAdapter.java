@@ -18,6 +18,7 @@ import com.tallty.smart_life_android.utils.ToastUtil;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,10 +69,21 @@ public class CartListAdapter extends RecyclerView.Adapter<CartListAdapter.CartLi
         } else{
             holder.check_box.setChecked(cartItem.isChecked());
             holder.count.setText(""+ cartItem.getCount());
-            holder.count_price.setText("小计:￥ "+ cartItem.getPrice()* cartItem.getCount());
+            float total = cartItem.getPrice()* cartItem.getCount();
+            holder.count_price.setText("小计:￥ "+ formatTotalPrice(total));
             // 设置监听
             setButtonListener(holder, position, cartItem);
         }
+    }
+
+    /**
+     * format total price
+     */
+    private String formatTotalPrice(float total) {
+        //构造方法的字符格式这里如果小数不足2位,会以0补足.
+        DecimalFormat decimalFormat=new DecimalFormat(".00");
+        //format 返回的是字符串
+        return decimalFormat.format(total);
     }
 
     @Override

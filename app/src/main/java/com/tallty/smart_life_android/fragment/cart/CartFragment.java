@@ -31,6 +31,7 @@ import com.tallty.smart_life_android.model.CartList;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -50,13 +51,11 @@ public class CartFragment extends BaseLazyMainFragment {
     private CartListAdapter adapter;
     private CheckBox select_all_btn;
     private TextView total_price_text;
-    private AlertDialog.Builder builder = null;
     // 数据
     private ArrayList<CartItem> cartItems = new ArrayList<>();
     // checked 相关
     private boolean isSelectAll = false;
     private ArrayList<CartItem> selected_commodities = new ArrayList<>();
-
 
     public static CartFragment newInstance() {
         Bundle args = new Bundle();
@@ -131,7 +130,7 @@ public class CartFragment extends BaseLazyMainFragment {
                         }
                     }
                     adapter.notifyDataSetChanged();
-                    total_price_text.setText("￥ "+total);
+                    total_price_text.setText("￥ "+formatTotalPrice(total));
                 }else{
                     select_all_btn.setChecked(false);
                     showToast("购物车空空如也");
@@ -184,37 +183,31 @@ public class CartFragment extends BaseLazyMainFragment {
 
             @Override
             public void onItemLongPress(RecyclerView.ViewHolder vh, final int position) {
-//                showItemDeleteDialog(position);
+//                final AlertDialog.Builder builder = new AlertDialog.Builder(_mActivity, R.style.CustomAlertDialogTheme);
+//                builder.setMessage("确认删除吗")
+//                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                deleteCartItem(position);
+//                            }
+//                        })
+//                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                dialog.dismiss();
+//                            }
+//                        }).create().show();
             }
         });
-    }
-
-    /**
-     * 显示长按删除购物车条目弹框
-     */
-    private void showItemDeleteDialog(final int position) {
-        builder = new AlertDialog.Builder(getActivity(), R.style.CustomAlertDialogTheme);
-        builder.setMessage("确定删除该商品吗?")
-                .setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        deleteCartItem(position);
-                    }
-                })
-                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                    }
-                }).create();
-        builder.show();
     }
 
     /**
      * 删除一个购物车条目
      */
     private void deleteCartItem(final int position) {
-        int id = cartItems.get(position).getId();
+        showProgress("正在删除...");
         Engine.authService(shared_token, shared_phone)
-            .deleteCartItem(id)
+            .deleteCartItem(cartItems.get(position).getId())
             .enqueue(new Callback<CartItem>() {
                 @Override
                 public void onResponse(Call<CartItem> call, Response<CartItem> response) {
@@ -234,6 +227,7 @@ public class CartFragment extends BaseLazyMainFragment {
 
                 @Override
                 public void onFailure(Call<CartItem> call, Throwable t) {
+                    hideProgress();
                     showToast(showString(R.string.network_error));
                 }
             });
@@ -255,7 +249,17 @@ public class CartFragment extends BaseLazyMainFragment {
         } else {
             select_all_btn.setChecked(false);
         }
-        total_price_text.setText("￥ "+total);
+        total_price_text.setText("￥ "+ formatTotalPrice(total));
+    }
+
+    /**
+     * format total price
+     */
+    private String formatTotalPrice(float total) {
+        //构造方法的字符格式这里如果小数不足2位,会以0补足.
+        DecimalFormat decimalFormat=new DecimalFormat(".00");
+        //format 返回的是字符串
+        return decimalFormat.format(total);
     }
 
 

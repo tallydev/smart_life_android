@@ -517,6 +517,5 @@ public class SportMoreData extends BaseBackFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-
     }
 }

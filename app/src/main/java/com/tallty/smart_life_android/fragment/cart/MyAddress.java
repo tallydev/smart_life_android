@@ -18,7 +18,6 @@ import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.AddressListAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.custom.RecyclerVIewItemTouchListener;
-import com.tallty.smart_life_android.event.SelectAddress;
 import com.tallty.smart_life_android.event.SetDefaultAddress;
 import com.tallty.smart_life_android.model.Contact;
 import com.tallty.smart_life_android.model.ContactList;
@@ -148,7 +147,7 @@ public class MyAddress extends BaseBackFragment {
             editor.putString(Const.CONTACT_STREET, contact.getStreet());
             editor.putString(Const.CONTACT_COMMUNITY, contact.getCommunity());
             editor.putString(Const.CONTACT_ADDRESS, contact.getAddress());
-            editor.commit();
+            editor.apply();
         }
     }
 
@@ -159,7 +158,8 @@ public class MyAddress extends BaseBackFragment {
         recyclerView.addOnItemTouchListener(new RecyclerVIewItemTouchListener(recyclerView) {
             @Override
             public void onItemClick(RecyclerView.ViewHolder vh, int position) throws ParseException {
-
+                // 把选中的地址回传给上一个页面
+                selectAddress(position);
             }
 
             @Override
@@ -182,6 +182,30 @@ public class MyAddress extends BaseBackFragment {
         });
     }
 
+    public void selectAddress(int position) {
+        Contact cache_contact;
+        // 取消原来的选中地址
+        cache_contact = contacts.get(defaultContactListPosition);
+        cache_contact.setChecked(false);
+        contacts.set(defaultContactListPosition, cache_contact);
+        adapter.notifyItemChanged(defaultContactListPosition);
+
+        // 设置新的选中地址 && 重置 defaultContactListPosition 为新的position
+        cache_contact = contacts.get(position);
+        cache_contact.setChecked(true);
+        contacts.set(position, cache_contact);
+        adapter.notifyItemChanged(position);
+        defaultContactListPosition = position;
+
+        // 把选中的地址回传给上一个页面
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(Const.OBJECT, cache_contact);
+        setFramgentResult(RESULT_OK, bundle);
+        if (from == Const.FROM_ORDER){
+            pop();
+        }
+    }
+
     private void deleteContact(final int position) {
         showProgress("正在删除...");
         Engine.authService(shared_token, shared_phone)
@@ -189,7 +213,7 @@ public class MyAddress extends BaseBackFragment {
                 .enqueue(new Callback<Contact>() {
             @Override
             public void onResponse(Call<Contact> call, Response<Contact> response) {
-                if (response.code() == 204) {
+                if (response.isSuccessful()) {
                     boolean is_removed = false;
                     if (contacts.size() > 1 && contacts.get(position).isDefault()) {
                         contacts.remove(position);
@@ -209,7 +233,7 @@ public class MyAddress extends BaseBackFragment {
                         contacts.remove(position);
                     }
                     adapter.notifyItemRemoved(position);
-                    adapter.notifyItemRangeChanged(position, contacts.size()-position);
+                    adapter.notifyItemRangeChanged(position, contacts.size() - position);
                     hideProgress();
                 } else {
                     hideProgress();
@@ -275,34 +299,6 @@ public class MyAddress extends BaseBackFragment {
 
         // 更新默认地址下标
         defaultContactListPosition = event.getPosition();
-    }
-
-    /**
-     * 接收事件: SelectAddress
-     */
-    @Subscribe
-    public void onSelectAddress(SelectAddress event) {
-        Contact cache_contact;
-        // 取消原来的选中地址
-        cache_contact = contacts.get(defaultContactListPosition);
-        cache_contact.setChecked(false);
-        contacts.set(defaultContactListPosition, cache_contact);
-        adapter.notifyItemChanged(defaultContactListPosition);
-
-        // 设置新的选中地址 && 重置 defaultContactListPosition 为新的position
-        cache_contact = contacts.get(event.getPosition());
-        cache_contact.setChecked(true);
-        contacts.set(event.getPosition(), cache_contact);
-        adapter.notifyItemChanged(event.getPosition());
-        defaultContactListPosition = event.getPosition();
-
-        // 把选中的地址回传给上一个页面
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(Const.OBJECT, cache_contact);
-        setFramgentResult(RESULT_OK, bundle);
-        if (from == Const.FROM_ORDER){
-            pop();
-        }
     }
 
     @Override

@@ -34,7 +34,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:textColor="@color/orange"
-            android:textSize="@dimen/text_16"
+            android:textSize="@dimen/text_18"
             android:textStyle="bold"
             android:text="1"/>
 

@@ -8,13 +8,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
+import com.pingplusplus.android.Pingpp;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.R;
+import com.tallty.smart_life_android.activity.MainActivity;
 import com.tallty.smart_life_android.base.BaseBackFragment;
-import com.tallty.smart_life_android.model.Contact;
 import com.tallty.smart_life_android.model.CartItem;
+import com.tallty.smart_life_android.model.Contact;
 
 import java.util.ArrayList;
+
+import static android.R.attr.data;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,6 +31,7 @@ public class PayOrder extends BaseBackFragment {
     private Contact order_contact = new Contact();
 
     private TextView order_price_text;
+    private TextView pay_btn;
 
     public static PayOrder newInstance(float total_price,
                                        ArrayList<CartItem> selected_cart_items,
@@ -64,11 +69,12 @@ public class PayOrder extends BaseBackFragment {
     @Override
     protected void initView() {
         order_price_text = getViewById(R.id.order_price);
+        pay_btn = getViewById(R.id.pay_now);
     }
 
     @Override
     protected void setListener() {
-
+        pay_btn.setOnClickListener(this);
     }
 
     @Override
@@ -78,6 +84,10 @@ public class PayOrder extends BaseBackFragment {
 
     @Override
     public void onClick(View v) {
-
+        switch (v.getId()) {
+            case R.id.pay_now:
+                Pingpp.createPayment(_mActivity, String.valueOf(data));
+                break;
+        }
     }
 }
