@@ -333,19 +333,6 @@ public class SportMoreData extends BaseBackFragment {
         recyclerView.setLayoutManager(linearLayoutManager);
         adapter = new HomeSportRankAdapter(_mActivity, sportRankItems);
         recyclerView.setAdapter(adapter);
-
-        // 点击加载更多功能
-        // 使用 RecyclerView 本身帮助方法无效 (列表响应不了滚动)
-//        recyclerView.addOnScrollListener(new LoadMoreRecyclerScrollListener(linearLayoutManager) {
-//            @Override
-//            public void onLoadMore(int currentPage) {
-//                if (currentPage < total_pages) {
-//                    current_page = currentPage;
-//                    initRankList(now_timeline);
-//                    Logger.d("加载了更多数据");
-//                }
-//            }
-//        });
     }
 
     /**

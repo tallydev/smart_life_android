@@ -9,13 +9,18 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
-import com.tallty.smart_life_android.adapter.HomeProductAdapter;
+import com.tallty.smart_life_android.adapter.ProductListAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
+import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.model.Product;
 import com.tallty.smart_life_android.model.ProductList;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 
@@ -29,7 +34,6 @@ import retrofit2.Response;
 public class ProductFragment extends BaseBackFragment {
     private String fragmentTitle;
     private RecyclerView recyclerView;
-    private HomeProductAdapter adapter;
     // 数据
     private ArrayList<Product> products = new ArrayList<>();
 
@@ -72,23 +76,19 @@ public class ProductFragment extends BaseBackFragment {
 
     @Override
     protected void afterAnimationLogic() {
-        setList();
+        fetchProducts();
     }
 
-    private void setList() {
+    private void fetchProducts() {
         showProgress("正在加载...");
         Engine.noAuthService().getProductList(1, 20).enqueue(new Callback<ProductList>() {
             @Override
             public void onResponse(Call<ProductList> call, Response<ProductList> response) {
                 if (response.isSuccessful()) {
                     // 商品列表
-                    ProductList productList = response.body();
                     products.clear();
-                    products.addAll(productList.getProducts());
-                    // 加载列表
-                    recyclerView.setLayoutManager(new LinearLayoutManager(_mActivity));
-                    adapter = new HomeProductAdapter(_mActivity, products);
-                    recyclerView.setAdapter(adapter);
+                    products.addAll(response.body().getProducts());
+                    setList();
                     hideProgress();
                 } else {
                     hideProgress();
@@ -100,6 +100,19 @@ public class ProductFragment extends BaseBackFragment {
             public void onFailure(Call<ProductList> call, Throwable t) {
                 hideProgress();
                 showToast(showString(R.string.network_error));
+            }
+        });
+    }
+
+    private void setList() {
+        // 加载列表
+        recyclerView.setLayoutManager(new LinearLayoutManager(_mActivity));
+        ProductListAdapter adapter = new ProductListAdapter(R.layout.item_home_product, products);
+        recyclerView.setAdapter(adapter);
+        recyclerView.addOnItemTouchListener(new OnItemClickListener() {
+            @Override
+            public void onSimpleItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
+                EventBus.getDefault().post(new StartBrotherEvent(ProductShowFragment.newInstance(products.get(i))));
             }
         });
     }

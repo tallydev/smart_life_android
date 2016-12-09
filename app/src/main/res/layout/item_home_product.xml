@@ -18,11 +18,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/product_name"
-        android:maxHeight="40dp"
         android:textColor="@color/global_text"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
-        android:layout_marginLeft="5dp"
+        android:layout_marginLeft="10dp"
         android:lineSpacingExtra="4sp"
         android:textSize="@dimen/text_14"
         android:maxLines="2"
@@ -32,26 +31,12 @@
 
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="15dp"
-        android:textSize="@dimen/text_12"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_16"
         android:id="@+id/product_price"
         android:gravity="center_vertical"
         android:textColor="@color/orange"
         android:layout_below="@id/product_name"
         android:layout_alignLeft="@id/product_name"
         android:layout_alignStart="@id/product_name"/>
-
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="70dp"
-        android:layout_height="25dp"
-        android:gravity="center"
-        android:text="查看详情"
-        android:textSize="@dimen/text_12"
-        android:id="@+id/detail_btn"
-        android:background="@drawable/product_detail_bg"
-        android:textColor="@color/white"
-        android:layout_alignBottom="@id/product_photo"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
 </RelativeLayout>

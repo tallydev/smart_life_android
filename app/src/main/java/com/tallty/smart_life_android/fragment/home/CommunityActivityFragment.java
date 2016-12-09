@@ -9,12 +9,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.CommunityActivityAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
-import com.tallty.smart_life_android.custom.RecyclerVIewItemTouchListener;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.fragment.Common.GlobalAppointFragment;
 import com.tallty.smart_life_android.model.Activities;
@@ -22,7 +23,6 @@ import com.tallty.smart_life_android.model.Activity;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -101,26 +101,15 @@ public class CommunityActivityFragment extends BaseBackFragment {
 
     private void setList(final ArrayList<Activity> activities) {
         recyclerView.setLayoutManager(new LinearLayoutManager(_mActivity));
-        CommunityActivityAdapter adapter = new CommunityActivityAdapter(activities, _mActivity);
+        CommunityActivityAdapter adapter = new CommunityActivityAdapter(R.layout.item_community_activity, activities);
         recyclerView.setAdapter(adapter);
-        recyclerView.addOnItemTouchListener(new RecyclerVIewItemTouchListener(recyclerView) {
+        recyclerView.addOnItemTouchListener(new OnItemClickListener() {
             @Override
-            public void onItemClick(RecyclerView.ViewHolder vh, int position) throws ParseException {
-                Activity activity = activities.get(position);
+            public void onSimpleItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
+                Activity activity = activities.get(i);
                 EventBus.getDefault().post(new StartBrotherEvent(
-                    GlobalAppointFragment.newInstance(
-                            "活动详情",
-                            activity.getDetail_image(),
-                            activity.getId(),
-                            "我要报名",
-                            false
-                    )
+                    GlobalAppointFragment.newInstance("活动详情", activity.getDetail_image(), activity.getId(), "我要报名", false)
                 ));
-            }
-
-            @Override
-            public void onItemLongPress(RecyclerView.ViewHolder vh, int position) {
-
             }
         });
     }

@@ -40,7 +40,7 @@ import static com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView.SCAL
 
 /**
  * 首页-社区活动-活动详情
- * 首页-社区活动-新品上市
+ * 首页-社区服务
  */
 public class GlobalAppointFragment extends BaseBackFragment {
     private String fragmentTitle;
