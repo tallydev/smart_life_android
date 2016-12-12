@@ -16,8 +16,7 @@
         android:layout_alignParentLeft="true"
         android:textColor="@color/global_text"
         android:layout_centerVertical="true"
-        android:textSize="@dimen/text_14"
-        android:text="@string/step_rank_number"/>
+        android:textSize="@dimen/text_14"/>
     
     <ImageView
         android:id="@+id/rank_photo"
@@ -38,8 +37,7 @@
         android:layout_centerVertical="true"
         android:textColor="@color/global_text"
         android:textSize="@dimen/text_14"
-        android:layout_toRightOf="@id/rank_photo"
-        android:text="@string/step_rank_name"/>
+        android:layout_toRightOf="@id/rank_photo"/>
 
     <TextView
         android:id="@+id/praise_count"
@@ -89,8 +87,7 @@
         android:layout_centerVertical="true"
         android:textSize="@dimen/text_22"
         android:layout_toLeftOf="@id/praise_button"
-        android:textColor="@color/orange"
-        android:text="9074"/>
+        android:textColor="@color/orange"/>
 
     <View
         android:id="@+id/line"

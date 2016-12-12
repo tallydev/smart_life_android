@@ -115,7 +115,6 @@ public class ProductFragment extends BaseBackFragment implements BaseQuickAdapte
         // 初次加载列表
         recyclerView.setLayoutManager(new LinearLayoutManager(_mActivity));
         adapter = new ProductListAdapter(R.layout.item_home_product, products);
-        adapter.setAutoLoadMoreSize(3);
         adapter.setLoadMoreView(new CustomLoadMoreView());
         recyclerView.setAdapter(adapter);
         // 点击事件

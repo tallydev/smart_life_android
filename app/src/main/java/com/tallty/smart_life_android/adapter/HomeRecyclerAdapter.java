@@ -20,7 +20,7 @@ import com.tallty.smart_life_android.fragment.home.HealthyCheckReport;
 import com.tallty.smart_life_android.fragment.home.HomeFragment;
 import com.tallty.smart_life_android.fragment.home.MarketCategoryFragment;
 import com.tallty.smart_life_android.fragment.home.ProductFragment;
-import com.tallty.smart_life_android.fragment.home.SportMoreData;
+import com.tallty.smart_life_android.fragment.home.SportFragment;
 import com.tallty.smart_life_android.holder.HomeViewHolder;
 
 import org.greenrobot.eventbus.EventBus;
@@ -138,7 +138,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
         }
         // 健步达人
         else if (position == 1) {
-            EventBus.getDefault().post(new StartBrotherEvent(SportMoreData.newInstance("健步达人", HomeFragment.step)));
+            EventBus.getDefault().post(new StartBrotherEvent(SportFragment.newInstance("健步达人", HomeFragment.step)));
         }
         // 社区活动
         else if (position == 2) {
@@ -223,7 +223,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
                 // 健步达人
                 else if (tag == 1) {
                     if (position == 0) {
-                        EventBus.getDefault().post(new StartBrotherEvent(SportMoreData.newInstance("健步达人", HomeFragment.step)));
+                        EventBus.getDefault().post(new StartBrotherEvent(SportFragment.newInstance("健步达人", HomeFragment.step)));
                     }
                 }
                 // 社区活动
