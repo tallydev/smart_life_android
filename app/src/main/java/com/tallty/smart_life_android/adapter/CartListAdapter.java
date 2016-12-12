@@ -161,7 +161,7 @@ public class CartListAdapter extends RecyclerView.Adapter<CartListAdapter.CartLi
 
         CartListViewHolder(View itemView) {
             super(itemView);
-            check_box = (CheckBox) itemView.findViewById(R.id.select_btn);
+            check_box = (CheckBox) itemView.findViewById(R.id.cart_list_select_btn);
             photo = (ImageView) itemView.findViewById(R.id.cart_list_photo);
             name = (TextView) itemView.findViewById(R.id.cart_list_name);
             add = (Button) itemView.findViewById(R.id.cart_list_add);

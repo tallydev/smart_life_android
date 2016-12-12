@@ -1,9 +1,7 @@
 package com.tallty.smart_life_android.fragment.cart;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +15,7 @@ import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
+import com.tallty.smart_life_android.adapter.CartAdapter;
 import com.tallty.smart_life_android.adapter.CartListAdapter;
 import com.tallty.smart_life_android.base.BaseLazyMainFragment;
 import com.tallty.smart_life_android.custom.RecyclerVIewItemTouchListener;
@@ -48,7 +47,7 @@ public class CartFragment extends BaseLazyMainFragment {
 
     private TextView pay;
     private RecyclerView recyclerView;
-    private CartListAdapter adapter;
+    private CartAdapter adapter;
     private CheckBox select_all_btn;
     private TextView total_price_text;
     // 数据
@@ -172,33 +171,8 @@ public class CartFragment extends BaseLazyMainFragment {
     private void processRecyclerVIew(){
         // 载入列表
         recyclerView.setLayoutManager(new LinearLayoutManager(_mActivity));
-        adapter = new CartListAdapter(_mActivity, cartItems);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        adapter = new CartAdapter(R.layout.item_cart_list, cartItems);
         recyclerView.setAdapter(adapter);
-        recyclerView.addOnItemTouchListener(new RecyclerVIewItemTouchListener(recyclerView) {
-            @Override
-            public void onItemClick(RecyclerView.ViewHolder vh, int position) {
-
-            }
-
-            @Override
-            public void onItemLongPress(RecyclerView.ViewHolder vh, final int position) {
-//                final AlertDialog.Builder builder = new AlertDialog.Builder(_mActivity, R.style.CustomAlertDialogTheme);
-//                builder.setMessage("确认删除吗")
-//                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                deleteCartItem(position);
-//                            }
-//                        })
-//                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                dialog.dismiss();
-//                            }
-//                        }).create().show();
-            }
-        });
     }
 
     /**
@@ -268,8 +242,10 @@ public class CartFragment extends BaseLazyMainFragment {
      */
     @Subscribe
     public void onCartUpdateItem(CartUpdateItem event){
+        Log.d(App.TAG, "接收到的"+event.position);
+        Log.d(App.TAG, "接收到的"+event.cartItem.isChecked());
         cartItems.set(event.position, event.cartItem);
-        adapter.notifyItemChanged(event.position, event.cartItem);
+        adapter.notifyItemChanged(event.position);
         // 处理【合计】【全选】逻辑
         float total = 0.0f;
         isSelectAll = true;

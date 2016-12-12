@@ -7,7 +7,7 @@
     android:layout_marginBottom="4dp"
     android:layout_height="90dp">
     <CheckBox
-        android:id="@+id/select_btn"
+        android:id="@+id/cart_list_select_btn"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="center_vertical"
@@ -20,7 +20,7 @@
         android:layout_centerVertical="true"
         android:layout_marginRight="10dp"
         android:src="@drawable/banner_one"
-        android:layout_toRightOf="@id/select_btn"/>
+        android:layout_toRightOf="@id/cart_list_select_btn"/>
     <TextView
         android:id="@+id/cart_list_price"
         android:layout_width="wrap_content"
