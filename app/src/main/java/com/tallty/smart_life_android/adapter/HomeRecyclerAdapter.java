@@ -14,10 +14,11 @@ import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.event.ShowSnackbarEvent;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
-import com.tallty.smart_life_android.fragment.home.CommunityActivityFragment;
 import com.tallty.smart_life_android.fragment.Common.GlobalAppointFragment;
+import com.tallty.smart_life_android.fragment.home.CommunityActivityFragment;
 import com.tallty.smart_life_android.fragment.home.HealthyCheckReport;
 import com.tallty.smart_life_android.fragment.home.HomeFragment;
+import com.tallty.smart_life_android.fragment.home.MarketCategoryFragment;
 import com.tallty.smart_life_android.fragment.home.ProductFragment;
 import com.tallty.smart_life_android.fragment.home.SportMoreData;
 import com.tallty.smart_life_android.holder.HomeViewHolder;
@@ -47,8 +48,6 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
     private static final int IS_NORMAL = 0;
     private static final int IS_STEPS = 1;
     private static final int IS_PRODUCT = 2;
-    // banner图数据
-    private Integer[] imagesUrl = { R.drawable.banner_one, R.drawable.community_activity };
 
     /**
      * 构造器
@@ -166,7 +165,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
         }
         // 精品超市
         else if (position == 7) {
-            EventBus.getDefault().post(new StartBrotherEvent(ProductFragment.newInstance("精品超市")));
+            EventBus.getDefault().post(new StartBrotherEvent(MarketCategoryFragment.newInstance("精品超市")));
         }
     }
 
@@ -272,7 +271,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
                 // 精品超市
                 else if (tag == 7) {
                     if (position == 0) {
-                        EventBus.getDefault().post(new StartBrotherEvent(ProductFragment.newInstance("精品超市")));
+                        EventBus.getDefault().post(new StartBrotherEvent(MarketCategoryFragment.newInstance("商品分类")));
                     }
                 }
             }

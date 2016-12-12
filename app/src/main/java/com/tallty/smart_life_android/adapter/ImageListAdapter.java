@@ -13,17 +13,18 @@ import java.util.List;
 /**
  * Created by kang on 2016/11/23.
  * 首页 - 社区活动 - 适配器
+ * 首页 - 精品超市分类 - 适配器
  */
 
-public class CommunityActivityAdapter extends BaseQuickAdapter<Activity, BaseViewHolder> {
+public class ImageListAdapter extends BaseQuickAdapter<Activity, BaseViewHolder> {
 
-    public CommunityActivityAdapter(int layoutResId, List<Activity> data) {
+    public ImageListAdapter(int layoutResId, List<Activity> data) {
         super(layoutResId, data);
     }
 
     @Override
     protected void convert(BaseViewHolder baseViewHolder, Activity activity) {
-        ImageView imageView = baseViewHolder.getView(R.id.community_activity_item_image);
+        ImageView imageView = baseViewHolder.getView(R.id.image_list_item_image);
         imageView.setMaxHeight(4000);
 
         Glide.with(mContext)

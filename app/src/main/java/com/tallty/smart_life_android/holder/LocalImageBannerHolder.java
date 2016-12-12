@@ -19,7 +19,7 @@ public class LocalImageBannerHolder implements Holder<Integer> {
     @Override
     public View createView(Context context) {
         imageView = new ImageView(context);
-        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
 
         return imageView;
     }
@@ -28,7 +28,7 @@ public class LocalImageBannerHolder implements Holder<Integer> {
     public void UpdateUI(Context context, int position, Integer data) {
         Glide.with(context)
                 .load(data)
-                .error(R.drawable.default_banner)
+                .error(R.drawable.image_error)
                 .into(imageView);
     }
 }

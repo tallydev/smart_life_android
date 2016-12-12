@@ -16,12 +16,8 @@ import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.ImageListAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
-import com.tallty.smart_life_android.event.StartBrotherEvent;
-import com.tallty.smart_life_android.fragment.Common.GlobalAppointFragment;
 import com.tallty.smart_life_android.model.Activities;
 import com.tallty.smart_life_android.model.Activity;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 
@@ -30,16 +26,16 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * 首页 - 社区活动
+ * 首页 - 精品超市 - 分类
  */
-public class CommunityActivityFragment extends BaseBackFragment {
+public class MarketCategoryFragment extends BaseBackFragment {
     private String title;
     private RecyclerView recyclerView;
 
-    public static CommunityActivityFragment newInstance(String title) {
+    public static MarketCategoryFragment newInstance(String title) {
         Bundle args = new Bundle();
         args.putString(Const.FRAGMENT_NAME, title);
-        CommunityActivityFragment fragment = new CommunityActivityFragment();
+        MarketCategoryFragment fragment = new MarketCategoryFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -55,7 +51,7 @@ public class CommunityActivityFragment extends BaseBackFragment {
 
     @Override
     public int getFragmentLayout() {
-        return R.layout.fragment_community_activity;
+        return R.layout.fragment_market_category;
     }
 
     @Override
@@ -65,7 +61,7 @@ public class CommunityActivityFragment extends BaseBackFragment {
 
     @Override
     protected void initView() {
-        recyclerView = getViewById(R.id.activities_list);
+        recyclerView = getViewById(R.id.categories_list);
     }
 
     @Override
@@ -79,6 +75,7 @@ public class CommunityActivityFragment extends BaseBackFragment {
     }
 
     private void getActivities() {
+        // TODO: 2016/12/12 获取商品类别
         showProgress("载入中...");
         Engine.authService(shared_token, shared_phone).getActivities().enqueue(new Callback<Activities>() {
             @Override
@@ -99,17 +96,14 @@ public class CommunityActivityFragment extends BaseBackFragment {
         });
     }
 
-    private void setList(final ArrayList<Activity> activities) {
+    private void setList(final ArrayList<Activity> categories) {
         recyclerView.setLayoutManager(new LinearLayoutManager(_mActivity));
-        ImageListAdapter adapter = new ImageListAdapter(R.layout.item_community_activity, activities);
+        ImageListAdapter adapter = new ImageListAdapter(R.layout.item_community_activity, categories);
         recyclerView.setAdapter(adapter);
         recyclerView.addOnItemTouchListener(new OnItemClickListener() {
             @Override
             public void onSimpleItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
-                Activity activity = activities.get(i);
-                EventBus.getDefault().post(new StartBrotherEvent(
-                    GlobalAppointFragment.newInstance("活动详情", activity.getDetail_image(), activity.getId(), "我要报名", false)
-                ));
+                start(ProductFragment.newInstance("商品列表"));
             }
         });
     }

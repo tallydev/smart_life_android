@@ -78,7 +78,7 @@
                 <com.bigkoo.convenientbanner.ConvenientBanner
                     android:id="@+id/product_detail_banner"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
+                    android:layout_height="280dp"
                     android:layout_alignParentTop="true"
                     app:canLoop="true" />
                 <TextView

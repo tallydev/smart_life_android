@@ -26,10 +26,13 @@ public class ProductListAdapter extends BaseQuickAdapter<Product, BaseViewHolder
         baseViewHolder
             .setText(R.id.product_name, product.getTitle())
             .setText(R.id.product_price, "￥ "+product.getPrice());
+        ImageView imageView = baseViewHolder.getView(R.id.product_photo);
+        imageView.setMaxHeight(1000);
         Glide
             .with(mContext)
             .load(product.getThumb())
-            .crossFade()
-            .into((ImageView) baseViewHolder.getView(R.id.product_photo));
+            .placeholder(R.drawable.product_placeholder)
+            .error(R.drawable.image_error)
+            .into(imageView);
     }
 }

@@ -224,7 +224,7 @@ public class ProductShowFragment extends BaseBackFragment implements OnItemClick
                 public void onLoadFailed(Exception e, Drawable errorDrawable) {
                     super.onLoadFailed(e, errorDrawable);
                     hideProgress();
-                    showToast("加载详情失败, 请稍后重试");
+                    showToast("加载商品详情失败");
                 }
             });
     }

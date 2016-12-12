@@ -16,6 +16,7 @@ import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.ProductListAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
+import com.tallty.smart_life_android.custom.CustomLoadMoreView;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.model.Product;
 import com.tallty.smart_life_android.model.ProductList;
@@ -31,11 +32,15 @@ import retrofit2.Response;
 /**
  * 首页-限量销售
  */
-public class ProductFragment extends BaseBackFragment {
+public class ProductFragment extends BaseBackFragment implements BaseQuickAdapter.RequestLoadMoreListener {
     private String fragmentTitle;
     private RecyclerView recyclerView;
+    private ProductListAdapter adapter;
     // 数据
     private ArrayList<Product> products = new ArrayList<>();
+    // 加载更多
+    private int current_page = 1;
+    private int total_pages = 1;
 
     public static ProductFragment newInstance(String title) {
         Bundle args = new Bundle();
@@ -81,10 +86,12 @@ public class ProductFragment extends BaseBackFragment {
 
     private void fetchProducts() {
         showProgress("正在加载...");
-        Engine.noAuthService().getProductList(1, 20).enqueue(new Callback<ProductList>() {
+        Engine.noAuthService().getProductList(1, 10).enqueue(new Callback<ProductList>() {
             @Override
             public void onResponse(Call<ProductList> call, Response<ProductList> response) {
                 if (response.isSuccessful()) {
+                    current_page = response.body().getCurrentPage();
+                    total_pages = response.body().getTotalPages();
                     // 商品列表
                     products.clear();
                     products.addAll(response.body().getProducts());
@@ -105,16 +112,54 @@ public class ProductFragment extends BaseBackFragment {
     }
 
     private void setList() {
-        // 加载列表
+        // 初次加载列表
         recyclerView.setLayoutManager(new LinearLayoutManager(_mActivity));
-        ProductListAdapter adapter = new ProductListAdapter(R.layout.item_home_product, products);
+        adapter = new ProductListAdapter(R.layout.item_home_product, products);
+        adapter.setAutoLoadMoreSize(3);
+        adapter.setLoadMoreView(new CustomLoadMoreView());
         recyclerView.setAdapter(adapter);
+        // 点击事件
         recyclerView.addOnItemTouchListener(new OnItemClickListener() {
             @Override
             public void onSimpleItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
                 EventBus.getDefault().post(new StartBrotherEvent(ProductShowFragment.newInstance(products.get(i))));
             }
         });
+        // 加载更多
+        adapter.setOnLoadMoreListener(this);
+    }
+
+    @Override
+    public void onLoadMoreRequested() {
+        recyclerView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (current_page >= total_pages) {
+                    adapter.loadMoreEnd();
+                } else {
+                    current_page++;
+                    Engine.noAuthService().getProductList(current_page, 10).enqueue(new Callback<ProductList>() {
+                        @Override
+                        public void onResponse(Call<ProductList> call, Response<ProductList> response) {
+                            if (response.isSuccessful()) {
+                                current_page = response.body().getCurrentPage();
+                                total_pages = response.body().getTotalPages();
+                                // 商品列表
+                                adapter.addData(response.body().getProducts());
+                                adapter.loadMoreComplete();
+                            } else {
+                                adapter.loadMoreFail();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ProductList> call, Throwable t) {
+                            adapter.loadMoreFail();
+                        }
+                    });
+                }
+            }
+        }, 1000);
     }
 
     @Override
