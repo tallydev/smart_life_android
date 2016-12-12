@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.db.chart.Tools;
 import com.db.chart.model.LineSet;
 import com.db.chart.view.AxisController;
@@ -20,7 +19,6 @@ import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.SportRankAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
-import com.tallty.smart_life_android.custom.CustomLoadMoreView;
 import com.tallty.smart_life_android.custom.MyRecyclerView;
 import com.tallty.smart_life_android.model.SportData;
 import com.tallty.smart_life_android.model.SportDetail;
@@ -43,7 +41,7 @@ import retrofit2.Response;
 /**
  * 首页-健步达人-更多数据
  */
-public class SportFragment extends BaseBackFragment implements BaseQuickAdapter.RequestLoadMoreListener {
+public class SportFragment extends BaseBackFragment {
     private String mName;
     // 组件
     private TextView tab_day;
@@ -60,13 +58,15 @@ public class SportFragment extends BaseBackFragment implements BaseQuickAdapter.
     private TextView total_step;
     private TextView rank_percent;
     private TextView rank_position;
+    private TextView rank_load_more;
     // 列表
     private MyRecyclerView recyclerView;
     private SportRankAdapter adapter;
     // rank列表控制
+    private boolean isLoadRank = false;
     private Integer total_pages = 1;
     private Integer current_page = 1;
-    private Integer per_page = 10;
+    private Integer per_page = 20;
     // 切换加载控制
     private boolean isLoadDay = false;
     private boolean isLoadWeek = false;
@@ -131,6 +131,7 @@ public class SportFragment extends BaseBackFragment implements BaseQuickAdapter.
         rank_position = getViewById(R.id.rank_position);
 
         recyclerView = getViewById(R.id.step_rank);
+        rank_load_more = getViewById(R.id.rank_load_more);
     }
 
     @Override
@@ -139,6 +140,7 @@ public class SportFragment extends BaseBackFragment implements BaseQuickAdapter.
         tab_week.setOnClickListener(this);
         tab_month.setOnClickListener(this);
         tab_year.setOnClickListener(this);
+        rank_load_more.setOnClickListener(this);
     }
 
     @Override
@@ -173,6 +175,11 @@ public class SportFragment extends BaseBackFragment implements BaseQuickAdapter.
                 tabSelectedTask(tab_year, chartYear, isLoadYear);
                 isLoadYear = true;
                 break;
+            case R.id.rank_load_more:
+                rank_load_more.setText("加载中…");
+                rank_load_more.setClickable(false);
+                getMoreRank();
+                break;
         }
     }
 
@@ -184,6 +191,8 @@ public class SportFragment extends BaseBackFragment implements BaseQuickAdapter.
      */
     private void tabSelectedTask(TextView tab, LineChartView chart, boolean isLoad) {
         chartTabReset();
+        // 重置加载更多按钮
+        resetRankMoreBtn("点击加载更多");
         tab.setSelected(true);
         chart.setVisibility(View.VISIBLE);
         if (DAY.equals(now_timeline)) {
@@ -201,25 +210,25 @@ public class SportFragment extends BaseBackFragment implements BaseQuickAdapter.
         // 步数少于服务器的步数,会上传失败
         Log.i(App.TAG, "开始上传步数任务"+current_date+","+ step);
         Engine
-            .authService(shared_token, shared_phone)
-            .uploadStep(current_date, step, "android", versionCode)
-            .enqueue(new Callback<Step>() {
-                @Override
-                public void onResponse(Call<Step> call, Response<Step> response) {
-                    if (response.isSuccessful()) {
-                        Log.i(App.TAG, "上传步数成功"+response.body().getCount());
-                    } else {
-                        Log.i(App.TAG, "上传步数失败");
+                .authService(shared_token, shared_phone)
+                .uploadStep(current_date, step, "android", versionCode)
+                .enqueue(new Callback<Step>() {
+                    @Override
+                    public void onResponse(Call<Step> call, Response<Step> response) {
+                        if (response.isSuccessful()) {
+                            Log.i(App.TAG, "上传步数成功"+response.body().getCount());
+                        } else {
+                            Log.i(App.TAG, "上传步数失败");
+                        }
+                        // 载入图表和列表
+                        initChartAndRank(chart, isLoad);
                     }
-                    // 载入图表和列表
-                    initChartAndRank(chart, isLoad);
-                }
 
-                @Override
-                public void onFailure(Call<Step> call, Throwable t) {
-                    Log.d(App.TAG, "上传步数链接服务器失败");
-                }
-            });
+                    @Override
+                    public void onFailure(Call<Step> call, Throwable t) {
+                        Log.d(App.TAG, "上传步数链接服务器失败");
+                    }
+                });
     }
 
     /**
@@ -271,78 +280,103 @@ public class SportFragment extends BaseBackFragment implements BaseQuickAdapter.
         Engine.authService(shared_token, shared_phone)
                 .getSportRanks(now_timeline, current_page, per_page)
                 .enqueue(new Callback<SportRank>() {
-            @Override
-            public void onResponse(Call<SportRank> call, Response<SportRank> response) {
-                hideProgress();
-                if (response.isSuccessful()) {
-                    SportRank sportRank = response.body();
-                    sportRankItems.clear();
-                    sportRankItems.addAll(sportRank.getTop());
-                    total_pages = sportRank.getTotal_pages();
-                    current_page = sportRank.getCurrent_page();
-                    setRankList();
-                } else {
-                    showToast(showString(R.string.response_error));
-                }
-            }
+                    @Override
+                    public void onResponse(Call<SportRank> call, Response<SportRank> response) {
+                        if (response.isSuccessful()) {
+                            SportRank sportRank = response.body();
+                            sportRankItems.clear();
+                            sportRankItems.addAll(sportRank.getTop());
 
-            @Override
-            public void onFailure(Call<SportRank> call, Throwable t) {
-                hideProgress();
-                showToast(showString(R.string.response_error));
-            }
-        });
+                            total_pages = sportRank.getTotal_pages();
+                            current_page = sportRank.getCurrent_page();
+
+                            // 是否显示点击加载更多按钮
+                            if (current_page < total_pages) {
+                                rank_load_more.setVisibility(View.VISIBLE);
+                                current_page++;
+                            }
+
+                            // 更新列表
+                            if (isLoadRank) {
+                                // 以后采取更新列表
+                                Log.d(App.TAG, "开始更新列表");
+                                adapter.notifyDataSetChanged();
+                            } else {
+                                // 第一次初始化列表
+                                setRankList(sportRankItems);
+                                isLoadRank = true;
+                            }
+
+                            hideProgress();
+                        } else {
+                            hideProgress();
+                            showToast(showString(R.string.response_error));
+                            Log.d(App.TAG, "初始化rank列表,请求错误"+current_page+"/"+now_timeline);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<SportRank> call, Throwable t) {
+                        hideProgress();
+                        showToast(showString(R.string.response_error));
+                        Log.d(App.TAG, "初始化rank列表,网络错误");
+                    }
+                });
     }
 
     /**
      * 操作列表
      */
-    private void setRankList() {
-        recyclerView.setLayoutManager(new LinearLayoutManager(_mActivity));
-        adapter = new SportRankAdapter(R.layout.item_step_rank, sportRankItems);
-        adapter.setLoadMoreView(new CustomLoadMoreView());
+    private void setRankList(ArrayList<SportRankItem> sportRankItems) {
+        Log.d(App.TAG, "初始化列表");
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(_mActivity);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        adapter = new SportRankAdapter(_mActivity, sportRankItems);
         recyclerView.setAdapter(adapter);
-        // 加载更多
-        adapter.setOnLoadMoreListener(this);
     }
 
     /**
-     * 加载更多
+     * 点击加载更多rank数据
      */
-    @Override
-    public void onLoadMoreRequested() {
-        recyclerView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (current_page >= total_pages) {
-                    adapter.loadMoreEnd();
-                } else {
-                    current_page++;
-                    Engine.authService(shared_token, shared_phone)
-                            .getSportRanks(now_timeline, current_page, per_page)
-                            .enqueue(new Callback<SportRank>() {
-                        @Override
-                        public void onResponse(Call<SportRank> call, Response<SportRank> response) {
-                            if (response.isSuccessful()) {
-                                current_page = response.body().getCurrent_page();
-                                total_pages = response.body().getTotal_pages();
-                                // rank列表
-                                adapter.addData(response.body().getTop());
-                                adapter.loadMoreComplete();
-                            } else {
-                                adapter.loadMoreFail();
-                            }
+    private void getMoreRank() {
+        Engine.authService(shared_token, shared_phone)
+                .getSportRanks(now_timeline, current_page, per_page)
+                .enqueue(new Callback<SportRank>() {
+                    @Override
+                    public void onResponse(Call<SportRank> call, Response<SportRank> response) {
+                        if (response.isSuccessful()) {
+                            SportRank sportRank = response.body();
+                            sportRankItems.addAll(sportRank.getTop());
+                            total_pages = sportRank.getTotal_pages();
+                            current_page = sportRank.getCurrent_page();
+                            // 点击加载更多
+                            adapter.notifyDataSetChanged();
+                            resetRankMoreBtn("点击加载更多");
+                        } else {
+                            resetRankMoreBtn("点击重新加载");
                         }
+                        // 显示与数量控制
+                        if (current_page < total_pages) {
+                            rank_load_more.setVisibility(View.VISIBLE);
+                            current_page++;
+                        } else {
+                            rank_load_more.setVisibility(View.GONE);
+                        }
+                    }
 
-                        @Override
-                        public void onFailure(Call<SportRank> call, Throwable t) {
-                            adapter.loadMoreFail();
+                    @Override
+                    public void onFailure(Call<SportRank> call, Throwable t) {
+                        resetRankMoreBtn("点击重新加载");
+                        if (current_page < total_pages) {
+                            rank_load_more.setVisibility(View.VISIBLE);
+                            current_page++;
+                        } else {
+                            rank_load_more.setVisibility(View.GONE);
                         }
-                    });
-                }
-            }
-        }, 1000);
+                    }
+                });
     }
+
 
     /**
      * 设置个人统计信息
@@ -452,6 +486,13 @@ public class SportFragment extends BaseBackFragment implements BaseQuickAdapter.
         chartWeek.setVisibility(View.GONE);
         chartMonth.setVisibility(View.GONE);
         chartYear.setVisibility(View.GONE);
+    }
+
+    // 重置点击加载更多按钮
+    private void resetRankMoreBtn(String text) {
+        rank_load_more.setVisibility(View.GONE);
+        rank_load_more.setClickable(true);
+        rank_load_more.setText(text);
     }
 
     private String getTodayDate() {
