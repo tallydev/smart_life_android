@@ -9,16 +9,12 @@
     <include layout="@layout/toolbar"/>
 
     <!--主体部分-->
-    <LinearLayout
+    <android.support.v7.widget.RecyclerView
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:id="@+id/limit_sail_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp">
-        <com.tallty.smart_life_android.custom.MyRecyclerView
-            android:id="@+id/limit_sail_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scrollbars="vertical"/>
-    </LinearLayout>
+        android:layout_marginTop="4dp"
+        android:scrollbars="vertical"/>
 
 </android.support.design.widget.CoordinatorLayout>
