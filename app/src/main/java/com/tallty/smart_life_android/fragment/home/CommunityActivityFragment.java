@@ -14,7 +14,7 @@ import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
-import com.tallty.smart_life_android.adapter.ImageListAdapter;
+import com.tallty.smart_life_android.adapter.CommunityActivityAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.fragment.Common.GlobalAppointFragment;
@@ -101,7 +101,7 @@ public class CommunityActivityFragment extends BaseBackFragment {
 
     private void setList(final ArrayList<Activity> activities) {
         recyclerView.setLayoutManager(new LinearLayoutManager(_mActivity));
-        ImageListAdapter adapter = new ImageListAdapter(R.layout.item_community_activity, activities);
+        CommunityActivityAdapter adapter = new CommunityActivityAdapter(R.layout.item_community_activity, activities);
         recyclerView.setAdapter(adapter);
         recyclerView.addOnItemTouchListener(new OnItemClickListener() {
             @Override

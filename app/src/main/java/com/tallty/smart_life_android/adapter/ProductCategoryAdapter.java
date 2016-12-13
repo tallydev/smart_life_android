@@ -6,30 +6,29 @@ import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.tallty.smart_life_android.R;
-import com.tallty.smart_life_android.model.Activity;
+import com.tallty.smart_life_android.model.Category;
 
 import java.util.List;
 
 /**
- * Created by kang on 2016/11/23.
- * 首页 - 社区活动 - 适配器
+ * Created by kang on 2016/12/13.
  * 首页 - 精品超市分类 - 适配器
  */
 
-public class ImageListAdapter extends BaseQuickAdapter<Activity, BaseViewHolder> {
+public class ProductCategoryAdapter extends BaseQuickAdapter<Category, BaseViewHolder> {
 
-    public ImageListAdapter(int layoutResId, List<Activity> data) {
+    public ProductCategoryAdapter(int layoutResId, List<Category> data) {
         super(layoutResId, data);
     }
 
     @Override
-    protected void convert(BaseViewHolder baseViewHolder, Activity activity) {
+    protected void convert(BaseViewHolder baseViewHolder, Category category) {
         ImageView imageView = baseViewHolder.getView(R.id.image_list_item_image);
         imageView.setMaxHeight(4000);
 
         Glide.with(mContext)
-            .load(activity.getImage())
-            .crossFade()
-            .into(imageView);
+                .load(category.getThumb())
+                .crossFade()
+                .into(imageView);
     }
 }

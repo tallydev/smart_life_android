@@ -14,10 +14,11 @@ import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
-import com.tallty.smart_life_android.adapter.ImageListAdapter;
+import com.tallty.smart_life_android.adapter.CommunityActivityAdapter;
+import com.tallty.smart_life_android.adapter.ProductCategoryAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
-import com.tallty.smart_life_android.model.Activities;
-import com.tallty.smart_life_android.model.Activity;
+import com.tallty.smart_life_android.model.Categories;
+import com.tallty.smart_life_android.model.Category;
 
 import java.util.ArrayList;
 
@@ -28,14 +29,14 @@ import retrofit2.Response;
 /**
  * 首页 - 精品超市 - 分类
  */
-public class MarketCategoryFragment extends BaseBackFragment {
+public class ProductCategoryFragment extends BaseBackFragment {
     private String title;
     private RecyclerView recyclerView;
 
-    public static MarketCategoryFragment newInstance(String title) {
+    public static ProductCategoryFragment newInstance(String title) {
         Bundle args = new Bundle();
         args.putString(Const.FRAGMENT_NAME, title);
-        MarketCategoryFragment fragment = new MarketCategoryFragment();
+        ProductCategoryFragment fragment = new ProductCategoryFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -75,35 +76,34 @@ public class MarketCategoryFragment extends BaseBackFragment {
     }
 
     private void getActivities() {
-        // TODO: 2016/12/12 获取商品类别
-        showProgress("载入中...");
-        Engine.authService(shared_token, shared_phone).getActivities().enqueue(new Callback<Activities>() {
+        showProgress("正在加载...");
+        Engine.noAuthService().getProductCategories().enqueue(new Callback<Categories>() {
             @Override
-            public void onResponse(Call<Activities> call, Response<Activities> response) {
+            public void onResponse(Call<Categories> call, Response<Categories> response) {
                 if (response.isSuccessful()) {
-                    setList(response.body().getActivities());
+                    setList(response.body().getCategories());
                 } else {
-                    showToast("载入失败");
+                    showToast("加载失败");
                 }
                 hideProgress();
             }
 
             @Override
-            public void onFailure(Call<Activities> call, Throwable t) {
+            public void onFailure(Call<Categories> call, Throwable t) {
                 hideProgress();
-                showToast("载入失败, 请检查手机网络");
+                showToast("链接错误, 请检查手机网络");
             }
         });
     }
 
-    private void setList(final ArrayList<Activity> categories) {
+    private void setList(final ArrayList<Category> categories) {
         recyclerView.setLayoutManager(new LinearLayoutManager(_mActivity));
-        ImageListAdapter adapter = new ImageListAdapter(R.layout.item_community_activity, categories);
+        ProductCategoryAdapter adapter = new ProductCategoryAdapter(R.layout.item_community_activity, categories);
         recyclerView.setAdapter(adapter);
         recyclerView.addOnItemTouchListener(new OnItemClickListener() {
             @Override
             public void onSimpleItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
-                start(ProductFragment.newInstance("商品列表"));
+                start(ProductFragment.newInstance("商品列表", categories.get(i).getId()));
             }
         });
     }

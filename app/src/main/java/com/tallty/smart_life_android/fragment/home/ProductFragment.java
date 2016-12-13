@@ -17,11 +17,8 @@ import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.ProductListAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.custom.CustomLoadMoreView;
-import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.model.Product;
 import com.tallty.smart_life_android.model.ProductList;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 
@@ -34,6 +31,7 @@ import retrofit2.Response;
  */
 public class ProductFragment extends BaseBackFragment implements BaseQuickAdapter.RequestLoadMoreListener {
     private String fragmentTitle;
+    private int categoryId = 0;
     private RecyclerView recyclerView;
     private ProductListAdapter adapter;
     // 数据
@@ -41,10 +39,12 @@ public class ProductFragment extends BaseBackFragment implements BaseQuickAdapte
     // 加载更多
     private int current_page = 1;
     private int total_pages = 1;
+    private int per_page = 10;
 
-    public static ProductFragment newInstance(String title) {
+    public static ProductFragment newInstance(String title, int categoryId) {
         Bundle args = new Bundle();
         args.putString(Const.FRAGMENT_NAME, title);
+        args.putInt(Const.INT, categoryId);
         ProductFragment fragment = new ProductFragment();
         fragment.setArguments(args);
         return fragment;
@@ -56,6 +56,7 @@ public class ProductFragment extends BaseBackFragment implements BaseQuickAdapte
         Bundle args = getArguments();
         if (args != null) {
             fragmentTitle = args.getString(Const.FRAGMENT_NAME);
+            categoryId = args.getInt(Const.INT);
         }
     }
 
@@ -86,7 +87,8 @@ public class ProductFragment extends BaseBackFragment implements BaseQuickAdapte
 
     private void fetchProducts() {
         showProgress("正在加载...");
-        Engine.noAuthService().getProductList(1, 10).enqueue(new Callback<ProductList>() {
+        Engine.noAuthService().getProductsBycategory(current_page, per_page, categoryId)
+                .enqueue(new Callback<ProductList>() {
             @Override
             public void onResponse(Call<ProductList> call, Response<ProductList> response) {
                 if (response.isSuccessful()) {
@@ -137,7 +139,8 @@ public class ProductFragment extends BaseBackFragment implements BaseQuickAdapte
                     adapter.loadMoreEnd();
                 } else {
                     current_page++;
-                    Engine.noAuthService().getProductList(current_page, 10).enqueue(new Callback<ProductList>() {
+                    Engine.noAuthService().getProductsBycategory(current_page, per_page, categoryId)
+                            .enqueue(new Callback<ProductList>() {
                         @Override
                         public void onResponse(Call<ProductList> call, Response<ProductList> response) {
                             if (response.isSuccessful()) {

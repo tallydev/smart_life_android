@@ -119,7 +119,7 @@ public class ProductShowFragment extends BaseBackFragment implements OnItemClick
 
     @Override
     protected void afterAnimationLogic() {
-//        setToolbarMenu(toolbar);
+        setToolbarMenu(toolbar);
         // 显示商品信息
         showProduct();
         // 设置banner
@@ -177,14 +177,6 @@ public class ProductShowFragment extends BaseBackFragment implements OnItemClick
      * 设置toolbar的菜单按钮
      */
     private void setToolbarMenu(Toolbar toolbar) {
-        boolean blank = true;
-        // TODO: 16/8/1 调用接口判断购物车是否为空
-        if (blank) {
-            toolbar.inflateMenu(R.menu.cart_blank);
-        } else {
-            toolbar.inflateMenu(R.menu.cart_has);
-        }
-
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {

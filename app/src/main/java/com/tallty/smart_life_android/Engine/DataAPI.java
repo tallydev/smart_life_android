@@ -5,6 +5,8 @@ import com.tallty.smart_life_android.model.Appointment;
 import com.tallty.smart_life_android.model.AppointmentList;
 import com.tallty.smart_life_android.model.CartItem;
 import com.tallty.smart_life_android.model.CartList;
+import com.tallty.smart_life_android.model.Categories;
+import com.tallty.smart_life_android.model.Category;
 import com.tallty.smart_life_android.model.Contact;
 import com.tallty.smart_life_android.model.ContactList;
 import com.tallty.smart_life_android.model.Home;
@@ -85,11 +87,20 @@ public interface DataAPI {
     Call<User> getUser();
 
     // *********************************************************************************************
+    // 商品分类
+    @GET("product_sorts")
+    Call<Categories> getProductCategories();
+
+    // 根据类别查看商品
+    @GET("products/sort")
+    Call<ProductList> getProductsBycategory(@Query("page") int page,
+                                            @Query("per_page") int per_page,
+                                            @Query("product_sort_id") int category_id);
 
     // 获取商品列表
     @GET("products")
-    Call<ProductList> getProductList(@Query("page") Integer page,
-                                     @Query("per_page") Integer per_page);
+    Call<ProductList> getProductList(@Query("page") int page,
+                                     @Query("per_page") int per_page);
 
     // 获取商品详情
     @GET("products/{id}")
@@ -97,8 +108,8 @@ public interface DataAPI {
 
     // 获取购物车列表
     @GET("cart_items")
-    Call<CartList> getCartList(@Query("page") Integer page,
-                               @Query("per_page") Integer per_page);
+    Call<CartList> getCartList(@Query("page") int page,
+                               @Query("per_page") int per_page);
 
     // 添加商品到购物车
     @FormUrlEncoded
