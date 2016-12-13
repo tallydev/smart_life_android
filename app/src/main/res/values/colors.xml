@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--toolbar-->
-    <color name="colorPrimary">#FF8000</color>
+    <color name="colorPrimary">#FFFFFF</color>
     <color name="textColorPrimary">#FFFFFF</color>
-    <!--状态条-->
-    <color name="colorPrimaryDark">#ff8000</color>
-    <!--强调-->
-    <color name="colorAccent">#333333</color>
+    <color name="colorPrimaryDark">#FF8000</color>
+    <color name="colorAccent">#FF8000</color>
+
     <!--通用背景色-->
     <color name="app_bg">#E7E7E7</color>
+    <color name="toolbar_bg">#FF8000</color>
 
     <!--tab menu 颜色-->
     <color name="tab_num_color">#FFFFFF</color>

@@ -10,12 +10,11 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="?attr/colorPrimary"
-        android:minHeight="48dp"
+        android:background="@color/toolbar_bg"
         android:fitsSystemWindows="true"
-        android:theme="@style/ActionBarThemeOverlay"
-        app:popupTheme="@style/ActionBarPopupThemeOverlay"
-        app:titleTextAppearance="@style/ActionBar.TitleText">
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/AppTheme.NoActionBar.PopupOverlay"
+        app:titleTextAppearance="@style/Toolbar_TextAppearance_White">
         <!--自定义控件-->
         <TextView
             android:id="@+id/toolbar_title"
