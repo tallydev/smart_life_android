@@ -1,16 +1,15 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/orange</item>
-        <item name="android:windowIsTranslucent">true</item>
+        <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textColor">@color/global_text</item>
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
     </style>
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
     <!--toolbar 相关-->
     <style name="ActionBarPopupThemeOverlay" parent="ThemeOverlay.AppCompat.Dark"/>
@@ -23,8 +22,6 @@
         <item name="colorControlNormal">@color/textColorPrimary</item>
         <item name="colorControlHighlight">#3fff</item>
     </style>
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
     <!--tab menu文字公用样式(if it has)-->
     <style name="tab_menu_icon">
