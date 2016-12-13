@@ -77,4 +77,9 @@ public class Const {
             put("ZNJJ", "智能家居");
         }
     };
+
+    /**
+     * 购物车相关
+     */
+    public static final String SALE_OFF = "sale_off";
 }

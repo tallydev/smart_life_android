@@ -244,72 +244,83 @@ public class CartFragment extends BaseMainFragment implements BaseQuickAdapter.R
         } else {
             select_all_btn.setChecked(false);
         }
-        total_price_text.setText("￥ "+ total);
-    }
-
-    @Override
-    public void onClick(View v) {
-        float total;
-        switch (v.getId()) {
-            case R.id.pay:
-                // 初始化selected_commodities
-                selected_commodities.clear();
-                total = 0.0f;
-                // 结算时,保存选中商品
-                for (CartItem cartItem : cartItems){
-                    if (cartItem.isChecked()){
-                        total += cartItem.getCount() * cartItem.getPrice();
-                        selected_commodities.add(cartItem);
-                    }
-                }
-                if (selected_commodities.size() > 0){
-                    EventBus.getDefault().post(new StartBrotherEvent(
-                            ConfirmOrder.newInstance(selected_commodities, GlobalUtils.floatRound(total)))
-                    );
-                }else{
-                    showToast("您还未选择任何商品");
-                }
-                break;
-            case R.id.select_all_btn:
-                total = 0.0f;
-                if (cartItems.size() > 0){
-                    for (CartItem cartItem : cartItems){
-                        if (select_all_btn.isChecked()){
-                            cartItem.setChecked(true);
-                            total += cartItem.getCount() * cartItem.getPrice();
-                        }else{
-                            cartItem.setChecked(false);
-                        }
-                    }
-                    adapter.notifyDataSetChanged();
-                    total_price_text.setText("￥ " + GlobalUtils.floatRound(total));
-                }else{
-                    select_all_btn.setChecked(false);
-                    showToast("购物车空空如也");
-                }
-                break;
-        }
+        total_price_text.setText("￥ "+ GlobalUtils.floatRound(total));
     }
 
     // 获取商品详情
     private void getProduct(int product_id) {
         Engine.noAuthService().getProduct(product_id)
-                .enqueue(new Callback<Product>() {
-                    @Override
-                    public void onResponse(Call<Product> call, Response<Product> response) {
-                        if (response.isSuccessful()) {
-                            EventBus.getDefault().post(new StartBrotherEvent(ProductShowFragment.newInstance(response.body())));
-                        } else {
-                            Log.d(App.TAG, response.message());
-                            showToast("获取详情失败");
-                        }
+            .enqueue(new Callback<Product>() {
+                @Override
+                public void onResponse(Call<Product> call, Response<Product> response) {
+                    if (response.isSuccessful()) {
+                        EventBus.getDefault().post(
+                                new StartBrotherEvent(ProductShowFragment.newInstance(response.body()))
+                        );
+                    } else {
+                        Log.d(App.TAG, response.message());
+                        showToast("获取详情失败");
                     }
+                }
 
-                    @Override
-                    public void onFailure(Call<Product> call, Throwable t) {
-                        showToast("网络连接错误");
-                    }
-                });
+                @Override
+                public void onFailure(Call<Product> call, Throwable t) {
+                    showToast("网络连接错误");
+                }
+            });
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.pay:
+                processAccount();
+                break;
+            case R.id.select_all_btn:
+                processSelectAll();
+                break;
+        }
+    }
+
+    // 结算
+    private void processAccount() {
+        float total = 0.0f;
+        selected_commodities.clear();
+        // 结算时,保存选中商品
+        for (CartItem cartItem : cartItems){
+            if (cartItem.isChecked()){
+                total += cartItem.getCount() * cartItem.getPrice();
+                selected_commodities.add(cartItem);
+            }
+        }
+        if (selected_commodities.size() > 0){
+            EventBus.getDefault().post(new StartBrotherEvent(
+                    ConfirmOrder.newInstance(selected_commodities, GlobalUtils.floatRound(total)))
+            );
+        }else{
+            showToast("您还未选择任何商品");
+        }
+    }
+
+    // 全选
+    private void processSelectAll() {
+        float total = 0.0f;
+        if (cartItems.size() == 0) {
+            select_all_btn.setChecked(false);
+            showToast("购物车空空如也");
+            return;
+        }
+        for (CartItem cartItem : cartItems){
+            if (Const.SALE_OFF.equals(cartItem.getState())) continue;
+            if (select_all_btn.isChecked()){
+                cartItem.setChecked(true);
+                total += cartItem.getCount() * cartItem.getPrice();
+            }else{
+                cartItem.setChecked(false);
+            }
+        }
+        adapter.notifyDataSetChanged();
+        total_price_text.setText("￥ " + GlobalUtils.floatRound(total));
     }
 
     /**
@@ -323,6 +334,7 @@ public class CartFragment extends BaseMainFragment implements BaseQuickAdapter.R
         float total = 0.0f;
         isSelectAll = true;
         for (CartItem cartItem : cartItems){
+            if (Const.SALE_OFF.equals(cartItem.getState())) continue;
             if (cartItem.isChecked()){
                 float item_total = cartItem.getCount() * cartItem.getPrice();
                 total += item_total;

@@ -12,10 +12,6 @@ import java.io.Serializable;
 
 public class CartItem implements Serializable{
 
-    public CartItem(){
-
-    }
-
     @SerializedName ("id")
     @Expose
     private int id;
@@ -23,10 +19,6 @@ public class CartItem implements Serializable{
     @SerializedName ("product_id")
     @Expose
     private int productId;
-
-    @SerializedName ("user_id")
-    @Expose
-    private int userId;
 
     @SerializedName ("title")
     @Expose
@@ -40,9 +32,21 @@ public class CartItem implements Serializable{
     @Expose
     private int count;
 
+    @SerializedName ("amount")
+    @Expose
+    private float amount;
+
     @SerializedName ("state")
     @Expose
     private String state;
+
+    @SerializedName ("state_alias")
+    @Expose
+    private String stateAlias;
+
+    @SerializedName ("product_sort")
+    @Expose
+    private String category;
 
     @SerializedName ("created_at")
     @Expose
@@ -52,32 +56,25 @@ public class CartItem implements Serializable{
     @Expose
     private String thumb;
 
-    @SerializedName ("image_id")
-    @Expose
-    private Integer image_id;
-
-    // 前端已计算,可不使用
-    @SerializedName ("amount")
-    @Expose
-    private float amount;
-
-
     // 业务参数
     @SerializedName ("checked")
     @Expose
     private boolean checked;
 
-
     public int getId() {
         return id;
     }
 
-    public boolean isChecked() {
-        return checked;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public void setChecked(boolean checked) {
-        this.checked = checked;
+    public int getProductId() {
+        return productId;
+    }
+
+    public void setProductId(int productId) {
+        this.productId = productId;
     }
 
     public String getName() {
@@ -96,48 +93,12 @@ public class CartItem implements Serializable{
         this.price = price;
     }
 
-    public String getThumb() {
-        return thumb;
-    }
-
-    public void setThumb(String thumb) {
-        this.thumb = thumb;
-    }
-
     public int getCount() {
         return count;
     }
 
     public void setCount(int count) {
         this.count = count;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getProductId() {
-        return productId;
-    }
-
-    public void setProductId(int productId) {
-        this.productId = productId;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
-    }
-
-    public String getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
     }
 
     public float getAmount() {
@@ -148,20 +109,51 @@ public class CartItem implements Serializable{
         this.amount = amount;
     }
 
-
-    public Integer getImage_id() {
-        return image_id;
+    public String getState() {
+        return state;
     }
 
-    public void setImage_id(Integer image_id) {
-        this.image_id = image_id;
+    public void setState(String state) {
+        this.state = state;
     }
 
-    public int getUserId() {
-        return userId;
+    public String getStateAlias() {
+        return stateAlias;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setStateAlias(String stateAlias) {
+        this.stateAlias = stateAlias;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getThumb() {
+        return thumb;
+    }
+
+    public void setThumb(String thumb) {
+        this.thumb = thumb;
+    }
+
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
     }
 }

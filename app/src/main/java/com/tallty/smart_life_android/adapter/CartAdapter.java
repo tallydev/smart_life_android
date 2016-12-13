@@ -1,10 +1,12 @@
 package com.tallty.smart_life_android.adapter;
 
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -37,6 +39,7 @@ public class CartAdapter extends BaseQuickAdapter<CartItem, BaseViewHolder>{
         Button addBtn = baseViewHolder.getView(R.id.cart_item_add);
         Button reduceBtn = baseViewHolder.getView(R.id.cart_item_reduce);
         ImageView imageView = baseViewHolder.getView(R.id.cart_item_photo);
+        final CheckBox checkBox = baseViewHolder.getView(R.id.cart_item_check_box);
 
         Glide.with(mContext).load(cartItem.getThumb()).into(imageView);
         baseViewHolder
@@ -46,7 +49,6 @@ public class CartAdapter extends BaseQuickAdapter<CartItem, BaseViewHolder>{
             .setText(R.id.cart_item_total, "小计:￥ "+ GlobalUtils.floatRound(cartItem.getPrice()* count));
 
         // 单选
-        final CheckBox checkBox = baseViewHolder.getView(R.id.cart_item_check_box);
         checkBox.setChecked(cartItem.isChecked());
         checkBox.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,5 +85,18 @@ public class CartAdapter extends BaseQuickAdapter<CartItem, BaseViewHolder>{
                 EventBus.getDefault().post(new TransferDataEvent(bundle, "cart_product"));
             }
         });
+
+        // 处理失效商品
+        if ("sale_off".equals(cartItem.getState())) {
+            checkBox.setClickable(false);
+            checkBox.setChecked(false);
+            addBtn.setVisibility(View.INVISIBLE);
+            reduceBtn.setVisibility(View.INVISIBLE);
+            baseViewHolder
+                .setBackgroundColor(R.id.cart_item_layout, ContextCompat.getColor(mContext, R.color.item_gray_bg))
+                .setVisible(R.id.cart_item_total, false)
+                .setVisible(R.id.cart_item_count, false)
+                .setText(R.id.cart_item_price, cartItem.getStateAlias());
+        }
     }
 }
