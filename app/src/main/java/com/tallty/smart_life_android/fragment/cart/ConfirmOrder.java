@@ -3,7 +3,6 @@ package com.tallty.smart_life_android.fragment.cart;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -13,11 +12,11 @@ import android.widget.TextView;
 
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.R;
-import com.tallty.smart_life_android.adapter.CartListAdapter;
+import com.tallty.smart_life_android.adapter.ConfirmOrderAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
-import com.tallty.smart_life_android.model.Contact;
 import com.tallty.smart_life_android.model.CartItem;
+import com.tallty.smart_life_android.model.Contact;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -90,8 +89,7 @@ public class ConfirmOrder extends BaseBackFragment {
         setDefaultAddress();
         // 列表
         recyclerView.setLayoutManager(new LinearLayoutManager(_mActivity));
-        CartListAdapter adapter = new CartListAdapter(_mActivity, selected_cart_items, "提交订单");
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        ConfirmOrderAdapter adapter = new ConfirmOrderAdapter(R.layout.item_cart_list, selected_cart_items);
         recyclerView.setAdapter(adapter);
     }
 
@@ -132,6 +130,11 @@ public class ConfirmOrder extends BaseBackFragment {
         }
     }
 
+    @Override
+    protected void onFragmentPop() {
+        super.onFragmentPop();
+    }
+
     /**
      * startForResult:
      * 目标Fragment调用setFragmentResult()后，在其出栈时，会回调该方法
@@ -144,10 +147,10 @@ public class ConfirmOrder extends BaseBackFragment {
             // 显示
             if (order_contact != null){
                 order_address_text.setText(
-                        order_contact.getArea()+
-                        order_contact.getStreet()+
-                        order_contact.getCommunity()+
-                        order_contact.getAddress()
+                    order_contact.getArea() +
+                    order_contact.getStreet() +
+                    order_contact.getCommunity() +
+                    order_contact.getAddress()
                 );
             }
         } else {

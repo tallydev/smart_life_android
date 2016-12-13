@@ -50,11 +50,11 @@ public abstract class BaseMainFragment extends BaseFragment implements View.OnCl
         // 初始化ToolBar
         Toolbar toolbar = getViewById(R.id.toolbar);
         TextView toolbar_title = getViewById(R.id.toolbar_title);
-        // 调试使用
-        initToolbarMenu(toolbar);
         initToolBar(toolbar, toolbar_title);
         // 引用组件
         initView();
+        // 调试使用
+//        initToolbarMenu(toolbar);
         return view;
     }
 

@@ -117,7 +117,6 @@ public class MyAddress extends BaseBackFragment {
                             contacts.get(i).setChecked(false);
                         }
                     }
-
                     // 载入列表
                     setList();
                     hideProgress();

@@ -87,26 +87,23 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
                 if (state == 1) {
                     hideSoftInput();
                 } else if (state == 2) {
-                    // 退出fragment时执行
                     onFragmentPop();
                 }
-
             }
 
             @Override
-            public void onEdgeTouch(int oritentationEdgeFlag) {
-
-            }
+            public void onEdgeTouch(int oritentationEdgeFlag) {}
 
             @Override
-            public void onDragScrolled(float scrollPercent) {
-
-            }
+            public void onDragScrolled(float scrollPercent) {}
         });
     }
 
     // fragment 添加退出时的逻辑 (滑动退出,点击返回退出)
-    protected void onFragmentPop() {}
+    protected void onFragmentPop() {
+        hideSoftInput();
+        setTimerCancel();
+    }
     // 获取布局文件id
     public abstract int getFragmentLayout();
     // 处理toolbar
@@ -134,18 +131,12 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                _mActivity.onBackPressed();
-                setTimerCancel();
-                // 隐藏软键盘
-                hideSoftInput();
-                // 出栈
                 pop();
-                // 退出时执行
                 onFragmentPop();
             }
         });
         // 调试使用
-         initToolbarMenu(toolbar);
+//         initToolbarMenu(toolbar);
     }
 
     /**
@@ -175,7 +166,6 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
     public boolean onBackPressedSupport() {
         pop();
         onFragmentPop();
-        setTimerCancel();
         return true;
     }
 

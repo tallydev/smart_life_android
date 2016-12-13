@@ -34,19 +34,19 @@ public class CartAdapter extends BaseQuickAdapter<CartItem, BaseViewHolder>{
     protected void convert(final BaseViewHolder baseViewHolder, final CartItem cartItem) {
         final int count = cartItem.getCount();
         final int position = baseViewHolder.getAdapterPosition();
-        Button addBtn = baseViewHolder.getView(R.id.cart_list_add);
-        Button reduceBtn = baseViewHolder.getView(R.id.cart_list_reduce);
+        Button addBtn = baseViewHolder.getView(R.id.cart_item_add);
+        Button reduceBtn = baseViewHolder.getView(R.id.cart_item_reduce);
         ImageView imageView = baseViewHolder.getView(R.id.cart_item_photo);
 
         Glide.with(mContext).load(cartItem.getThumb()).into(imageView);
         baseViewHolder
             .setText(R.id.cart_item_name, cartItem.getName())
-            .setText(R.id.cart_list_count, ""+count)
+            .setText(R.id.cart_item_count, ""+count)
             .setText(R.id.cart_item_price, "￥ " + cartItem.getPrice())
             .setText(R.id.cart_item_total, "小计:￥ "+ GlobalUtils.floatRound(cartItem.getPrice()* count));
 
         // 单选
-        final CheckBox checkBox = baseViewHolder.getView(R.id.cart_list_select_btn);
+        final CheckBox checkBox = baseViewHolder.getView(R.id.cart_item_check_box);
         checkBox.setChecked(cartItem.isChecked());
         checkBox.setOnClickListener(new View.OnClickListener() {
             @Override
