@@ -200,7 +200,7 @@ public class MyAddress extends BaseBackFragment {
         // 把选中的地址回传给上一个页面
         Bundle bundle = new Bundle();
         bundle.putSerializable(Const.OBJECT, cache_contact);
-        setFramgentResult(RESULT_OK, bundle);
+        setFragmentResult(RESULT_OK, bundle);
         if (from == Const.FROM_ORDER){
             pop();
         }

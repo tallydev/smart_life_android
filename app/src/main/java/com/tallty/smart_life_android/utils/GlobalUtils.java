@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 
 import com.tallty.smart_life_android.R;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -15,7 +16,7 @@ import java.util.Locale;
  * app 工具类
  */
 
-public class Apputils {
+public class GlobalUtils {
 
     public static String getTodayDate() {
         Date date = new Date(System.currentTimeMillis());
@@ -52,5 +53,13 @@ public class Apputils {
             e.printStackTrace();
             return 0;
         }
+    }
+
+    public static float floatRound(float value) {
+        int scale = 2;//设置位数
+        int roundingMode = 4;//表示四舍五入，可以选择其他舍值方式，例如去尾，等等.
+        BigDecimal bd  = new BigDecimal((double)value);
+        bd = bd.setScale(scale, roundingMode);
+        return bd.floatValue();
     }
 }

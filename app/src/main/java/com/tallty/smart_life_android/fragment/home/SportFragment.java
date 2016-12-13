@@ -26,7 +26,7 @@ import com.tallty.smart_life_android.model.SportInfo;
 import com.tallty.smart_life_android.model.SportRank;
 import com.tallty.smart_life_android.model.SportRankItem;
 import com.tallty.smart_life_android.model.Step;
-import com.tallty.smart_life_android.utils.Apputils;
+import com.tallty.smart_life_android.utils.GlobalUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -206,7 +206,7 @@ public class SportFragment extends BaseBackFragment {
     private void updateStepAndInitChartRank(final LineChartView chart,
                                             final boolean isLoad) {
         String current_date = getTodayDate();
-        int versionCode = Apputils.getVersionCode(_mActivity);
+        int versionCode = GlobalUtils.getVersionCode(_mActivity);
         // 步数少于服务器的步数,会上传失败
         Log.i(App.TAG, "开始上传步数任务"+current_date+","+ step);
         Engine

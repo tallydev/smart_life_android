@@ -1,8 +1,9 @@
 package com.tallty.smart_life_android.fragment.cart;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -11,26 +12,31 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.listener.OnItemLongClickListener;
 import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.CartAdapter;
-import com.tallty.smart_life_android.adapter.CartListAdapter;
-import com.tallty.smart_life_android.base.BaseLazyMainFragment;
-import com.tallty.smart_life_android.custom.RecyclerVIewItemTouchListener;
+import com.tallty.smart_life_android.base.BaseMainFragment;
+import com.tallty.smart_life_android.custom.CustomLoadMoreView;
 import com.tallty.smart_life_android.event.CartUpdateItem;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.event.TabReselectedEvent;
 import com.tallty.smart_life_android.event.TabSelectedEvent;
+import com.tallty.smart_life_android.event.TransferDataEvent;
+import com.tallty.smart_life_android.fragment.Common.GlobalAppointFragment;
 import com.tallty.smart_life_android.fragment.MainFragment;
+import com.tallty.smart_life_android.fragment.home.ProductShowFragment;
 import com.tallty.smart_life_android.model.CartItem;
 import com.tallty.smart_life_android.model.CartList;
+import com.tallty.smart_life_android.model.Product;
+import com.tallty.smart_life_android.utils.GlobalUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -41,7 +47,7 @@ import retrofit2.Response;
  * Created by kang on 16/6/20.
  * 购物车
  */
-public class CartFragment extends BaseLazyMainFragment {
+public class CartFragment extends BaseMainFragment implements BaseQuickAdapter.RequestLoadMoreListener {
     private String shared_token;
     private String shared_phone;
 
@@ -52,6 +58,9 @@ public class CartFragment extends BaseLazyMainFragment {
     private TextView total_price_text;
     // 数据
     private ArrayList<CartItem> cartItems = new ArrayList<>();
+    private int current_page = 1;
+    private int total_pages = 1;
+    private int per_page = 10;
     // checked 相关
     private boolean isSelectAll = false;
     private ArrayList<CartItem> selected_commodities = new ArrayList<>();
@@ -85,94 +94,107 @@ public class CartFragment extends BaseLazyMainFragment {
     }
 
     @Override
-    protected void initLazyView(@Nullable Bundle savedInstanceState) {
+    public void onLazyInitView(@Nullable Bundle savedInstanceState) {
+        super.onLazyInitView(savedInstanceState);
         pay.setOnClickListener(this);
         select_all_btn.setChecked(isSelectAll);
         select_all_btn.setOnClickListener(this);
         total_price_text.setText("￥ 0.0");
-
+        initList();
         getCartList();
     }
 
-    @Override
-    public void onClick(View v) {
-        float total;
-        switch (v.getId()) {
-            case R.id.pay:
-                // 初始化selected_commodities
-                selected_commodities.clear();
-                total = 0.0f;
-                // 结算时,保存选中商品
-                for (CartItem cartItem : cartItems){
-                    if (cartItem.isChecked()){
-                        total += cartItem.getCount() * cartItem.getPrice();
-                        selected_commodities.add(cartItem);
-                    }
-                }
-                if (selected_commodities.size() > 0){
-                    EventBus.getDefault().post(new StartBrotherEvent(
-                            ConfirmOrder.newInstance(selected_commodities, total))
-                    );
-                }else{
-                    showToast("您还未选择任何商品");
-                }
-                break;
-            case R.id.select_all_btn:
-                total = 0.0f;
-                if (cartItems.size() > 0){
-                    for (CartItem cartItem : cartItems){
-                        if (select_all_btn.isChecked()){
-                            cartItem.setChecked(true);
-                            total += cartItem.getCount() * cartItem.getPrice();
-                        }else{
-                            cartItem.setChecked(false);
-                        }
-                    }
-                    adapter.notifyDataSetChanged();
-                    total_price_text.setText("￥ "+formatTotalPrice(total));
-                }else{
-                    select_all_btn.setChecked(false);
-                    showToast("购物车空空如也");
-                }
-                break;
-        }
+    private void initList() {
+        // 初始化列表
+        recyclerView.setLayoutManager(new LinearLayoutManager(_mActivity));
+        adapter = new CartAdapter(R.layout.item_cart_list, cartItems);
+        adapter.setLoadMoreView(new CustomLoadMoreView());
+        adapter.setOnLoadMoreListener(this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.addOnItemTouchListener(new OnItemLongClickListener() {
+            @Override
+            public void onSimpleItemLongClick(BaseQuickAdapter baseQuickAdapter, View view, final int i) {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(_mActivity, R.style.CustomAlertDialogTheme);
+                builder.setMessage("确认删除吗")
+                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                deleteCartItem(i);
+                            }
+                        })
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).create().show();
+            }
+        });
     }
 
     private void getCartList() {
-        showProgress(showString(R.string.progress_normal));
         Engine.authService(shared_token, shared_phone)
-            .getCartList(1, 100)
+            .getCartList(current_page, per_page)
             .enqueue(new Callback<CartList>() {
                 @Override
                 public void onResponse(Call<CartList> call, Response<CartList> response) {
                     if (response.isSuccessful()) {
                         CartList cartList = response.body();
+                        current_page = response.body().getCurrentPage();
+                        total_pages = response.body().getTotalPages();
                         cartItems.clear();
                         cartItems.addAll(cartList.getCartItems());
                         // 设置业务参数Checked
                         for (CartItem item : cartItems) {
                             item.setChecked(false);
                         }
-                        processRecyclerVIew();
+                        adapter.notifyDataSetChanged();
                     } else {
                         showToast(showString(R.string.response_error));
                     }
-                    hideProgress();
                 }
 
                 @Override
                 public void onFailure(Call<CartList> call, Throwable t) {
-                    hideProgress();
                     showToast(showString(R.string.network_error));
                 }
             });
     }
 
-    private void processRecyclerVIew(){
-        // 载入列表
-        recyclerView.setLayoutManager(new LinearLayoutManager(_mActivity));
-        adapter = new CartAdapter(R.layout.item_cart_list, cartItems);
-        recyclerView.setAdapter(adapter);
+    /**
+     * 加载更多
+     */
+    @Override
+    public void onLoadMoreRequested() {
+        recyclerView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (current_page >= total_pages) {
+                    adapter.loadMoreEnd();
+                } else {
+                    current_page++;
+                    Engine.noAuthService().getCartList(current_page, per_page).enqueue(new Callback<CartList>() {
+                        @Override
+                        public void onResponse(Call<CartList> call, Response<CartList> response) {
+                            if (response.isSuccessful()) {
+                                current_page = response.body().getCurrentPage();
+                                total_pages = response.body().getTotalPages();
+                                // 商品列表
+                                adapter.addData(response.body().getCartItems());
+                                adapter.loadMoreComplete();
+                            } else {
+                                adapter.loadMoreFail();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<CartList> call, Throwable t) {
+                            adapter.loadMoreFail();
+                        }
+                    });
+                }
+            }
+        }, 1000);
     }
 
     /**
@@ -223,27 +245,79 @@ public class CartFragment extends BaseLazyMainFragment {
         } else {
             select_all_btn.setChecked(false);
         }
-        total_price_text.setText("￥ "+ formatTotalPrice(total));
+        total_price_text.setText("￥ "+ total);
     }
 
-    /**
-     * format total price
-     */
-    private String formatTotalPrice(float total) {
-        //构造方法的字符格式这里如果小数不足2位,会以0补足.
-        DecimalFormat decimalFormat=new DecimalFormat(".00");
-        //format 返回的是字符串
-        return decimalFormat.format(total);
+    @Override
+    public void onClick(View v) {
+        float total;
+        switch (v.getId()) {
+            case R.id.pay:
+                // 初始化selected_commodities
+                selected_commodities.clear();
+                total = 0.0f;
+                // 结算时,保存选中商品
+                for (CartItem cartItem : cartItems){
+                    if (cartItem.isChecked()){
+                        total += cartItem.getCount() * cartItem.getPrice();
+                        selected_commodities.add(cartItem);
+                    }
+                }
+                if (selected_commodities.size() > 0){
+                    EventBus.getDefault().post(new StartBrotherEvent(
+                            ConfirmOrder.newInstance(selected_commodities, GlobalUtils.floatRound(total)))
+                    );
+                }else{
+                    showToast("您还未选择任何商品");
+                }
+                break;
+            case R.id.select_all_btn:
+                total = 0.0f;
+                if (cartItems.size() > 0){
+                    for (CartItem cartItem : cartItems){
+                        if (select_all_btn.isChecked()){
+                            cartItem.setChecked(true);
+                            total += cartItem.getCount() * cartItem.getPrice();
+                        }else{
+                            cartItem.setChecked(false);
+                        }
+                    }
+                    adapter.notifyDataSetChanged();
+                    total_price_text.setText("￥ " + GlobalUtils.floatRound(total));
+                }else{
+                    select_all_btn.setChecked(false);
+                    showToast("购物车空空如也");
+                }
+                break;
+        }
     }
 
+    // 获取商品详情
+    private void getProduct(int product_id) {
+        Engine.noAuthService().getProduct(product_id)
+                .enqueue(new Callback<Product>() {
+                    @Override
+                    public void onResponse(Call<Product> call, Response<Product> response) {
+                        if (response.isSuccessful()) {
+                            EventBus.getDefault().post(new StartBrotherEvent(ProductShowFragment.newInstance(response.body())));
+                        } else {
+                            Log.d(App.TAG, response.message());
+                            showToast("获取详情失败");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Product> call, Throwable t) {
+                        showToast("网络连接错误");
+                    }
+                });
+    }
 
     /**
      * 订阅事件: CartUpdateItem(int position, CartItem cartItem)
      */
     @Subscribe
     public void onCartUpdateItem(CartUpdateItem event){
-        Log.d(App.TAG, "接收到的"+event.position);
-        Log.d(App.TAG, "接收到的"+event.cartItem.isChecked());
         cartItems.set(event.position, event.cartItem);
         adapter.notifyItemChanged(event.position);
         // 处理【合计】【全选】逻辑
@@ -258,11 +332,10 @@ public class CartFragment extends BaseLazyMainFragment {
             }
         }
         // 设置【合计】【全选】
-        total_price_text.setText("￥ "+total);
+        total_price_text.setText("￥ " + GlobalUtils.floatRound(total));
         select_all_btn.setChecked(isSelectAll);
     }
 
-    // 订阅事件:
     // Tab被重复点击时执行的操作
     @Subscribe
     public void onTabReselectedEvent(TabReselectedEvent event) {
@@ -275,6 +348,14 @@ public class CartFragment extends BaseLazyMainFragment {
     public void onTabSelectedEvent(TabSelectedEvent event) {
         if (event.getPosition() == 3) {
             getCartList();
+        }
+    }
+
+    // 查看商品详情
+    @Subscribe
+    public void onTransferDataEvent(TransferDataEvent event) {
+        if ("cart_product".equals(event.tag)) {
+            getProduct(event.bundle.getInt("product_id"));
         }
     }
 

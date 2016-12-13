@@ -7,7 +7,7 @@ import android.hardware.SensorEventListener;
 import android.util.Log;
 
 import com.tallty.smart_life_android.App;
-import com.tallty.smart_life_android.utils.CountDownTimer;
+import com.tallty.smart_life_android.custom.CountDownTimer;
 
 import java.util.Timer;
 import java.util.TimerTask;

@@ -151,7 +151,7 @@ public class ChangeProfileFragment extends BaseBackFragment {
                             Bundle bundle = new Bundle();
                             bundle.putString(RESULT_DATA, text);
                             bundle.putInt(RESULT_POSITION, position);
-                            setFramgentResult(RESULT_OK, bundle);
+                            setFragmentResult(RESULT_OK, bundle);
                             // 隐藏软键盘
                             hideSoftInput();
                             hideProgress();

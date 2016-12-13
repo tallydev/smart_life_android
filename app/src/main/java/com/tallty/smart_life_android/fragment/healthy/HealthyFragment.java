@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.R;
-import com.tallty.smart_life_android.base.BaseLazyMainFragment;
+import com.tallty.smart_life_android.base.BaseMainFragment;
 import com.tallty.smart_life_android.event.TabReselectedEvent;
 import com.tallty.smart_life_android.fragment.MainFragment;
 
@@ -20,7 +20,7 @@ import org.greenrobot.eventbus.Subscribe;
  * Created by kang on 16/6/20.
  * 健康
  */
-public class HealthyFragment extends BaseLazyMainFragment {
+public class HealthyFragment extends BaseMainFragment {
 
 
     public static HealthyFragment newInstance() {
@@ -47,8 +47,8 @@ public class HealthyFragment extends BaseLazyMainFragment {
     }
 
     @Override
-    protected void initLazyView(@Nullable Bundle savedInstanceState) {
-
+    public void onLazyInitView(@Nullable Bundle savedInstanceState) {
+        super.onLazyInitView(savedInstanceState);
     }
 
     @Override

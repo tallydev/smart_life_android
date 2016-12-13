@@ -18,7 +18,7 @@ import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
-import com.tallty.smart_life_android.base.BaseLazyMainFragment;
+import com.tallty.smart_life_android.base.BaseMainFragment;
 import com.tallty.smart_life_android.custom.GlideCircleTransform;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.event.TabReselectedEvent;
@@ -40,7 +40,7 @@ import retrofit2.Response;
  * Created by kang on 16/6/20.
  * 个人中心
  */
-public class MeFragment extends BaseLazyMainFragment {
+public class MeFragment extends BaseMainFragment {
     private String shared_token;
     private String shared_phone;
 
@@ -130,12 +130,15 @@ public class MeFragment extends BaseLazyMainFragment {
     }
 
     @Override
-    protected void initLazyView(@Nullable Bundle savedInstanceState) {
+    public void onLazyInitView(@Nullable Bundle savedInstanceState) {
+        super.onLazyInitView(savedInstanceState);
         setListener();
         setView();
         // 查询用户信息
-        Log.i(App.TAG, shared_phone);
-        Log.i(App.TAG, shared_token);
+        getUserInfo();
+    }
+
+    private void getUserInfo() {
         Engine.authService(shared_token, shared_phone).getUser().enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
@@ -146,11 +149,6 @@ public class MeFragment extends BaseLazyMainFragment {
                             .placeholder(R.drawable.user_default)
                             .transform(new GlideCircleTransform(_mActivity)).into(photo);
                     name.setText(user.getNickname());
-
-                    Log.i(App.TAG, "接口数据,昵称"+response.body().getNickname());
-
-                    Log.i(App.TAG, "用户昵称"+user.getNickname());
-                    Log.i(App.TAG, "设置了个人中心名称图片");
                 } else {
                     showToast("获取用户信息失败");
                 }

@@ -158,7 +158,7 @@ public class NewAddressFragment extends BaseBackFragment {
             // 向服务器提交新联系人
             showProgress(showString(R.string.progress_normal));
             Engine.authService(shared_token, shared_phone)
-                    .newContact(name, phone, area, contact_street, contact_community, detail, false)
+                    .createContact(name, phone, area, contact_street, contact_community, detail, false)
                     .enqueue(new Callback<ContactList>() {
                         @Override
                         public void onResponse(Call<ContactList> call, Response<ContactList> response) {
@@ -166,7 +166,7 @@ public class NewAddressFragment extends BaseBackFragment {
                                 // 新地址创建成功, 传递给上级, 并退出当前页
                                 Bundle bundle = new Bundle();
                                 bundle.putSerializable(Const.OBJECT, new_contact);
-                                setFramgentResult(RESULT_OK, bundle);
+                                setFragmentResult(RESULT_OK, bundle);
                                 hideProgress();
                                 hideSoftInput();
                                 pop();

@@ -33,8 +33,8 @@ import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.activity.MainActivity;
 import com.tallty.smart_life_android.model.SportData;
 import com.tallty.smart_life_android.model.Step;
-import com.tallty.smart_life_android.utils.Apputils;
-import com.tallty.smart_life_android.utils.CountDownTimer;
+import com.tallty.smart_life_android.utils.GlobalUtils;
+import com.tallty.smart_life_android.custom.CountDownTimer;
 import com.tallty.smart_life_android.utils.DbUtils;
 
 import java.text.SimpleDateFormat;
@@ -158,7 +158,7 @@ public class StepService extends Service implements SensorEventListener {
                 public void onResponse(Call<SportData> call, Response<SportData> response) {
                     if (response.code() == 200) {
                         int count = response.body().getSelf().getCount();
-                        String current_date = Apputils.getTodayDate();
+                        String current_date = GlobalUtils.getTodayDate();
                         DbUtils.createDb(StepService.this, Const.DB_NAME);
                         // 保存到数据库 (不保存, stepService中无记录是会重置 current_step);
                         Step data = new Step();

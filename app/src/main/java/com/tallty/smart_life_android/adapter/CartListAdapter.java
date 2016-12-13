@@ -162,13 +162,13 @@ public class CartListAdapter extends RecyclerView.Adapter<CartListAdapter.CartLi
         CartListViewHolder(View itemView) {
             super(itemView);
             check_box = (CheckBox) itemView.findViewById(R.id.cart_list_select_btn);
-            photo = (ImageView) itemView.findViewById(R.id.cart_list_photo);
-            name = (TextView) itemView.findViewById(R.id.cart_list_name);
+            photo = (ImageView) itemView.findViewById(R.id.cart_item_photo);
+            name = (TextView) itemView.findViewById(R.id.cart_item_name);
             add = (Button) itemView.findViewById(R.id.cart_list_add);
             reduce = (Button) itemView.findViewById(R.id.cart_list_reduce);
             count = (TextView) itemView.findViewById(R.id.cart_list_count);
-            price = (TextView) itemView.findViewById(R.id.cart_list_price);
-            count_price = (TextView) itemView.findViewById(R.id.cart_list_count_price);
+            price = (TextView) itemView.findViewById(R.id.cart_item_price);
+            count_price = (TextView) itemView.findViewById(R.id.cart_item_total);
 
             order_item_count = (TextView) itemView.findViewById(R.id.order_item_count);
         }

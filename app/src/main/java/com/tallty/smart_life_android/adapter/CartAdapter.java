@@ -1,6 +1,6 @@
 package com.tallty.smart_life_android.adapter;
 
-import android.util.Log;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -9,15 +9,15 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.event.CartUpdateItem;
+import com.tallty.smart_life_android.event.TransferDataEvent;
 import com.tallty.smart_life_android.model.CartItem;
+import com.tallty.smart_life_android.utils.GlobalUtils;
 import com.tallty.smart_life_android.utils.ToastUtil;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.text.DecimalFormat;
 import java.util.List;
 
 /**
@@ -34,14 +34,16 @@ public class CartAdapter extends BaseQuickAdapter<CartItem, BaseViewHolder>{
     protected void convert(final BaseViewHolder baseViewHolder, final CartItem cartItem) {
         final int count = cartItem.getCount();
         final int position = baseViewHolder.getAdapterPosition();
+        Button addBtn = baseViewHolder.getView(R.id.cart_list_add);
+        Button reduceBtn = baseViewHolder.getView(R.id.cart_list_reduce);
+        ImageView imageView = baseViewHolder.getView(R.id.cart_item_photo);
 
-
-        Glide.with(mContext).load(cartItem.getThumb()).into((ImageView) baseViewHolder.getView(R.id.cart_list_photo));
+        Glide.with(mContext).load(cartItem.getThumb()).into(imageView);
         baseViewHolder
-            .setText(R.id.cart_list_name, cartItem.getName())
+            .setText(R.id.cart_item_name, cartItem.getName())
             .setText(R.id.cart_list_count, ""+count)
-            .setText(R.id.cart_list_price, "￥ " + cartItem.getPrice())
-            .setText(R.id.cart_list_count_price, "小计:￥ "+ formatTotalPrice(cartItem.getPrice()* count));
+            .setText(R.id.cart_item_price, "￥ " + cartItem.getPrice())
+            .setText(R.id.cart_item_total, "小计:￥ "+ GlobalUtils.floatRound(cartItem.getPrice()* count));
 
         // 单选
         final CheckBox checkBox = baseViewHolder.getView(R.id.cart_list_select_btn);
@@ -51,13 +53,9 @@ public class CartAdapter extends BaseQuickAdapter<CartItem, BaseViewHolder>{
             public void onClick(View v) {
                 cartItem.setChecked(checkBox.isChecked());
                 EventBus.getDefault().post(new CartUpdateItem(position, cartItem));
-                Log.d(App.TAG, "你点击的是"+position);
-                Log.d(App.TAG, "checkBox状态"+checkBox.isChecked());
             }
         });
         // 数量操作
-        Button addBtn = baseViewHolder.getView(R.id.cart_list_add);
-        Button reduceBtn = baseViewHolder.getView(R.id.cart_list_reduce);
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,15 +74,14 @@ public class CartAdapter extends BaseQuickAdapter<CartItem, BaseViewHolder>{
                 }
             }
         });
-    }
-
-    /**
-     * format total price
-     */
-    private String formatTotalPrice(float total) {
-        //构造方法的字符格式这里如果小数不足2位,会以0补足.
-        DecimalFormat decimalFormat=new DecimalFormat(".00");
-        //format 返回的是字符串
-        return decimalFormat.format(total);
+        // 查看商品
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putInt("product_id", cartItem.getProductId());
+                EventBus.getDefault().post(new TransferDataEvent(bundle, "cart_product"));
+            }
+        });
     }
 }

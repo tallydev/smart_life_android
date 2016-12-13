@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.CommunityGridViewAdapter;
-import com.tallty.smart_life_android.base.BaseLazyMainFragment;
+import com.tallty.smart_life_android.base.BaseMainFragment;
 import com.tallty.smart_life_android.custom.MyGridView;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.event.TabReselectedEvent;
@@ -30,7 +30,7 @@ import java.util.List;
  * Created by kang on 16/6/20.
  * 群组
  */
-public class CommunityFragment extends BaseLazyMainFragment{
+public class CommunityFragment extends BaseMainFragment {
     private ImageView government;
     private ImageView best_tone;
     private RelativeLayout service;
@@ -85,7 +85,8 @@ public class CommunityFragment extends BaseLazyMainFragment{
     }
 
     @Override
-    protected void initLazyView(@Nullable Bundle savedInstanceState) {
+    public void onLazyInitView(@Nullable Bundle savedInstanceState) {
+        super.onLazyInitView(savedInstanceState);
         setListener();
         initGridView();
     }

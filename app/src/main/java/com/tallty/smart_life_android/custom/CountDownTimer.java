@@ -1,4 +1,4 @@
-package com.tallty.smart_life_android.utils;
+package com.tallty.smart_life_android.custom;
 
 import android.os.Handler;
 import android.os.Message;

@@ -8,6 +8,7 @@ import com.tallty.smart_life_android.model.CartList;
 import com.tallty.smart_life_android.model.Contact;
 import com.tallty.smart_life_android.model.ContactList;
 import com.tallty.smart_life_android.model.Home;
+import com.tallty.smart_life_android.model.Product;
 import com.tallty.smart_life_android.model.ProductList;
 import com.tallty.smart_life_android.model.ReportList;
 import com.tallty.smart_life_android.model.ReportShowList;
@@ -90,6 +91,10 @@ public interface DataAPI {
     Call<ProductList> getProductList(@Query("page") Integer page,
                                      @Query("per_page") Integer per_page);
 
+    // 获取商品详情
+    @GET("products/{id}")
+    Call<Product> getProduct(@Path("id") int id);
+
     // 获取购物车列表
     @GET("cart_items")
     Call<CartList> getCartList(@Query("page") Integer page,
@@ -112,13 +117,13 @@ public interface DataAPI {
     // 新增联系人
     @FormUrlEncoded
     @POST("contacts")
-    Call<ContactList> newContact(@Field("contact[name]") String name,
-                                 @Field("contact[phone]") String phone,
-                                 @Field("contact[area]") String area,
-                                 @Field("contact[street]") String street,
-                                 @Field("contact[community]") String community,
-                                 @Field("contact[address]") String address,
-                                 @Field("contact[is_default]") boolean is_default);
+    Call<ContactList> createContact(@Field("contact[name]") String name,
+                                    @Field("contact[phone]") String phone,
+                                    @Field("contact[area]") String area,
+                                    @Field("contact[street]") String street,
+                                    @Field("contact[community]") String community,
+                                    @Field("contact[address]") String address,
+                                    @Field("contact[is_default]") boolean is_default);
 
     // 删除联系人
     @DELETE("contacts/{id}")

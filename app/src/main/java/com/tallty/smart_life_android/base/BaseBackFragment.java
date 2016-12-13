@@ -134,6 +134,7 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                _mActivity.onBackPressed();
                 setTimerCancel();
                 // 隐藏软键盘
                 hideSoftInput();
@@ -144,7 +145,7 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
             }
         });
         // 调试使用
-        // initToolbarMenu(toolbar);
+         initToolbarMenu(toolbar);
     }
 
     /**

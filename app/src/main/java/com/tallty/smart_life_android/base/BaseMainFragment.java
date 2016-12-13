@@ -25,11 +25,8 @@ import com.tallty.smart_life_android.utils.ToastUtil;
  * 懒加载, (耗时操作)
  * 使用时, 直接继承此类即可
  */
-public abstract class BaseLazyMainFragment extends BaseFragment implements View.OnClickListener {
+public abstract class BaseMainFragment extends BaseFragment implements View.OnClickListener {
     protected SharedPreferences sharedPre;
-    // 状态
-    private boolean mInited = false;
-    private Bundle mSavedInstanceState;
     // 布局
     private View view;
     // 载入框
@@ -40,7 +37,6 @@ public abstract class BaseLazyMainFragment extends BaseFragment implements View.
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mSavedInstanceState = savedInstanceState;
         sharedPre = _mActivity.getSharedPreferences("SmartLife", Context.MODE_PRIVATE);
         // 拦截调用
         fragmentInterceptor();
@@ -55,54 +51,21 @@ public abstract class BaseLazyMainFragment extends BaseFragment implements View.
         Toolbar toolbar = getViewById(R.id.toolbar);
         TextView toolbar_title = getViewById(R.id.toolbar_title);
         // 调试使用
-        // initToolbarMenu(toolbar);
+        initToolbarMenu(toolbar);
         initToolBar(toolbar, toolbar_title);
         // 引用组件
         initView();
-
         return view;
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        if (savedInstanceState == null) {
-            if (!isHidden()) {
-                mInited = true;
-                initLazyView(null);
-            }
-        } else {
-            // isSupportHidden()仅在saveInstanceState!=null时有意义,是库帮助记录Fragment状态的方法
-            if (!isSupportHidden()) {
-                mInited = true;
-                initLazyView(savedInstanceState);
-            }
-        }
-    }
-
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        if (!mInited && !hidden) {
-            mInited = true;
-            initLazyView(mSavedInstanceState);
-        }
-    }
-
-    // fragment  拦截器
-    protected void fragmentInterceptor() {
-        // 供子类使用
-    }
+    // fragment  拦截器 // 供子类使用
+    protected void fragmentInterceptor() {}
     // 获取布局文件
     public abstract int getFragmentLayout();
     // 初始化toolbar
     protected abstract void initToolBar(Toolbar toolbar, TextView title);
     // 初始化视图组件
     protected abstract void initView();
-    // 懒加载
-    protected abstract void initLazyView(@Nullable Bundle savedInstanceState);
-
 
     /**
      * 处理回退事件

@@ -119,7 +119,7 @@ public class ProductShowFragment extends BaseBackFragment implements OnItemClick
 
     @Override
     protected void afterAnimationLogic() {
-        setToolbarMenu(toolbar);
+//        setToolbarMenu(toolbar);
         // 显示商品信息
         showProduct();
         // 设置banner

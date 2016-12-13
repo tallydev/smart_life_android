@@ -18,7 +18,7 @@ import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.activity.MainActivity;
-import com.tallty.smart_life_android.base.BaseLazyMainFragment;
+import com.tallty.smart_life_android.base.BaseMainFragment;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.model.User;
 
@@ -35,7 +35,7 @@ import retrofit2.Response;
 /**
  * 个人中心-登录
  */
-public class LoginFragment extends BaseLazyMainFragment {
+public class LoginFragment extends BaseMainFragment {
     private AutoCompleteTextView phone_edit;
     private EditText password_edit;
     private Button login_btn;
@@ -93,11 +93,11 @@ public class LoginFragment extends BaseLazyMainFragment {
     }
 
     @Override
-    protected void initLazyView(@Nullable Bundle savedInstanceState) {
+    public void onLazyInitView(@Nullable Bundle savedInstanceState) {
+        super.onLazyInitView(savedInstanceState);
         login_btn.setOnClickListener(this);
         free_register.setOnClickListener(this);
         find_password.setOnClickListener(this);
-
         initFormEdit();
     }
 

@@ -14,15 +14,16 @@
         android:gravity="center"
         android:button="@drawable/check_box_style"/>
     <ImageView
-        android:id="@+id/cart_list_photo"
-        android:layout_width="80dp"
-        android:layout_height="60dp"
+        android:id="@+id/cart_item_photo"
+        android:layout_width="90dp"
+        android:layout_height="70dp"
         android:layout_centerVertical="true"
         android:layout_marginRight="10dp"
         android:src="@drawable/banner_one"
-        android:layout_toRightOf="@id/cart_list_select_btn"/>
+        android:layout_toRightOf="@id/cart_list_select_btn"
+        android:scaleType="centerCrop"/>
     <TextView
-        android:id="@+id/cart_list_price"
+        android:id="@+id/cart_item_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -33,22 +34,21 @@
         android:ellipsize="end"
         android:textSize="@dimen/text_12"/>
     <TextView
-        android:id="@+id/cart_list_name"
+        android:id="@+id/cart_item_name"
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:layout_marginTop="20dp"
+        android:paddingRight="14dp"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@id/cart_list_photo"
-        android:layout_toLeftOf="@id/cart_list_price"
+        android:layout_toRightOf="@id/cart_item_photo"
+        android:layout_toLeftOf="@id/cart_item_price"
         android:textColor="@color/global_text"
         android:maxLines="2"
-        android:text="鸡蛋// TODO: 16/8/5 记得修改, // TODO: 16/8/5 记得修改, // TODO: 16/8/5 记得修改, "
-
         android:ellipsize="end"
         android:textSize="@dimen/text_12"/>
 
     <TextView
-        android:id="@+id/cart_list_count_price"
+        android:id="@+id/cart_item_total"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
@@ -61,8 +61,8 @@
         android:id="@+id/order_item_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/cart_list_price"
-        android:layout_above="@id/cart_list_count_price"
+        android:layout_below="@id/cart_item_price"
+        android:layout_above="@id/cart_item_total"
         android:layout_alignParentRight="true"
         android:textSize="@dimen/text_12"
         android:textColor="@color/global_text"
@@ -75,7 +75,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="15dp"
-        android:layout_toRightOf="@+id/cart_list_photo"
+        android:layout_toRightOf="@+id/cart_item_photo"
         android:paddingLeft="5dp"
         android:paddingRight="5dp">
         <Button

@@ -28,7 +28,7 @@ import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.HomeRecyclerAdapter;
-import com.tallty.smart_life_android.base.BaseLazyMainFragment;
+import com.tallty.smart_life_android.base.BaseMainFragment;
 import com.tallty.smart_life_android.custom.MyRecyclerView;
 import com.tallty.smart_life_android.event.ShowSnackbarEvent;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
@@ -40,7 +40,7 @@ import com.tallty.smart_life_android.holder.HomeViewHolder;
 import com.tallty.smart_life_android.model.Home;
 import com.tallty.smart_life_android.model.Step;
 import com.tallty.smart_life_android.service.StepService;
-import com.tallty.smart_life_android.utils.Apputils;
+import com.tallty.smart_life_android.utils.GlobalUtils;
 import com.tallty.smart_life_android.utils.DbUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -58,7 +58,7 @@ import retrofit2.Response;
  * Created by kang on 16/6/20.
  * 首页
  */
-public class HomeFragment extends BaseLazyMainFragment implements OnItemClickListener, Handler.Callback{
+public class HomeFragment extends BaseMainFragment implements OnItemClickListener, Handler.Callback{
     private String shared_token;
     private String shared_phone;
     private CountDownTimer delayTimer;
@@ -152,7 +152,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
 
     @Override
     protected void initView() {
-        versionCode = Apputils.getVersionCode(_mActivity);
+        versionCode = GlobalUtils.getVersionCode(_mActivity);
         Log.i(App.TAG, "APP 版本码: "+versionCode);
         EventBus.getDefault().register(this);
         banner = getViewById(R.id.home_banner);
@@ -165,7 +165,8 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
     }
 
     @Override
-    protected void initLazyView(@Nullable Bundle savedInstanceState) {
+    public void onLazyInitView(@Nullable Bundle savedInstanceState) {
+        super.onLazyInitView(savedInstanceState);
         setBanner();
         setList();
         // 设置计步服务
@@ -191,7 +192,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
 
             @Override
             public void onFinish() {
-                String current_date = Apputils.getTodayDate();
+                String current_date = GlobalUtils.getTodayDate();
                 Log.d(App.TAG, "首次进入页面,上传步数任务,并获取首页数据"+current_date+","+step);
                 Engine
                     .authService(shared_token, shared_phone)
@@ -267,7 +268,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
      */
     private void processClockStep() {
 
-        String time = Apputils.getNowTime();
+        String time = GlobalUtils.getNowTime();
         String hour = time.substring(0, 2);
         String minute = time.substring(3);
         Log.i(App.TAG, "一分钟轮询"+time);
@@ -398,7 +399,7 @@ public class HomeFragment extends BaseLazyMainFragment implements OnItemClickLis
     }
 
     private void uploadStep() {
-        String current_date = Apputils.getTodayDate();
+        String current_date = GlobalUtils.getTodayDate();
         /**
          * 上传步数, 如果是新的一天, 重置步数后再上传
          * 如果是新的一天, 重置数据

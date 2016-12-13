@@ -196,7 +196,7 @@ public class BindPhoneFragment extends BaseBackFragment {
                                 Bundle bundle = new Bundle();
                                 bundle.putString(RESULT_DATA, phone);
                                 bundle.putInt(RESULT_POSITION, position);
-                                setFramgentResult(RESULT_OK, bundle);
+                                setFragmentResult(RESULT_OK, bundle);
                                 // 隐藏软键盘
                                 hideSoftInput();
                                 hideProgress();
