@@ -16,12 +16,9 @@ import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.ConfirmOrderAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
-import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.model.CartItem;
 import com.tallty.smart_life_android.model.Contact;
 import com.tallty.smart_life_android.model.ContactList;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 
@@ -173,8 +170,7 @@ public class ConfirmOrder extends BaseBackFragment {
                 break;
             case R.id.submit_order:
                 if (has_address) {
-                    EventBus.getDefault().post(new StartBrotherEvent(PayOrder
-                            .newInstance(total_price, selected_cart_items, order_contact)));
+                    start(PayOrder.newInstance(total_price, selected_cart_items, order_contact));
                 } else {
                     showToast(EMPTY_ADDRESS);
                 }

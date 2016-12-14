@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -16,6 +17,7 @@ import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.SelectAddressAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
+import com.tallty.smart_life_android.fragment.me.ManageAddresses;
 import com.tallty.smart_life_android.model.Contact;
 
 import java.util.ArrayList;
@@ -58,8 +60,19 @@ public class SelectAddress extends BaseBackFragment {
 
     @Override
     public void initToolbar(Toolbar toolbar, TextView toolbar_title) {
-        toolbar_title.setText("收货地址");
-
+        toolbar_title.setText("选择收货地址");
+        toolbar.inflateMenu(R.menu.addresses_menu);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.toolbar_addresses_manager:
+                        start(ManageAddresses.newInstance());
+                        break;
+                }
+                return true;
+            }
+        });
     }
 
     @Override
