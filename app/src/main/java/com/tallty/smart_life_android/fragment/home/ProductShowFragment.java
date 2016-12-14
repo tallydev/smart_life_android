@@ -94,6 +94,7 @@ public class ProductShowFragment extends BaseBackFragment implements OnItemClick
     @Override
     public void initToolbar(Toolbar toolbar, TextView toolbar_title) {
         toolbar_title.setText("商品详情");
+        toolbar.inflateMenu(R.menu.cart_blank);
     }
 
     @Override
@@ -154,13 +155,10 @@ public class ProductShowFragment extends BaseBackFragment implements OnItemClick
                     @Override
                     public void onResponse(Call<CartItem> call, Response<CartItem> response) {
                         hideProgress();
-                        if (response.isSuccessful()) {
-                            toolbar.getMenu().clear();
-                            toolbar.inflateMenu(R.menu.cart_has);
+                        if (response.isSuccessful())
                             showToast("已加入购物车");
-                        } else {
+                        else
                             showToast("加入购物车失败");
-                        }
                     }
 
                     @Override

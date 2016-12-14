@@ -7,6 +7,9 @@
 
     <!--通用背景色-->
     <color name="app_bg">#E7E7E7</color>
+
+    <!--toolbar-->
+    <color name="toolbar_text_color">#FFFFFF</color>
     <color name="toolbar_bg">#FF8000</color>
 
     <!--tab menu 颜色-->

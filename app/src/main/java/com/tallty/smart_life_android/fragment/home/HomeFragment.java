@@ -570,8 +570,10 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
     public void onDestroyView() {
         super.onDestroyView();
         EventBus.getDefault().unregister(this);
-        timer.onFinish();
-        delayTimer.onFinish();
+        if (timer != null)
+            timer.onFinish();
+        if (delayTimer != null)
+            delayTimer.onFinish();
     }
 
     @Subscribe

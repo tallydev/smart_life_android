@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.tallty.smart_life_android.App;
@@ -128,7 +127,7 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
      * 设置toolbar的返回按钮
      */
     protected void initBackToolbar(Toolbar toolbar) {
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_28dp);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_24dp);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
