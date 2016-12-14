@@ -45,16 +45,16 @@
                 android:textSize="24sp"/>
             <TextView
                 android:id="@+id/order_contact"
-                android:layout_width="120dp"
+                android:layout_width="wrap_content"
                 android:layout_height="36dp"
+                android:layout_marginRight="28dp"
                 android:textColor="@color/global_text"
                 android:layout_toRightOf="@id/address_icon"
                 android:layout_toLeftOf="@id/address_indicator"
                 android:gravity="center_vertical"
                 android:textSize="@dimen/text_14"
                 android:maxLines="2"
-                android:ellipsize="end"
-                android:text="XX区XX街道XX (小区名称) XX栋XX单元XXX室"/>
+                android:ellipsize="end"/>
         </RelativeLayout>
 
         <RelativeLayout

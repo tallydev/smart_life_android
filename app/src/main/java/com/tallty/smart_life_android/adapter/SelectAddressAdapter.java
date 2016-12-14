@@ -20,6 +20,7 @@ public class SelectAddressAdapter extends BaseQuickAdapter<Contact, BaseViewHold
     @Override
     protected void convert(BaseViewHolder baseViewHolder, Contact contact) {
         baseViewHolder
+            .setChecked(R.id.item_address_check_box, contact.isChecked())
             .setText(R.id.item_address_name, contact.getName())
             .setText(R.id.item_address_phone, contact.getPhone())
             .setVisible(R.id.item_address_default_text, contact.isDefault())

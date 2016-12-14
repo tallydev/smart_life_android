@@ -119,6 +119,49 @@ public class ManageAddresses extends BaseBackFragment {
         });
     }
 
+    private void deleteContact(final int position) {
+        showProgress("正在删除...");
+        Engine.authService(shared_token, shared_phone)
+                .deleteContact(contacts.get(position).getId())
+                .enqueue(new Callback<Contact>() {
+                    @Override
+                    public void onResponse(Call<Contact> call, Response<Contact> response) {
+                        if (response.isSuccessful()) {
+                            boolean is_removed = false;
+                            if (contacts.size() > 1 && contacts.get(position).isDefault()) {
+                                contacts.remove(position);
+                                is_removed = true;
+                                // 如果删除的是默认地址, 则取第一个地址为默认地址
+                                contacts.get(0).setDefault(true);
+                                contacts.get(0).setChecked(true);
+                                // 更新本地默认地址
+
+                            } else if (contacts.size() <= 1) {
+                                // 当删除的地址为最后一条时,置空shared中的默认地址
+                                Contact contact = new Contact();
+
+                            }
+
+                            if (!is_removed) {
+                                contacts.remove(position);
+                            }
+                            adapter.notifyItemRemoved(position);
+                            adapter.notifyItemRangeChanged(position, contacts.size() - position);
+                            hideProgress();
+                        } else {
+                            hideProgress();
+                            showToast("删除失败,请重试");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Contact> call, Throwable t) {
+                        hideProgress();
+                        showToast(showString(R.string.network_error));
+                    }
+                });
+    }
+
     /**
      * startForResult:
      * 响应NewAddressFragment的返回数据

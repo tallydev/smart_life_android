@@ -54,7 +54,6 @@ public class Contact implements Serializable {
     @Expose
     private int order;
 
-
     // UI属性
     private boolean checked;
 
