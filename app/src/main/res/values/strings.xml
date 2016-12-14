@@ -193,4 +193,9 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="address">"<h1>XX区XX街道XX (小区名称) XX栋XX单元XXX室</h1>"</string>
+    <string name="default_address">[默认地址]</string>
+    <string name="address_delete">删除</string>
+    <string name="address_edit">编辑</string>
+    <string name="address_set_default">设为默认地址</string>
 </resources>

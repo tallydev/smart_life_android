@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
-import com.tallty.smart_life_android.adapter.AddressListAdapter;
+import com.tallty.smart_life_android.adapter.SelectAddressAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.custom.RecyclerVIewItemTouchListener;
 import com.tallty.smart_life_android.event.SetDefaultAddress;
@@ -36,23 +36,23 @@ import retrofit2.Response;
 /**
  * 购物车-确认订单-收货地址
  */
-public class MyAddress extends BaseBackFragment {
+public class SelectAddress extends BaseBackFragment {
     // 调用者
     private int from;
     // UI
     private TextView new_address_text;
     private RecyclerView recyclerView;
-    private AddressListAdapter adapter;
+    private SelectAddressAdapter adapter;
     // 地址列表
     private List<Contact> contacts = new ArrayList<>();
     // 默认地址position
     private int defaultContactListPosition = -1;
 
 
-    public static MyAddress newInstance(int from) {
+    public static SelectAddress newInstance(int from) {
         Bundle args = new Bundle();
         args.putInt(Const.FROM, from);
-        MyAddress fragment = new MyAddress();
+        SelectAddress fragment = new SelectAddress();
         fragment.setArguments(args);
         return fragment;
     }
@@ -74,6 +74,7 @@ public class MyAddress extends BaseBackFragment {
     @Override
     public void initToolbar(Toolbar toolbar, TextView toolbar_title) {
         toolbar_title.setText("收货地址");
+
     }
 
     @Override
@@ -100,7 +101,8 @@ public class MyAddress extends BaseBackFragment {
         Engine.authService(shared_token, shared_phone).getContacts().enqueue(new Callback<ContactList>() {
             @Override
             public void onResponse(Call<ContactList> call, Response<ContactList> response) {
-                if (response.code() == 200) {
+                hideProgress();
+                if (response.isSuccessful()) {
                     contacts.clear();
                     contacts.addAll(response.body().getContacts());
                     // 整理数据
@@ -119,9 +121,7 @@ public class MyAddress extends BaseBackFragment {
                     }
                     // 载入列表
                     setList();
-                    hideProgress();
                 } else {
-                    hideProgress();
                     showToast(showString(R.string.response_error));
                 }
             }
@@ -152,7 +152,7 @@ public class MyAddress extends BaseBackFragment {
 
     private void setList() {
         recyclerView.setLayoutManager(new LinearLayoutManager(_mActivity));
-        adapter = new AddressListAdapter(_mActivity, contacts);
+        adapter = new SelectAddressAdapter(R.layout.item_select_address, contacts);
         recyclerView.setAdapter(adapter);
         recyclerView.addOnItemTouchListener(new RecyclerVIewItemTouchListener(recyclerView) {
             @Override

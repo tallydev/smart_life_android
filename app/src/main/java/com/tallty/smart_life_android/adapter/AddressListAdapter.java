@@ -32,7 +32,7 @@ public class AddressListAdapter extends RecyclerView.Adapter<AddressListAdapter.
 
     @Override
     public AddressListAdapter.AddressViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new AddressViewHolder(LayoutInflater.from(context).inflate(R.layout.item_address, parent, false));
+        return new AddressViewHolder(LayoutInflater.from(context).inflate(R.layout.item_select_address, parent, false));
     }
 
     @Override
@@ -79,7 +79,6 @@ public class AddressListAdapter extends RecyclerView.Adapter<AddressListAdapter.
             name = (TextView) itemView.findViewById(R.id.item_address_name);
             address = (TextView) itemView.findViewById(R.id.item_address_detail);
             phone = (TextView) itemView.findViewById(R.id.item_address_phone);
-            isDefault = (TextView) itemView.findViewById(R.id.item_address_default);
         }
     }
 }

@@ -37,7 +37,7 @@ import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.custom.RecyclerVIewItemTouchListener;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.event.TransferDataEvent;
-import com.tallty.smart_life_android.fragment.cart.MyAddress;
+import com.tallty.smart_life_android.fragment.cart.SelectAddress;
 import com.tallty.smart_life_android.model.User;
 import com.tallty.smart_life_android.utils.ImageUtils;
 
@@ -213,7 +213,7 @@ public class ProfileFragment extends BaseBackFragment {
                     processSex(position);
                 } else if (position == 7) {
                     EventBus.getDefault().post(
-                            new StartBrotherEvent(MyAddress.newInstance(Const.FROM_PROFILE)));
+                            new StartBrotherEvent(ManageAddresses.newInstance()));
                 } else if (position == 8) {
                     // 跳转绑定手机页面
                     showToast("暂不支持修改");
