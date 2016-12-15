@@ -4,16 +4,18 @@ import com.tallty.smart_life_android.model.Contact;
 
 /**
  * Created by kang on 16/7/25.
- * 收货地址-设置默认地址事件
+ * 地址管理实践
  */
 
-public class SetDefaultAddress {
+public class ManageAddressEvent {
     private int position;
     private Contact contact;
+    private String action;
 
-    public SetDefaultAddress(int position, Contact contact){
+    public ManageAddressEvent(int position, Contact contact, String action) {
         this.position = position;
         this.contact = contact;
+        this.action = action;
     }
 
     public int getPosition() {
@@ -22,5 +24,9 @@ public class SetDefaultAddress {
 
     public Contact getContact() {
         return contact;
+    }
+
+    public String getAction() {
+        return action;
     }
 }

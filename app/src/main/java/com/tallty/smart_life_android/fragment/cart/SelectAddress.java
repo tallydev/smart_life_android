@@ -132,7 +132,7 @@ public class SelectAddress extends BaseBackFragment {
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.new_address:
-                startForResult(NewAddressFragment.newInstance(), REQ_CODE);
+                startForResult(AddressFormFragment.newInstance(new Contact()), REQ_CODE);
                 break;
         }
     }

@@ -30,22 +30,22 @@ import retrofit2.Response;
 /**
  * 收货地址-新建地址
  */
-public class NewAddressFragment extends BaseBackFragment {
+public class AddressFormFragment extends BaseBackFragment {
     private EditText edit_name;
     private EditText edit_phone;
     private EditText edit_area;
     private EditText edit_detail;
     private TextView save_address;
     // 数据
+    private Contact contact;
     private String contact_area;
     private String contact_street;
     private String contact_community;
 
-    public static NewAddressFragment newInstance() {
-
+    public static AddressFormFragment newInstance(Contact contact) {
         Bundle args = new Bundle();
-
-        NewAddressFragment fragment = new NewAddressFragment();
+        args.putSerializable(Const.OBJECT, contact);
+        AddressFormFragment fragment = new AddressFormFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -55,7 +55,7 @@ public class NewAddressFragment extends BaseBackFragment {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
-
+            contact = (Contact) args.getSerializable(Const.OBJECT);
         }
     }
 
@@ -72,7 +72,6 @@ public class NewAddressFragment extends BaseBackFragment {
     @Override
     protected void initView() {
         EventBus.getDefault().register(this);
-
         edit_name = getViewById(R.id.address_name);
         edit_phone = getViewById(R.id.address_phone);
         edit_area = getViewById(R.id.address_area);
@@ -211,7 +210,7 @@ public class NewAddressFragment extends BaseBackFragment {
     private boolean isPhoneValid(String phone) {
         boolean flag;
         try{
-            Pattern pattern = Pattern.compile("^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$");
+            Pattern pattern = Pattern.compile(Const.PHONE_PATTEN);
             Matcher matcher = pattern.matcher(phone);
             flag = matcher.matches();
         }catch(Exception e){

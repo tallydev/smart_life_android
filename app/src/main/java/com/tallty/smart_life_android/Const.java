@@ -40,6 +40,7 @@ public class Const {
     public static final String USER_TOKEN = "user_token";
     public static final String USER_NICKNAME = "user_nickname";
     public static final String USER_AVATAR = "user_avatar";
+    public static final String PHONE_PATTEN = "^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$";
     // Contact
     public static final String CONTACT_ID = "contact_ID";
     public static final String CONTACT_AREA = "contact_area";
@@ -75,4 +76,11 @@ public class Const {
      * 购物车相关
      */
     public static final String SALE_OFF = "sale_off";
+
+    /**
+     * 收货地址相关
+     */
+    public static final String DELETE_ADDRESS = "delete_address";
+    public static final String EDIT_ADDRESS = "edit_address";
+    public static final String SET_ADDRESS_DEFAULT = "set_address_default";
 }

@@ -14,12 +14,18 @@ import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.ManageAddressesAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
-import com.tallty.smart_life_android.fragment.cart.NewAddressFragment;
+import com.tallty.smart_life_android.event.ManageAddressEvent;
+import com.tallty.smart_life_android.fragment.cart.AddressFormFragment;
 import com.tallty.smart_life_android.model.Contact;
 import com.tallty.smart_life_android.model.ContactList;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,10 +41,10 @@ public class ManageAddresses extends BaseBackFragment {
     private ManageAddressesAdapter adapter;
     // 地址列表
     private List<Contact> contacts = new ArrayList<>();
+    private int preDefaultPosition;
 
     public static ManageAddresses newInstance() {
         Bundle args = new Bundle();
-
         ManageAddresses fragment = new ManageAddresses();
         fragment.setArguments(args);
         return fragment;
@@ -65,6 +71,7 @@ public class ManageAddresses extends BaseBackFragment {
 
     @Override
     protected void initView() {
+        EventBus.getDefault().register(this);
         new_address_text = getViewById(R.id.new_address_text);
         recyclerView = getViewById(R.id.addresses);
     }
@@ -84,7 +91,7 @@ public class ManageAddresses extends BaseBackFragment {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.new_address_text:
-                startForResult(NewAddressFragment.newInstance(), REQ_CODE);
+                startForResult(AddressFormFragment.newInstance(new Contact()), REQ_CODE);
                 break;
         }
     }
@@ -119,52 +126,63 @@ public class ManageAddresses extends BaseBackFragment {
         });
     }
 
-    private void deleteContact(final int position) {
+    private void deleteContact(final int position, final Contact contact) {
         showProgress("正在删除...");
         Engine.authService(shared_token, shared_phone)
-                .deleteContact(contacts.get(position).getId())
-                .enqueue(new Callback<Contact>() {
-                    @Override
-                    public void onResponse(Call<Contact> call, Response<Contact> response) {
-                        if (response.isSuccessful()) {
-                            boolean is_removed = false;
-                            if (contacts.size() > 1 && contacts.get(position).isDefault()) {
-                                contacts.remove(position);
-                                is_removed = true;
-                                // 如果删除的是默认地址, 则取第一个地址为默认地址
-                                contacts.get(0).setDefault(true);
-                                contacts.get(0).setChecked(true);
-                                // 更新本地默认地址
-
-                            } else if (contacts.size() <= 1) {
-                                // 当删除的地址为最后一条时,置空shared中的默认地址
-                                Contact contact = new Contact();
-
-                            }
-
-                            if (!is_removed) {
-                                contacts.remove(position);
-                            }
-                            adapter.notifyItemRemoved(position);
-                            adapter.notifyItemRangeChanged(position, contacts.size() - position);
-                            hideProgress();
-                        } else {
-                            hideProgress();
-                            showToast("删除失败,请重试");
+            .deleteContact(contacts.get(position).getId())
+            .enqueue(new Callback<Contact>() {
+                @Override
+                public void onResponse(Call<Contact> call, Response<Contact> response) {
+                    hideProgress();
+                    if (response.isSuccessful()) {
+                        contacts.remove(position);
+                        adapter.notifyItemRemoved(position);
+                        // 如果删除的是默认地址, 则取第一个地址为默认地址
+                        if (contacts.size() > 0 && contact.isDefault()) {
+                            contacts.get(0).setDefault(true);
+                            contacts.get(0).setChecked(true);
+                            adapter.notifyItemChanged(0);
                         }
+                    } else {
+                        showToast("删除失败,请重试");
                     }
+                }
+                @Override
+                public void onFailure(Call<Contact> call, Throwable t) {
+                    hideProgress();
+                    showToast(showString(R.string.network_error));
+                }
+            });
+    }
 
-                    @Override
-                    public void onFailure(Call<Contact> call, Throwable t) {
-                        hideProgress();
-                        showToast(showString(R.string.network_error));
+    private void setAddressDefault(final Contact contact) {
+        showProgress("正在更新...");
+        Map<String, String> fields = new HashMap<>();
+        Engine.authService(shared_token, shared_phone)
+            .updateContact(contact.getId(), true, fields)
+            .enqueue(new Callback<ContactList>() {
+                @Override
+                public void onResponse(Call<ContactList> call, Response<ContactList> response) {
+                    hideProgress();
+                    if (response.isSuccessful()) {
+                        contacts.clear();
+                        contacts.addAll(response.body().getContacts());
+                        adapter.notifyDataSetChanged();
+                    } else {
+                        showToast("更新失败");
                     }
-                });
+                }
+                @Override
+                public void onFailure(Call<ContactList> call, Throwable t) {
+                    hideProgress();
+                    showToast(showString(R.string.network_error));
+                }
+            });
     }
 
     /**
      * startForResult:
-     * 响应NewAddressFragment的返回数据
+     * 响应 AddressFormFragment 返回的新增地址
      */
     @Override
     protected void onFragmentResult(int requestCode, int resultCode, Bundle data) {
@@ -176,5 +194,26 @@ public class ManageAddresses extends BaseBackFragment {
                 adapter.notifyDataSetChanged();
             }
         }
+    }
+
+    // 编辑地址、删除地址、设置默认地址
+    @Subscribe
+    public void onManageAddressEvent(ManageAddressEvent event) {
+        switch (event.getAction()) {
+            case Const.EDIT_ADDRESS:
+                break;
+            case Const.DELETE_ADDRESS:
+                deleteContact(event.getPosition(), event.getContact());
+                break;
+            case Const.SET_ADDRESS_DEFAULT:
+                setAddressDefault(event.getContact());
+                break;
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

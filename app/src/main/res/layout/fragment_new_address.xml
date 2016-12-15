@@ -23,7 +23,7 @@
             android:background="@color/orange"
             android:gravity="center"
             android:textSize="@dimen/text_16"
-            android:text="保存"
+            android:text="@string/save"
             android:textColor="@color/white"/>
 
         <LinearLayout

@@ -140,6 +140,13 @@ public interface DataAPI {
     @DELETE("contacts/{id}")
     Call<Contact> deleteContact(@Path("id") int contact_id);
 
+    // 更新联系人
+    @FormUrlEncoded
+    @PUT("contacts/{id}")
+    Call<ContactList> updateContact(@Path("id") int contact_id,
+                                @Field("contact[is_default]") boolean isDefault,
+                                @FieldMap(encoded = true) Map<String, String> fields);
+
     // *********************************************************************************************
 
     // 上传运动步数

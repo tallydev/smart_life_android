@@ -214,7 +214,7 @@ public class LoginFragment extends BaseMainFragment {
     private boolean isPhoneValid(String phone) {
         boolean flag;
         try{
-            Pattern pattern = Pattern.compile("^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$");
+            Pattern pattern = Pattern.compile(Const.PHONE_PATTEN);
             Matcher matcher = pattern.matcher(phone);
             flag = matcher.matches();
         }catch(Exception e){

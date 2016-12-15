@@ -282,7 +282,7 @@ public class ResetFragment extends BaseBackFragment {
     private boolean isPhoneValid(String phone) {
         boolean flag;
         try{
-            Pattern pattern = Pattern.compile("^((13[0-9])|(15[^4,\\D])|(18[0-9]))\\d{8}$");
+            Pattern pattern = Pattern.compile(Const.PHONE_PATTEN);
             Matcher matcher = pattern.matcher(phone);
             flag = matcher.matches();
         }catch(Exception e){

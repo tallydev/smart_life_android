@@ -113,13 +113,11 @@ public class ConfirmOrder extends BaseBackFragment {
                     // 整理数据
                     int cache_contact_id = sharedPre.getInt(Const.CONTACT_ID, 0);
                     for (int i = 0; i < contacts.size(); i++)  {
-                        if (cache_contact_id != 0) {
-                            if (contacts.get(i).getId() == cache_contact_id) {
-                                order_contact = contacts.get(i);
-                                contacts.get(i).setChecked(true);
-                                setOrderAddress(order_contact);
-                                break;
-                            }
+                        if (contacts.get(i).getId() == cache_contact_id) {
+                            order_contact = contacts.get(i);
+                            contacts.get(i).setChecked(true);
+                            setOrderAddress(order_contact);
+                            break;
                         } else {
                             if (contacts.get(i).isDefault()) {
                                 order_contact = contacts.get(i);
