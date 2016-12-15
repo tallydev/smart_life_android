@@ -92,13 +92,21 @@ public class AddressFormFragment extends BaseBackFragment {
 
     @Override
     protected void afterAnimationLogic() {
+        initForm();
+    }
+
+    // 初始化表单
+    private void initForm() {
         edit_name.setText(contact.getName());
         edit_phone.setText(contact.getPhone());
+        edit_detail.setText(contact.getAddress());
         String area = contact.getArea() == null ?  "" : contact.getArea();
         String street = contact.getStreet() == null ? "" : contact.getStreet();
         String community = contact.getCommunity() == null ? "" : contact.getCommunity();
-        edit_area.setText(area + " " + street + " " + community);
-        edit_detail.setText(contact.getAddress());
+        if (contact.getArea() == null)
+            edit_area.setText("请选择所在物业小区");
+        else
+            edit_area.setText(area + " " + street + " " + community);
     }
 
     @Override

@@ -37,6 +37,7 @@ import com.tallty.smart_life_android.utils.GlobalUtils;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -217,6 +218,11 @@ public class CartFragment extends BaseMainFragment implements BaseQuickAdapter.R
                         setCartListState(cartItems);
                     } else {
                         showToast("删除失败");
+                        try {
+                            Log.d(App.TAG, response.errorBody().string());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
 

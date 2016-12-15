@@ -44,6 +44,7 @@ public class ManageAddresses extends BaseBackFragment {
     // 地址列表
     private List<Contact> contacts = new ArrayList<>();
     private int updatePosition = -1;
+    private int defaultPosition = -1;
 
     public static ManageAddresses newInstance() {
         Bundle args = new Bundle();
@@ -115,6 +116,13 @@ public class ManageAddresses extends BaseBackFragment {
                     contacts.addAll(response.body().getContacts());
                     // 显示数据
                     adapter.notifyDataSetChanged();
+                    // 获取默认地址的position
+                    for (int i = 0; i < contacts.size(); i++) {
+                        if (contacts.get(i).isDefault()) {
+                            defaultPosition = i;
+                            break;
+                        }
+                    }
                 } else {
                     showToast(showString(R.string.response_error));
                 }
@@ -139,6 +147,7 @@ public class ManageAddresses extends BaseBackFragment {
                     if (response.isSuccessful()) {
                         contacts.remove(position);
                         adapter.notifyItemRemoved(position);
+                        adapter.notifyItemRangeChanged(position, contacts.size());
                         // 如果删除的是默认地址, 则取第一个地址为默认地址
                         if (contacts.size() > 0 && contact.isDefault()) {
                             contacts.get(0).setDefault(true);
@@ -157,7 +166,7 @@ public class ManageAddresses extends BaseBackFragment {
             });
     }
 
-    private void setAddressDefault(final Contact contact) {
+    private void setAddressDefault(final Contact contact, final int position) {
         showProgress("正在更新...");
         Map<String, String> fields = new HashMap<>();
         Engine.authService(shared_token, shared_phone)
@@ -167,9 +176,11 @@ public class ManageAddresses extends BaseBackFragment {
                 public void onResponse(Call<ContactList> call, Response<ContactList> response) {
                     hideProgress();
                     if (response.isSuccessful()) {
-                        contacts.clear();
-                        contacts.addAll(response.body().getContacts());
-                        adapter.notifyDataSetChanged();
+                        contacts.get(defaultPosition).setDefault(false);
+                        adapter.notifyItemChanged(defaultPosition);
+                        contacts.get(position).setDefault(true);
+                        adapter.notifyItemChanged(position);
+                        defaultPosition = position;
                     } else {
                         showToast("更新失败");
                     }
@@ -231,7 +242,7 @@ public class ManageAddresses extends BaseBackFragment {
                         }).create().show();
                 break;
             case Const.SET_ADDRESS_DEFAULT:
-                setAddressDefault(event.getContact());
+                setAddressDefault(event.getContact(), event.getPosition());
                 break;
         }
     }
