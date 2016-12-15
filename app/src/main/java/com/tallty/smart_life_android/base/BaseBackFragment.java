@@ -198,7 +198,7 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
         progressDialog.show();
         // 增加timeout
         setTimerCancel();
-        timer = new CountDownTimer(5000, 1000) {
+        timer = new CountDownTimer(6000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {}
 

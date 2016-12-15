@@ -187,9 +187,9 @@ public class AddressDialogFragment extends DialogFragment implements View.OnClic
             case R.id.confirm_btn:
                 Bundle bundle = new Bundle();
                 bundle.putString("小区",
-                        areaWheel.getSelectionItem().toString()+
-                        streetWheel.getSelectionItem().toString()+
-                        communityWheel.getSelectionItem().toString()
+                    areaWheel.getSelectionItem().toString() + " " +
+                    streetWheel.getSelectionItem().toString() + " " +
+                    communityWheel.getSelectionItem().toString()
                 );
                 bundle.putString(Const.CONTACT_AREA, areaWheel.getSelectionItem().toString());
                 bundle.putString(Const.CONTACT_STREET, streetWheel.getSelectionItem().toString());

@@ -4,10 +4,12 @@ package com.tallty.smart_life_android.fragment.cart;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
@@ -20,6 +22,9 @@ import com.tallty.smart_life_android.model.ContactList;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,7 +33,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * 收货地址-新建地址
+ * 收货地址-新建或更新
  */
 public class AddressFormFragment extends BaseBackFragment {
     private EditText edit_name;
@@ -36,11 +41,8 @@ public class AddressFormFragment extends BaseBackFragment {
     private EditText edit_area;
     private EditText edit_detail;
     private TextView save_address;
-    // 数据
-    private Contact contact;
-    private String contact_area;
-    private String contact_street;
-    private String contact_community;
+    // 新建或更新维护的同一对象
+    private Contact contact = new Contact();
 
     public static AddressFormFragment newInstance(Contact contact) {
         Bundle args = new Bundle();
@@ -66,7 +68,10 @@ public class AddressFormFragment extends BaseBackFragment {
 
     @Override
     public void initToolbar(Toolbar toolbar, TextView toolbar_title) {
-        toolbar_title.setText("新建收货地址");
+        if (contact.getName() != null)
+            toolbar_title.setText("编辑收货地址");
+        else
+            toolbar_title.setText("新增收货地址");
     }
 
     @Override
@@ -87,7 +92,13 @@ public class AddressFormFragment extends BaseBackFragment {
 
     @Override
     protected void afterAnimationLogic() {
-
+        edit_name.setText(contact.getName());
+        edit_phone.setText(contact.getPhone());
+        String area = contact.getArea() == null ?  "" : contact.getArea();
+        String street = contact.getStreet() == null ? "" : contact.getStreet();
+        String community = contact.getCommunity() == null ? "" : contact.getCommunity();
+        edit_area.setText(area + " " + street + " " + community);
+        edit_detail.setText(contact.getAddress());
     }
 
     @Override
@@ -146,42 +157,86 @@ public class AddressFormFragment extends BaseBackFragment {
         if (cancel) {
             focusView.requestFocus();
         } else {
-            // 提交成功: 返回数据
-            final Contact new_contact = new Contact();
-            new_contact.setName(name);
-            new_contact.setPhone(phone);
-            new_contact.setArea(contact_area);
-            new_contact.setStreet(contact_street);
-            new_contact.setCommunity(contact_community);
-            new_contact.setAddress(detail);
-            // 向服务器提交新联系人
-            showProgress(showString(R.string.progress_normal));
-            Engine.authService(shared_token, shared_phone)
-                    .createContact(name, phone, area, contact_street, contact_community, detail, false)
-                    .enqueue(new Callback<ContactList>() {
-                        @Override
-                        public void onResponse(Call<ContactList> call, Response<ContactList> response) {
-                            if (response.isSuccessful()) {
-                                // 新地址创建成功, 传递给上级, 并退出当前页
-                                Bundle bundle = new Bundle();
-                                bundle.putSerializable(Const.OBJECT, new_contact);
-                                setFragmentResult(RESULT_OK, bundle);
-                                hideProgress();
-                                hideSoftInput();
-                                pop();
-                            } else {
-                                hideProgress();
-                                showToast(showString(R.string.response_error));
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<ContactList> call, Throwable t) {
-                            hideProgress();
-                            showToast(showString(R.string.network_error));
-                        }
-                    });
+            // 数据验证通过, 保存到对象中
+            contact.setName(name);
+            contact.setPhone(phone);
+            contact.setAddress(detail);
+            // 表单数据
+            Map<String, String> fields = new HashMap<>();
+            fields.put("contact[name]", contact.getName());
+            fields.put("contact[phone]", contact.getPhone());
+            fields.put("contact[area]", contact.getArea());
+            fields.put("contact[street]", contact.getStreet());
+            fields.put("contact[community]", contact.getCommunity());
+            fields.put("contact[address]", contact.getAddress());
+            // 更新或新建
+            if (0 == contact.getId())
+                createContact(fields);
+            else
+                updateContact(fields);
         }
+    }
+
+    // 新增联系人
+    private void createContact(Map<String, String> fields) {
+        showProgress("正在保存...");
+        Engine.authService(shared_token, shared_phone)
+            .createContact(fields).enqueue(new Callback<ContactList>() {
+                @Override
+                public void onResponse(Call<ContactList> call, Response<ContactList> response) {
+                    hideProgress();
+                    if (response.isSuccessful()) {
+                        // 新地址创建成功, 传递给上级, 并退出当前页
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable(Const.OBJECT, contact);
+                        setFragmentResult(RESULT_OK, bundle);
+                        hideSoftInput();
+                        pop();
+                    } else {
+                        showToast("保存失败");
+                        try {
+                            Log.d(App.TAG, response.errorBody().string());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ContactList> call, Throwable t) {
+                    hideProgress();
+                    showToast(showString(R.string.network_error));
+                }
+            });
+    }
+
+    // 更新联系人
+    private void updateContact(Map<String, String> fields) {
+        showProgress("正在保存...");
+        Engine.authService(shared_token, shared_phone)
+                .updateContact(contact.getId(), contact.isDefault(), fields)
+                .enqueue(new Callback<ContactList>() {
+                    @Override
+                    public void onResponse(Call<ContactList> call, Response<ContactList> response) {
+                        hideProgress();
+                        if (response.isSuccessful()) {
+                            // 更新成功, 传递给上级, 并退出当前页
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable(Const.OBJECT, contact);
+                            bundle.putString(Const.STRING, "update");
+                            setFragmentResult(RESULT_OK, bundle);
+                            hideSoftInput();
+                            pop();
+                        } else {
+                            showToast("保存失败");
+                        }
+                    }
+                    @Override
+                    public void onFailure(Call<ContactList> call, Throwable t) {
+                        hideProgress();
+                        showToast(showString(R.string.network_error));
+                    }
+                });
     }
 
     @Override
@@ -199,9 +254,9 @@ public class AddressFormFragment extends BaseBackFragment {
     public void onConfirmDialogEvnet(ConfirmDialogEvent event) {
         event.dialog.dismiss();
         edit_area.setText(event.data.getString("小区"));
-        contact_area = event.data.getString(Const.CONTACT_AREA);
-        contact_street = event.data.getString(Const.CONTACT_STREET);
-        contact_community = event.data.getString(Const.CONTACT_COMMUNITY);
+        contact.setArea(event.data.getString(Const.CONTACT_AREA));
+        contact.setStreet(event.data.getString(Const.CONTACT_STREET));
+        contact.setCommunity(event.data.getString(Const.CONTACT_COMMUNITY));
     }
 
     /**

@@ -1,8 +1,10 @@
 package com.tallty.smart_life_android.fragment.me;
 
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -41,7 +43,7 @@ public class ManageAddresses extends BaseBackFragment {
     private ManageAddressesAdapter adapter;
     // 地址列表
     private List<Contact> contacts = new ArrayList<>();
-    private int preDefaultPosition;
+    private int updatePosition = -1;
 
     public static ManageAddresses newInstance() {
         Bundle args = new Bundle();
@@ -190,20 +192,43 @@ public class ManageAddresses extends BaseBackFragment {
         if (requestCode == REQ_CODE && resultCode == RESULT_OK) {
             Contact new_contact = (Contact) data.getSerializable(Const.OBJECT);
             if (new_contact != null) {
-                contacts.add(new_contact);
-                adapter.notifyDataSetChanged();
+                if (updatePosition > 0) {
+                    // 更新
+                    contacts.set(updatePosition, new_contact);
+                    adapter.notifyItemChanged(updatePosition);
+                    updatePosition = -1;
+                } else {
+                    // 新增
+                    contacts.add(new_contact);
+                    adapter.notifyDataSetChanged();
+                }
             }
         }
     }
 
     // 编辑地址、删除地址、设置默认地址
     @Subscribe
-    public void onManageAddressEvent(ManageAddressEvent event) {
+    public void onManageAddressEvent(final ManageAddressEvent event) {
         switch (event.getAction()) {
             case Const.EDIT_ADDRESS:
+                updatePosition = event.getPosition();
+                startForResult(AddressFormFragment.newInstance(event.getContact()), REQ_CODE);
                 break;
             case Const.DELETE_ADDRESS:
-                deleteContact(event.getPosition(), event.getContact());
+                final AlertDialog.Builder builder = new AlertDialog.Builder(_mActivity, R.style.CustomAlertDialogTheme);
+                builder.setMessage("确认删除此收货地址吗")
+                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                deleteContact(event.getPosition(), event.getContact());
+                            }
+                        })
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).create().show();
                 break;
             case Const.SET_ADDRESS_DEFAULT:
                 setAddressDefault(event.getContact());

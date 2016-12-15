@@ -18,7 +18,7 @@ public class Contact implements Serializable {
 
     @SerializedName("id")
     @Expose
-    private int id;
+    private int id = 0;
 
     @SerializedName("name")
     @Expose
@@ -56,7 +56,6 @@ public class Contact implements Serializable {
 
     // UI属性
     private boolean checked;
-
 
     public int getId() {
         return id;

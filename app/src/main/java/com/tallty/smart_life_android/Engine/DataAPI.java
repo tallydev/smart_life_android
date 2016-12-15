@@ -128,13 +128,7 @@ public interface DataAPI {
     // 新增联系人
     @FormUrlEncoded
     @POST("contacts")
-    Call<ContactList> createContact(@Field("contact[name]") String name,
-                                    @Field("contact[phone]") String phone,
-                                    @Field("contact[area]") String area,
-                                    @Field("contact[street]") String street,
-                                    @Field("contact[community]") String community,
-                                    @Field("contact[address]") String address,
-                                    @Field("contact[is_default]") boolean is_default);
+    Call<ContactList> createContact(@FieldMap(encoded = true) Map<String, String> fields);
 
     // 删除联系人
     @DELETE("contacts/{id}")
