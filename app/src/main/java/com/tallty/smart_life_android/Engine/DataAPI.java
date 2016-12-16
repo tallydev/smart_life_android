@@ -10,6 +10,8 @@ import com.tallty.smart_life_android.model.Category;
 import com.tallty.smart_life_android.model.Contact;
 import com.tallty.smart_life_android.model.ContactList;
 import com.tallty.smart_life_android.model.Home;
+import com.tallty.smart_life_android.model.Order;
+import com.tallty.smart_life_android.model.Orders;
 import com.tallty.smart_life_android.model.Product;
 import com.tallty.smart_life_android.model.ProductList;
 import com.tallty.smart_life_android.model.ReportList;
@@ -19,6 +21,7 @@ import com.tallty.smart_life_android.model.SportRank;
 import com.tallty.smart_life_android.model.Step;
 import com.tallty.smart_life_android.model.User;
 
+import java.lang.reflect.Array;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -106,6 +109,8 @@ public interface DataAPI {
     @GET("products/{id}")
     Call<Product> getProduct(@Path("id") int id);
 
+    // *********************************************************************************************
+
     // 获取购物车列表
     @GET("cart_items")
     Call<CartList> getCartList(@Query("page") int page,
@@ -120,6 +125,19 @@ public interface DataAPI {
     // 删除购物车的一个商品
     @DELETE("cart_items/{id}")
     Call<CartItem> deleteCartItem(@Path("id") int id);
+
+    // *********************************************************************************************
+    // 创建订单
+    @FormUrlEncoded
+    @POST("orders")
+    Call<Order> createOrder(@Field("cart_item_ids") int[] cart_ids);
+
+    // 获取订单列表
+    @GET("orders")
+    Call<Orders> getOrders(@Query("page") int page,
+                           @Query("per_page") int per_page);
+
+    // *********************************************************************************************
 
     // 联系人列表
     @GET("contacts")

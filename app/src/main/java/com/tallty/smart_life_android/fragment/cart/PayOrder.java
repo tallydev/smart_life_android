@@ -3,7 +3,6 @@ package com.tallty.smart_life_android.fragment.cart;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
@@ -11,35 +10,34 @@ import android.widget.TextView;
 import com.pingplusplus.android.Pingpp;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.R;
-import com.tallty.smart_life_android.activity.MainActivity;
 import com.tallty.smart_life_android.base.BaseBackFragment;
-import com.tallty.smart_life_android.model.CartItem;
-import com.tallty.smart_life_android.model.Contact;
+import com.tallty.smart_life_android.event.StartBrotherEvent;
+import com.tallty.smart_life_android.event.SwitchTabFragment;
+import com.tallty.smart_life_android.fragment.MainFragment;
+import com.tallty.smart_life_android.fragment.me.MyOrders;
+import com.tallty.smart_life_android.model.Order;
 
-import java.util.ArrayList;
+import org.greenrobot.eventbus.EventBus;
 
 import static android.R.attr.data;
+import static android.R.attr.order;
 
 /**
- * A simple {@link Fragment} subclass.
  * 购物车-支付订单
  */
 public class PayOrder extends BaseBackFragment {
     // 结算数据
-    private ArrayList<CartItem> selected_cart_items = new ArrayList<>();
-    private float total_price = 0.0f;
-    private Contact order_contact = new Contact();
-
+    private Order order = new Order();
+    // UI
+    private TextView order_seq;
+    private TextView order_postage;
     private TextView order_price_text;
     private TextView pay_btn;
+    private TextView order_total_price;
 
-    public static PayOrder newInstance(float total_price,
-                                       ArrayList<CartItem> selected_cart_items,
-                                       Contact order_contact) {
+    public static PayOrder newInstance(Order order) {
         Bundle args = new Bundle();
-        args.putFloat(Const.TOTAL_PRICE, total_price);
-        args.putSerializable(Const.OBJECT_List, selected_cart_items);
-        args.putSerializable(Const.OBJECT, order_contact);
+        args.putSerializable(Const.OBJECT, order);
         PayOrder fragment = new PayOrder();
         fragment.setArguments(args);
         return fragment;
@@ -50,9 +48,7 @@ public class PayOrder extends BaseBackFragment {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
-            total_price = args.getFloat(Const.TOTAL_PRICE);
-            selected_cart_items = (ArrayList<CartItem>) args.getSerializable(Const.OBJECT_List);
-            order_contact = (Contact) args.getSerializable(Const.OBJECT);
+            order = (Order) args.getSerializable(Const.OBJECT);
         }
     }
 
@@ -68,8 +64,11 @@ public class PayOrder extends BaseBackFragment {
 
     @Override
     protected void initView() {
+        order_seq = getViewById(R.id.order_number);
+        order_postage = getViewById(R.id.order_postage);
         order_price_text = getViewById(R.id.order_price);
         pay_btn = getViewById(R.id.pay_now);
+        order_total_price = getViewById(R.id.order_total_price);
     }
 
     @Override
@@ -79,7 +78,27 @@ public class PayOrder extends BaseBackFragment {
 
     @Override
     protected void afterAnimationLogic() {
-        order_price_text.setText("RMB "+total_price);
+        showData();
+    }
+
+    @Override
+    protected void onFragmentPop() {
+        super.onFragmentPop();
+        popTo(MainFragment.class, false, new Runnable() {
+            @Override
+            public void run() {
+                // 通知MainFragment切换CartFragment
+                EventBus.getDefault().post(new SwitchTabFragment(4));
+                EventBus.getDefault().post(new StartBrotherEvent(MyOrders.newInstance()));
+            }
+        });
+    }
+
+    private void showData() {
+        order_price_text.setText("RMB " + (order.getPrice() - order.getPostage()));
+        order_postage.setText("+ ￥ " + order.getPostage());
+        order_seq.setText(order.getSeq());
+        order_total_price.setText("￥ " + order.getPrice());
     }
 
     @Override

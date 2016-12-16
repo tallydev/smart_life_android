@@ -99,7 +99,7 @@
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/submit_order_list"
-            android:scrollbars="vertical"
+            android:scrollbars="none"
             android:layout_above="@id/submit_order_layout"
             android:layout_below="@id/link_to_addresses"
             android:layout_width="match_parent"

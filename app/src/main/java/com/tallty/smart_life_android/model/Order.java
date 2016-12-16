@@ -13,22 +13,37 @@ import java.util.List;
  */
 
 public class Order implements Serializable {
-
-    public Order() {
-
-    }
-
     @SerializedName ("id")
     @Expose
     private int id;
 
-    @SerializedName ("number")
+    @SerializedName ("user_id")
     @Expose
-    private String number;
+    private int userId;
 
-    @SerializedName ("time")
+    @SerializedName ("contactId")
+    @Expose
+    private int contactId;
+
+    @SerializedName ("seq")
+    @Expose
+    private String seq;
+
+    @SerializedName ("need_postage")
+    @Expose
+    private boolean needPostage;
+
+    @SerializedName ("postage")
+    @Expose
+    private float postage;
+
+    @SerializedName ("created_at")
     @Expose
     private String time;
+
+    @SerializedName ("state_alias")
+    @Expose
+    private String stateAlias;
 
     @SerializedName ("state")
     @Expose
@@ -42,9 +57,9 @@ public class Order implements Serializable {
     @Expose
     private float price;
 
-    @SerializedName("Commodities")
+    @SerializedName("cart_items")
     @Expose
-    private List<CartItem> commodities = new ArrayList<>();
+    private List<CartItem> cartItems = new ArrayList<>();
 
     public int getId() {
         return id;
@@ -54,12 +69,12 @@ public class Order implements Serializable {
         this.id = id;
     }
 
-    public String getNumber() {
-        return number;
+    public String getSeq() {
+        return seq;
     }
 
-    public void setNumber(String number) {
-        this.number = number;
+    public void setSeq(String seq) {
+        this.seq = seq;
     }
 
     public String getTime() {
@@ -94,11 +109,55 @@ public class Order implements Serializable {
         this.price = price;
     }
 
-    public List<CartItem> getCommodities() {
-        return commodities;
+    public List<CartItem> getCartItems() {
+        return cartItems;
     }
 
-    public void setCommodities(List<CartItem> commodities) {
-        this.commodities = commodities;
+    public void setCartItems(List<CartItem> cartItems) {
+        this.cartItems = cartItems;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public int getContactId() {
+        return contactId;
+    }
+
+    public void setContactId(int contactId) {
+        this.contactId = contactId;
+    }
+
+    public void setPostage(int postage) {
+        this.postage = postage;
+    }
+
+    public String getStateAlias() {
+        return stateAlias;
+    }
+
+    public void setStateAlias(String stateAlias) {
+        this.stateAlias = stateAlias;
+    }
+
+    public boolean isNeedPostage() {
+        return needPostage;
+    }
+
+    public void setNeedPostage(boolean needPostage) {
+        this.needPostage = needPostage;
+    }
+
+    public float getPostage() {
+        return postage;
+    }
+
+    public void setPostage(float postage) {
+        this.postage = postage;
     }
 }

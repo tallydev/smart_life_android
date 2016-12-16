@@ -19,6 +19,7 @@ import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.model.CartItem;
 import com.tallty.smart_life_android.model.Contact;
 import com.tallty.smart_life_android.model.ContactList;
+import com.tallty.smart_life_android.model.Order;
 
 import java.util.ArrayList;
 
@@ -168,12 +169,38 @@ public class ConfirmOrder extends BaseBackFragment {
                 break;
             case R.id.submit_order:
                 if (has_address) {
-                    start(PayOrder.newInstance(total_price, selected_cart_items, order_contact));
+                    submitOrderAndPay();
                 } else {
                     showToast(EMPTY_ADDRESS);
                 }
                 break;
         }
+    }
+
+    // 提交订单 && 支付
+    private void submitOrderAndPay() {
+        showProgress("正在创建订单...");
+        int[] cart_ids = new int[selected_cart_items.size()];
+        for (int i = 0; i < selected_cart_items.size(); i++) {
+            cart_ids[i] = selected_cart_items.get(i).getId();
+        }
+        Engine.authService(shared_token, shared_phone).createOrder(cart_ids).enqueue(new Callback<Order>() {
+            @Override
+            public void onResponse(Call<Order> call, Response<Order> response) {
+                hideProgress();
+                if (response.isSuccessful()) {
+                    start(PayOrder.newInstance(response.body()));
+                } else {
+                    showToast("创建失败");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Order> call, Throwable t) {
+                hideProgress();
+                showToast(showString(R.string.network_error));
+            }
+        });
     }
 
     @Override

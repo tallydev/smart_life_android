@@ -12,10 +12,8 @@
     <android.support.v7.widget.RecyclerView
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:id="@+id/my_orders_list"
+        android:scrollbars="none"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="4dp"
-        android:paddingRight="4dp"
-        android:paddingTop="10dp"/>
+        android:layout_height="wrap_content"/>
 
 </android.support.design.widget.CoordinatorLayout>

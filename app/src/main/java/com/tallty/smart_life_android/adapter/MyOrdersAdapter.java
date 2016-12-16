@@ -1,17 +1,12 @@
 package com.tallty.smart_life_android.adapter;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseViewHolder;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.model.Order;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,56 +14,23 @@ import java.util.List;
  * 账户管理-我的订单
  */
 
-public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.MyOrdersViewHolder> {
-    private Context context;
-    private List<Order> orders = new ArrayList<>();
+public class MyOrdersAdapter extends BaseQuickAdapter<Order, BaseViewHolder>{
 
-    public MyOrdersAdapter(Context context, List<Order> orders) {
-        this.context = context;
-        this.orders = orders;
+    public MyOrdersAdapter(int layoutResId, List<Order> data) {
+        super(layoutResId, data);
     }
 
     @Override
-    public MyOrdersViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new MyOrdersViewHolder(LayoutInflater
-                .from(context).inflate(R.layout.item_my_orders, parent, false));
-    }
+    protected void convert(BaseViewHolder baseViewHolder, Order order) {
+        baseViewHolder
+                .setText(R.id.order_number, "订单编号：" + order.getSeq())
+                .setText(R.id.order_time, "下单时间：" + order.getTime())
+                .setText(R.id.order_state, order.getStateAlias())
+                .setText(R.id.order_pay_way, order.getPayWay())
+                .setText(R.id.order_price, "￥ " + order.getPrice());
 
-    @Override
-    public void onBindViewHolder(MyOrdersViewHolder holder, int position) {
-        Order order = orders.get(position);
-        holder.number.setText("订单号："+order.getNumber());
-        holder.time.setText(order.getTime());
-        holder.state.setText(order.getState());
-        holder.pay_way.setText(order.getPayWay());
-        holder.price.setText("￥"+order.getPrice());
-        // 加载商品列表
-        holder.commodities.setAdapter(new MyOrdersCommodityAdapter(context, order.getCommodities()));
-    }
-
-    @Override
-    public int getItemCount() {
-        return orders.size();
-    }
-
-
-    class MyOrdersViewHolder extends RecyclerView.ViewHolder {
-        private TextView number;
-        private TextView time;
-        private TextView state;
-        private TextView pay_way;
-        private TextView price;
-        private RecyclerView commodities;
-
-
-        MyOrdersViewHolder(View itemView) {
-            super(itemView);
-            number = (TextView) itemView.findViewById(R.id.order_number);
-            time = (TextView) itemView.findViewById(R.id.order_time);
-            state = (TextView) itemView.findViewById(R.id.order_state);
-            pay_way = (TextView) itemView.findViewById(R.id.order_pay_way);
-            price = (TextView) itemView.findViewById(R.id.order_price);
-            commodities = (RecyclerView) itemView.findViewById(R.id.order_commodity_list);
-        }
+        RecyclerView cartItems = baseViewHolder.getView(R.id.order_commodity_list);
+        // 加载订单的商品列表
+        cartItems.setAdapter(new MyOrdersCommodityAdapter(R.layout.item_my_orders_commodity, order.getCartItems()));
     }
 }

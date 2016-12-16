@@ -85,7 +85,7 @@
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/cart_list"
-            android:scrollbars="vertical"
+            android:scrollbars="none"
             android:paddingTop="4dp"
             android:layout_above="@id/line"
             android:layout_width="match_parent"

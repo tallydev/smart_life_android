@@ -3,10 +3,18 @@ package com.tallty.smart_life_android.utils;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.util.Log;
+import android.widget.ImageView;
 
+import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.R;
 
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -55,6 +63,7 @@ public class GlobalUtils {
         }
     }
 
+    // 四舍五入
     public static float floatRound(float value) {
         int scale = 2;//设置位数
         int roundingMode = BigDecimal.ROUND_HALF_UP;//表示四舍五入，可以选择其他舍值方式，例如去尾，等等.

@@ -3,17 +3,14 @@
 
     <string name="title_activity_main">慧生活</string>
     <string name="terms_of_service">服务条款</string>
-
     <string name="timer_text">距离结束时间:</string>
-    <string name="press_again_exit">再按一次退出</string>
-
     <!--健康报告-->
     <string name="check_report_one">检查项目</string>
     <string name="check_report_two">检查结果</string>
     <string name="check_report_three">参考范围</string>
     <string name="report_show_one">检查日期</string>
     <string name="report_show_two">检测结果</string>
-
+    <!--用户相关-->
     <string name="step_rank_photo">头像</string>
     <string name="step_rank_number">1</string>
     <string name="step_rank_name">Tony</string>
@@ -27,11 +24,17 @@
     <string name="sign_nickname">昵称</string>
     <string name="sign_select_address">所在小区选择</string>
     <string name="sign_accept">我已接收登录服务条款</string>
-
-    <string name="fa_angle_right">{fa-angle-right}</string>
-
     <string name="appoint_success">提交成功</string>
-
+    <!--购物相关-->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="address">"<h1>XX区XX街道XX (小区名称) XX栋XX单元XXX室</h1>"</string>
+    <string name="default_address">[默认地址]</string>
+    <string name="address_delete">删除</string>
+    <string name="address_edit">编辑</string>
+    <string name="address_set_default">设为默认地址</string>
+    <string name="save">保存</string>
+    <string name="pay_now">立即支付</string>
+    <string name="pay_text">实付金额:</string>
     <!--网络操作相关-->
     <string name="progress_login">登录中…</string>
     <string name="progress_register">注册中…</string>
@@ -39,38 +42,8 @@
     <string name="progress_reset">正在加载…</string>
     <string name="response_error">加载失败,请重试</string>
     <string name="network_error">网络链接错误</string>
-
-
-    <!--商品详情简介-->
-    <string name="product_pineapple_description">
-        热带雨林气候,光照充足\n
-        版纳古朴民风, 无激素和催熟\n\n
-        温馨提示：\n
-        1.人工采摘，大小个头不一，以重量为准；\n
-        2.发货时间待定，待新鲜采摘后即刻发货；\n
-        3.鉴于水果保质特性，请收货当日去皮食用\n
-          或者冰箱冷藏72小时内请食用完毕。
-    </string>
-    <string name="product_egg_description">
-        自然低密度农林散养，自由觅食，纯粮补喂\n
-        公母同林，保持好心情\n
-        蛋壳厚实，微量元素丰富\n\n
-        温馨提示：\n
-        1.	土鸡蛋整体偏小，食量大小不一，产蛋大小不一；\n
-        2.	散养鸡大多三五天才下一次蛋，供应商尽早发货；\n
-        3.	冰箱冷藏30天内请食用完毕。
-    </string>
-    <string name="product_honey_description">
-        深山野生原蜜珍酿\n
-        清香浓郁，甜而不腻\n
-        采收季节：2016年春季\n\n
-        温馨提示：\n
-        1.	存放于低于25℃的阴凉干燥处;\n
-        2.	每日三次，每次1茶匙;\n
-        3.	一周岁以下婴幼儿、糖尿病患者以及\n
-        蜂产品过敏者或其他禁忌者不建议食用；\n
-        4.	忌与豆腐、韭菜同食，易导致腹泻。
-    </string>
+    <!--图标-->
+    <string name="fa_angle_right">{fa-angle-right}</string>
 
 
     <string name="clause_text">
@@ -191,12 +164,4 @@
 3、	本协议的订立、执行和解释及争议的解决均应适用中华人民共和国的法律。如就本协议内容或其执行发生任何争议，则双方应首先通过友好协商方式解决；协商不成的，任何一方均应向彩立方数据所在地人民法院提起诉讼。
     </string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="address">"<h1>XX区XX街道XX (小区名称) XX栋XX单元XXX室</h1>"</string>
-    <string name="default_address">[默认地址]</string>
-    <string name="address_delete">删除</string>
-    <string name="address_edit">编辑</string>
-    <string name="address_set_default">设为默认地址</string>
-    <string name="save">保存</string>
 </resources>

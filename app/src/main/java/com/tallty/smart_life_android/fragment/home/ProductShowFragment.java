@@ -300,4 +300,13 @@ public class ProductShowFragment extends BaseBackFragment implements OnItemClick
             }
         });
     }
+
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        detail_image.recycle();
+        releaseImageViewResouce(small_detail_image);
+    }
 }

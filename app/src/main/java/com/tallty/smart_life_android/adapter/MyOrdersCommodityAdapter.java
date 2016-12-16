@@ -1,18 +1,13 @@
 package com.tallty.smart_life_android.adapter;
 
-import android.content.Context;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseViewHolder;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.model.CartItem;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,49 +15,19 @@ import java.util.List;
  * 我的订单-商品列表
  */
 
-public class MyOrdersCommodityAdapter extends RecyclerView.Adapter<MyOrdersCommodityAdapter.OrderCommodityViewHolder>{
-    private Context context;
-    private List<CartItem> commodities = new ArrayList<>();
+public class MyOrdersCommodityAdapter extends BaseQuickAdapter<CartItem, BaseViewHolder>{
 
-    public MyOrdersCommodityAdapter(Context context, List<CartItem> commodities) {
-        this.context = context;
-        this.commodities = commodities;
+    public MyOrdersCommodityAdapter(int layoutResId, List<CartItem> data) {
+        super(layoutResId, data);
     }
 
     @Override
-    public OrderCommodityViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new OrderCommodityViewHolder(LayoutInflater
-                .from(context).inflate(R.layout.item_my_orders_commodity, parent, false));
-    }
-
-    @Override
-    public void onBindViewHolder(OrderCommodityViewHolder holder, int position) {
-        CartItem cartItem = commodities.get(position);
-        // 调用接口时修改
-//        Glide.with(_mActivity).load(cartItem.getThumb()).skipMemoryCache(true).into(holder.image);
-//        Glide.with(context).load(cartItem.getImage_id()).skipMemoryCache(true).into(holder.image);
-        holder.name.setText(cartItem.getName());
-        holder.price.setText("￥ "+ cartItem.getPrice());
-        holder.count.setText("x "+ cartItem.getCount());
-    }
-
-    @Override
-    public int getItemCount() {
-        return commodities.size();
-    }
-
-    class OrderCommodityViewHolder extends RecyclerView.ViewHolder {
-        private ImageView image;
-        private TextView name;
-        private TextView price;
-        private TextView count;
-
-        OrderCommodityViewHolder(View itemView) {
-            super(itemView);
-                image = (ImageView) itemView.findViewById(R.id.order_commodity_image);
-                name = (TextView) itemView.findViewById(R.id.order_commodity_name);
-                price = (TextView) itemView.findViewById(R.id.order_commodity_price);
-                count = (TextView) itemView.findViewById(R.id.order_commodity_count);
-        }
+    protected void convert(BaseViewHolder baseViewHolder, CartItem cartItem) {
+        Glide.with(mContext).load(cartItem.getThumb())
+                .into((ImageView) baseViewHolder.getView(R.id.order_commodity_image));
+        baseViewHolder
+                .setText(R.id.order_commodity_name, cartItem.getName())
+                .setText(R.id.order_commodity_price, "￥ "+ cartItem.getPrice())
+                .setText(R.id.order_commodity_count, "x "+ cartItem.getCount());
     }
 }
