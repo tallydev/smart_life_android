@@ -226,20 +226,17 @@ public class ManageAddresses extends BaseBackFragment {
                 startForResult(AddressFormFragment.newInstance(event.getContact()), REQ_CODE);
                 break;
             case Const.DELETE_ADDRESS:
-                final AlertDialog.Builder builder = new AlertDialog.Builder(_mActivity, R.style.CustomAlertDialogTheme);
-                builder.setMessage("确认删除此收货地址吗")
-                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                deleteContact(event.getPosition(), event.getContact());
-                            }
-                        })
-                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        }).create().show();
+                confirmDialog("确认删除此收货地址吗", new OnConfirmDialogListener() {
+                    @Override
+                    public void onConfirm(DialogInterface dialog, int which) {
+                        deleteContact(event.getPosition(), event.getContact());
+                    }
+
+                    @Override
+                    public void onCancel(DialogInterface dialog, int which) {
+
+                    }
+                });
                 break;
             case Const.SET_ADDRESS_DEFAULT:
                 setAddressDefault(event.getContact(), event.getPosition());

@@ -19,6 +19,7 @@ import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.CartAdapter;
+import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.base.BaseMainFragment;
 import com.tallty.smart_life_android.custom.CustomLoadMoreView;
 import com.tallty.smart_life_android.event.CartUpdateItem;
@@ -115,20 +116,17 @@ public class CartFragment extends BaseMainFragment implements BaseQuickAdapter.R
         recyclerView.addOnItemTouchListener(new OnItemLongClickListener() {
             @Override
             public void onSimpleItemLongClick(BaseQuickAdapter baseQuickAdapter, View view, final int i) {
-                final AlertDialog.Builder builder = new AlertDialog.Builder(_mActivity, R.style.CustomAlertDialogTheme);
-                builder.setMessage("确认删除吗")
-                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                deleteCartItem(i);
-                            }
-                        })
-                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        }).create().show();
+                confirmDialog("确认删除吗", new BaseBackFragment.OnConfirmDialogListener() {
+                    @Override
+                    public void onConfirm(DialogInterface dialog, int which) {
+                        deleteCartItem(i);
+                    }
+
+                    @Override
+                    public void onCancel(DialogInterface dialog, int which) {
+
+                    }
+                });
             }
         });
     }

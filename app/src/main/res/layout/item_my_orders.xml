@@ -19,6 +19,18 @@
         android:paddingRight="12dp"
         android:text="订单号：2012123456"/>
     <TextView
+        android:id="@+id/order_state"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:gravity="center_vertical"
+        android:textColor="@color/orange"
+        android:textSize="@dimen/text_12"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:text="已发货"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"/>
+    <TextView
         android:id="@+id/order_time"
         android:layout_width="wrap_content"
         android:layout_height="36dp"
@@ -30,13 +42,13 @@
         android:paddingRight="12dp"
         android:text="2016-05-23"/>
     <TextView
-        android:id="@+id/order_state"
+        android:id="@+id/order_pay_way"
         android:layout_width="wrap_content"
         android:layout_height="36dp"
         android:gravity="center_vertical"
         android:textColor="@color/global_text"
         android:layout_alignParentRight="true"
-        android:layout_below="@id/order_number"
+        android:layout_below="@id/order_state"
         android:textSize="@dimen/text_12"
         android:paddingLeft="12dp"
         android:paddingRight="12dp"
@@ -49,23 +61,23 @@
         app:layoutManager="android.support.v7.widget.LinearLayoutManager"
         android:scrollbars="none"
         android:background="@color/white"
-        android:layout_below="@+id/order_state"/>
+        android:layout_below="@+id/order_time"/>
     <!--订单尾-->
     <TextView
         android:id="@+id/order_price_and_postage"
         android:layout_width="match_parent"
-        android:layout_height="32dp"
+        android:layout_height="36dp"
         android:gravity="right|center_vertical"
         android:paddingRight="12dp"
         android:paddingLeft="12dp"
         android:textSize="@dimen/text_12"
-        android:textColor="@color/orange"
+        android:textColor="@color/global_text"
         android:background="@drawable/border_bottom_bg"
         android:layout_below="@id/order_commodity_list"
         android:text="￥30.5"/>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="42dp"
         android:orientation="horizontal"
         android:paddingLeft="12dp"
         android:paddingTop="8dp"
@@ -73,26 +85,52 @@
         android:gravity="right"
         android:layout_below="@id/order_price_and_postage">
         <Button
-            android:id="@+id/order_pay_button"
+            android:id="@+id/order_logistics_button"
             android:layout_width="74dp"
-            android:layout_height="26dp"
-            android:textColor="@color/global_text"
+            android:layout_height="match_parent"
+            android:textColor="@color/global_light_text"
+            android:textSize="@dimen/text_14"
+            android:gravity="center"
+            android:shadowColor="@color/transparent"
+            android:layout_marginRight="12dp"
+            android:text="@string/order_logistics"
+            android:visibility="gone"
+            android:background="@drawable/border_button_bg"/>
+        <Button
+            android:id="@+id/order_delete_button"
+            android:layout_width="74dp"
+            android:layout_height="match_parent"
+            android:textColor="@color/global_light_text"
+            android:textSize="@dimen/text_14"
+            android:gravity="center"
+            android:shadowColor="@color/transparent"
+            android:layout_marginRight="12dp"
+            android:text="@string/order_delete"
+            android:visibility="gone"
+            android:background="@drawable/border_button_bg"/>
+        <Button
+            android:id="@+id/order_cancel_button"
+            android:layout_width="74dp"
+            android:layout_height="match_parent"
+            android:textColor="@color/global_light_text"
             android:textSize="@dimen/text_14"
             android:gravity="center"
             android:shadowColor="@color/transparent"
             android:layout_marginRight="12dp"
             android:text="@string/order_cancel"
+            android:visibility="gone"
             android:background="@drawable/border_button_bg"/>
         <Button
-            android:id="@+id/order_common_button"
+            android:id="@+id/order_pay_button"
             android:layout_width="60dp"
-            android:layout_height="26dp"
-            android:textColor="@drawable/border_button_orange_text_color"
+            android:layout_height="match_parent"
             android:textSize="@dimen/text_14"
             android:gravity="center"
+            android:visibility="gone"
             android:layout_marginRight="12dp"
             android:shadowColor="@color/transparent"
             android:text="@string/order_pay"
-            android:background="@drawable/border_button_orange_bg"/>
+            android:background="@drawable/border_button_orange_bg"
+            android:textColor="@drawable/border_button_orange_text_color"/>
     </LinearLayout>
 </RelativeLayout>

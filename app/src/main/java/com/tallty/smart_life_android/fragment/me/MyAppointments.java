@@ -111,22 +111,19 @@ public class MyAppointments extends BaseBackFragment {
 
             @Override
             public void onItemLongPress(RecyclerView.ViewHolder vh, final int position) {
-                final AlertDialog.Builder builder = new AlertDialog.Builder(_mActivity, R.style.CustomAlertDialogTheme);
-                builder.setMessage("确认删除吗")
-                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                appointments.remove(position);
-                                adapter.notifyItemRemoved(position);
-                                adapter.notifyItemRangeChanged(position, appointments.size()-position);
-                            }
-                        })
-                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        }).create().show();
+                confirmDialog("确认删除吗", new OnConfirmDialogListener() {
+                    @Override
+                    public void onConfirm(DialogInterface dialog, int which) {
+                        appointments.remove(position);
+                        adapter.notifyItemRemoved(position);
+                        adapter.notifyItemRangeChanged(position, appointments.size()-position);
+                    }
+
+                    @Override
+                    public void onCancel(DialogInterface dialog, int which) {
+
+                    }
+                });
             }
         });
     }

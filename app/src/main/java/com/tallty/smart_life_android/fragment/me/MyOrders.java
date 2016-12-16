@@ -1,6 +1,7 @@
 package com.tallty.smart_life_android.fragment.me;
 
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,12 +12,17 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.tallty.smart_life_android.App;
+import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.MyOrdersAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
+import com.tallty.smart_life_android.event.ManageOrderEvent;
 import com.tallty.smart_life_android.model.Order;
 import com.tallty.smart_life_android.model.Orders;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +69,7 @@ public class MyOrders extends BaseBackFragment {
 
     @Override
     protected void initView() {
+        EventBus.getDefault().register(this);
         recyclerView = getViewById(R.id.my_orders_list);
     }
 
@@ -109,5 +116,69 @@ public class MyOrders extends BaseBackFragment {
     @Override
     public void onClick(View v) {
 
+    }
+
+    /**
+     * 订单处理事件
+     * @param event
+     */
+    @Subscribe
+    public void onManageOrderEvent(final ManageOrderEvent event) {
+        switch (event.getAction()) {
+            case Const.PAY_ORDER:
+                payOrder(event.getOrder(), event.getPosition());
+                break;
+            case Const.CANCEL_ORDER:
+                confirmDialog("确认取消此订单吗？", new OnConfirmDialogListener() {
+                    @Override
+                    public void onConfirm(DialogInterface dialog, int which) {
+                        deleteOrder(event.getOrder(), event.getPosition());
+                    }
+
+                    @Override
+                    public void onCancel(DialogInterface dialog, int which) {
+
+                    }
+                });
+                break;
+            case Const.DELETE_ORDER:
+                confirmDialog("确认删除此订单吗？", new OnConfirmDialogListener() {
+                    @Override
+                    public void onConfirm(DialogInterface dialog, int which) {
+                        deleteOrder(event.getOrder(), event.getPosition());
+                    }
+
+                    @Override
+                    public void onCancel(DialogInterface dialog, int which) {
+
+                    }
+                });
+                break;
+            case Const.LOGISTICS_ORDER:
+                showLogistics(event.getOrder(), event.getPosition());
+                break;
+        }
+    }
+
+    // TODO: 2016/12/16 处理订单事件
+    // 取消订单 || 删除订单
+    private void deleteOrder(Order order, int position) {
+        showToast("取消订单");
+    }
+
+    // 支付订单
+    private void payOrder(Order order, int position) {
+        showToast("开始支付");
+    }
+
+    // 查看物流
+    private void showLogistics(Order order, int position) {
+        showToast("查看物流");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

@@ -2,6 +2,7 @@ package com.tallty.smart_life_android.base;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -9,6 +10,7 @@ import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -181,6 +183,51 @@ public abstract class BaseMainFragment extends BaseFragment implements View.OnCl
         }
 
         snackbar.show();
+    }
+
+    /**
+     * 显示确认弹出
+     */
+    public interface OnConfirmDialogListener {
+        void onConfirm(DialogInterface dialog, int which);
+        void onCancel(DialogInterface dialog, int which);
+    }
+    protected void confirmDialog(String body, String confirm_str, String cancel_str, final BaseBackFragment.OnConfirmDialogListener listener) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(_mActivity, R.style.CustomAlertDialogTheme);
+        builder.setMessage(body)
+                .setPositiveButton(confirm_str, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        listener.onConfirm(dialog, which);
+                    }
+                })
+                .setNegativeButton(cancel_str, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        listener.onCancel(dialog, which);
+                    }
+                }).create().show();
+
+    }
+
+    protected void confirmDialog(String body, final BaseBackFragment.OnConfirmDialogListener listener) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(_mActivity, R.style.CustomAlertDialogTheme);
+        builder.setMessage(body)
+                .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        listener.onConfirm(dialog, which);
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        listener.onCancel(dialog, which);
+                    }
+                }).create().show();
+
     }
 
     @Override

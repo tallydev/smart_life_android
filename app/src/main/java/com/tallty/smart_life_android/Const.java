@@ -89,5 +89,6 @@ public class Const {
      */
     public static final String CANCEL_ORDER = "cancel_order";
     public static final String DELETE_ORDER = "delete_order";
+    public static final String LOGISTICS_ORDER = "logistics_order";
     public static final String PAY_ORDER = "pay_order";
 }

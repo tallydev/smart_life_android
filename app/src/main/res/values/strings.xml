@@ -39,6 +39,7 @@
     <string name="order_cancel">取消订单</string>
     <string name="order_pay">付款</string>
     <string name="order_delete">删除订单</string>
+    <string name="order_logistics">查看物流</string>
     <!--网络操作相关-->
     <string name="progress_login">登录中…</string>
     <string name="progress_register">注册中…</string>
