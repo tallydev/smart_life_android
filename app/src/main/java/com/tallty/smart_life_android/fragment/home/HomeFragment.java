@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
+import com.pgyersdk.update.PgyUpdateManager;
 import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.Engine.Engine;
@@ -175,6 +176,8 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
         setUploadStepTimer();
         // 进入页面, 延时3秒, 先上传一次步数, 然后再获取首页信息(优化首页信息的实时性)
         delayUploadStep();
+        // 检查更新
+        PgyUpdateManager.register(getActivity());
     }
 
     /**

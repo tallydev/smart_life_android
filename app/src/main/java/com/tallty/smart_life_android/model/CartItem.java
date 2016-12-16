@@ -28,6 +28,10 @@ public class CartItem implements Serializable{
     @Expose
     private float price;
 
+    @SerializedName ("after_discount")
+    @Expose
+    private float originalPrice;
+
     @SerializedName ("count")
     @Expose
     private int count;
@@ -36,6 +40,10 @@ public class CartItem implements Serializable{
     @Expose
     private float amount;
 
+    @SerializedName ("sales")
+    @Expose
+    private int sales;
+
     @SerializedName ("state")
     @Expose
     private String state;
@@ -43,10 +51,6 @@ public class CartItem implements Serializable{
     @SerializedName ("state_alias")
     @Expose
     private String stateAlias;
-
-    @SerializedName ("product_sort")
-    @Expose
-    private String category;
 
     @SerializedName ("created_at")
     @Expose
@@ -125,14 +129,6 @@ public class CartItem implements Serializable{
         this.stateAlias = stateAlias;
     }
 
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
     public String getCreatedAt() {
         return createdAt;
     }
@@ -155,5 +151,21 @@ public class CartItem implements Serializable{
 
     public void setChecked(boolean checked) {
         this.checked = checked;
+    }
+
+    public float getOriginalPrice() {
+        return originalPrice;
+    }
+
+    public void setOriginalPrice(float originalPrice) {
+        this.originalPrice = originalPrice;
+    }
+
+    public int getSales() {
+        return sales;
+    }
+
+    public void setSales(int sales) {
+        this.sales = sales;
     }
 }

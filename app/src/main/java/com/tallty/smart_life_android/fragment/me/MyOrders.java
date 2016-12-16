@@ -24,6 +24,7 @@ import com.tallty.smart_life_android.model.Orders;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -101,6 +102,11 @@ public class MyOrders extends BaseBackFragment {
                     orders.addAll(response.body().getOrders());
                     adapter.notifyDataSetChanged();
                 } else {
+                    try {
+                        Log.d(App.TAG, response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     showToast("加载失败");
                 }
             }
@@ -109,6 +115,7 @@ public class MyOrders extends BaseBackFragment {
             public void onFailure(Call<Orders> call, Throwable t) {
                 hideProgress();
                 showToast("网络连接错误");
+                Log.d(App.TAG, t.getLocalizedMessage());
             }
         });
     }

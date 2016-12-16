@@ -7,15 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.pgyersdk.update.PgyUpdateManager;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseFragment;
 import com.tallty.smart_life_android.custom.TabBar;
 import com.tallty.smart_life_android.custom.TabBarTab;
-import com.tallty.smart_life_android.event.TabSelectedEvent;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.event.SwitchTabFragment;
 import com.tallty.smart_life_android.event.TabReselectedEvent;
+import com.tallty.smart_life_android.event.TabSelectedEvent;
 import com.tallty.smart_life_android.fragment.cart.CartFragment;
 import com.tallty.smart_life_android.fragment.community.CommunityFragment;
 import com.tallty.smart_life_android.fragment.healthy.HealthyFragment;
@@ -85,9 +84,6 @@ public class MainFragment extends BaseFragment {
         }
 
         initView(view);
-        // 检查更新
-        PgyUpdateManager.register(getActivity());
-
         return view;
     }
 

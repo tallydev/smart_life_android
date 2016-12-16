@@ -52,39 +52,52 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbars="none">
-
-            <com.tallty.smart_life_android.custom.MyRecyclerView
-                android:id="@+id/check_report_list"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scrollbars="none"
-                android:clickable="true"
-                android:layout_marginBottom="4dp"/>
-
+                android:layout_height="wrap_content">
+                <com.tallty.smart_life_android.custom.MyRecyclerView
+                    android:id="@+id/check_report_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="none"
+                    android:clickable="true"
+                    android:layout_marginBottom="4dp"/>
+                <ImageView
+                    android:id="@+id/icon_one"
+                    android:layout_width="40dp"
+                    android:layout_height="36dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"
+                    android:background="@color/white"
+                    android:src="@drawable/me_healthy"
+                    android:layout_below="@id/check_report_list"/>
+                <TextView
+                    android:id="@+id/text_one"
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:textSize="@dimen/text_14"
+                    android:text="健康建议"
+                    android:background="@color/white"
+                    android:gravity="center_vertical"
+                    android:layout_toRightOf="@id/icon_one"
+                    android:layout_below="@id/check_report_list"/>
+                <View
+                    android:id="@+id/line"
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/app_bg"
+                    android:layout_below="@id/text_one"/>
+                <com.tallty.smart_life_android.custom.MyRecyclerView
+                    android:id="@+id/check_report_advise"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/line"
+                    android:scrollbars="none"
+                    android:layout_marginBottom="4dp"/>
             <!--健康建议-->
-            <!--<LinearLayout-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:orientation="vertical"-->
-                <!--android:paddingLeft="16dp"-->
-                <!--android:background="@color/white"-->
-                <!--android:paddingTop="10dp"-->
-                <!--android:paddingRight="16dp"-->
-                <!--android:paddingBottom="10dp">-->
-            <!--<TextView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="健康建议"-->
-                <!--android:textSize="@dimen/text_14"-->
-                <!--android:drawableLeft="@drawable/address_icon"/>-->
-            <!--<View-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="1px"-->
-                <!--android:background="@color/gray"-->
-                <!--android:layout_marginTop="10dp"-->
-                <!--android:layout_marginBottom="10dp"/>-->
-            <!--&lt;!&ndash;健康建议&ndash;&gt;-->
-            <!--</LinearLayout>-->
+            </RelativeLayout>
         </ScrollView>
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

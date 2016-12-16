@@ -39,7 +39,19 @@ public class Order implements Serializable {
 
     @SerializedName ("created_at")
     @Expose
-    private String time;
+    private String createdAt;
+
+    @SerializedName ("created_at_output")
+    @Expose
+    private String created_time;
+
+    @SerializedName ("updated_at")
+    @Expose
+    private String updatedAt;
+
+    @SerializedName ("updated_at_output")
+    @Expose
+    private String updated_time;
 
     @SerializedName ("state_alias")
     @Expose
@@ -77,12 +89,12 @@ public class Order implements Serializable {
         this.seq = seq;
     }
 
-    public String getTime() {
-        return time;
+    public String getCreated_time() {
+        return created_time;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setCreated_time(String created_time) {
+        this.created_time = created_time;
     }
 
     public String getState() {
@@ -159,5 +171,29 @@ public class Order implements Serializable {
 
     public void setPostage(float postage) {
         this.postage = postage;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public String getUpdated_time() {
+        return updated_time;
+    }
+
+    public void setUpdated_time(String updated_time) {
+        this.updated_time = updated_time;
     }
 }

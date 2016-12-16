@@ -20,8 +20,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class Engine {
     private static final String baseUrl = "http://elive.clfsj.com:8081/";
     // 退出时, 需要重置authService
-    public static DataAPI authService = null;
+    private static DataAPI authService = null;
     private static DataAPI noAuthService = null;
+    private static String authToken = null;
 
     // 未鉴权的网络服务
     public static DataAPI noAuthService() {
@@ -34,11 +35,18 @@ public class Engine {
 
     // 鉴权的网络服务
     public static DataAPI authService(String token, String phone) {
-        if (authService == null) {
+        if (authService == null || !authToken.equals(token)) {
+            authToken = token;
             setAuthService(token, phone);
             Log.d(App.TAG, "初始化了Auth");
         }
         return authService;
+    }
+
+    public static void resetEngine() {
+        authService = null;
+        noAuthService = null;
+        authToken = null;
     }
 
 

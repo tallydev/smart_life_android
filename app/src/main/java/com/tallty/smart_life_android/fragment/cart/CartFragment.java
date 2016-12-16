@@ -142,13 +142,17 @@ public class CartFragment extends BaseMainFragment implements BaseQuickAdapter.R
                         current_page = response.body().getCurrentPage();
                         total_pages = response.body().getTotalPages();
                         if (cartItems.size() != cartList.getCartItems().size()) {
-                            Log.d(App.TAG, "更新了, 现在的:"+cartItems.size()+"获取的"+cartList.getCartItems().size());
                             cartItems.clear();
                             cartItems.addAll(cartList.getCartItems());
                             adapter.notifyDataSetChanged();
                         }
                     } else {
                         showToast(showString(R.string.response_error));
+                        try {
+                            Log.d(App.TAG, response.errorBody().string());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
 

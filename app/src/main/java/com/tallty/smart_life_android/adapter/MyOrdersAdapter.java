@@ -45,7 +45,7 @@ public class MyOrdersAdapter extends BaseQuickAdapter<Order, BaseViewHolder>{
         cartItems.setAdapter(new MyOrdersCommodityAdapter(R.layout.item_my_orders_commodity, order.getCartItems()));
         baseViewHolder
                 .setText(R.id.order_number, "订单编号：" + order.getSeq())
-                .setText(R.id.order_time, "下单时间：" + order.getTime())
+                .setText(R.id.order_time, "下单时间：" + order.getCreated_time())
                 .setText(R.id.order_state, order.getStateAlias())
                 .setText(R.id.order_pay_way, order.getPayWay());
 

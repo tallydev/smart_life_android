@@ -176,7 +176,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
         try {
             Date date = format.parse(time);
             countDownSecond = date.getTime() - System.currentTimeMillis();
-//            Log.d(App.TAG, "限量发售: 时间"+date.getTime() +"");
+//            Log.d(App.TAG, "限量发售: 时间"+date.getCreated_time() +"");
 //            Log.d(App.TAG, "限量发售: 当前"+System.currentTimeMillis() +"");
 //            Log.d(App.TAG, "限量发售: 差值"+countDownSecond +"");
         } catch (ParseException e) {

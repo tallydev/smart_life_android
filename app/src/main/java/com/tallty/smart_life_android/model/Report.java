@@ -31,6 +31,10 @@ public class Report implements Serializable {
     @Expose
     private String state;
 
+    @SerializedName("advise")
+    @Expose
+    private String advise;
+
 
 
     public String getName() {
@@ -71,5 +75,13 @@ public class Report implements Serializable {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public String getAdvise() {
+        return advise;
+    }
+
+    public void setAdvise(String advise) {
+        this.advise = advise;
     }
 }

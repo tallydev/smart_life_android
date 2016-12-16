@@ -37,7 +37,6 @@ import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.custom.RecyclerVIewItemTouchListener;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.event.TransferDataEvent;
-import com.tallty.smart_life_android.fragment.cart.SelectAddress;
 import com.tallty.smart_life_android.model.User;
 import com.tallty.smart_life_android.utils.ImageUtils;
 
@@ -130,69 +129,11 @@ public class ProfileFragment extends BaseBackFragment {
     @Override
     protected void afterAnimationLogic() {
         values.set(10, getVersion());
+        initList();
         getUserInfo();
     }
 
-
-    /**
-     * 获取用户信息,并显示
-     */
-    private void getUserInfo() {
-        showProgress(showString(R.string.progress_normal));
-        // 查询用户信息, 更新列表
-        Engine.authService(shared_token, shared_phone).getUser().enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                if (response.isSuccessful()) {
-                    user = response.body();
-
-                    values.set(0, user.getAvatar());
-                    values.set(1, user.getNickname());
-                    values.set(2, user.getPhone());
-                    values.set(3, user.getBirth());
-                    values.set(4, user.getSex());
-                    values.set(5, user.getSlogan());
-                    values.set(6, user.getIdCard());
-                    values.set(8, user.getPhone());
-
-                    processRecyclerView();
-                } else {
-                    hideProgress();
-                    showToast(showString(R.string.response_error));
-                }
-            }
-
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                hideProgress();
-                showToast(showString(R.string.network_error));
-            }
-        });
-    }
-
-    /**
-     * 退出事件
-     */
-    @Override
-    protected void onFragmentPop() {
-        super.onFragmentPop();
-        // 给<账户管理>传递对象
-        Bundle bundle = new Bundle();
-        bundle.putString(Const.USER_AVATAR, values.get(0));
-        bundle.putString(Const.USER_NICKNAME, values.get(1));
-        EventBus.getDefault().post(new TransferDataEvent(bundle, "ProfileFragment"));
-    }
-
-    @Override
-    public void onClick(View v) {
-
-    }
-
-    /**
-     * 加载列表
-     */
-    private void processRecyclerView() {
-        // 加载列表
+    private void initList() {
         recyclerView.setLayoutManager(new LinearLayoutManager(_mActivity));
         adapter = new ProfileListAdapter(_mActivity, keys, values);
         recyclerView.setAdapter(adapter);
@@ -236,7 +177,56 @@ public class ProfileFragment extends BaseBackFragment {
 
             }
         });
-        hideProgress();
+    }
+
+
+    /**
+     * 获取用户信息,并显示
+     */
+    private void getUserInfo() {
+        // 查询用户信息, 更新列表
+        Engine.authService(shared_token, shared_phone).getUser().enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.isSuccessful()) {
+                    user = response.body();
+                    values.set(0, user.getAvatar());
+                    values.set(1, user.getNickname());
+                    values.set(2, user.getPhone());
+                    values.set(3, user.getBirth());
+                    values.set(4, user.getSex());
+                    values.set(5, user.getSlogan());
+                    values.set(6, user.getIdCard());
+                    values.set(8, user.getPhone());
+                    adapter.notifyDataSetChanged();
+                } else {
+                    showToast(showString(R.string.response_error));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                showToast(showString(R.string.network_error));
+            }
+        });
+    }
+
+    /**
+     * 退出事件
+     */
+    @Override
+    protected void onFragmentPop() {
+        super.onFragmentPop();
+        // 给<账户管理>传递对象
+        Bundle bundle = new Bundle();
+        bundle.putString(Const.USER_AVATAR, values.get(0));
+        bundle.putString(Const.USER_NICKNAME, values.get(1));
+        EventBus.getDefault().post(new TransferDataEvent(bundle, "ProfileFragment"));
+    }
+
+    @Override
+    public void onClick(View v) {
+
     }
 
     /**
@@ -450,27 +440,25 @@ public class ProfileFragment extends BaseBackFragment {
      * 处理退出登录
      */
     private void processSignOut() {
-        builder = new AlertDialog.Builder(getActivity(), R.style.CustomAlertDialogTheme);
-        builder.setMessage("确定退出当前账号吗?")
-                .setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // 从数据源删除数
-                        SharedPreferences.Editor editor = sharedPre.edit();
-                        editor.putString(Const.USER_TOKEN, Const.EMPTY_STRING);
-                        editor.apply();
-                        // 重置网络请求, 否则退出账号,authService 还保留着上一账号的phone 和 token
-                        Engine.authService = null;
-                        Intent intent = new Intent(getActivity(), LoginActivity.class);
-                        startActivity(intent);
-                        getActivity().finish();
-                    }
-                })
-                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                    }
-                }).create();
-        builder.show();
+        confirmDialog("确定退出当前账号吗?", new OnConfirmDialogListener() {
+            @Override
+            public void onConfirm(DialogInterface dialog, int which) {
+                // 从数据源删除数
+                SharedPreferences.Editor editor = sharedPre.edit();
+                editor.putString(Const.USER_TOKEN, Const.EMPTY_STRING);
+                editor.apply();
+                // 重置网络请求, 否则退出账号,authService 还保留着上一账号的phone 和 token
+                Engine.resetEngine();
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                startActivity(intent);
+                getActivity().finish();
+            }
+
+            @Override
+            public void onCancel(DialogInterface dialog, int which) {
+
+            }
+        });
     }
 
     /**

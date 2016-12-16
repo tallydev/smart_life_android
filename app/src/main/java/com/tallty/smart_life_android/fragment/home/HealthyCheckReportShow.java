@@ -45,9 +45,7 @@ public class HealthyCheckReportShow extends BaseBackFragment {
 
     public static HealthyCheckReportShow newInstance(Report report) {
         Bundle args = new Bundle();
-
         args.putSerializable(Const.OBJECT, report);
-
         HealthyCheckReportShow fragment = new HealthyCheckReportShow();
         fragment.setArguments(args);
         return fragment;
@@ -86,22 +84,31 @@ public class HealthyCheckReportShow extends BaseBackFragment {
     @Override
     protected void afterAnimationLogic() {
         chart_name.setText(report.getAlias());
-        // 获取单项历史数据
+        initList();
+        getHistoryData();
+    }
+
+    private void initList() {
+        myRecyclerView.setLayoutManager(new LinearLayoutManager(_mActivity));
+        adapter = new HomeCheckReportShowAdapter(R.layout.item_home_check_report_show, reportShowItems);
+        myRecyclerView.setAdapter(adapter);
+    }
+
+    // 获取单项历史数据
+    public void getHistoryData() {
         showProgress(showString(R.string.progress_normal));
         Engine.authService(shared_token, shared_phone).getReportHistory(report.getName()).enqueue(new Callback<ReportShowList>() {
             @Override
             public void onResponse(Call<ReportShowList> call, Response<ReportShowList> response) {
+                hideProgress();
                 if (response.isSuccessful()) {
-                    reportShowItems = response.body().getList();
-                    // 加载列表
-                    setList();
-                    // 记载图表
+                    reportShowItems.clear();
+                    reportShowItems.addAll(response.body().getList());
+                    adapter.notifyDataSetChanged();
+                    // 图表
                     if (!reportShowItems.isEmpty() && isAdded())
                         setChart();
-
-                    hideProgress();
                 } else {
-                    hideProgress();
                     showToast(showString(R.string.response_error));
                 }
             }
@@ -117,12 +124,6 @@ public class HealthyCheckReportShow extends BaseBackFragment {
     @Override
     public void onClick(View v) {}
 
-    private void setList() {
-        // 初始化列表
-        myRecyclerView.setLayoutManager(new LinearLayoutManager(_mActivity));
-        adapter = new HomeCheckReportShowAdapter(_mActivity, reportShowItems);
-        myRecyclerView.setAdapter(adapter);
-    }
 
     private void setChart() {
         String[] labels = new String[reportShowItems.size()];
