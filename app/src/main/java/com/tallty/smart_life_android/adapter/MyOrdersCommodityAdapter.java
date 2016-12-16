@@ -1,5 +1,6 @@
 package com.tallty.smart_life_android.adapter;
 
+import android.text.Html;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -28,6 +29,7 @@ public class MyOrdersCommodityAdapter extends BaseQuickAdapter<CartItem, BaseVie
         baseViewHolder
                 .setText(R.id.order_commodity_name, cartItem.getName())
                 .setText(R.id.order_commodity_price, "￥ "+ cartItem.getPrice())
-                .setText(R.id.order_commodity_count, "x "+ cartItem.getCount());
+                .setText(R.id.order_commodity_count, "x "+ cartItem.getCount())
+        .setText(R.id.order_commodity_original_price, Html.fromHtml("<s> ￥ " + cartItem.getPrice() + "</s>"));
     }
 }

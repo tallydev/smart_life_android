@@ -29,12 +29,16 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="address">"<h1>XX区XX街道XX (小区名称) XX栋XX单元XXX室</h1>"</string>
     <string name="default_address">[默认地址]</string>
-    <string name="address_delete">删除</string>
-    <string name="address_edit">编辑</string>
+    <string name="delete_string">删除</string>
+    <string name="edit_string">编辑</string>
     <string name="address_set_default">设为默认地址</string>
     <string name="save">保存</string>
     <string name="pay_now">立即支付</string>
     <string name="pay_text">实付金额:</string>
+    <!--订单相关-->
+    <string name="order_cancel">取消订单</string>
+    <string name="order_pay">付款</string>
+    <string name="order_delete">删除订单</string>
     <!--网络操作相关-->
     <string name="progress_login">登录中…</string>
     <string name="progress_register">注册中…</string>

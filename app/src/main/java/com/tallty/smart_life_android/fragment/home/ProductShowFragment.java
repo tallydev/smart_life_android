@@ -104,7 +104,7 @@ public class ProductShowFragment extends BaseBackFragment implements OnItemClick
         product_description = getViewById(R.id.product_detail_description);
         add = getViewById(R.id.add);
         reduce = getViewById(R.id.reduce);
-        number = getViewById(R.id.number);
+        number = getViewById(R.id.product_count);
         add_to_cart = getViewById(R.id.add_to_cart);
         banner = getViewById(R.id.product_detail_banner);
         detail_image = getViewById(R.id.product_detail_image);

@@ -7,7 +7,7 @@
 
     <!--通用背景色-->
     <color name="app_bg">#eeeeee</color>
-    <color name="light_app_bg">#F5F5F5</color>
+    <color name="light_app_bg">#fafafa</color>
     <!--toolbar-->
     <color name="toolbar_text_color">#FFFFFF</color>
     <color name="toolbar_bg">#FF8000</color>

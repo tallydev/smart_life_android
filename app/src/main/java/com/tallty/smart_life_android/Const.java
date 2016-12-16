@@ -83,4 +83,11 @@ public class Const {
     public static final String DELETE_ADDRESS = "delete_address";
     public static final String EDIT_ADDRESS = "edit_address";
     public static final String SET_ADDRESS_DEFAULT = "set_address_default";
+
+    /**
+     * 订单相关
+     */
+    public static final String CANCEL_ORDER = "cancel_order";
+    public static final String DELETE_ORDER = "delete_order";
+    public static final String PAY_ORDER = "pay_order";
 }
