@@ -1,6 +1,8 @@
 package com.tallty.smart_life_android.adapter;
 
-import android.text.Html;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.StrikethroughSpan;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -26,10 +28,14 @@ public class MyOrdersCommodityAdapter extends BaseQuickAdapter<CartItem, BaseVie
     protected void convert(BaseViewHolder baseViewHolder, CartItem cartItem) {
         Glide.with(mContext).load(cartItem.getThumb())
                 .into((ImageView) baseViewHolder.getView(R.id.order_commodity_image));
+        String delete_str = "￥ "+cartItem.getOriginalPrice();
+        SpannableString spannableString = new SpannableString(delete_str);
+        spannableString.setSpan(new StrikethroughSpan(), 0, delete_str.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         baseViewHolder
                 .setText(R.id.order_commodity_name, cartItem.getName())
                 .setText(R.id.order_commodity_price, "￥ "+ cartItem.getPrice())
                 .setText(R.id.order_commodity_count, "x "+ cartItem.getCount())
-        .setText(R.id.order_commodity_original_price, Html.fromHtml("<s> ￥ " + cartItem.getPrice() + "</s>"));
+                .setText(R.id.order_commodity_original_price, spannableString)
+                .setVisible(R.id.order_commodity_original_price, cartItem.getPrice() != cartItem.getOriginalPrice());
     }
 }

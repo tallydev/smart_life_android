@@ -82,38 +82,11 @@ public class ProductFragment extends BaseBackFragment implements BaseQuickAdapte
 
     @Override
     protected void afterAnimationLogic() {
+        initList();
         fetchProducts();
     }
 
-    private void fetchProducts() {
-        showProgress("正在加载...");
-        Engine.noAuthService().getProductsBycategory(current_page, per_page, categoryId)
-                .enqueue(new Callback<ProductList>() {
-            @Override
-            public void onResponse(Call<ProductList> call, Response<ProductList> response) {
-                if (response.isSuccessful()) {
-                    current_page = response.body().getCurrentPage();
-                    total_pages = response.body().getTotalPages();
-                    // 商品列表
-                    products.clear();
-                    products.addAll(response.body().getProducts());
-                    setList();
-                    hideProgress();
-                } else {
-                    hideProgress();
-                    showToast(showString(R.string.response_error));
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ProductList> call, Throwable t) {
-                hideProgress();
-                showToast(showString(R.string.network_error));
-            }
-        });
-    }
-
-    private void setList() {
+    private void initList() {
         // 初次加载列表
         recyclerView.setLayoutManager(new LinearLayoutManager(_mActivity));
         adapter = new ProductListAdapter(R.layout.item_home_product, products);
@@ -128,6 +101,33 @@ public class ProductFragment extends BaseBackFragment implements BaseQuickAdapte
         });
         // 加载更多
         adapter.setOnLoadMoreListener(this);
+    }
+
+    private void fetchProducts() {
+        showProgress("正在加载...");
+        Engine.noAuthService().getProductsBycategory(current_page, per_page, categoryId)
+                .enqueue(new Callback<ProductList>() {
+            @Override
+            public void onResponse(Call<ProductList> call, Response<ProductList> response) {
+                hideProgress();
+                if (response.isSuccessful()) {
+                    current_page = response.body().getCurrentPage();
+                    total_pages = response.body().getTotalPages();
+                    // 商品列表
+                    products.clear();
+                    products.addAll(response.body().getProducts());
+                    adapter.notifyDataSetChanged();
+                } else {
+                    showToast(showString(R.string.response_error));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ProductList> call, Throwable t) {
+                hideProgress();
+                showToast(showString(R.string.network_error));
+            }
+        });
     }
 
     @Override

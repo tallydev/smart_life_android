@@ -8,6 +8,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.StrikethroughSpan;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -60,6 +63,8 @@ public class ProductShowFragment extends BaseBackFragment implements OnItemClick
     // UI
     private TextView product_title;
     private TextView product_price;
+    private TextView product_original_price;
+    private TextView inventory_and_sales;
     private TextView product_description;
     private Button add;
     private Button reduce;
@@ -102,6 +107,9 @@ public class ProductShowFragment extends BaseBackFragment implements OnItemClick
         product_title = getViewById(R.id.product_detail_title);
         product_price = getViewById(R.id.product_detail_price);
         product_description = getViewById(R.id.product_detail_description);
+        product_original_price = getViewById(R.id.product_detail_original_price);
+        inventory_and_sales = getViewById(R.id.product_detail_inventory_and_sales);
+
         add = getViewById(R.id.add);
         reduce = getViewById(R.id.reduce);
         number = getViewById(R.id.product_count);
@@ -198,6 +206,12 @@ public class ProductShowFragment extends BaseBackFragment implements OnItemClick
         product_title.setText(product.getTitle());
         product_price.setText("￥ "+product.getPrice());
         product_description.setText(product.getDetail());
+        inventory_and_sales.setText("库存量："+product.getCount()+"    销量："+product.getSales());
+        String original_price_str = "￥ "+product.getOriginalPrice();
+        SpannableString spannableString = new SpannableString(original_price_str);
+        spannableString.setSpan(new StrikethroughSpan(), 0, original_price_str.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        product_original_price.setText(spannableString);
+
         // 加载详情图
         detail_image.setZoomEnabled(false);
         detail_image.setMinimumScaleType(SCALE_TYPE_CENTER_CROP);

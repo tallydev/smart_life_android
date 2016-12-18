@@ -24,11 +24,11 @@ public class CartItem implements Serializable{
     @Expose
     private String name;
 
-    @SerializedName ("price")
+    @SerializedName ("after_discount")
     @Expose
     private float price;
 
-    @SerializedName ("after_discount")
+    @SerializedName ("price")
     @Expose
     private float originalPrice;
 

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="10dp"
-    android:layout_marginBottom="1px"
+    android:layout_marginBottom="1dp"
     android:background="@color/white">
     <ImageView
         android:id="@+id/product_photo"
@@ -39,4 +39,14 @@
         android:layout_below="@id/product_name"
         android:layout_alignLeft="@id/product_name"
         android:layout_alignStart="@id/product_name"/>
+
+    <TextView
+        android:id="@+id/sales_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_12"
+        android:textColor="@color/gray_text"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/product_name"
+        android:layout_alignBaseline="@id/product_price"/>
 </RelativeLayout>

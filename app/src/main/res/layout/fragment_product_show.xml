@@ -79,46 +79,62 @@
                 <com.bigkoo.convenientbanner.ConvenientBanner
                     android:id="@+id/product_detail_banner"
                     android:layout_width="match_parent"
-                    android:layout_height="280dp"
+                    android:layout_height="320dp"
                     android:layout_alignParentTop="true"
                     app:canLoop="true" />
-                <TextView
-                    android:id="@+id/product_detail_title"
+                <RelativeLayout
+                    android:id="@+id/description_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="16dp"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp"
-                    android:paddingBottom="5dp"
-                    android:layout_marginTop="4dp"
-                    android:textSize="@dimen/text_18"
-                    android:layout_below="@id/product_detail_banner"
-                    android:background="@color/white"/>
-                <TextView
-                    android:id="@+id/product_detail_price"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="5dp"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp"
-                    android:paddingBottom="10dp"
-                    android:textSize="@dimen/text_18"
-                    android:textColor="@color/orange"
-                    android:layout_below="@id/product_detail_title"
-                    android:background="@color/white"/>
-                <TextView
-                    android:id="@+id/product_detail_description"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:lineSpacingExtra="5sp"
-                    android:paddingTop="5dp"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp"
-                    android:paddingBottom="15dp"
-                    android:layout_marginBottom="2dp"
-                    android:textColor="@color/global_text"
-                    android:layout_below="@id/product_detail_price"
-                    android:background="@color/white"/>
+                    android:background="@color/white"
+                    android:padding="12dp"
+                    android:layout_below="@id/product_detail_banner">
+                    <TextView
+                        android:id="@+id/product_detail_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:textSize="@dimen/text_14"/>
+                    <TextView
+                        android:id="@+id/product_detail_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_18"
+                        android:layout_marginBottom="5dp"
+                        android:textColor="@color/orange"
+                        android:text="123"
+                        android:layout_below="@id/product_detail_title"/>
+                    <TextView
+                        android:id="@+id/product_detail_original_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_12"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:textColor="@color/gray_text"
+                        android:text="145"
+                        android:autoLink="all"
+                        android:layout_toRightOf="@id/product_detail_price"
+                        android:layout_alignBaseline="@id/product_detail_price"
+                        android:layout_below="@id/product_detail_title"/>
+                    <TextView
+                        android:id="@+id/product_detail_inventory_and_sales"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:textSize="@dimen/text_10"
+                        android:textColor="@color/gray_text"
+                        android:layout_below="@id/product_detail_price"
+                        android:text="库存了12"/>
+                    <TextView
+                        android:id="@+id/product_detail_description"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:lineSpacingExtra="5sp"
+                        android:layout_marginBottom="2dp"
+                        android:textColor="@color/global_text"
+                        android:layout_below="@id/product_detail_inventory_and_sales"/>
+                </RelativeLayout>
                 <!--长图使用第三方库加载,防止OOM-->
                 <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
                     android:id="@+id/product_detail_image"
@@ -126,13 +142,13 @@
                     android:layout_height="wrap_content"
                     android:layout_above="@id/actions"
                     android:visibility="visible"
-                    android:layout_below="@id/product_detail_description"/>
+                    android:layout_below="@id/description_layout"/>
                 <!--短图使用正常的ImageView加载, 防止水平过度缩放问题-->
                 <ImageView
                     android:id="@+id/small_product_detail_image"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/product_detail_description"
+                    android:layout_below="@id/description_layout"
                     android:visibility="gone"
                     android:scaleType="fitStart"/>
             </RelativeLayout>

@@ -25,7 +25,8 @@ public class ProductListAdapter extends BaseQuickAdapter<Product, BaseViewHolder
     protected void convert(BaseViewHolder baseViewHolder, Product product) {
         baseViewHolder
             .setText(R.id.product_name, product.getTitle())
-            .setText(R.id.product_price, "￥ "+product.getPrice());
+            .setText(R.id.product_price, "￥ "+product.getPrice())
+        .setText(R.id.sales_number, "已售"+product.getSales()+"件");
         ImageView imageView = baseViewHolder.getView(R.id.product_photo);
         imageView.setMaxHeight(1000);
         Glide

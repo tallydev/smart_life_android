@@ -20,13 +20,28 @@ public class Product implements Serializable {
     @Expose
     private String title;
 
+    // 折扣
+    @SerializedName("discount_rate")
+    @Expose
+    private float discountRate;
+
+    // 原价
     @SerializedName("price")
+    @Expose
+    private float originalPrice;
+
+    // 折后价
+    @SerializedName("after_discount")
     @Expose
     private float price;
 
     @SerializedName("count")
     @Expose
     private int count;
+
+    @SerializedName("sales")
+    @Expose
+    private int sales;
 
     @SerializedName("detail")
     @Expose
@@ -43,12 +58,6 @@ public class Product implements Serializable {
     @SerializedName("product_banners")
     @Expose
     private ArrayList<Banner> banners;
-
-
-    // 死数据使用
-    private int tag;
-    private int thumbId;
-    private int stringId;
 
 
     public int getId() {
@@ -83,30 +92,6 @@ public class Product implements Serializable {
         this.thumb = thumb;
     }
 
-    public int getThumbId() {
-        return thumbId;
-    }
-
-    public void setThumbId(int thumbId) {
-        this.thumbId = thumbId;
-    }
-
-    public int getStringId() {
-        return stringId;
-    }
-
-    public void setStringId(int stringId) {
-        this.stringId = stringId;
-    }
-
-    public int getTag() {
-        return tag;
-    }
-
-    public void setTag(int tag) {
-        this.tag = tag;
-    }
-
     public int getCount() {
         return count;
     }
@@ -137,5 +122,29 @@ public class Product implements Serializable {
 
     public void setDetailImage(String detailImage) {
         this.detailImage = detailImage;
+    }
+
+    public float getOriginalPrice() {
+        return originalPrice;
+    }
+
+    public void setOriginalPrice(float originalPrice) {
+        this.originalPrice = originalPrice;
+    }
+
+    public float getDiscountRate() {
+        return discountRate;
+    }
+
+    public void setDiscountRate(float discountRate) {
+        this.discountRate = discountRate;
+    }
+
+    public int getSales() {
+        return sales;
+    }
+
+    public void setSales(int sales) {
+        this.sales = sales;
     }
 }
