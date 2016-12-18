@@ -137,8 +137,8 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pop();
                 onFragmentPop();
+                pop();
             }
         });
         // 调试使用

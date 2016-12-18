@@ -18,6 +18,7 @@ import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.MyOrdersAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.event.ManageOrderEvent;
+import com.tallty.smart_life_android.fragment.cart.PayOrder;
 import com.tallty.smart_life_android.model.Order;
 import com.tallty.smart_life_android.model.Orders;
 
@@ -26,6 +27,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import retrofit2.Call;
@@ -100,6 +102,7 @@ public class MyOrders extends BaseBackFragment {
                 if (response.isSuccessful()) {
                     orders.clear();
                     orders.addAll(response.body().getOrders());
+                    Collections.reverse(orders);
                     adapter.notifyDataSetChanged();
                 } else {
                     try {
@@ -175,7 +178,7 @@ public class MyOrders extends BaseBackFragment {
 
     // 支付订单
     private void payOrder(Order order, int position) {
-        showToast("开始支付");
+        start(PayOrder.newInstance(order));
     }
 
     // 查看物流

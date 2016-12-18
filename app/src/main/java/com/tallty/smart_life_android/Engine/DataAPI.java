@@ -1,5 +1,6 @@
 package com.tallty.smart_life_android.Engine;
 
+import com.google.gson.JsonElement;
 import com.tallty.smart_life_android.model.Activities;
 import com.tallty.smart_life_android.model.Appointment;
 import com.tallty.smart_life_android.model.AppointmentList;
@@ -136,6 +137,13 @@ public interface DataAPI {
     @GET("orders")
     Call<Orders> getOrders(@Query("page") int page,
                            @Query("per_page") int per_page);
+
+    // 获取支付凭证
+    @FormUrlEncoded
+    @POST("/get_pingpp_pay_order")
+    Call<JsonElement> getPayCharge(@Field("channel") String channel,
+                                   @Field("amount") int amount,
+                                   @FieldMap(encoded = true) Map<String, String> fields);
 
     // *********************************************************************************************
 

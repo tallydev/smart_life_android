@@ -7,7 +7,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
-import com.pingplusplus.android.Pingpp;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
@@ -20,7 +19,6 @@ import com.tallty.smart_life_android.model.Order;
 import org.greenrobot.eventbus.EventBus;
 
 import static android.R.attr.data;
-import static android.R.attr.order;
 
 /**
  * 购物车-支付订单
@@ -84,14 +82,16 @@ public class PayOrder extends BaseBackFragment {
     @Override
     protected void onFragmentPop() {
         super.onFragmentPop();
-        popTo(MainFragment.class, false, new Runnable() {
-            @Override
-            public void run() {
-                // 通知MainFragment切换CartFragment
-                EventBus.getDefault().post(new SwitchTabFragment(4));
-                EventBus.getDefault().post(new StartBrotherEvent(MyOrders.newInstance()));
-            }
-        });
+        if (findFragment(MyOrders.class) == null) {
+            popTo(MainFragment.class, false, new Runnable() {
+                @Override
+                public void run() {
+                    // 通知MainFragment切换CartFragment
+                    EventBus.getDefault().post(new SwitchTabFragment(4));
+                    EventBus.getDefault().post(new StartBrotherEvent(MyOrders.newInstance()));
+                }
+            });
+        }
     }
 
     private void showData() {
@@ -105,7 +105,7 @@ public class PayOrder extends BaseBackFragment {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.pay_now:
-                Pingpp.createPayment(_mActivity, String.valueOf(data));
+
                 break;
         }
     }

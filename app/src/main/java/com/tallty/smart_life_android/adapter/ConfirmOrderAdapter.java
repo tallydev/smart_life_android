@@ -8,6 +8,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.model.CartItem;
+import com.tallty.smart_life_android.utils.ArithUtils;
 import com.tallty.smart_life_android.utils.GlobalUtils;
 
 import java.util.List;
@@ -36,7 +37,7 @@ public class ConfirmOrderAdapter extends BaseQuickAdapter<CartItem, BaseViewHold
             .setText(R.id.cart_item_price, "￥ " + cartItem.getPrice())
             .setVisible(R.id.order_item_count, true)
             .setText(R.id.order_item_count, "x " + count)
-            .setText(R.id.cart_item_total, "小计:￥ "+ GlobalUtils.floatRound(cartItem.getPrice() * count));
+            .setText(R.id.cart_item_total, "小计:￥ "+ ArithUtils.round(cartItem.getPrice() * count));
         Glide
             .with(mContext)
             .load(cartItem.getThumb())

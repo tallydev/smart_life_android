@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -15,7 +14,7 @@ import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.event.CartUpdateItem;
 import com.tallty.smart_life_android.event.TransferDataEvent;
 import com.tallty.smart_life_android.model.CartItem;
-import com.tallty.smart_life_android.utils.GlobalUtils;
+import com.tallty.smart_life_android.utils.ArithUtils;
 import com.tallty.smart_life_android.utils.ToastUtil;
 
 import org.greenrobot.eventbus.EventBus;
@@ -46,7 +45,7 @@ public class CartAdapter extends BaseQuickAdapter<CartItem, BaseViewHolder>{
             .setText(R.id.cart_item_name, cartItem.getName())
             .setText(R.id.cart_item_count, ""+count)
             .setText(R.id.cart_item_price, "￥ " + cartItem.getPrice())
-            .setText(R.id.cart_item_total, "小计:￥ "+ GlobalUtils.floatRound(cartItem.getPrice()* count));
+            .setText(R.id.cart_item_total, "小计:￥ "+ ArithUtils.round(cartItem.getPrice()* count));
 
         // 单选
         checkBox.setChecked(cartItem.isChecked());

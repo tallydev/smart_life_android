@@ -62,13 +62,4 @@ public class GlobalUtils {
             return 0;
         }
     }
-
-    // 四舍五入
-    public static float floatRound(float value) {
-        int scale = 2;//设置位数
-        int roundingMode = BigDecimal.ROUND_HALF_UP;//表示四舍五入，可以选择其他舍值方式，例如去尾，等等.
-        BigDecimal bd  = new BigDecimal((double)value);
-        bd = bd.setScale(scale, roundingMode);
-        return bd.floatValue();
-    }
 }

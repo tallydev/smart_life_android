@@ -3,7 +3,6 @@ package com.tallty.smart_life_android.fragment.cart;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -27,13 +26,12 @@ import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.event.TabReselectedEvent;
 import com.tallty.smart_life_android.event.TabSelectedEvent;
 import com.tallty.smart_life_android.event.TransferDataEvent;
-import com.tallty.smart_life_android.fragment.Common.GlobalAppointFragment;
 import com.tallty.smart_life_android.fragment.MainFragment;
 import com.tallty.smart_life_android.fragment.home.ProductShowFragment;
 import com.tallty.smart_life_android.model.CartItem;
 import com.tallty.smart_life_android.model.CartList;
 import com.tallty.smart_life_android.model.Product;
-import com.tallty.smart_life_android.utils.GlobalUtils;
+import com.tallty.smart_life_android.utils.ArithUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -245,14 +243,13 @@ public class CartFragment extends BaseMainFragment implements BaseQuickAdapter.R
         if (cartItems.size() > 0){
             for (CartItem cartItem : cartItems){
                 if (cartItem.isChecked()){
-                    float item_total = cartItem.getCount() * cartItem.getPrice();
-                    total += item_total;
+                    total += ArithUtils.mul(cartItem.getCount(), cartItem.getPrice());;
                 }
             }
         } else {
             select_all_btn.setChecked(false);
         }
-        total_price_text.setText("￥ "+ GlobalUtils.floatRound(total));
+        total_price_text.setText("￥ "+ ArithUtils.round(total));
     }
 
     // 获取商品详情
@@ -297,13 +294,13 @@ public class CartFragment extends BaseMainFragment implements BaseQuickAdapter.R
         // 结算时,保存选中商品
         for (CartItem cartItem : cartItems){
             if (cartItem.isChecked()){
-                total += cartItem.getCount() * cartItem.getPrice();
+                total += ArithUtils.mul(cartItem.getCount(), cartItem.getPrice());
                 selected_commodities.add(cartItem);
             }
         }
         if (selected_commodities.size() > 0){
             EventBus.getDefault().post(new StartBrotherEvent(
-                    ConfirmOrder.newInstance(selected_commodities, GlobalUtils.floatRound(total)))
+                    ConfirmOrder.newInstance(selected_commodities, ArithUtils.round(total)))
             );
         }else{
             showToast("您还未选择任何商品");
@@ -322,13 +319,13 @@ public class CartFragment extends BaseMainFragment implements BaseQuickAdapter.R
             if (Const.SALE_OFF.equals(cartItem.getState())) continue;
             if (select_all_btn.isChecked()){
                 cartItem.setChecked(true);
-                total += cartItem.getCount() * cartItem.getPrice();
+                total += ArithUtils.mul(cartItem.getCount(), cartItem.getPrice());
             }else{
                 cartItem.setChecked(false);
             }
         }
         adapter.notifyDataSetChanged();
-        total_price_text.setText("￥ " + GlobalUtils.floatRound(total));
+        total_price_text.setText("￥ " + ArithUtils.round(total));
     }
 
     /**
@@ -344,14 +341,13 @@ public class CartFragment extends BaseMainFragment implements BaseQuickAdapter.R
         for (CartItem cartItem : cartItems){
             if (Const.SALE_OFF.equals(cartItem.getState())) continue;
             if (cartItem.isChecked()){
-                float item_total = cartItem.getCount() * cartItem.getPrice();
-                total += item_total;
+                total += ArithUtils.mul(cartItem.getCount(), cartItem.getPrice());
             }else{
                 isSelectAll = false;
             }
         }
         // 设置【合计】【全选】
-        total_price_text.setText("￥ " + GlobalUtils.floatRound(total));
+        total_price_text.setText("￥ " + ArithUtils.round(total));
         select_all_btn.setChecked(isSelectAll);
     }
 
