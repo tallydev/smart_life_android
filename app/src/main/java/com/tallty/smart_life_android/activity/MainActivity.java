@@ -68,13 +68,9 @@ public class MainActivity extends SupportActivity {
                     // "invalid" - 支付插件未安装（一般是微信客户端未安装的情况）
 
                 }
-
-                String errorMsg = data.getExtras().getString("error_msg"); // 错误信息
-                String extraMsg = data.getExtras().getString("extra_msg"); // 错误信息
                 Log.i(App.TAG, "结果:===》"+result);
-                Log.i(App.TAG, "错误:===》"+errorMsg);
-                Log.i(App.TAG, "额外:===》"+extraMsg);
-                Log.i(App.TAG, data.getExtras().getInt("code") + "==========");
+                Log.i(App.TAG, "错误:===》"+data.getExtras().getString("error_msg"));
+                Log.i(App.TAG, "额外:===》"+data.getExtras().getString("extra_msg"));
             }
         }
     }
