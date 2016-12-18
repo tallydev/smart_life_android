@@ -56,12 +56,18 @@ public class MainActivity extends SupportActivity {
         if (requestCode == Pingpp.REQUEST_CODE_PAYMENT) {
             if (resultCode == Activity.RESULT_OK) {
                 String result = data.getExtras().getString("pay_result");
+                if ("success".equals(result)) {
+                    // "success" - 支付成功
 
-                // 处理返回值
-                // "success" - 支付成功
-                // "fail"    - 支付失败
-                // "cancel"  - 取消支付
-                // "invalid" - 支付插件未安装（一般是微信客户端未安装的情况）
+                } else if ("fail".equals(result)) {
+                    // "fail"    - 支付失败
+                } else if ("cancel".equals(result)) {
+                    // "cancel"  - 取消支付
+
+                } else if ("invalid".equals(result)) {
+                    // "invalid" - 支付插件未安装（一般是微信客户端未安装的情况）
+
+                }
 
                 String errorMsg = data.getExtras().getString("error_msg"); // 错误信息
                 String extraMsg = data.getExtras().getString("extra_msg"); // 错误信息

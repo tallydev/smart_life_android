@@ -23,7 +23,6 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TextView;
 
-import com.orhanobut.logger.Logger;
 import com.pgyersdk.javabean.AppBean;
 import com.pgyersdk.update.PgyUpdateManager;
 import com.pgyersdk.update.UpdateManagerListener;
@@ -353,7 +352,7 @@ public class ProfileFragment extends BaseBackFragment {
             // 更新账户管理图片
             if (file != null) {
                 // 上传
-                Logger.d("开始上传");
+                Log.d(App.TAG, "开始上传");
                 uploadPic(file);
             } else {
                 showToast("");

@@ -4,7 +4,6 @@ import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 
-import com.orhanobut.logger.Logger;
 import com.pgyersdk.crash.PgyCrashManager;
 import com.squareup.leakcanary.LeakCanary;
 
@@ -22,7 +21,6 @@ public class App extends Application{
     public void onCreate() {
         super.onCreate();
         sInstance = this;
-        Logger.init();
         // 内存泄露测试
         LeakCanary.install(this);
         // 注册蒲公英Crash接口

@@ -1,8 +1,6 @@
 package com.tallty.smart_life_android.fragment.cart;
 
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
@@ -17,8 +15,8 @@ import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
-import com.tallty.smart_life_android.activity.MainActivity;
 import com.tallty.smart_life_android.base.BaseBackFragment;
+import com.tallty.smart_life_android.event.PayEvent;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.event.SwitchTabFragment;
 import com.tallty.smart_life_android.fragment.MainFragment;
@@ -27,6 +25,7 @@ import com.tallty.smart_life_android.model.CartItem;
 import com.tallty.smart_life_android.model.Order;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -87,6 +86,7 @@ public class PayOrder extends BaseBackFragment {
 
     @Override
     protected void initView() {
+        EventBus.getDefault().register(this);
         order_seq = getViewById(R.id.order_number);
         order_postage = getViewById(R.id.order_postage);
         order_price_text = getViewById(R.id.order_price);
@@ -154,23 +154,56 @@ public class PayOrder extends BaseBackFragment {
         fields.put("subject", order.getSeq());
         fields.put("body", body);
         Engine.authService(shared_token, shared_phone).getPayCharge(payWay, 1, fields)
-                .enqueue(new Callback<JsonElement>() {
-                    @Override
-                    public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
-                        hideProgress();
-                        if (response.isSuccessful()) {
-                            Log.d(App.TAG, String.valueOf(response.body().getAsJsonObject()));
-//                            Pingpp.createPayment(getActivity(), String.valueOf(response.body().getAsJsonObject()));
-                        } else {
-                            showToast("支付失败");
-                        }
+            .enqueue(new Callback<JsonElement>() {
+                @Override
+                public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+                    hideProgress();
+                    if (response.isSuccessful()) {
+                        Log.d(App.TAG, String.valueOf(response.body().getAsJsonObject()));
+                        Pingpp.createPayment(getActivity(), String.valueOf(response.body().getAsJsonObject()));
+                    } else {
+                        showToast("支付失败");
                     }
+                }
 
-                    @Override
-                    public void onFailure(Call<JsonElement> call, Throwable t) {
-                        hideProgress();
-                        showToast("网络错误");
-                    }
-                });
+                @Override
+                public void onFailure(Call<JsonElement> call, Throwable t) {
+                    hideProgress();
+                    showToast("网络错误");
+                }
+            });
+    }
+
+    /**
+     * 处理支付回调事件
+     */
+    @Subscribe
+    private void onPayEvent(PayEvent event) {
+        if ("success".equals(event.getResult())) {
+            // "success" - 支付成功
+            popTo(MainFragment.class, false, new Runnable() {
+                @Override
+                public void run() {
+                    // 通知MainFragment切换CartFragment
+                    EventBus.getDefault().post(new SwitchTabFragment(4));
+                    EventBus.getDefault().post(new StartBrotherEvent(MyOrders.newInstance()));
+                }
+            });
+        } else if ("fail".equals(event.getResult())) {
+            // "fail"    - 支付失败
+            showToast("支付失败");
+        } else if ("cancel".equals(event.getResult())) {
+            // "cancel"  - 取消支付
+            pop();
+        } else if ("invalid".equals(event.getResult())) {
+            // "invalid" - 支付插件未安装（一般是微信客户端未安装的情况）
+            showToast("未安装微信客户端");
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

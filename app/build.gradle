@@ -52,7 +52,7 @@ android {
             buildConfigField "boolean", "LOG_DEBUG", "false"
             minifyEnabled false
             zipAlignEnabled true
-            // 移除无用的resource文件(修改为true会报错,待解决)
+            // 移除无用的resource文件
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
