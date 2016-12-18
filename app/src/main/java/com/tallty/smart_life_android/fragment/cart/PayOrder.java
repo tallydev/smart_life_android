@@ -110,17 +110,17 @@ public class PayOrder extends BaseBackFragment {
                 public void run() {
                     // 通知MainFragment切换CartFragment
                     EventBus.getDefault().post(new SwitchTabFragment(4));
-                    EventBus.getDefault().post(new StartBrotherEvent(MyOrders.newInstance()));
+                    EventBus.getDefault().post(new StartBrotherEvent(MyOrders.newInstance("all")));
                 }
             });
         }
     }
 
     private void showData() {
-        order_price_text.setText("￥ " + (order.getPrice() - order.getPostage()));
+        order_price_text.setText("￥ " + order.getPrice());
         order_postage.setText("+ ￥ " + order.getPostage());
         order_seq.setText(order.getSeq());
-        order_total_price.setText("￥ " + order.getPrice());
+        order_total_price.setText("￥ " + order.getTotalPrice());
     }
 
     @Override
@@ -173,7 +173,7 @@ public class PayOrder extends BaseBackFragment {
                 public void run() {
                     // 通知MainFragment切换CartFragment
                     EventBus.getDefault().post(new SwitchTabFragment(4));
-                    EventBus.getDefault().post(new StartBrotherEvent(MyOrders.newInstance()));
+                    EventBus.getDefault().post(new StartBrotherEvent(MyOrders.newInstance("all")));
                 }
             });
         } else if ("fail".equals(event.getResult())) {

@@ -16,7 +16,6 @@ import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.event.ManageOrderEvent;
 import com.tallty.smart_life_android.model.Order;
-import com.tallty.smart_life_android.utils.ArithUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -40,19 +39,24 @@ public class MyOrdersAdapter extends BaseQuickAdapter<Order, BaseViewHolder>{
         Button pay_button = baseViewHolder.getView(R.id.order_pay_button);
         Button cancel_button = baseViewHolder.getView(R.id.order_cancel_button);
         Button delete_button = baseViewHolder.getView(R.id.order_delete_button);
-        Button logistics_button = baseViewHolder.getView(R.id.order_logistics_button);
+        Button service_button = baseViewHolder.getView(R.id.order_service_button);
         TextView price_and_postage = baseViewHolder.getView(R.id.order_price_and_postage);
         // 显示
         cartItems.setAdapter(new MyOrdersCommodityAdapter(R.layout.item_my_orders_commodity, order.getCartItems()));
+        String payWay = "";
+        if ("alipay".equals(order.getPayWay()))
+            payWay = "支付宝支付";
+        else if ("wx".equals(order.getPayWay()))
+            payWay = "微信支付";
         baseViewHolder
                 .setText(R.id.order_number, "订单编号：" + order.getSeq())
                 .setText(R.id.order_time, "下单时间：" + order.getCreated_time())
                 .setText(R.id.order_state, order.getStateAlias())
-                .setText(R.id.order_pay_way, order.getPayWay());
+                .setText(R.id.order_pay_way, payWay);
 
         // 富文本显示订单金额
-        int price_length = String.valueOf(order.getPrice()).length();
-        SpannableString spannableString = new SpannableString("合计：￥ " + order.getPrice() + " (含运费￥" + order.getPostage() + ")");
+        int price_length = String.valueOf(order.getTotalPrice()).length();
+        SpannableString spannableString = new SpannableString("合计：￥ " + order.getTotalPrice() + " (含运费￥" + order.getPostage() + ")");
         spannableString.setSpan(new AbsoluteSizeSpan(16, true), 5, 5 + price_length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannableString.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.orange)), 5, 5 + price_length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         price_and_postage.setText(spannableString);
@@ -67,6 +71,7 @@ public class MyOrdersAdapter extends BaseQuickAdapter<Order, BaseViewHolder>{
                 cancel_button.setVisibility(View.VISIBLE);
                 break;
             case "paid":
+                service_button.setVisibility(View.VISIBLE);
                 break;
         }
 
@@ -89,10 +94,10 @@ public class MyOrdersAdapter extends BaseQuickAdapter<Order, BaseViewHolder>{
                 EventBus.getDefault().post(new ManageOrderEvent(position, order, Const.DELETE_ORDER));
             }
         });
-        logistics_button.setOnClickListener(new View.OnClickListener() {
+        service_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventBus.getDefault().post(new ManageOrderEvent(position, order, Const.LOGISTICS_ORDER));
+                EventBus.getDefault().post(new ManageOrderEvent(position, order, Const.SERVICE_ORDER));
             }
         });
     }

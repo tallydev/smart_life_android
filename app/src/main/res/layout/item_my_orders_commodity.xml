@@ -44,7 +44,7 @@
         android:layout_height="16dp"
         android:layout_below="@id/order_commodity_price"
         android:textColor="@color/gray_text"
-        android:autoLink="all"
+        android:autoLink="none"
         android:textSize="@dimen/text_12"
         android:text="￥30.5"
         android:layout_alignParentRight="true"/>

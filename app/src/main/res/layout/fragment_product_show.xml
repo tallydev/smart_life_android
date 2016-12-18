@@ -113,7 +113,7 @@
                         android:layout_marginBottom="5dp"
                         android:textColor="@color/gray_text"
                         android:text="145"
-                        android:autoLink="all"
+                        android:autoLink="none"
                         android:layout_toRightOf="@id/product_detail_price"
                         android:layout_alignBaseline="@id/product_detail_price"
                         android:layout_below="@id/product_detail_title"/>

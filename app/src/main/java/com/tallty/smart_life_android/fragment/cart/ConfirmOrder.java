@@ -7,10 +7,12 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
@@ -22,6 +24,8 @@ import com.tallty.smart_life_android.model.ContactList;
 import com.tallty.smart_life_android.model.Order;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -180,10 +184,13 @@ public class ConfirmOrder extends BaseBackFragment {
     // 提交订单 && 支付
     private void submitOrderAndPay() {
         showProgress("正在创建订单...");
-        int[] cart_ids = new int[selected_cart_items.size()];
+        List<Integer> cart_ids = new ArrayList<>();
         for (int i = 0; i < selected_cart_items.size(); i++) {
-            cart_ids[i] = selected_cart_items.get(i).getId();
+            cart_ids.add(selected_cart_items.get(i).getId());
+            Log.d(App.TAG, "商品的id===》"+selected_cart_items.get(i).getId());
         }
+        Log.d(App.TAG, "商品列表"+ cart_ids);
+
         Engine.authService(shared_token, shared_phone).createOrder(cart_ids).enqueue(new Callback<Order>() {
             @Override
             public void onResponse(Call<Order> call, Response<Order> response) {

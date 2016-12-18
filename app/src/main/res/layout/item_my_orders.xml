@@ -85,7 +85,7 @@
         android:gravity="right"
         android:layout_below="@id/order_price_and_postage">
         <Button
-            android:id="@+id/order_logistics_button"
+            android:id="@+id/order_service_button"
             android:layout_width="74dp"
             android:layout_height="match_parent"
             android:textColor="@color/global_light_text"
@@ -93,7 +93,7 @@
             android:gravity="center"
             android:shadowColor="@color/transparent"
             android:layout_marginRight="12dp"
-            android:text="@string/order_logistics"
+            android:text="@string/order_service"
             android:visibility="gone"
             android:background="@drawable/border_button_bg"/>
         <Button

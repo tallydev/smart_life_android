@@ -142,7 +142,7 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
             }
         });
         // 调试使用
-         initToolbarMenu(toolbar);
+        // initToolbarMenu(toolbar);
     }
 
     /**

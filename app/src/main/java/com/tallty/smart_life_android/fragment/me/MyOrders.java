@@ -2,6 +2,9 @@ package com.tallty.smart_life_android.fragment.me;
 
 
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,7 +28,6 @@ import com.tallty.smart_life_android.model.Orders;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -40,13 +42,15 @@ import retrofit2.Response;
 public class MyOrders extends BaseBackFragment {
     private RecyclerView recyclerView;
     private MyOrdersAdapter adapter;
+    private String sort = "";
     // 数据
     private List<Order> orders = new ArrayList<>();
     private int current_page = 1;
     private int total_pages = 1;
 
-    public static MyOrders newInstance() {
+    public static MyOrders newInstance(String sort) {
         Bundle args = new Bundle();
+        args.putString(Const.STRING, sort);
         MyOrders fragment = new MyOrders();
         fragment.setArguments(args);
         return fragment;
@@ -57,6 +61,7 @@ public class MyOrders extends BaseBackFragment {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
+            sort = args.getString(Const.STRING);
         }
     }
 
@@ -103,13 +108,8 @@ public class MyOrders extends BaseBackFragment {
                     orders.clear();
                     orders.addAll(response.body().getOrders());
                     Collections.reverse(orders);
-                    adapter.notifyDataSetChanged();
+                    processOrderSort();
                 } else {
-                    try {
-                        Log.d(App.TAG, response.errorBody().string());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
                     showToast("加载失败");
                 }
             }
@@ -121,6 +121,38 @@ public class MyOrders extends BaseBackFragment {
                 Log.d(App.TAG, t.getLocalizedMessage());
             }
         });
+    }
+
+    private void processOrderSort() {
+        List<Order> cache = new ArrayList<>();
+
+        switch (sort) {
+            case "all":
+                for (Order order : orders) {
+                    if (!("canceled".equals(order.getState())))
+                        cache.add(order);
+                }
+                orders.clear();
+                orders.addAll(cache);
+                break;
+            case "unpaid":
+                for (Order order : orders) {
+                    if ("unpaid".equals(order.getState()))
+                        cache.add(order);
+                }
+                orders.clear();
+                orders.addAll(cache);
+                break;
+            case "untransport":
+                for (Order order : orders) {
+                    if ("paid".equals(order.getState()))
+                        cache.add(order);
+                }
+                orders.clear();
+                orders.addAll(cache);
+                break;
+        }
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -164,16 +196,35 @@ public class MyOrders extends BaseBackFragment {
                     }
                 });
                 break;
-            case Const.LOGISTICS_ORDER:
-                showLogistics(event.getOrder(), event.getPosition());
+            case Const.SERVICE_ORDER:
+                contactService(event.getOrder(), event.getPosition());
                 break;
         }
     }
 
-    // TODO: 2016/12/16 处理订单事件
     // 取消订单 || 删除订单
-    private void deleteOrder(Order order, int position) {
-        showToast("取消订单");
+    private void deleteOrder(final Order order, final int position) {
+        showProgress("正在取消订单...");
+        Engine.authService(shared_token, shared_phone).deleteOrder(order.getId())
+            .enqueue(new Callback<Order>() {
+                @Override
+                public void onResponse(Call<Order> call, Response<Order> response) {
+                    hideProgress();
+                    if (response.isSuccessful()) {
+                        orders.remove(position);
+                        adapter.notifyItemRemoved(position);
+                        adapter.notifyItemRangeChanged(position, orders.size());
+                    } else {
+                        showToast("取消订单失败");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Order> call, Throwable t) {
+                    hideProgress();
+                    showToast("网络连接错误");
+                }
+            });
     }
 
     // 支付订单
@@ -181,9 +232,16 @@ public class MyOrders extends BaseBackFragment {
         start(PayOrder.newInstance(order));
     }
 
-    // 查看物流
-    private void showLogistics(Order order, int position) {
-        showToast("查看物流");
+    // 联系客服
+    private void contactService(Order order, int position) {
+        PackageManager pm = _mActivity.getPackageManager();
+        boolean permission = (PackageManager.PERMISSION_GRANTED == pm.checkPermission("android.permission.CALL_PHONE","com.tallty.smart_life_android"));
+        if (permission) {
+            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+"087164589208"));
+            startActivity(intent);
+        } else {
+            showToast("应用无拨打电话权限,请设置应用权限后尝试");
+        }
     }
 
     @Override

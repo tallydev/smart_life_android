@@ -29,13 +29,40 @@ public class Order implements Serializable {
     @Expose
     private String seq;
 
+    // 订单总价 = 商品价格 + 邮费
+    @SerializedName ("price")
+    @Expose
+    private float totalPrice;
+
+    // 商品价格
+    @SerializedName ("without_postage")
+    @Expose
+    private float price;
+
+    // 邮费
+    @SerializedName ("postage")
+    @Expose
+    private float postage;
+
     @SerializedName ("need_postage")
     @Expose
     private boolean needPostage;
 
-    @SerializedName ("postage")
+    @SerializedName ("state_alias")
     @Expose
-    private float postage;
+    private String stateAlias;
+
+    @SerializedName ("state")
+    @Expose
+    private String state;
+
+    @SerializedName ("pay_way")
+    @Expose
+    private String payWay;
+
+//    @SerializedName ("pay_way_alias")
+//    @Expose
+    private String payWayAlias;
 
     @SerializedName ("created_at")
     @Expose
@@ -52,22 +79,6 @@ public class Order implements Serializable {
     @SerializedName ("updated_at_output")
     @Expose
     private String updated_time;
-
-    @SerializedName ("state_alias")
-    @Expose
-    private String stateAlias;
-
-    @SerializedName ("state")
-    @Expose
-    private String state;
-
-    @SerializedName ("pay_way")
-    @Expose
-    private String payWay;
-
-    @SerializedName ("price")
-    @Expose
-    private float price;
 
     @SerializedName("cart_items")
     @Expose
@@ -113,12 +124,12 @@ public class Order implements Serializable {
         this.payWay = payWay;
     }
 
-    public float getPrice() {
-        return price;
+    public float getTotalPrice() {
+        return totalPrice;
     }
 
-    public void setPrice(float price) {
-        this.price = price;
+    public void setTotalPrice(float totalPrice) {
+        this.totalPrice = totalPrice;
     }
 
     public List<CartItem> getCartItems() {
@@ -195,5 +206,21 @@ public class Order implements Serializable {
 
     public void setUpdated_time(String updated_time) {
         this.updated_time = updated_time;
+    }
+
+    public float getPrice() {
+        return price;
+    }
+
+    public void setPrice(float price) {
+        this.price = price;
+    }
+
+    public String getPayWayAlias() {
+        return payWayAlias;
+    }
+
+    public void setPayWayAlias(String payWayAlias) {
+        this.payWayAlias = payWayAlias;
     }
 }

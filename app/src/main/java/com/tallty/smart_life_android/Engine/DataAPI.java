@@ -24,6 +24,7 @@ import com.tallty.smart_life_android.model.User;
 
 import java.lang.reflect.Array;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import okhttp3.MultipartBody;
@@ -131,13 +132,18 @@ public interface DataAPI {
     // 创建订单
     @FormUrlEncoded
     @POST("orders")
-    Call<Order> createOrder(@Field("cart_item_ids") int[] cart_ids);
+    Call<Order> createOrder(@Field("cart_item_ids[]") List<Integer> cart_ids);
 
     // 获取订单列表
     @GET("orders")
     Call<Orders> getOrders(@Query("page") int page,
                            @Query("per_page") int per_page);
 
+    // 删除订单
+    @DELETE("orders/{id}")
+    Call<Order> deleteOrder(@Path("id") int order_id);
+
+    // *********************************************************************************************
     // 获取支付凭证
     @FormUrlEncoded
     @POST("/get_pingpp_pay_order")

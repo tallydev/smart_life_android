@@ -7,9 +7,11 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.text.style.StrikethroughSpan;
 import android.util.Log;
 import android.view.MenuItem;
@@ -150,7 +152,11 @@ public class ProductShowFragment extends BaseBackFragment implements OnItemClick
                 }
                 break;
             case R.id.add_to_cart:
-                addProductToCart();
+                if (product.getCount() <= 0) {
+                    showToast("库存不足，努力备货中");
+                } else {
+                    addProductToCart();
+                }
                 break;
         }
     }
@@ -207,9 +213,11 @@ public class ProductShowFragment extends BaseBackFragment implements OnItemClick
         product_price.setText("￥ "+product.getPrice());
         product_description.setText(product.getDetail());
         inventory_and_sales.setText("库存量："+product.getCount()+"    销量："+product.getSales());
-        String original_price_str = "￥ "+product.getOriginalPrice();
+
+        String original_price_str = "￥ " + product.getOriginalPrice();
         SpannableString spannableString = new SpannableString(original_price_str);
         spannableString.setSpan(new StrikethroughSpan(), 0, original_price_str.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new ForegroundColorSpan(ContextCompat.getColor(_mActivity, R.color.gray_text)), 0, original_price_str.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         product_original_price.setText(spannableString);
 
         // 加载详情图

@@ -116,7 +116,7 @@
                             android:layout_marginTop="8dp"
                             android:gravity="center"
                             android:background="@drawable/item_bg"
-                            android:text="代付款"/>
+                            android:text="待付款"/>
                     </LinearLayout>
                     <LinearLayout
                         android:id="@+id/wait_transport"
@@ -137,7 +137,7 @@
                             android:layout_marginTop="8dp"
                             android:gravity="center"
                             android:background="@drawable/item_bg"
-                            android:text="代付款"/>
+                            android:text="待配送"/>
                     </LinearLayout>
                 </RelativeLayout>
             </LinearLayout>
