@@ -156,6 +156,7 @@
                 android:text="支付方式"/>
 
             <RadioGroup
+                android:id="@+id/pay_radio_group"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/textView3"
@@ -164,22 +165,20 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text=" 微信支付"
-                    android:id="@+id/weixin_pay"
-                    android:buttonTint="@color/gray_text"
+                    android:text=" 支付宝支付"
+                    android:id="@+id/alipay"
                     android:textColor="@color/global_text"
-                    android:drawableLeft="@mipmap/ic_wechat_pay"
+                    android:drawableLeft="@mipmap/ic_alipay"
                     android:textSize="@dimen/text_14"
                     android:checked="true"/>
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text=" 支付宝支付"
-                    android:id="@+id/alipay"
-                    android:buttonTint="@color/gray_text"
+                    android:text=" 微信支付"
+                    android:id="@+id/weixin_pay"
                     android:textColor="@color/global_text"
-                    android:drawableLeft="@mipmap/ic_alipay"
+                    android:drawableLeft="@mipmap/ic_wechat_pay"
                     android:textSize="@dimen/text_14"
                     android:checked="false"/>
             </RadioGroup>
