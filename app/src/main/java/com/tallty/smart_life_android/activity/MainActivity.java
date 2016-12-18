@@ -11,7 +11,10 @@ import com.pingplusplus.android.Pingpp;
 import com.pingplusplus.android.PingppLog;
 import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.R;
+import com.tallty.smart_life_android.event.PayEvent;
 import com.tallty.smart_life_android.fragment.MainFragment;
+
+import org.greenrobot.eventbus.EventBus;
 
 import me.yokeyword.fragmentation.SupportActivity;
 import me.yokeyword.fragmentation.anim.DefaultHorizontalAnimator;
@@ -55,19 +58,12 @@ public class MainActivity extends SupportActivity {
         //支付页面返回处理
         if (requestCode == Pingpp.REQUEST_CODE_PAYMENT) {
             if (resultCode == Activity.RESULT_OK) {
+                // "success" - 支付成功
+                // "fail"    - 支付失败
+                // "cancel"  - 取消支付
+                // "invalid" - 支付插件未安装（一般是微信客户端未安装的情况）
                 String result = data.getExtras().getString("pay_result");
-                if ("success".equals(result)) {
-                    // "success" - 支付成功
-
-                } else if ("fail".equals(result)) {
-                    // "fail"    - 支付失败
-                } else if ("cancel".equals(result)) {
-                    // "cancel"  - 取消支付
-
-                } else if ("invalid".equals(result)) {
-                    // "invalid" - 支付插件未安装（一般是微信客户端未安装的情况）
-
-                }
+                EventBus.getDefault().post(new PayEvent(result));
                 Log.i(App.TAG, "结果:===》"+result);
                 Log.i(App.TAG, "错误:===》"+data.getExtras().getString("error_msg"));
                 Log.i(App.TAG, "额外:===》"+data.getExtras().getString("extra_msg"));

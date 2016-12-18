@@ -145,6 +145,11 @@ public interface DataAPI {
                                    @Field("amount") int amount,
                                    @FieldMap(encoded = true) Map<String, String> fields);
 
+    // 扣除库存后, 发起支付, 获取Charge
+    @FormUrlEncoded
+    @POST("/orders/{id}/create_payment")
+    Call<JsonElement> getOrderPayCharge(@Path("id") int order_id, @Field("pay_way") String channel);
+
     // *********************************************************************************************
 
     // 联系人列表

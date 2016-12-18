@@ -21,14 +21,10 @@ import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.event.SwitchTabFragment;
 import com.tallty.smart_life_android.fragment.MainFragment;
 import com.tallty.smart_life_android.fragment.me.MyOrders;
-import com.tallty.smart_life_android.model.CartItem;
 import com.tallty.smart_life_android.model.Order;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -144,16 +140,7 @@ public class PayOrder extends BaseBackFragment {
 
     private void processPayOrder() {
         showProgress("准备支付中...");
-        int amount = (int) (order.getPrice() * 100);
-        String body = "";
-        for (CartItem item : order.getCartItems()) {
-            String str = "【" + item.getName() + "x" + item.getCount() + "】";
-            body += str;
-        }
-        Map<String, String> fields = new HashMap<>();
-        fields.put("subject", order.getSeq());
-        fields.put("body", body);
-        Engine.authService(shared_token, shared_phone).getPayCharge(payWay, 1, fields)
+        Engine.authService(shared_token, shared_phone).getOrderPayCharge(order.getId(), payWay)
             .enqueue(new Callback<JsonElement>() {
                 @Override
                 public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
@@ -178,7 +165,7 @@ public class PayOrder extends BaseBackFragment {
      * 处理支付回调事件
      */
     @Subscribe
-    private void onPayEvent(PayEvent event) {
+    public void onPayEvent(PayEvent event) {
         if ("success".equals(event.getResult())) {
             // "success" - 支付成功
             popTo(MainFragment.class, false, new Runnable() {
