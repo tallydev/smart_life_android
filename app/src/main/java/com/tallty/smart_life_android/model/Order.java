@@ -60,9 +60,9 @@ public class Order implements Serializable {
     @Expose
     private String payWay;
 
-    @SerializedName ("pay_way_alias")
-    @Expose
-    private String payWayAlias;
+//    @SerializedName ("pay_way_alias")
+//    @Expose
+//    private String payWayAlias;
 
     @SerializedName ("created_at")
     @Expose
@@ -214,13 +214,5 @@ public class Order implements Serializable {
 
     public void setPrice(float price) {
         this.price = price;
-    }
-
-    public String getPayWayAlias() {
-        return payWayAlias;
-    }
-
-    public void setPayWayAlias(String payWayAlias) {
-        this.payWayAlias = payWayAlias;
     }
 }

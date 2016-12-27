@@ -33,7 +33,6 @@ public class CommunityActivityAdapter extends BaseQuickAdapter<Activity, BaseVie
 
         Glide.with(mContext)
             .load(activity.getImage())
-            .placeholder(R.drawable.image_placeholder)
             .error(R.drawable.image_error)
             .into(imageView);
     }

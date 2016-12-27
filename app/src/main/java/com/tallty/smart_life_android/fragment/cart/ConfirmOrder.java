@@ -206,6 +206,7 @@ public class ConfirmOrder extends BaseBackFragment {
             public void onFailure(Call<Order> call, Throwable t) {
                 hideProgress();
                 showToast(showString(R.string.network_error));
+                Log.d(App.TAG, t.getLocalizedMessage());
             }
         });
     }
