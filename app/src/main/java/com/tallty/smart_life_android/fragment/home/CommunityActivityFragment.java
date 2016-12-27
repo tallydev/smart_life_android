@@ -35,6 +35,8 @@ import retrofit2.Response;
 public class CommunityActivityFragment extends BaseBackFragment {
     private String title;
     private RecyclerView recyclerView;
+    private CommunityActivityAdapter adapter;
+    private ArrayList<Activity> activities = new ArrayList<>();
 
     public static CommunityActivityFragment newInstance(String title) {
         Bundle args = new Bundle();
@@ -75,7 +77,23 @@ public class CommunityActivityFragment extends BaseBackFragment {
 
     @Override
     protected void afterAnimationLogic() {
+        initList();
         getActivities();
+    }
+
+    private void initList() {
+        recyclerView.setLayoutManager(new LinearLayoutManager(_mActivity));
+        adapter = new CommunityActivityAdapter(R.layout.item_community_activity, activities);
+        recyclerView.setAdapter(adapter);
+        recyclerView.addOnItemTouchListener(new OnItemClickListener() {
+            @Override
+            public void onSimpleItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
+                Activity activity = activities.get(i);
+                EventBus.getDefault().post(new StartBrotherEvent(
+                        GlobalAppointFragment.newInstance("活动详情", activity.getDetail_image(), activity.getId(), "我要报名", false)
+                ));
+            }
+        });
     }
 
     private void getActivities() {
@@ -84,7 +102,9 @@ public class CommunityActivityFragment extends BaseBackFragment {
             @Override
             public void onResponse(Call<Activities> call, Response<Activities> response) {
                 if (response.isSuccessful()) {
-                    setList(response.body().getActivities());
+                    activities.clear();
+                    activities.addAll(response.body().getActivities());
+                    adapter.notifyDataSetChanged();
                 } else {
                     showToast("载入失败");
                 }
@@ -95,21 +115,6 @@ public class CommunityActivityFragment extends BaseBackFragment {
             public void onFailure(Call<Activities> call, Throwable t) {
                 hideProgress();
                 showToast("载入失败, 请检查手机网络");
-            }
-        });
-    }
-
-    private void setList(final ArrayList<Activity> activities) {
-        recyclerView.setLayoutManager(new LinearLayoutManager(_mActivity));
-        CommunityActivityAdapter adapter = new CommunityActivityAdapter(R.layout.item_community_activity, activities);
-        recyclerView.setAdapter(adapter);
-        recyclerView.addOnItemTouchListener(new OnItemClickListener() {
-            @Override
-            public void onSimpleItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
-                Activity activity = activities.get(i);
-                EventBus.getDefault().post(new StartBrotherEvent(
-                    GlobalAppointFragment.newInstance("活动详情", activity.getDetail_image(), activity.getId(), "我要报名", false)
-                ));
             }
         });
     }

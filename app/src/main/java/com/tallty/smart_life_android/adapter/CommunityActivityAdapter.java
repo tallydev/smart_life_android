@@ -7,6 +7,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.model.Activity;
+import com.tallty.smart_life_android.utils.DpUtil;
 
 import java.util.List;
 
@@ -24,11 +25,16 @@ public class CommunityActivityAdapter extends BaseQuickAdapter<Activity, BaseVie
     @Override
     protected void convert(BaseViewHolder baseViewHolder, Activity activity) {
         ImageView imageView = baseViewHolder.getView(R.id.image_list_item_image);
-        imageView.setMaxHeight(4000);
+        if (activity.getImage().isEmpty()) {
+            imageView.setMaxHeight(DpUtil.dip2px(mContext, 160));
+        } else {
+            imageView.setMaxHeight(4000);
+        }
 
         Glide.with(mContext)
             .load(activity.getImage())
-            .crossFade()
+            .placeholder(R.drawable.image_placeholder)
+            .error(R.drawable.image_error)
             .into(imageView);
     }
 }

@@ -27,6 +27,7 @@ public class NetworkImageBannerHolder implements Holder<String> {
     public void UpdateUI(Context context, int position, String data) {
         Glide.with(context)
                 .load(data)
+                .placeholder(R.drawable.image_placeholder)
                 .error(R.drawable.image_error)
                 .into(imageView);
     }

@@ -60,8 +60,8 @@ public class Order implements Serializable {
     @Expose
     private String payWay;
 
-//    @SerializedName ("pay_way_alias")
-//    @Expose
+    @SerializedName ("pay_way_alias")
+    @Expose
     private String payWayAlias;
 
     @SerializedName ("created_at")

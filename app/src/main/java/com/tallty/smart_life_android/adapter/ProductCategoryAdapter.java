@@ -7,6 +7,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.model.Category;
+import com.tallty.smart_life_android.utils.DpUtil;
 
 import java.util.List;
 
@@ -24,11 +25,17 @@ public class ProductCategoryAdapter extends BaseQuickAdapter<Category, BaseViewH
     @Override
     protected void convert(BaseViewHolder baseViewHolder, Category category) {
         ImageView imageView = baseViewHolder.getView(R.id.image_list_item_image);
-        imageView.setMaxHeight(4000);
+        if (category.getThumb().isEmpty()) {
+            imageView.setMaxHeight(DpUtil.dip2px(mContext, 160));
+        } else {
+            imageView.setMaxHeight(4000);
+        }
 
         Glide.with(mContext)
                 .load(category.getThumb())
                 .crossFade()
+                .placeholder(R.drawable.product_placeholder)
+                .error(R.drawable.image_error)
                 .into(imageView);
     }
 }

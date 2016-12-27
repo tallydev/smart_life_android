@@ -57,7 +57,7 @@ public class Product implements Serializable {
 
     @SerializedName("product_banners")
     @Expose
-    private ArrayList<Banner> banners;
+    private ArrayList<ProductBanner> productBanners;
 
 
     public int getId() {
@@ -108,12 +108,12 @@ public class Product implements Serializable {
         this.detail = detail;
     }
 
-    public ArrayList<Banner> getBanners() {
-        return banners;
+    public ArrayList<ProductBanner> getProductBanners() {
+        return productBanners;
     }
 
-    public void setBanners(ArrayList<Banner> banners) {
-        this.banners = banners;
+    public void setProductBanners(ArrayList<ProductBanner> productBanners) {
+        this.productBanners = productBanners;
     }
 
     public String getDetailImage() {

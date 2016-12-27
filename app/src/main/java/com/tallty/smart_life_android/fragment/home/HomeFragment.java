@@ -36,19 +36,19 @@ import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.event.TabReselectedEvent;
 import com.tallty.smart_life_android.fragment.Common.GlobalAppointFragment;
 import com.tallty.smart_life_android.fragment.MainFragment;
-import com.tallty.smart_life_android.holder.LocalImageBannerHolder;
 import com.tallty.smart_life_android.holder.HomeViewHolder;
+import com.tallty.smart_life_android.holder.NetworkImageBannerHolder;
+import com.tallty.smart_life_android.model.Banner;
 import com.tallty.smart_life_android.model.Home;
 import com.tallty.smart_life_android.model.Step;
 import com.tallty.smart_life_android.service.StepService;
-import com.tallty.smart_life_android.utils.GlobalUtils;
 import com.tallty.smart_life_android.utils.DbUtils;
+import com.tallty.smart_life_android.utils.GlobalUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import retrofit2.Call;
@@ -78,14 +78,15 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
     private static final int uploadStepInterval = 900000;
     private UploadStepTimer timer;
     // 组件
-    private ConvenientBanner<Integer> banner;
+    private ConvenientBanner<String> banner;
     private MyRecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private HomeRecyclerAdapter homeRecyclerAdapter;
     // 运动达人的ViewHolder
     private HomeViewHolder homeViewHolder = null;
     // banner图数据
-    private Integer[] imagesUrl = { R.drawable.banner_one, R.drawable.banner_two, R.drawable.banner_three};
+    private ArrayList<Banner> banners = new ArrayList<>();
+    private boolean is_load_banner = false;
     // 列表数据
     private List<String> titles = new ArrayList<String>() {
         {
@@ -168,8 +169,8 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
     @Override
     public void onLazyInitView(@Nullable Bundle savedInstanceState) {
         super.onLazyInitView(savedInstanceState);
-        setBanner();
         setList();
+        getHomeData();
         // 设置计步服务
         setupService();
         // 设置步数上传计时器(15分钟倒计时: 每分钟判断整点并获取首页数据, 结束上传步数)
@@ -252,20 +253,6 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
     }
 
     // ========================业务逻辑=========================
-    private void setBanner() {
-        List<Integer> networkImages = Arrays.asList(imagesUrl);
-        banner.setPages(
-            new CBViewHolderCreator() {
-                @Override
-                public Object createHolder() {
-                    return new LocalImageBannerHolder();
-                }
-            }, networkImages
-        )
-        .setPageIndicator(new int[] {R.mipmap.banner_indicator, R.mipmap.banner_indicator_focused})
-        .setOnItemClickListener(this);
-    }
-
     /**
      * 时间整点业务, 处理步数
      */
@@ -351,22 +338,28 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
         }
     }
 
+    // 初次进入首页,获取首页信息
     private void getHomeData() {
         Engine.authService(shared_token, shared_phone).getHomeData().enqueue(new Callback<Home>() {
             @Override
             public void onResponse(Call<Home> call, Response<Home> response) {
                 if (response.isSuccessful()) {
-                    if (response.body().getFitness() != null) {
-                        rank = response.body().getFitness().get("rank");
-                        // 设置浮窗时间
-                        server_today = response.body().getFitness().get("today");
+                    if (!is_load_banner) {
+                        // 加载banner图
+                        banners.clear();
+                        banners.addAll(response.body().getBanners());
+                        setBanner();
                     }
                     // 更新健步达人浮窗
-                    if (homeViewHolder == null) {
-                        homeViewHolder = (HomeViewHolder) recyclerView.findViewHolderForAdapterPosition(1);
-                    } else {
-                        homeViewHolder.rank.setText(rank);
-                        homeViewHolder.date.setText(server_today);
+                    if (response.body().getFitness() != null) {
+                        rank = response.body().getFitness().get("rank");
+                        server_today = response.body().getFitness().get("today");
+                        if (homeViewHolder == null) {
+                            homeViewHolder = (HomeViewHolder) recyclerView.findViewHolderForAdapterPosition(1);
+                        } else {
+                            homeViewHolder.rank.setText(rank);
+                            homeViewHolder.date.setText(server_today);
+                        }
                     }
                     // 更新新品上市倒计时
                     homeRecyclerAdapter.setCountDownTimer(response.body().getNewer().get("end_time"));
@@ -386,6 +379,22 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
                 Log.e(App.TAG, t.getMessage()+"");
             }
         });
+    }
+
+    private void setBanner() {
+        is_load_banner = true;
+        List<String> networkImages = new ArrayList<>();
+        for (Banner banner : banners) {
+            networkImages.add(banner.getBannerImage());
+        }
+        banner.setPages(new CBViewHolderCreator<NetworkImageBannerHolder>() {
+            @Override
+            public NetworkImageBannerHolder createHolder() {
+                return new NetworkImageBannerHolder();
+            }
+        }, networkImages)
+        .setPageIndicator(new int[] {R.mipmap.banner_indicator, R.mipmap.banner_indicator_focused})
+        .setOnItemClickListener(this);
     }
 
     private void setList() {
@@ -543,11 +552,10 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
      */
     @Override
     public void onItemClick(int position) {
-        switch (position) {
-            case 1:
-                String url = "http://elive.clfsj.com:8989/images/banner_sport.jpg";
-                EventBus.getDefault().post(new StartBrotherEvent(GlobalAppointFragment.newInstance("健步达人", url)));
-                break;
+        String title = banners.get(position).getTitle();
+        String detailImageUrl = banners.get(position).getBannerDetailImage();
+        if (!detailImageUrl.isEmpty()) {
+            EventBus.getDefault().post(new StartBrotherEvent(GlobalAppointFragment.newInstance(title, detailImageUrl)));
         }
     }
 

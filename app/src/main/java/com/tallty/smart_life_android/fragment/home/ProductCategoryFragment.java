@@ -32,6 +32,8 @@ import retrofit2.Response;
 public class ProductCategoryFragment extends BaseBackFragment {
     private String title;
     private RecyclerView recyclerView;
+    private ProductCategoryAdapter adapter;
+    private ArrayList<Category> categories = new ArrayList<>();
 
     public static ProductCategoryFragment newInstance(String title) {
         Bundle args = new Bundle();
@@ -72,7 +74,20 @@ public class ProductCategoryFragment extends BaseBackFragment {
 
     @Override
     protected void afterAnimationLogic() {
+        initList();
         getActivities();
+    }
+
+    private void initList() {
+        recyclerView.setLayoutManager(new LinearLayoutManager(_mActivity));
+        adapter = new ProductCategoryAdapter(R.layout.item_community_activity, categories);
+        recyclerView.setAdapter(adapter);
+        recyclerView.addOnItemTouchListener(new OnItemClickListener() {
+            @Override
+            public void onSimpleItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
+                start(ProductFragment.newInstance("商品列表", categories.get(i).getId()));
+            }
+        });
     }
 
     private void getActivities() {
@@ -81,7 +96,9 @@ public class ProductCategoryFragment extends BaseBackFragment {
             @Override
             public void onResponse(Call<Categories> call, Response<Categories> response) {
                 if (response.isSuccessful()) {
-                    setList(response.body().getCategories());
+                    categories.clear();
+                    categories.addAll(response.body().getCategories());
+                    adapter.notifyDataSetChanged();
                 } else {
                     showToast("加载失败");
                 }
@@ -92,18 +109,6 @@ public class ProductCategoryFragment extends BaseBackFragment {
             public void onFailure(Call<Categories> call, Throwable t) {
                 hideProgress();
                 showToast("链接错误, 请检查手机网络");
-            }
-        });
-    }
-
-    private void setList(final ArrayList<Category> categories) {
-        recyclerView.setLayoutManager(new LinearLayoutManager(_mActivity));
-        ProductCategoryAdapter adapter = new ProductCategoryAdapter(R.layout.item_community_activity, categories);
-        recyclerView.setAdapter(adapter);
-        recyclerView.addOnItemTouchListener(new OnItemClickListener() {
-            @Override
-            public void onSimpleItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
-                start(ProductFragment.newInstance("商品列表", categories.get(i).getId()));
             }
         });
     }

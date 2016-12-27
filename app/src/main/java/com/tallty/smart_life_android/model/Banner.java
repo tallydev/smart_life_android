@@ -6,19 +6,28 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 /**
- * Created by kang on 2016/11/30.
- * 轮播图
+ * Created by kang on 2016/12/27.
+ * 首页轮播图
  */
 
 public class Banner implements Serializable {
 
-    @SerializedName ("id")
+    @SerializedName("id")
     @Expose
     private int id;
 
-    @SerializedName("url")
+    @SerializedName("title")
     @Expose
-    private String url;
+    private String title;
+
+    @SerializedName("banner_cover")
+    @Expose
+    private String bannerImage;
+
+    @SerializedName("banner_detail")
+    @Expose
+    private String bannerDetailImage;
+
 
     public int getId() {
         return id;
@@ -28,11 +37,27 @@ public class Banner implements Serializable {
         this.id = id;
     }
 
-    public String getUrl() {
-        return url;
+    public String getTitle() {
+        return title;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getBannerImage() {
+        return bannerImage;
+    }
+
+    public void setBannerImage(String bannerImage) {
+        this.bannerImage = bannerImage;
+    }
+
+    public String getBannerDetailImage() {
+        return bannerDetailImage;
+    }
+
+    public void setBannerDetailImage(String bannerDetailImage) {
+        this.bannerDetailImage = bannerDetailImage;
     }
 }

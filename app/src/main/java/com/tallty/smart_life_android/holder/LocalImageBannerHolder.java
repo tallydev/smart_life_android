@@ -28,6 +28,7 @@ public class LocalImageBannerHolder implements Holder<Integer> {
     public void UpdateUI(Context context, int position, Integer data) {
         Glide.with(context)
                 .load(data)
+                .placeholder(R.drawable.image_placeholder)
                 .error(R.drawable.image_error)
                 .into(imageView);
     }

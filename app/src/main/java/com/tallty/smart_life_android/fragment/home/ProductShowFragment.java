@@ -38,7 +38,7 @@ import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.event.SwitchTabFragment;
 import com.tallty.smart_life_android.fragment.MainFragment;
 import com.tallty.smart_life_android.holder.NetworkImageBannerHolder;
-import com.tallty.smart_life_android.model.Banner;
+import com.tallty.smart_life_android.model.ProductBanner;
 import com.tallty.smart_life_android.model.CartItem;
 import com.tallty.smart_life_android.model.Product;
 
@@ -243,9 +243,9 @@ public class ProductShowFragment extends BaseBackFragment implements OnItemClick
 
     private void setBanner() {
         List<String> networkImages = new ArrayList<>();
-        ArrayList<Banner> banners = product.getBanners();
-        for(Banner banner : banners) {
-            networkImages.add(banner.getUrl());
+        ArrayList<ProductBanner> productBanners = product.getProductBanners();
+        for(ProductBanner productBanner : productBanners) {
+            networkImages.add(productBanner.getUrl());
         }
         banner.setPages(new CBViewHolderCreator<NetworkImageBannerHolder>() {
                 @Override
