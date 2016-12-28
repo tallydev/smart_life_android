@@ -27,6 +27,11 @@ import java.util.List;
  */
 
 public class MyOrdersAdapter extends BaseQuickAdapter<Order, BaseViewHolder>{
+    private Button pay_button;
+    private Button cancel_button;
+    private Button delete_button;
+    private Button service_button;
+
 
     public MyOrdersAdapter(int layoutResId, List<Order> data) {
         super(layoutResId, data);
@@ -36,23 +41,18 @@ public class MyOrdersAdapter extends BaseQuickAdapter<Order, BaseViewHolder>{
     protected void convert(final BaseViewHolder baseViewHolder, final Order order) {
         final int position = baseViewHolder.getAdapterPosition();
         RecyclerView cartItems = baseViewHolder.getView(R.id.order_commodity_list);
-        Button pay_button = baseViewHolder.getView(R.id.order_pay_button);
-        Button cancel_button = baseViewHolder.getView(R.id.order_cancel_button);
-        Button delete_button = baseViewHolder.getView(R.id.order_delete_button);
-        Button service_button = baseViewHolder.getView(R.id.order_service_button);
+        pay_button = baseViewHolder.getView(R.id.order_pay_button);
+        cancel_button = baseViewHolder.getView(R.id.order_cancel_button);
+        delete_button = baseViewHolder.getView(R.id.order_delete_button);
+        service_button = baseViewHolder.getView(R.id.order_service_button);
         TextView price_and_postage = baseViewHolder.getView(R.id.order_price_and_postage);
         // 显示
         cartItems.setAdapter(new MyOrdersCommodityAdapter(R.layout.item_my_orders_commodity, order.getCartItems()));
-        String payWay = "";
-        if ("alipay".equals(order.getPayWay()))
-            payWay = "支付宝支付";
-        else if ("wx".equals(order.getPayWay()))
-            payWay = "微信支付";
         baseViewHolder
                 .setText(R.id.order_number, "订单编号：" + order.getSeq())
                 .setText(R.id.order_time, "下单时间：" + order.getCreated_time())
                 .setText(R.id.order_state, order.getStateAlias())
-                .setText(R.id.order_pay_way, payWay);
+                .setText(R.id.order_pay_way, order.getPayWayAlias());
 
         // 富文本显示订单金额
         int price_length = String.valueOf(order.getTotalPrice()).length();
@@ -62,6 +62,7 @@ public class MyOrdersAdapter extends BaseQuickAdapter<Order, BaseViewHolder>{
         price_and_postage.setText(spannableString);
 
         // 显示按钮
+        resetButton();
         switch (order.getState()) {
             case "unpaid":
                 pay_button.setVisibility(View.VISIBLE);
@@ -100,5 +101,12 @@ public class MyOrdersAdapter extends BaseQuickAdapter<Order, BaseViewHolder>{
                 EventBus.getDefault().post(new ManageOrderEvent(position, order, Const.SERVICE_ORDER));
             }
         });
+    }
+
+    private void resetButton() {
+        pay_button.setVisibility(View.GONE);
+        cancel_button.setVisibility(View.GONE);
+        delete_button.setVisibility(View.GONE);
+        service_button.setVisibility(View.GONE);
     }
 }

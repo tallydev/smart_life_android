@@ -187,7 +187,6 @@ public class ConfirmOrder extends BaseBackFragment {
         List<Integer> cart_ids = new ArrayList<>();
         for (int i = 0; i < selected_cart_items.size(); i++) {
             cart_ids.add(selected_cart_items.get(i).getId());
-            Log.d(App.TAG, "商品的id===》"+selected_cart_items.get(i).getId());
         }
         Log.d(App.TAG, "商品列表"+ cart_ids);
 

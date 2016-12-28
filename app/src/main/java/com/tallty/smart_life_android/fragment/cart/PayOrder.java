@@ -128,12 +128,11 @@ public class PayOrder extends BaseBackFragment {
         switch (v.getId()) {
             case R.id.pay_now:
                 if (pay_radio_group.getCheckedRadioButtonId() == R.id.weixin_pay) {
-                    showToast("微信支付暂未开通");
                     payWay = CHANNEL_WECHAT;
                 } else if (pay_radio_group.getCheckedRadioButtonId() == R.id.alipay){
                     payWay = CHANNEL_ALIPAY;
-                    processPayOrder();
                 }
+                processPayOrder();
                 break;
         }
     }
@@ -149,7 +148,7 @@ public class PayOrder extends BaseBackFragment {
                         Log.d(App.TAG, String.valueOf(response.body().getAsJsonObject()));
                         Pingpp.createPayment(getActivity(), String.valueOf(response.body().getAsJsonObject()));
                     } else {
-                        showToast("支付失败");
+                        showToast("发起支付失败");
                     }
                 }
 

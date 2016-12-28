@@ -49,6 +49,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
@@ -86,7 +87,6 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
     private HomeViewHolder homeViewHolder = null;
     // banner图数据
     private ArrayList<Banner> banners = new ArrayList<>();
-    private boolean is_load_banner = false;
     // 列表数据
     private List<String> titles = new ArrayList<String>() {
         {
@@ -169,8 +169,8 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
     @Override
     public void onLazyInitView(@Nullable Bundle savedInstanceState) {
         super.onLazyInitView(savedInstanceState);
+        getHomeBanners();
         setList();
-        getHomeData();
         // 设置计步服务
         setupService();
         // 设置步数上传计时器(15分钟倒计时: 每分钟判断整点并获取首页数据, 结束上传步数)
@@ -338,18 +338,12 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
         }
     }
 
-    // 初次进入首页,获取首页信息
+    // 获取首页信息
     private void getHomeData() {
         Engine.authService(shared_token, shared_phone).getHomeData().enqueue(new Callback<Home>() {
             @Override
             public void onResponse(Call<Home> call, Response<Home> response) {
                 if (response.isSuccessful()) {
-                    if (!is_load_banner) {
-                        // 加载banner图
-                        banners.clear();
-                        banners.addAll(response.body().getBanners());
-                        setBanner();
-                    }
                     // 更新健步达人浮窗
                     if (response.body().getFitness() != null) {
                         rank = response.body().getFitness().get("rank");
@@ -381,8 +375,30 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
         });
     }
 
+    // 获取首页Banners
+    private void getHomeBanners() {
+        Engine.authService(shared_token, shared_phone)
+            .getHomeBanners()
+            .enqueue(new Callback<HashMap<String, ArrayList<Banner>>>() {
+                @Override
+                public void onResponse(Call<HashMap<String, ArrayList<Banner>>> call, Response<HashMap<String, ArrayList<Banner>>> response) {
+                    if (response.isSuccessful()) {
+                        banners.clear();
+                        banners.addAll(response.body().get("banners"));
+                        setBanner();
+                    } else {
+
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<HashMap<String, ArrayList<Banner>>> call, Throwable t) {
+
+                }
+        });
+    }
+
     private void setBanner() {
-        is_load_banner = true;
         List<String> networkImages = new ArrayList<>();
         for (Banner banner : banners) {
             networkImages.add(banner.getBannerImage());

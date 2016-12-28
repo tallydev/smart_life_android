@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.tallty.smart_life_android.model.Activities;
 import com.tallty.smart_life_android.model.Appointment;
 import com.tallty.smart_life_android.model.AppointmentList;
+import com.tallty.smart_life_android.model.Banner;
 import com.tallty.smart_life_android.model.CartItem;
 import com.tallty.smart_life_android.model.CartList;
 import com.tallty.smart_life_android.model.Categories;
@@ -23,6 +24,7 @@ import com.tallty.smart_life_android.model.Step;
 import com.tallty.smart_life_android.model.User;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -226,6 +228,10 @@ public interface DataAPI {
     // 获取首页信息
     @GET("home")
     Call<Home> getHomeData();
+
+    // 获取首页Banner
+    @GET("home_info")
+    Call<HashMap<String, ArrayList<Banner>>> getHomeBanners();
 
     // *********************************************************************************************
     // 社区活动列表

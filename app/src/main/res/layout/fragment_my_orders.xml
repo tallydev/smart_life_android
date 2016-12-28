@@ -13,7 +13,6 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:id="@+id/my_orders_list"
         android:scrollbars="none"
-        android:paddingTop="4dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 

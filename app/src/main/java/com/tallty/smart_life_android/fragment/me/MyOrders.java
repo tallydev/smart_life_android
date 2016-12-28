@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.Engine.Engine;
@@ -29,7 +30,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import retrofit2.Call;
@@ -39,14 +39,16 @@ import retrofit2.Response;
 /**
  * 个人中心-我的订单
  */
-public class MyOrders extends BaseBackFragment {
+public class MyOrders extends BaseBackFragment implements BaseQuickAdapter.RequestLoadMoreListener{
     private RecyclerView recyclerView;
     private MyOrdersAdapter adapter;
     private String sort = "";
     // 数据
     private List<Order> orders = new ArrayList<>();
+    // 加载更多
     private int current_page = 1;
     private int total_pages = 1;
+    private int per_page = 10;
 
     public static MyOrders newInstance(String sort) {
         Bundle args = new Bundle();
@@ -96,19 +98,21 @@ public class MyOrders extends BaseBackFragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(_mActivity));
         adapter = new MyOrdersAdapter(R.layout.item_my_orders ,orders);
         recyclerView.setAdapter(adapter);
+        adapter.setOnLoadMoreListener(this);
     }
 
     private void getOrders() {
         showProgress("正在加载...");
-        Engine.authService(shared_token, shared_phone).getOrders(1, 10).enqueue(new Callback<Orders>() {
+        Engine.authService(shared_token, shared_phone).getOrders(current_page, per_page).enqueue(new Callback<Orders>() {
             @Override
             public void onResponse(Call<Orders> call, Response<Orders> response) {
                 hideProgress();
                 if (response.isSuccessful()) {
+                    current_page = response.body().getCurrentPage();
+                    total_pages = response.body().getTotalPages();
                     orders.clear();
                     orders.addAll(response.body().getOrders());
-                    Collections.reverse(orders);
-                    processOrderSort();
+                    adapter.notifyDataSetChanged();
                 } else {
                     showToast("加载失败");
                 }
@@ -123,41 +127,41 @@ public class MyOrders extends BaseBackFragment {
         });
     }
 
-    private void processOrderSort() {
-        List<Order> cache = new ArrayList<>();
-
-        switch (sort) {
-            case "all":
-                for (Order order : orders) {
-                    if (!("canceled".equals(order.getState())))
-                        cache.add(order);
-                }
-                orders.clear();
-                orders.addAll(cache);
-                break;
-            case "unpaid":
-                for (Order order : orders) {
-                    if ("unpaid".equals(order.getState()))
-                        cache.add(order);
-                }
-                orders.clear();
-                orders.addAll(cache);
-                break;
-            case "untransport":
-                for (Order order : orders) {
-                    if ("paid".equals(order.getState()))
-                        cache.add(order);
-                }
-                orders.clear();
-                orders.addAll(cache);
-                break;
-        }
-        adapter.notifyDataSetChanged();
-    }
-
     @Override
     public void onClick(View v) {
 
+    }
+
+    @Override
+    public void onLoadMoreRequested() {
+        recyclerView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (current_page >= total_pages) {
+                    adapter.loadMoreEnd();
+                } else {
+                    current_page++;
+                    Engine.authService(shared_token, shared_phone).getOrders(current_page, per_page).enqueue(new Callback<Orders>() {
+                        @Override
+                        public void onResponse(Call<Orders> call, Response<Orders> response) {
+                            if (response.isSuccessful()) {
+                                current_page = response.body().getCurrentPage();
+                                total_pages = response.body().getTotalPages();
+                                adapter.addData(response.body().getOrders());
+                                adapter.loadMoreComplete();
+                            } else {
+                                adapter.loadMoreFail();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Orders> call, Throwable t) {
+                            adapter.loadMoreFail();
+                        }
+                    });
+                }
+            }
+        }, 1000);
     }
 
     /**
