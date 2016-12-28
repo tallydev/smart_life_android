@@ -119,7 +119,6 @@ public class MainFragment extends BaseFragment {
                 EventBus.getDefault().post(new TabReselectedEvent(position));
             }
         });
-
     }
 
     /**

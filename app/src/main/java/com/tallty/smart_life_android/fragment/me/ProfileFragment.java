@@ -130,6 +130,7 @@ public class ProfileFragment extends BaseBackFragment {
         values.set(10, getVersion());
         initList();
         getUserInfo();
+        setVersionInfo();
     }
 
     private void initList() {
@@ -206,6 +207,22 @@ public class ProfileFragment extends BaseBackFragment {
             @Override
             public void onFailure(Call<User> call, Throwable t) {
                 showToast(showString(R.string.network_error));
+            }
+        });
+    }
+
+
+    // 显示版本信息
+    private void setVersionInfo() {
+        PgyUpdateManager.register(getActivity(), new UpdateManagerListener() {
+            @Override
+            public void onNoUpdateAvailable() {
+            }
+
+            @Override
+            public void onUpdateAvailable(String s) {
+                values.set(10, "发现新版本");
+                adapter.notifyItemChanged(10);
             }
         });
     }

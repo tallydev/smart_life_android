@@ -14,6 +14,9 @@ import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StrikethroughSpan;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -30,17 +33,19 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.ImageViewState;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+import com.mikepenz.actionitembadge.library.ActionItemBadge;
 import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
+import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.event.SwitchTabFragment;
 import com.tallty.smart_life_android.fragment.MainFragment;
 import com.tallty.smart_life_android.holder.NetworkImageBannerHolder;
-import com.tallty.smart_life_android.model.ProductBanner;
 import com.tallty.smart_life_android.model.CartItem;
 import com.tallty.smart_life_android.model.Product;
+import com.tallty.smart_life_android.model.ProductBanner;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -60,6 +65,7 @@ import static com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView.SCAL
 public class ProductShowFragment extends BaseBackFragment implements OnItemClickListener{
     // 商品
     private Product product;
+    private int productId = 0;
     // 修改数量
     private int count = 1;
     // UI
@@ -84,12 +90,21 @@ public class ProductShowFragment extends BaseBackFragment implements OnItemClick
         return fragment;
     }
 
+    public static ProductShowFragment newInstance(int productId) {
+        Bundle args = new Bundle();
+        args.putSerializable(Const.INT, productId);
+        ProductShowFragment fragment = new ProductShowFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
             product = (Product) args.getSerializable(Const.OBJECT);
+            productId = args.getInt(Const.INT);
         }
     }
 
@@ -131,12 +146,30 @@ public class ProductShowFragment extends BaseBackFragment implements OnItemClick
     @Override
     protected void afterAnimationLogic() {
         setToolbarMenu(toolbar);
-        // 显示商品信息
-        showProduct();
-        // 设置banner
-        setBanner();
+        if (productId != 0) {
+            getProductById();
+        }
+        if (product != null){
+            // 显示商品信息
+            showProduct();
+            // 设置banner
+            setBanner();
+        }
     }
 
+    // TODO: 2016/12/28 显示购物车角标
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        super.onCreateOptionsMenu(menu, inflater);
+//        int badgeCount = HomeFragment.cartCount;
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        _mActivity.getMenuInflater().inflate(R.menu.cart_blank, menu);
+//        //you can add some logic (hide it if the count == 0)
+//        if (HomeFragment.cartCount > 0) {
+//            ActionItemBadge.update(_mActivity, menu.findItem(R.id.toolbar_cart), ContextCompat.getDrawable(_mActivity, R.mipmap.cart_normal), ActionItemBadge.BadgeStyles.RED, badgeCount);
+//        } else {
+//            ActionItemBadge.hide(menu.findItem(R.id.toolbar_cart));
+//        }
+//    }
 
     @Override
     public void onClick(View v) {
@@ -169,10 +202,12 @@ public class ProductShowFragment extends BaseBackFragment implements OnItemClick
                     @Override
                     public void onResponse(Call<CartItem> call, Response<CartItem> response) {
                         hideProgress();
-                        if (response.isSuccessful())
+                        if (response.isSuccessful()) {
                             showToast("已加入购物车");
-                        else
+                            HomeFragment.cartCount++;
+                        } else {
                             showToast("加入购物车失败");
+                        }
                     }
 
                     @Override
@@ -206,6 +241,31 @@ public class ProductShowFragment extends BaseBackFragment implements OnItemClick
                 return true;
             }
         });
+    }
+
+    // 获取商品详情
+    private void getProductById() {
+        Engine.noAuthService().getProduct(productId)
+            .enqueue(new Callback<Product>() {
+                @Override
+                public void onResponse(Call<Product> call, Response<Product> response) {
+                    if (response.isSuccessful()) {
+                        product = response.body();
+                        // 显示商品信息
+                        showProduct();
+                        // 设置banner
+                        setBanner();
+                    } else {
+                        Log.d(App.TAG, response.message());
+                        showToast("获取详情失败");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Product> call, Throwable t) {
+                    showToast("网络连接错误");
+                }
+            });
     }
 
     private void showProduct() {

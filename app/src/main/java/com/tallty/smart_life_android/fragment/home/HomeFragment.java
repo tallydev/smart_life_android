@@ -39,6 +39,7 @@ import com.tallty.smart_life_android.fragment.MainFragment;
 import com.tallty.smart_life_android.holder.HomeViewHolder;
 import com.tallty.smart_life_android.holder.NetworkImageBannerHolder;
 import com.tallty.smart_life_android.model.Banner;
+import com.tallty.smart_life_android.model.CartList;
 import com.tallty.smart_life_android.model.Home;
 import com.tallty.smart_life_android.model.Step;
 import com.tallty.smart_life_android.service.StepService;
@@ -48,6 +49,7 @@ import com.tallty.smart_life_android.utils.GlobalUtils;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -65,6 +67,8 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
     private String shared_phone;
     private CountDownTimer delayTimer;
     private int versionCode;
+    // 购物车数量
+    public static int cartCount = 0;
     // 计步器相关
     private ServiceConnection conn;
     private static final int TIME_INTERVAL = 1000;
@@ -179,6 +183,8 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
         delayUploadStep();
         // 检查更新
         PgyUpdateManager.register(getActivity());
+        // 获取购物车数量
+        getCartCount();
     }
 
     /**
@@ -222,7 +228,6 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
         };
         delayTimer.start();
     }
-
 
     /**
      * 自定义计时器
@@ -396,6 +401,25 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
 
                 }
         });
+    }
+
+    // 获取购物车数量
+    private void getCartCount() {
+        Engine.authService(shared_token, shared_phone)
+            .getCartList(1, 100)
+            .enqueue(new Callback<CartList>() {
+                @Override
+                public void onResponse(Call<CartList> call, Response<CartList> response) {
+                    if (response.isSuccessful()) {
+                        CartList cartList = response.body();
+                        cartCount = cartList.getCartItems().size();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<CartList> call, Throwable t) {
+                }
+            });
     }
 
     private void setBanner() {

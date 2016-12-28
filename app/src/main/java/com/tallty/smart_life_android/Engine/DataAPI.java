@@ -139,7 +139,8 @@ public interface DataAPI {
     // 获取订单列表
     @GET("orders")
     Call<Orders> getOrders(@Query("page") int page,
-                           @Query("per_page") int per_page);
+                           @Query("per_page") int per_page,
+                           @Query("state") String state);
 
     // 删除订单
     @DELETE("orders/{id}")

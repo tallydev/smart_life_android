@@ -28,8 +28,8 @@
                 android:background="@color/white"
                 android:orientation="vertical"
                 android:layout_marginBottom="6dp"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp">
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp">
                 <RelativeLayout
                     android:id="@+id/me_profile"
                     android:layout_width="match_parent"
@@ -88,8 +88,8 @@
                 android:background="@color/white"
                 android:orientation="vertical"
                 android:layout_marginBottom="6dp"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp">
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp">
                 <include
                     android:id="@+id/me_order"
                     layout="@layout/me_border_cell"/>
@@ -148,8 +148,8 @@
                 android:background="@color/white"
                 android:orientation="vertical"
                 android:layout_marginBottom="6dp"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp">
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp">
                 <include
                     android:id="@+id/me_healthy"
                     layout="@layout/me_border_cell"/>
@@ -167,8 +167,8 @@
                 android:background="@color/white"
                 android:orientation="vertical"
                 android:layout_marginBottom="6dp"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp">
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp">
                 <include
                     android:id="@+id/contact_service"
                     layout="@layout/me_normal_cell"/>

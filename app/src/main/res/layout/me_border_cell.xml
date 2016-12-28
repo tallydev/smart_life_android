@@ -4,7 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/border_bottom_click_bg"
-    android:padding="10dp">
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
+    android:paddingTop="12dp"
+    android:paddingBottom="12dp">
     <ImageView
         android:id="@+id/cell_icon"
         android:layout_width="18dp"
@@ -42,7 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@id/indicator"
-        android:layout_marginRight="16dp"
+        android:layout_marginRight="8dp"
         android:visibility="gone"
         android:ellipsize="end"
         android:maxLines="1"

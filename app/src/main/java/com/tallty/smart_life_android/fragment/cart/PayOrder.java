@@ -110,7 +110,7 @@ public class PayOrder extends BaseBackFragment {
                 public void run() {
                     // 通知MainFragment切换CartFragment
                     EventBus.getDefault().post(new SwitchTabFragment(4));
-                    EventBus.getDefault().post(new StartBrotherEvent(MyOrders.newInstance("all")));
+                    EventBus.getDefault().post(new StartBrotherEvent(MyOrders.newInstance(null)));
                 }
             });
         }
@@ -172,7 +172,7 @@ public class PayOrder extends BaseBackFragment {
                 public void run() {
                     // 通知MainFragment切换CartFragment
                     EventBus.getDefault().post(new SwitchTabFragment(4));
-                    EventBus.getDefault().post(new StartBrotherEvent(MyOrders.newInstance("all")));
+                    EventBus.getDefault().post(new StartBrotherEvent(MyOrders.newInstance(null)));
                 }
             });
         } else if ("fail".equals(event.getResult())) {

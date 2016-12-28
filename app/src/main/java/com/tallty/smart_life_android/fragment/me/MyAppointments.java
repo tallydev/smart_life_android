@@ -4,22 +4,22 @@ package com.tallty.smart_life_android.fragment.me;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.listener.OnItemLongClickListener;
 import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.MyAppointmentsAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
-import com.tallty.smart_life_android.custom.RecyclerVIewItemTouchListener;
+import com.tallty.smart_life_android.custom.CustomLoadMoreView;
 import com.tallty.smart_life_android.model.Appointment;
 import com.tallty.smart_life_android.model.AppointmentList;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,11 +30,15 @@ import retrofit2.Response;
 /**
  * 个人中心-我的预约
  */
-public class MyAppointments extends BaseBackFragment {
+public class MyAppointments extends BaseBackFragment implements BaseQuickAdapter.RequestLoadMoreListener {
     private RecyclerView recyclerView;
     private MyAppointmentsAdapter adapter;
     // 数据
     private List<Appointment> appointments = new ArrayList<>();
+    // 加载更多
+    private int current_page = 1;
+    private int total_pages = 1;
+    private int per_page = 10;
 
     public static MyAppointments newInstance() {
         Bundle args = new Bundle();
@@ -75,48 +79,25 @@ public class MyAppointments extends BaseBackFragment {
 
     @Override
     protected void afterAnimationLogic() {
-        // 获取数据
-        showProgress(showString(R.string.progress_normal));
-        Engine.authService(shared_token, shared_phone).getAppointments(1, 10).enqueue(new Callback<AppointmentList>() {
-            @Override
-            public void onResponse(Call<AppointmentList> call, Response<AppointmentList> response) {
-                if (response.isSuccessful()) {
-                    appointments.addAll(response.body().getAppointments());
-                    // 加载列表
-                    setList();
-                    hideProgress();
-                } else {
-                    hideProgress();
-                    showToast(showString(R.string.response_error));
-                }
-            }
-
-            @Override
-            public void onFailure(Call<AppointmentList> call, Throwable t) {
-                hideProgress();
-                showToast(showString(R.string.network_error));
-            }
-        });
+        initList();
+        fetchAppointments();
     }
 
-    private void setList() {
+    private void initList() {
         recyclerView.setLayoutManager(new LinearLayoutManager(_mActivity));
-        adapter = new MyAppointmentsAdapter(_mActivity, appointments);
+        adapter = new MyAppointmentsAdapter(R.layout.item_my_appointments, appointments);
         recyclerView.setAdapter(adapter);
-        recyclerView.addOnItemTouchListener(new RecyclerVIewItemTouchListener(recyclerView) {
+        adapter.setOnLoadMoreListener(this);
+        adapter.setLoadMoreView(new CustomLoadMoreView());
+        recyclerView.addOnItemTouchListener(new OnItemLongClickListener() {
             @Override
-            public void onItemClick(RecyclerView.ViewHolder vh, int position) throws ParseException {
-
-            }
-
-            @Override
-            public void onItemLongPress(RecyclerView.ViewHolder vh, final int position) {
+            public void onSimpleItemLongClick(BaseQuickAdapter baseQuickAdapter, View view, final int i) {
                 confirmDialog("确认删除吗", new OnConfirmDialogListener() {
                     @Override
                     public void onConfirm(DialogInterface dialog, int which) {
-                        appointments.remove(position);
-                        adapter.notifyItemRemoved(position);
-                        adapter.notifyItemRangeChanged(position, appointments.size()-position);
+                        appointments.remove(i);
+                        adapter.notifyItemRemoved(i);
+                        adapter.notifyItemRangeChanged(i, appointments.size() - i);
                     }
 
                     @Override
@@ -126,6 +107,68 @@ public class MyAppointments extends BaseBackFragment {
                 });
             }
         });
+    }
+
+    private void fetchAppointments() {
+        // 获取数据
+        showProgress(showString(R.string.progress_normal));
+        Engine.authService(shared_token, shared_phone)
+            .getAppointments(current_page, per_page)
+            .enqueue(new Callback<AppointmentList>() {
+                @Override
+                public void onResponse(Call<AppointmentList> call, Response<AppointmentList> response) {
+                    hideProgress();
+                    if (response.isSuccessful()) {
+                        current_page = response.body().getCurrent_page();
+                        total_pages = response.body().getTotal_pages();
+                        appointments.clear();
+                        appointments.addAll(response.body().getAppointments());
+                        adapter.notifyDataSetChanged();
+                    } else {
+                        showToast(showString(R.string.response_error));
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<AppointmentList> call, Throwable t) {
+                    hideProgress();
+                    showToast(showString(R.string.network_error));
+                }
+        });
+    }
+
+    @Override
+    public void onLoadMoreRequested() {
+        recyclerView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (current_page >= total_pages) {
+                    adapter.loadMoreEnd();
+                } else {
+                    current_page++;
+                    Engine.authService(shared_token, shared_phone)
+                            .getAppointments(current_page, per_page)
+                            .enqueue(new Callback<AppointmentList>() {
+                                @Override
+                                public void onResponse(Call<AppointmentList> call, Response<AppointmentList> response) {
+                                    if (response.isSuccessful()) {
+                                        current_page = response.body().getCurrent_page();
+                                        total_pages = response.body().getTotal_pages();
+                                        adapter.addData(response.body().getAppointments());
+                                        adapter.loadMoreComplete();
+                                    } else {
+                                        adapter.loadMoreFail();
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<AppointmentList> call, Throwable t) {
+                                    adapter.loadMoreFail();
+                                }
+                            });
+                }
+            }
+        }, 1000);
     }
 
     @Override

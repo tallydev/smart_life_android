@@ -30,7 +30,6 @@ import com.tallty.smart_life_android.fragment.MainFragment;
 import com.tallty.smart_life_android.fragment.home.ProductShowFragment;
 import com.tallty.smart_life_android.model.CartItem;
 import com.tallty.smart_life_android.model.CartList;
-import com.tallty.smart_life_android.model.Product;
 import com.tallty.smart_life_android.utils.ArithUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -252,29 +251,6 @@ public class CartFragment extends BaseMainFragment implements BaseQuickAdapter.R
         total_price_text.setText("￥ "+ ArithUtils.round(total));
     }
 
-    // 获取商品详情
-    private void getProduct(int product_id) {
-        Engine.noAuthService().getProduct(product_id)
-            .enqueue(new Callback<Product>() {
-                @Override
-                public void onResponse(Call<Product> call, Response<Product> response) {
-                    if (response.isSuccessful()) {
-                        EventBus.getDefault().post(
-                                new StartBrotherEvent(ProductShowFragment.newInstance(response.body()))
-                        );
-                    } else {
-                        Log.d(App.TAG, response.message());
-                        showToast("获取详情失败");
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<Product> call, Throwable t) {
-                    showToast("网络连接错误");
-                }
-            });
-    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -370,7 +346,8 @@ public class CartFragment extends BaseMainFragment implements BaseQuickAdapter.R
     @Subscribe
     public void onTransferDataEvent(TransferDataEvent event) {
         if ("cart_product".equals(event.tag)) {
-            getProduct(event.bundle.getInt("product_id"));
+            int id = event.bundle.getInt("product_id");
+            EventBus.getDefault().post(new StartBrotherEvent(ProductShowFragment.newInstance(id)));
         }
     }
 

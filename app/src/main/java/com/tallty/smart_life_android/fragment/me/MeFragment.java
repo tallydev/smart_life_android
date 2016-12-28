@@ -196,13 +196,13 @@ public class MeFragment extends BaseMainFragment {
                 EventBus.getDefault().post(new StartBrotherEvent(ProfileFragment.newInstance()));
                 break;
             case R.id.me_order:
-                EventBus.getDefault().post(new StartBrotherEvent(MyOrders.newInstance("all")));
+                EventBus.getDefault().post(new StartBrotherEvent(MyOrders.newInstance(null)));
                 break;
             case R.id.wait_pay:
                 EventBus.getDefault().post(new StartBrotherEvent(MyOrders.newInstance("unpaid")));
                 break;
             case R.id.wait_transport:
-                EventBus.getDefault().post(new StartBrotherEvent(MyOrders.newInstance("untransport")));
+                EventBus.getDefault().post(new StartBrotherEvent(MyOrders.newInstance("paid")));
                 break;
             case R.id.me_healthy:
                 EventBus.getDefault().post(new StartBrotherEvent(HealthyCheckReport.newInstance("健康报告")));

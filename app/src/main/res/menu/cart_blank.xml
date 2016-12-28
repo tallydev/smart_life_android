@@ -5,5 +5,5 @@
         android:id="@+id/toolbar_cart"
         android:title="购物车"
         android:icon="@mipmap/ic_cart"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="always"/>
 </menu>
