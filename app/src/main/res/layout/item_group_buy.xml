@@ -1,13 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="180dp"
+        android:layout_height="160dp"
         android:src="@drawable/community_two"
-        android:id="@+id/imageView"/>
-
-</RelativeLayout>
+        android:id="@+id/group_buy_image"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:orientation="horizontal"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:background="@color/white">
+        <TextView
+            android:id="@+id/group_buy_people"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:textColor="@color/global_text"
+            android:textSize="@dimen/sp_14"/>
+        <cn.iwgang.countdownview.CountdownView
+            android:id="@+id/group_buy_timer"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_alignParentRight="true"
+            app:isHideTimeBackground="false"
+            app:timeBgSize="22dp"
+            app:timeBgColor="@color/white"
+            app:isShowTimeBgDivisionLine="true"
+            app:isShowDay="true"
+            app:isShowHour="true"
+            app:isShowMinute="true"
+            app:isShowSecond="true"
+            app:timeTextColor="@color/timer_color"
+            app:timeTextSize="@dimen/text_14"
+            app:isTimeTextBold="false"
+            app:suffixGravity="center"
+            android:textColor="@color/global_text"
+            app:suffixTextSize="@dimen/text_12"
+            app:isSuffixTextBold="false"
+            app:suffixDay="天"
+            app:suffixHour="时"
+            app:suffixMinute="分"
+            app:suffixSecond="秒"
+            app:isShowTimeBgBorder="true"
+            app:timeBgBorderColor="@color/app_bg"
+            app:timeBgBorderSize="1dp"
+            app:timeBgBorderRadius="3dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_toLeftOf="@id/group_buy_timer"
+            android:gravity="center_vertical"
+            android:textSize="@dimen/sp_14"
+            android:textColor="@color/global_text"
+            android:text="还剩："/>
+    </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:background="@color/app_bg"/>
+</LinearLayout>

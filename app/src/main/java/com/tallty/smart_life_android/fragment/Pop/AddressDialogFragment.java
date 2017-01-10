@@ -32,9 +32,9 @@ import java.util.List;
 public class AddressDialogFragment extends DialogFragment implements View.OnClickListener {
     private TextView cancel_btn;
     private TextView confirm_btn;
-    private WheelView areaWheel;
-    private WheelView streetWheel;
-    private WheelView communityWheel;
+    private WheelView<String> areaWheel;
+    private WheelView<String> streetWheel;
+    private WheelView<String> communityWheel;
     // tag
     private String caller;
 
@@ -96,9 +96,9 @@ public class AddressDialogFragment extends DialogFragment implements View.OnClic
     private void initView(View view) {
         cancel_btn = (TextView) view.findViewById(R.id.cancel_btn);
         confirm_btn = (TextView) view.findViewById(R.id.confirm_btn);
-        areaWheel = (WheelView) view.findViewById(R.id.wheel_view_community);
-        streetWheel = (WheelView) view.findViewById(R.id.wheel_view_street);
-        communityWheel = (WheelView) view.findViewById(R.id.wheel_view_area);
+        areaWheel = (WheelView<String>) view.findViewById(R.id.wheel_view_community);
+        streetWheel = (WheelView<String>) view.findViewById(R.id.wheel_view_street);
+        communityWheel = (WheelView<String>) view.findViewById(R.id.wheel_view_area);
     }
 
     private void setListener() {
@@ -128,10 +128,9 @@ public class AddressDialogFragment extends DialogFragment implements View.OnClic
         communityWheel.setWheelAdapter(new MyWheelViewAdapter(getActivity().getApplicationContext()));
         communityWheel.setSkin(WheelView.Skin.Holo);
         communityWheel.setWheelData(
-                areaDatas().get(
-                        streetDatas().get(communityDatas().get(areaWheel.getSelection()))
-                        .get(streetWheel.getSelection())
-                )
+            areaDatas().get(
+                streetDatas().get(communityDatas().get(areaWheel.getSelection())).get(streetWheel.getSelection())
+            )
         );
         communityWheel.setStyle(style);
         streetWheel.join(communityWheel);
@@ -187,13 +186,13 @@ public class AddressDialogFragment extends DialogFragment implements View.OnClic
             case R.id.confirm_btn:
                 Bundle bundle = new Bundle();
                 bundle.putString("小区",
-                    areaWheel.getSelectionItem().toString() + " " +
-                    streetWheel.getSelectionItem().toString() + " " +
-                    communityWheel.getSelectionItem().toString()
+                        areaWheel.getSelectionItem() + " " +
+                        streetWheel.getSelectionItem() + " " +
+                        communityWheel.getSelectionItem()
                 );
-                bundle.putString(Const.CONTACT_AREA, areaWheel.getSelectionItem().toString());
-                bundle.putString(Const.CONTACT_STREET, streetWheel.getSelectionItem().toString());
-                bundle.putString(Const.CONTACT_COMMUNITY, communityWheel.getSelectionItem().toString());
+                bundle.putString(Const.CONTACT_AREA, areaWheel.getSelectionItem());
+                bundle.putString(Const.CONTACT_STREET, streetWheel.getSelectionItem());
+                bundle.putString(Const.CONTACT_COMMUNITY, communityWheel.getSelectionItem());
                 EventBus.getDefault().post(new ConfirmDialogEvent(getDialog(), caller, bundle));
                 break;
         }

@@ -8,7 +8,8 @@ import java.util.ArrayList;
 
 /**
  * Created by kang on 16/8/4.
- * 模型-商品
+ * 模型 - 商品
+ * 模型 — 限量销售
  */
 
 public class Product implements Serializable {
@@ -58,6 +59,15 @@ public class Product implements Serializable {
     @SerializedName("product_banners")
     @Expose
     private ArrayList<ProductBanner> productBanners;
+
+    // 限量销售
+    @SerializedName("end_time")
+    @Expose
+    private long endTime;
+
+    @SerializedName("count_down")
+    @Expose
+    private long countDown;
 
 
     public int getId() {
@@ -146,5 +156,21 @@ public class Product implements Serializable {
 
     public void setSales(int sales) {
         this.sales = sales;
+    }
+
+    public long getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(long endTime) {
+        this.endTime = endTime;
+    }
+
+    public long getCountDown() {
+        return countDown;
+    }
+
+    public void setCountDown(long countDown) {
+        this.countDown = countDown;
     }
 }
