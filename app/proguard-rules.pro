@@ -17,7 +17,9 @@
 #}
 -keepattributes InnerClasses
 -dontoptimize
+-dontpreverify
 -optimizations optimization_filter
+
 # 支付相关混淆规则
 -dontwarn com.alipay.**
 -keep class com.alipay.** {*;}
@@ -43,3 +45,15 @@
 -keepclassmembers class * {
     @android.webkit.JavascriptInterface <methods>;
 }
+
+# 极光推送
+-dontwarn cn.jpush.**
+-keep class cn.jpush.** { *; }
+
+-dontwarn cn.jiguang.**
+-keep class cn.jiguang.** { *; }
+
+#==================gson && protobuf==========================
+-dontwarn com.google.**
+-keep class com.google.gson.** {*;}
+-keep class com.google.protobuf.** {*;}

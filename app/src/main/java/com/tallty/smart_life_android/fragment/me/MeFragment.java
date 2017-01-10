@@ -73,7 +73,6 @@ public class MeFragment extends BaseMainFragment {
     // 数据
     private User user = new User();
 
-
     public static MeFragment newInstance() {
         Bundle args = new Bundle();
 

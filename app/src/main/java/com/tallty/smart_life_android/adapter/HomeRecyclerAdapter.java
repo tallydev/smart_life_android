@@ -16,6 +16,7 @@ import com.tallty.smart_life_android.event.ShowSnackbarEvent;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.fragment.Common.GlobalAppointFragment;
 import com.tallty.smart_life_android.fragment.home.CommunityActivityFragment;
+import com.tallty.smart_life_android.fragment.home.GroupBuyFragment;
 import com.tallty.smart_life_android.fragment.home.HealthyCheckReport;
 import com.tallty.smart_life_android.fragment.home.HomeFragment;
 import com.tallty.smart_life_android.fragment.home.ProductCategoryFragment;
@@ -161,7 +162,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
         }
         // 限量发售
         else if (position == 6) {
-//            EventBus.getDefault().post(new StartBrotherEvent());
+            EventBus.getDefault().post(new StartBrotherEvent(GroupBuyFragment.newInstance()));
         }
         // 精品超市
         else if (position == 7) {
@@ -222,15 +223,13 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
                 }
                 // 健步达人
                 else if (tag == 1) {
-                    if (position == 0) {
+                    if (position == 0)
                         EventBus.getDefault().post(new StartBrotherEvent(SportFragment.newInstance("健步达人", HomeFragment.step)));
-                    }
                 }
                 // 社区活动
                 else if (tag == 2) {
-                    if (position == 0) {
+                    if (position == 0)
                         EventBus.getDefault().post(new StartBrotherEvent(CommunityActivityFragment.newInstance("社区活动")));
-                    }
                 }
                 // 智慧家居
                 else if (tag == 3) {
@@ -264,15 +263,13 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
                 }
                 // 限量发售
                 else if (tag == 6) {
-                    if (position == 0) {
-//                        EventBus.getDefault().post(new StartBrotherEvent());
-                    }
+                    if (position == 0)
+                        EventBus.getDefault().post(new StartBrotherEvent(GroupBuyFragment.newInstance()));
                 }
                 // 精品超市
                 else if (tag == 7) {
-                    if (position == 0) {
+                    if (position == 0)
                         EventBus.getDefault().post(new StartBrotherEvent(ProductCategoryFragment.newInstance("商品分类")));
-                    }
                 }
             }
         });

@@ -9,6 +9,8 @@ import com.squareup.leakcanary.LeakCanary;
 
 import java.util.List;
 
+import cn.jpush.android.api.JPushInterface;
+
 /**
  * Created by kang on 16/6/14.
  * Application
@@ -21,6 +23,9 @@ public class App extends Application{
     public void onCreate() {
         super.onCreate();
         sInstance = this;
+        // 极光推送
+        JPushInterface.setDebugMode(true);
+        JPushInterface.init(this);
         // 内存泄露测试
         LeakCanary.install(this);
         // 注册蒲公英Crash接口

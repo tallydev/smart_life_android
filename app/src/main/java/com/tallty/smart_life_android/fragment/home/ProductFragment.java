@@ -72,7 +72,7 @@ public class ProductFragment extends BaseBackFragment implements BaseQuickAdapte
 
     @Override
     protected void initView() {
-        recyclerView = getViewById(R.id.limit_sail_list);
+        recyclerView = getViewById(R.id.products_list);
     }
 
     @Override

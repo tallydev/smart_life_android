@@ -130,11 +130,18 @@ public interface DataAPI {
     @DELETE("cart_items/{id}")
     Call<CartItem> deleteCartItem(@Path("id") int id);
 
+    // 更新购物车数量
+    @FormUrlEncoded
+    @PUT("cart_items/{id}")
+    Call<CartItem> updateCartItemCount(@Path("id") int id,
+                                       @Field("cart_item[count]") int count);
+
     // *********************************************************************************************
     // 创建订单
     @FormUrlEncoded
     @POST("orders")
-    Call<Order> createOrder(@Field("cart_item_ids[]") List<Integer> cart_ids);
+    Call<Order> createOrder(@Field("cart_item_ids[]") List<Integer> cart_ids,
+                            @Field("order[contact_id]") int contact_id);
 
     // 获取订单列表
     @GET("orders")

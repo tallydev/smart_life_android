@@ -118,6 +118,7 @@ public class ConfirmOrder extends BaseBackFragment {
                     // 整理数据
                     int cache_contact_id = sharedPre.getInt(Const.CONTACT_ID, 0);
                     for (int i = 0; i < contacts.size(); i++)  {
+                        // 每次确认订单的显示常选地址、没有长选地址的话、显示默认地址
                         if (contacts.get(i).getId() == cache_contact_id) {
                             order_contact = contacts.get(i);
                             contacts.get(i).setChecked(true);
@@ -188,25 +189,25 @@ public class ConfirmOrder extends BaseBackFragment {
         for (int i = 0; i < selected_cart_items.size(); i++) {
             cart_ids.add(selected_cart_items.get(i).getId());
         }
-        Log.d(App.TAG, "商品列表"+ cart_ids);
 
-        Engine.authService(shared_token, shared_phone).createOrder(cart_ids).enqueue(new Callback<Order>() {
-            @Override
-            public void onResponse(Call<Order> call, Response<Order> response) {
-                hideProgress();
-                if (response.isSuccessful()) {
-                    start(PayOrder.newInstance(response.body()));
-                } else {
-                    showToast("创建失败");
+        Engine.authService(shared_token, shared_phone)
+            .createOrder(cart_ids, order_contact.getId())
+            .enqueue(new Callback<Order>() {
+                @Override
+                public void onResponse(Call<Order> call, Response<Order> response) {
+                    hideProgress();
+                    if (response.isSuccessful()) {
+                        start(PayOrder.newInstance(response.body()));
+                    } else {
+                        showToast("创建失败");
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<Order> call, Throwable t) {
-                hideProgress();
-                showToast(showString(R.string.network_error));
-                Log.d(App.TAG, t.getLocalizedMessage());
-            }
+                @Override
+                public void onFailure(Call<Order> call, Throwable t) {
+                    hideProgress();
+                    showToast(showString(R.string.network_error));
+                }
         });
     }
 

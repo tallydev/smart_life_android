@@ -23,6 +23,7 @@ import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
+import com.tallty.smart_life_android.model.Profile;
 import com.tallty.smart_life_android.model.User;
 
 import java.util.HashMap;
@@ -52,10 +53,10 @@ public class BindPhoneFragment extends BaseBackFragment {
     private boolean hasGot = false;
     private CountDownTimer timer;
 
-    public static BindPhoneFragment newInstance(String key, String value, int position) {
+    public static BindPhoneFragment newInstance(Profile profile, int position) {
         Bundle args = new Bundle();
-        args.putString("修改项", key);
-        args.putString("值", value);
+        args.putString("修改项", profile.getTitle());
+        args.putString("值", profile.getValue());
         args.putInt("位置", position);
         BindPhoneFragment fragment = new BindPhoneFragment();
         fragment.setArguments(args);
@@ -191,7 +192,7 @@ public class BindPhoneFragment extends BaseBackFragment {
                                 // 更新本地信息
                                 SharedPreferences.Editor editor = sharedPre.edit();
                                 editor.putString(Const.USER_PHONE, phone);
-                                editor.commit();
+                                editor.apply();
                                 // 回传给上个fragment
                                 Bundle bundle = new Bundle();
                                 bundle.putString(RESULT_DATA, phone);

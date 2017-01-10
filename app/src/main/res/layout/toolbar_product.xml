@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.AppBarLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:theme="@style/AppTheme.AppBarOverlay">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/toolbar_bg"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/AppTheme.NoActionBar.PopupOverlay"
+        app:titleTextAppearance="@style/Toolbar_TextAppearance_White">
+        <!--自定义控件-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <FrameLayout
+                android:id="@+id/cart_btn_ly"
+                android:layout_width="64dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true">
+                <ImageButton
+                    android:id="@+id/product_cart_btn"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="center"
+                    android:background="@color/transparent"
+                    android:cropToPadding="true"
+                    android:src="@mipmap/ic_cart"
+                    android:scaleType="centerCrop"/>
+                <TextView
+                    android:id="@+id/product_cart_count"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginRight="12dp"
+                    android:textSize="@dimen/dp_10"
+                    android:textColor="@color/white"
+                    android:background="@drawable/badge_bg"
+                    android:gravity="center"
+                    android:layout_gravity="right"
+                    android:text="12"/>
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/toolbar_title"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@color/toolbar_text_color"
+                android:layout_toLeftOf="@id/cart_btn_ly"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="hello"
+                android:textSize="@dimen/text_18"/>
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
+</android.support.design.widget.AppBarLayout>

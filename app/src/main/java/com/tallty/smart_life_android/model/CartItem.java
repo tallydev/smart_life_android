@@ -32,6 +32,11 @@ public class CartItem implements Serializable{
     @Expose
     private float originalPrice;
 
+    // 库存
+    @SerializedName ("stock")
+    @Expose
+    private int stock;
+
     @SerializedName ("count")
     @Expose
     private int count;
@@ -167,5 +172,13 @@ public class CartItem implements Serializable{
 
     public void setSales(int sales) {
         this.sales = sales;
+    }
+
+    public int getStock() {
+        return stock;
+    }
+
+    public void setStock(int stock) {
+        this.stock = stock;
     }
 }

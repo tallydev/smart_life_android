@@ -67,7 +67,9 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
     private String shared_phone;
     private CountDownTimer delayTimer;
     private int versionCode;
-    // 购物车数量
+    /**
+     * 购物车数量
+     **/
     public static int cartCount = 0;
     // 计步器相关
     private ServiceConnection conn;
@@ -403,7 +405,9 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
         });
     }
 
-    // 获取购物车数量
+    /**
+     * 获取购物车数量
+     **/
     private void getCartCount() {
         Engine.authService(shared_token, shared_phone)
             .getCartList(1, 100)

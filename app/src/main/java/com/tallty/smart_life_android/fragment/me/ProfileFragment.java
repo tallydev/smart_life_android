@@ -23,6 +23,8 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TextView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.pgyersdk.javabean.AppBean;
 import com.pgyersdk.update.PgyUpdateManager;
 import com.pgyersdk.update.UpdateManagerListener;
@@ -33,9 +35,9 @@ import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.activity.LoginActivity;
 import com.tallty.smart_life_android.adapter.ProfileListAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
-import com.tallty.smart_life_android.custom.RecyclerVIewItemTouchListener;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.event.TransferDataEvent;
+import com.tallty.smart_life_android.model.Profile;
 import com.tallty.smart_life_android.model.User;
 import com.tallty.smart_life_android.utils.ImageUtils;
 
@@ -66,28 +68,17 @@ public class ProfileFragment extends BaseBackFragment {
     private static final int TAKE_PICTURE = 1;
     private static final int CROP_SMALL_PICTURE = 2;
     private static Uri tempUri;
-    // 数据
+    // 列表
     private RecyclerView recyclerView;
     private ProfileListAdapter adapter;
-
+    // 数据
     private User user = new User();
-    private ArrayList<String> keys = new ArrayList<String>(){
-        {
-            add("头像");add("昵称");add("登录手机号");
-            add("出生日期");add("性别");add("个性签名");
-            add("身份证号");add("收货地址");add("变更绑定手机号");
-            add("设置支付密码");add("版本更新");add("退出当前账号");
-        }
-    };
-    private ArrayList<String> values = new ArrayList<String>(){
-        {
-            add("");add("");add("");
-            add("未设置");add("未设置");add("未设置");
-            add("");add("");add("");
-            add("");add("");add("");
-        }
-    };
-
+    private ArrayList<Profile> profiles = new ArrayList<>();
+    //                        {  0,      1,       2,          3,        4,       5,         6,         7,         8,         9};
+    private String[] titles = {"头像", "昵称", "登录手机号", "出生日期", "性别", "个性签名", "身份证号", "收货地址", "版本更新", "切换账号"};
+    private boolean[] hasGaps = {true, false,  true,       false,      false,  false,    false,     true,      false,     false};
+    private int[] itemTypes = {Profile.IMG, Profile.TEXT, Profile.TEXT, Profile.TEXT, Profile.TEXT,
+                                Profile.TEXT, Profile.TEXT, Profile.TEXT, Profile.TEXT, Profile.TEXT};
 
     public static ProfileFragment newInstance() {
         Bundle args = new Bundle();
@@ -127,54 +118,59 @@ public class ProfileFragment extends BaseBackFragment {
 
     @Override
     protected void afterAnimationLogic() {
-        values.set(10, getVersion());
+        tidyData();
         initList();
         getUserInfo();
-        setVersionInfo();
+    }
+
+    private void tidyData() {
+        for (int i = 0; i < titles.length; i++) {
+            Profile profile = new Profile(titles[i], "", itemTypes[i], hasGaps[i]);
+            profiles.add(profile);
+        }
     }
 
     private void initList() {
         recyclerView.setLayoutManager(new LinearLayoutManager(_mActivity));
-        adapter = new ProfileListAdapter(_mActivity, keys, values);
+        adapter = new ProfileListAdapter(profiles);
         recyclerView.setAdapter(adapter);
-        recyclerView.addOnItemTouchListener(new RecyclerVIewItemTouchListener(recyclerView) {
+        recyclerView.addOnItemTouchListener(new OnItemClickListener() {
             @Override
-            public void onItemClick(RecyclerView.ViewHolder vh, final int position) {
-                if (position == 0){
-                    // 修改头像
-                    processPhoto();
-                } else if (position == 2) {
-                    // 登录手机号
-                    showToast("暂不支持修改");
-                } else if (position == 3) {
-                    // 修改生日
-                    processBirth(position);
-                } else if (position == 4) {
-                    // 修改性别
-                    processSex(position);
-                } else if (position == 7) {
-                    EventBus.getDefault().post(
-                            new StartBrotherEvent(ManageAddresses.newInstance()));
-                } else if (position == 8) {
-                    // 跳转绑定手机页面
-                    showToast("暂不支持修改");
-//                    startForResult(BindPhoneFragment.newInstance(
-//                            keys.get(position), values.get(position), position), REQ_CODE);
-                } else if (position == 10) {
-                    updateVersion();
-                } else if (position == 11) {
-                    // 用户退出
-                    processSignOut();
-                } else {
-                    // 跳转修改页面(昵称、个性签名、身份证号、支付密码)
-                    startForResult(ChangeProfileFragment.newInstance(
-                            keys.get(position), values.get(position), position), REQ_CODE);
+            public void onSimpleItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
+                switch (i) {
+                    case 0:
+                        // 修改头像
+                        processPhoto();
+                        break;
+                    case 2:
+                        // 绑定新手机号
+                        startForResult(BindPhoneFragment.newInstance(profiles.get(i), i), REQ_CODE);
+                        break;
+                    case 3:
+                        // 修改生日
+                        processBirth(i);
+                        break;
+                    case 4:
+                        // 修改性别
+                        processSex(i);
+                        break;
+                    case 7:
+                        // 收货地址
+                        EventBus.getDefault().post(new StartBrotherEvent(ManageAddresses.newInstance()));
+                        break;
+                    case 8:
+                        // 检查版本
+                        updateVersion();
+                        break;
+                    case 9:
+                        // 注销
+                        processSignOut();
+                        break;
+                    default:
+                        // 跳转修改页面(昵称、个性签名、身份证号)
+                        startForResult(ChangeProfileFragment.newInstance(profiles.get(i), i), REQ_CODE);
+                        break;
                 }
-            }
-
-            @Override
-            public void onItemLongPress(RecyclerView.ViewHolder vh, int position) {
-
             }
         });
     }
@@ -190,15 +186,16 @@ public class ProfileFragment extends BaseBackFragment {
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccessful()) {
                     user = response.body();
-                    values.set(0, user.getAvatar());
-                    values.set(1, user.getNickname());
-                    values.set(2, user.getPhone());
-                    values.set(3, user.getBirth());
-                    values.set(4, user.getSex());
-                    values.set(5, user.getSlogan());
-                    values.set(6, user.getIdCard());
-                    values.set(8, user.getPhone());
+                    profiles.get(0).setValue(user.getAvatar());
+                    profiles.get(1).setValue(user.getNickname());
+                    profiles.get(2).setValue(user.getPhone());
+                    profiles.get(3).setValue(user.getBirth());
+                    profiles.get(4).setValue(user.getSex());
+                    profiles.get(5).setValue(user.getSlogan());
+                    profiles.get(6).setValue(user.getIdCard());
+                    profiles.get(8).setValue(getVersion());
                     adapter.notifyDataSetChanged();
+                    setVersionInfo();
                 } else {
                     showToast(showString(R.string.response_error));
                 }
@@ -221,8 +218,8 @@ public class ProfileFragment extends BaseBackFragment {
 
             @Override
             public void onUpdateAvailable(String s) {
-                values.set(10, "发现新版本");
-                adapter.notifyItemChanged(10);
+                profiles.get(8).setValue("发现新版本");
+                adapter.notifyItemChanged(8);
             }
         });
     }
@@ -235,8 +232,8 @@ public class ProfileFragment extends BaseBackFragment {
         super.onFragmentPop();
         // 给<账户管理>传递对象
         Bundle bundle = new Bundle();
-        bundle.putString(Const.USER_AVATAR, values.get(0));
-        bundle.putString(Const.USER_NICKNAME, values.get(1));
+        bundle.putString(Const.USER_AVATAR, profiles.get(0).getValue());
+        bundle.putString(Const.USER_NICKNAME, profiles.get(1).getValue());
         EventBus.getDefault().post(new TransferDataEvent(bundle, "ProfileFragment"));
     }
 
@@ -397,7 +394,7 @@ public class ProfileFragment extends BaseBackFragment {
                     editor.putString(Const.USER_AVATAR, response.body().getAvatar());
                     editor.apply();
                     // 更新UI
-                    values.set(0, file.getAbsolutePath());
+                    profiles.get(0).setValue(file.getAbsolutePath());
                     adapter.notifyItemChanged(0);
                     hideProgress();
                     showToast("上传成功");
@@ -483,7 +480,6 @@ public class ProfileFragment extends BaseBackFragment {
      */
     private void updateUserInfoDialog(final String value, final int position, String tag) {
         showProgress("修改中...");
-        // TODO: 16/8/3 后台暂无字段 ,模拟更新
         // 更新字段
         Map<String, String> fields = new HashMap<>();
         if ("生日".equals(tag)) {
@@ -501,7 +497,7 @@ public class ProfileFragment extends BaseBackFragment {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.code() == 200) {
-                    values.set(position, value);
+                    profiles.get(position).setValue(value);
                     adapter.notifyItemChanged(position);
                     hideProgress();
                 } else {
@@ -528,7 +524,7 @@ public class ProfileFragment extends BaseBackFragment {
             // 显示
             String text = data.getString(RESULT_DATA);
             int position = data.getInt(RESULT_POSITION);
-            values.set(position, text);
+            profiles.get(position).setValue(text);
             adapter.notifyItemChanged(position);
         }
     }

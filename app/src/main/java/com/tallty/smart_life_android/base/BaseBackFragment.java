@@ -271,7 +271,8 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
         if (progressDialog != null) {
             if (progressDialog.isShowing()) {
                 setTimerCancel();
-                progressDialog.dismiss();
+                if (progressDialog.isShowing())
+                    progressDialog.dismiss();
             }
         }
     }

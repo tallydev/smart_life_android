@@ -6,7 +6,7 @@
     android:fitsSystemWindows="false"
     android:background="@color/app_bg">
 
-    <include layout="@layout/toolbar"/>
+    <include layout="@layout/toolbar_product"/>
 
     <!--主体部分-->
     <RelativeLayout
@@ -39,7 +39,6 @@
                     android:layout_height="20dp"
                     android:background="@mipmap/ic_add"
                     android:layout_marginLeft="10dp"/>
-
                 <TextView
                     android:id="@+id/product_count"
                     android:layout_width="40dp"
@@ -49,7 +48,6 @@
                     android:textSize="@dimen/text_16"
                     android:textStyle="bold"
                     android:text="1"/>
-
                 <Button
                     android:id="@+id/reduce"
                     android:layout_width="20dp"

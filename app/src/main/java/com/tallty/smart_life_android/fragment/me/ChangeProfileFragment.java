@@ -14,6 +14,7 @@ import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
+import com.tallty.smart_life_android.model.Profile;
 import com.tallty.smart_life_android.model.User;
 
 import java.util.HashMap;
@@ -37,10 +38,10 @@ public class ChangeProfileFragment extends BaseBackFragment {
     private TextView change_tips;
     private Button change_btn;
 
-    public static ChangeProfileFragment newInstance(String key, String value, int position) {
+    public static ChangeProfileFragment newInstance(Profile profile, int position) {
         Bundle args = new Bundle();
-        args.putString("修改项", key);
-        args.putString("值", value);
+        args.putString("修改项", profile.getTitle());
+        args.putString("值", profile.getValue());
         args.putInt("位置", position);
         ChangeProfileFragment fragment = new ChangeProfileFragment();
         fragment.setArguments(args);

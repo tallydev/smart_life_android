@@ -129,7 +129,8 @@ public abstract class BaseMainFragment extends BaseFragment implements View.OnCl
         if (progressDialog != null) {
             if (progressDialog.isShowing()) {
                 setTimerCancel();
-                progressDialog.dismiss();
+                if (progressDialog.isShowing())
+                    progressDialog.dismiss();
             }
         }
     }

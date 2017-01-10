@@ -1,8 +1,10 @@
 package com.tallty.smart_life_android.fragment.cart;
 
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -27,6 +29,7 @@ import com.tallty.smart_life_android.event.TabReselectedEvent;
 import com.tallty.smart_life_android.event.TabSelectedEvent;
 import com.tallty.smart_life_android.event.TransferDataEvent;
 import com.tallty.smart_life_android.fragment.MainFragment;
+import com.tallty.smart_life_android.fragment.home.HomeFragment;
 import com.tallty.smart_life_android.fragment.home.ProductShowFragment;
 import com.tallty.smart_life_android.model.CartItem;
 import com.tallty.smart_life_android.model.CartList;
@@ -46,15 +49,20 @@ import retrofit2.Response;
  * Created by kang on 16/6/20.
  * 购物车
  */
-public class CartFragment extends BaseMainFragment implements BaseQuickAdapter.RequestLoadMoreListener {
+public class CartFragment extends BaseMainFragment implements
+        BaseQuickAdapter.RequestLoadMoreListener,
+        SwipeRefreshLayout.OnRefreshListener {
     private String shared_token;
     private String shared_phone;
-
+    // 下拉刷新控制
+    private boolean isRefresh = false;
+    // UI
     private TextView pay;
     private RecyclerView recyclerView;
     private CartAdapter adapter;
     private CheckBox select_all_btn;
     private TextView total_price_text;
+    private SwipeRefreshLayout refreshLayout;
     // 数据
     private ArrayList<CartItem> cartItems = new ArrayList<>();
     private int current_page = 1;
@@ -90,6 +98,7 @@ public class CartFragment extends BaseMainFragment implements BaseQuickAdapter.R
         recyclerView = getViewById(R.id.cart_list);
         select_all_btn = getViewById(R.id.select_all_btn);
         total_price_text = getViewById(R.id.total_price);
+        refreshLayout = getViewById(R.id.cart_list_fresh_layout);
     }
 
     @Override
@@ -100,6 +109,7 @@ public class CartFragment extends BaseMainFragment implements BaseQuickAdapter.R
         select_all_btn.setOnClickListener(this);
         total_price_text.setText("￥ 0.0");
         initList();
+        initRefreshLayout();
         getCartList();
     }
 
@@ -128,6 +138,22 @@ public class CartFragment extends BaseMainFragment implements BaseQuickAdapter.R
         });
     }
 
+    private void initRefreshLayout() {
+        //设置下拉出现小圆圈是否是缩放出现，出现的位置，最大的下拉位置
+        refreshLayout.setProgressViewOffset(true, 0, 150);
+        //设置下拉圆圈的大小，两个值 LARGE， DEFAULT
+        refreshLayout.setSize(SwipeRefreshLayout.DEFAULT);
+        refreshLayout.setColorSchemeColors(showColor(R.color.orange), Color.GREEN, Color.RED, Color.YELLOW);
+        // 设置手指在屏幕下拉多少距离会触发下拉刷新
+        refreshLayout.setDistanceToTriggerSync(100);
+        // 设定下拉圆圈的背景
+        refreshLayout.setProgressBackgroundColorSchemeColor(showColor(R.color.white));
+        // 设置圆圈的大小
+        refreshLayout.setSize(SwipeRefreshLayout.DEFAULT);
+        //设置下拉刷新的监听
+        refreshLayout.setOnRefreshListener(this);
+    }
+
     private void getCartList() {
         Engine.authService(shared_token, shared_phone)
             .getCartList(current_page, per_page)
@@ -138,11 +164,23 @@ public class CartFragment extends BaseMainFragment implements BaseQuickAdapter.R
                         CartList cartList = response.body();
                         current_page = response.body().getCurrentPage();
                         total_pages = response.body().getTotalPages();
-                        if (cartItems.size() != cartList.getCartItems().size()) {
-                            cartItems.clear();
-                            cartItems.addAll(cartList.getCartItems());
-                            adapter.notifyDataSetChanged();
+                        cartItems.clear();
+                        cartItems.addAll(cartList.getCartItems());
+                        // 判断是否全选
+                        if (select_all_btn.isChecked()) {
+                            for (CartItem item : cartItems) {
+                                item.setChecked(true);
+                            }
                         }
+                        adapter.notifyDataSetChanged();
+                        // 更新首页记录的购物车数量
+                        HomeFragment.cartCount = cartItems.size();
+                        // 下来刷新控制
+                        if (isRefresh) {
+                            refreshLayout.setRefreshing(false);
+                            isRefresh = false;
+                        }
+
                     } else {
                         showToast(showString(R.string.response_error));
                         try {
@@ -234,6 +272,35 @@ public class CartFragment extends BaseMainFragment implements BaseQuickAdapter.R
     }
 
     /**
+     * 更新购物车条目数量
+     */
+    private void updateCartItemCount(final int position, final CartItem item) {
+        showProgress("正在更新...");
+        Engine.authService(shared_token, shared_phone)
+            .updateCartItemCount(cartItems.get(position).getId(), item.getCount())
+            .enqueue(new Callback<CartItem>() {
+                @Override
+                public void onResponse(Call<CartItem> call, Response<CartItem> response) {
+                    hideProgress();
+                    if (response.isSuccessful()) {
+                        cartItems.set(position, item);
+                        adapter.notifyItemChanged(position);
+                        // 重新计算总价
+                        processUpdateCartItemLogic();
+                    } else {
+                        showToast("更新数量失败");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<CartItem> call, Throwable t) {
+                    hideProgress();
+                    showToast(showString(R.string.network_error));
+                }
+            });
+    }
+
+    /**
      * 购物车列表数据发生改变
      */
     private void setCartListState(ArrayList<CartItem> cartItems){
@@ -261,6 +328,15 @@ public class CartFragment extends BaseMainFragment implements BaseQuickAdapter.R
                 processSelectAll();
                 break;
         }
+    }
+
+    /**
+     * 下拉刷新
+     */
+    @Override
+    public void onRefresh() {
+        isRefresh = true;
+        getCartList();
     }
 
     // 结算
@@ -304,13 +380,8 @@ public class CartFragment extends BaseMainFragment implements BaseQuickAdapter.R
         total_price_text.setText("￥ " + ArithUtils.round(total));
     }
 
-    /**
-     * 订阅事件: CartUpdateItem(int position, CartItem cartItem)
-     */
-    @Subscribe
-    public void onCartUpdateItem(CartUpdateItem event){
-        cartItems.set(event.position, event.cartItem);
-        adapter.notifyItemChanged(event.position);
+    // 更新购物车条目后的【全选按钮】【合计】逻辑
+    private void processUpdateCartItemLogic() {
         // 处理【合计】【全选】逻辑
         float total = 0.0f;
         isSelectAll = true;
@@ -327,18 +398,37 @@ public class CartFragment extends BaseMainFragment implements BaseQuickAdapter.R
         select_all_btn.setChecked(isSelectAll);
     }
 
-    // Tab被重复点击时执行的操作
+    /**
+     * 订阅事件: CartUpdateItem(int position, CartItem cartItem)
+     */
+    @Subscribe
+    public void onCartUpdateItem(CartUpdateItem event){
+        if ("check".equals(event.operation)) {
+            // 选中直接更新列表
+            cartItems.set(event.position, event.cartItem);
+            adapter.notifyItemChanged(event.position);
+            processUpdateCartItemLogic();
+        } else {
+            // 如果是数量更新, 调用接口
+            updateCartItemCount(event.position, event.cartItem);
+        }
+    }
+
+    /**
+     * Tab被重复点击时执行的操作
+     */
     @Subscribe
     public void onTabReselectedEvent(TabReselectedEvent event) {
-        if (event.position == MainFragment.CART)
+        if (event.position == MainFragment.CART) {
             Log.d(App.TAG, "购物车被重复点击了");
+        }
     }
 
     // tab页面被选中
     @Subscribe
     public void onTabSelectedEvent(TabSelectedEvent event) {
         if (event.getPosition() == 3) {
-            getCartList();
+
         }
     }
 

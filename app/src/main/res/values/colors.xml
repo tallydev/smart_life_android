@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#FFFFFF</color>
+    <color name="colorPrimary">#ffffff</color>
     <color name="textColorPrimary">#FFFFFF</color>
     <color name="colorPrimaryDark">#FF8000</color>
     <color name="colorAccent">#FF8000</color>
 
     <!--通用背景色-->
     <color name="app_bg">#eeeeee</color>
-    <color name="light_app_bg">#efefef</color>
+    <color name="light_app_bg">#FAFAFA</color>
     <!--toolbar-->
     <color name="toolbar_text_color">#FFFFFF</color>
     <color name="toolbar_bg">#FF8000</color>
@@ -26,13 +26,14 @@
     <color name="alpha_white">#60ffffff</color>
     <color name="black">#000000</color>
     <color name="orange">#ff8000</color>
+    <color name="disable_orange">#f4993d</color>
     <color name="light_orange">#F3C4A6</color>
     <color name="yellow">#F8EA42</color>
     <color name="gray">#cccccc</color>
     <color name="gray_text">#aaaaaa</color>
     <color name="item_gray_bg">#F3F4F5</color>
     <color name="border">#999999</color>
-
+    <color name="red">#F3393D</color>
     <!--首页-->
     <color name="home_button_color">#333333</color>
     <color name="home_steps_bg">#a0000000</color>

@@ -33,7 +33,8 @@ public class CartAdapter extends BaseQuickAdapter<CartItem, BaseViewHolder>{
 
     @Override
     protected void convert(final BaseViewHolder baseViewHolder, final CartItem cartItem) {
-        final int count = cartItem.getCount();
+        // 库存小于已选数量, 显示库存数量
+        final int count = cartItem.getCount() > cartItem.getStock() ? cartItem.getStock() : cartItem.getCount();
         final int position = baseViewHolder.getAdapterPosition();
         Button addBtn = baseViewHolder.getView(R.id.cart_item_add);
         Button reduceBtn = baseViewHolder.getView(R.id.cart_item_reduce);
@@ -53,15 +54,19 @@ public class CartAdapter extends BaseQuickAdapter<CartItem, BaseViewHolder>{
             @Override
             public void onClick(View v) {
                 cartItem.setChecked(checkBox.isChecked());
-                EventBus.getDefault().post(new CartUpdateItem(position, cartItem));
+                EventBus.getDefault().post(new CartUpdateItem(position, cartItem, "check"));
             }
         });
         // 数量操作
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cartItem.setCount(count+1);
-                EventBus.getDefault().post(new CartUpdateItem(position, cartItem));
+                if (count + 1 > cartItem.getStock()) {
+                    ToastUtil.show("库存不足");
+                } else {
+                    cartItem.setCount(count+1);
+                    EventBus.getDefault().post(new CartUpdateItem(position, cartItem, "add"));
+                }
             }
         });
         reduceBtn.setOnClickListener(new View.OnClickListener() {
@@ -69,7 +74,7 @@ public class CartAdapter extends BaseQuickAdapter<CartItem, BaseViewHolder>{
             public void onClick(View v) {
                 if (count > 1){
                     cartItem.setCount(count-1);
-                    EventBus.getDefault().post(new CartUpdateItem(position, cartItem));
+                    EventBus.getDefault().post(new CartUpdateItem(position, cartItem, "reduce"));
                 }else{
                     ToastUtil.show("真的不能再少啦");
                 }
@@ -96,6 +101,19 @@ public class CartAdapter extends BaseQuickAdapter<CartItem, BaseViewHolder>{
                 .setVisible(R.id.cart_item_total, false)
                 .setVisible(R.id.cart_item_count, false)
                 .setText(R.id.cart_item_price, cartItem.getStateAlias());
+        }
+
+        // 处理库存不足商品
+        if (cartItem.getStock() == 0) {
+            checkBox.setClickable(false);
+            checkBox.setChecked(false);
+            addBtn.setVisibility(View.INVISIBLE);
+            reduceBtn.setVisibility(View.INVISIBLE);
+            baseViewHolder
+                    .setBackgroundColor(R.id.cart_item_layout, ContextCompat.getColor(mContext, R.color.item_gray_bg))
+                    .setVisible(R.id.cart_item_total, false)
+                    .setVisible(R.id.cart_item_count, false)
+                    .setText(R.id.cart_item_price, "库存不足");
         }
     }
 }
