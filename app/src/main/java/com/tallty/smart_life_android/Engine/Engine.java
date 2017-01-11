@@ -2,6 +2,8 @@ package com.tallty.smart_life_android.Engine;
 
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.tallty.smart_life_android.App;
 
 import java.io.IOException;
@@ -64,10 +66,14 @@ public class Engine {
             }
         }).build();
 
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
         // 创建Retrofit实例
         authService = new Retrofit.Builder()
                 .baseUrl(baseUrl)
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .client(client)
                 .build()
                 .create(DataAPI.class);
@@ -85,9 +91,13 @@ public class Engine {
             }
         }).build();
 
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
         noAuthService = new Retrofit.Builder()
                 .baseUrl(baseUrl)
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .client(client)
                 .build()
                 .create(DataAPI.class);

@@ -2,6 +2,7 @@ package com.tallty.smart_life_android.fragment.home;
 
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
@@ -23,17 +24,21 @@ import android.widget.TextView;
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
+import com.google.gson.JsonElement;
+import com.google.gson.stream.JsonReader;
 import com.pgyersdk.update.PgyUpdateManager;
 import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.HomeRecyclerAdapter;
+import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.base.BaseMainFragment;
 import com.tallty.smart_life_android.custom.MyRecyclerView;
 import com.tallty.smart_life_android.event.ShowSnackbarEvent;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.event.TabReselectedEvent;
+import com.tallty.smart_life_android.event.TransferDataEvent;
 import com.tallty.smart_life_android.fragment.Common.GlobalAppointFragment;
 import com.tallty.smart_life_android.fragment.MainFragment;
 import com.tallty.smart_life_android.holder.HomeViewHolder;
@@ -49,11 +54,11 @@ import com.tallty.smart_life_android.utils.GlobalUtils;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import cn.jpush.android.api.JPushInterface;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -187,6 +192,35 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
         PgyUpdateManager.register(getActivity());
         // 获取购物车数量
         getCartCount();
+        // 绑定用户到【电子猫眼】服务, 以获取监控推送
+        bindUserToNotification();
+    }
+
+    /**
+     * 绑定电子猫眼监控服务
+     */
+    private void bindUserToNotification() {
+        String registrationID = JPushInterface.getRegistrationID(_mActivity);
+        if (registrationID.isEmpty()) {
+            showToast("推送服务启动失败");
+            JPushInterface.init(_mActivity);
+            return;
+        }
+        Engine.noAuthService().bindNotification(shared_phone, registrationID)
+            .enqueue(new Callback<JsonElement>() {
+                @Override
+                public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+                    if (response.isSuccessful()) {
+                        Log.i(App.TAG, "绑定电子猫眼成功");
+                    } else
+                        Log.i(App.TAG, "绑定电子猫眼失败");
+                }
+
+                @Override
+                public void onFailure(Call<JsonElement> call, Throwable t) {
+                    Log.i(App.TAG, "绑定电子猫眼错误");
+                }
+        });
     }
 
     /**
@@ -264,7 +298,6 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
      * 时间整点业务, 处理步数
      */
     private void processClockStep() {
-
         String time = GlobalUtils.getNowTime();
         String hour = time.substring(0, 2);
         String minute = time.substring(3);
@@ -631,6 +664,8 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
             delayTimer.onFinish();
     }
 
+
+    //  ====================== 订阅事件 ========================
     @Subscribe
     public void onTabSelectedEvent(TabReselectedEvent event) {
         // Tab Home按钮被重复点击时执行的操作
@@ -647,5 +682,26 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
 
             }
         });
+    }
+
+    /**
+     * 显示推送详情
+     * @param event
+     */
+    @Subscribe
+    public void onShowNotification(final TransferDataEvent event) {
+        if (Const.JPUSH.equals(event.tag)) {
+            confirmDialog("电子猫眼发现可疑迹象!", "查看详情", "忽略", new BaseBackFragment.OnConfirmDialogListener() {
+                @Override
+                public void onConfirm(DialogInterface dialog, int which) {
+                    EventBus.getDefault().post(new StartBrotherEvent(ReceivePushFragment.newInstance(event.bundle)));
+                }
+
+                @Override
+                public void onCancel(DialogInterface dialog, int which) {
+
+                }
+            });
+        }
     }
 }

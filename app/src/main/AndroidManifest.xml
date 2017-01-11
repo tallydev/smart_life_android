@@ -56,16 +56,15 @@
         <activity
             android:name=".activity.LoadingActivity"
             android:screenOrientation="portrait">
-
-        </activity>
-        <activity
-            android:name=".activity.MainActivity"
-            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.MainActivity"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".activity.LoginActivity"
@@ -116,13 +115,13 @@
             </intent-filter>
         </service>
 
-        <receiver android:name=".service.BootCompleteReceiver">
+        <receiver android:name=".receiver.BootCompleteReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".service.NotificationReceiver"
+            android:name=".receiver.JPushReceiver"
             android:enabled="true">
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.REGISTRATION"/>
@@ -133,6 +132,7 @@
                 <category android:name="com.tallty.smart_life_android"/>
             </intent-filter>
         </receiver>
+
     </application>
 
 </manifest>

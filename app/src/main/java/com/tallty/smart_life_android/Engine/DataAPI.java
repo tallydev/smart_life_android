@@ -94,6 +94,13 @@ public interface DataAPI {
     Call<User> getUser();
 
     // *********************************************************************************************
+    // 用户绑定推送服务
+    @FormUrlEncoded
+    @POST("http://wx.igridtotalsolution.com:8080/smartring/service/BaseService.ashx?action=SetRegID")
+    Call<JsonElement> bindNotification(@Field("devid") String user_phone,
+                                       @Field("regapk") String jpush_id);
+
+    // *********************************************************************************************
     // 商品分类
     @GET("product_sorts")
     Call<Categories> getProductCategories();

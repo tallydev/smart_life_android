@@ -91,4 +91,9 @@ public class Const {
     public static final String DELETE_ORDER = "delete_order";
     public static final String SERVICE_ORDER = "service_order";
     public static final String PAY_ORDER = "pay_order";
+
+    /**
+     * 推送相关
+     */
+    public static final String JPUSH = "jpush_notification";
 }
