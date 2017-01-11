@@ -54,7 +54,7 @@ public class ProductCategoryFragment extends BaseBackFragment {
 
     @Override
     public int getFragmentLayout() {
-        return R.layout.fragment_market_category;
+        return R.layout.fragment_common_list;
     }
 
     @Override
@@ -64,7 +64,7 @@ public class ProductCategoryFragment extends BaseBackFragment {
 
     @Override
     protected void initView() {
-        recyclerView = getViewById(R.id.categories_list);
+        recyclerView = getViewById(R.id.common_list);
     }
 
     @Override

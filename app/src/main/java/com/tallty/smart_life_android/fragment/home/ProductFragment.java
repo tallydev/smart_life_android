@@ -62,7 +62,7 @@ public class ProductFragment extends BaseBackFragment implements BaseQuickAdapte
 
     @Override
     public int getFragmentLayout() {
-        return R.layout.fragment_product;
+        return R.layout.fragment_common_list;
     }
 
     @Override
@@ -72,7 +72,7 @@ public class ProductFragment extends BaseBackFragment implements BaseQuickAdapte
 
     @Override
     protected void initView() {
-        recyclerView = getViewById(R.id.products_list);
+        recyclerView = getViewById(R.id.common_list);
     }
 
     @Override

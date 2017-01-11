@@ -1,24 +1,20 @@
+<!--通用单列表布局-->
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:fitsSystemWindows="false"
-    android:background="@color/white">
+    android:background="@color/app_bg">
 
     <include layout="@layout/toolbar"/>
 
     <!--主体部分-->
-    <LinearLayout
+    <android.support.v7.widget.RecyclerView
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:id="@+id/common_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="4dp">
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/categories_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scrollbars="none"/>
-    </LinearLayout>
+        android:scrollbars="none"/>
 
 </android.support.design.widget.CoordinatorLayout>

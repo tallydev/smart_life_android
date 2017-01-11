@@ -57,7 +57,7 @@ public class CommunityActivityFragment extends BaseBackFragment {
 
     @Override
     public int getFragmentLayout() {
-        return R.layout.fragment_community_activity;
+        return R.layout.fragment_common_list;
     }
 
     @Override
@@ -67,7 +67,7 @@ public class CommunityActivityFragment extends BaseBackFragment {
 
     @Override
     protected void initView() {
-        recyclerView = getViewById(R.id.activities_list);
+        recyclerView = getViewById(R.id.common_list);
     }
 
     @Override

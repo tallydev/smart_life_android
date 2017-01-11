@@ -74,7 +74,7 @@ public class MyOrders extends BaseBackFragment implements BaseQuickAdapter.Reque
 
     @Override
     public int getFragmentLayout() {
-        return R.layout.fragment_my_orders;
+        return R.layout.fragment_common_list;
     }
 
     @Override
@@ -85,7 +85,7 @@ public class MyOrders extends BaseBackFragment implements BaseQuickAdapter.Reque
     @Override
     protected void initView() {
         EventBus.getDefault().register(this);
-        recyclerView = getViewById(R.id.my_orders_list);
+        recyclerView = getViewById(R.id.common_list);
     }
 
     @Override

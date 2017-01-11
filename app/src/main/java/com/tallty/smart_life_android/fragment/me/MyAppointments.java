@@ -59,7 +59,7 @@ public class MyAppointments extends BaseBackFragment implements BaseQuickAdapter
 
     @Override
     public int getFragmentLayout() {
-        return R.layout.fragment_my_appointments;
+        return R.layout.fragment_common_list;
     }
 
     @Override
@@ -69,7 +69,7 @@ public class MyAppointments extends BaseBackFragment implements BaseQuickAdapter
 
     @Override
     protected void initView() {
-        recyclerView = getViewById(R.id.appointments_list);
+        recyclerView = getViewById(R.id.common_list);
     }
 
     @Override

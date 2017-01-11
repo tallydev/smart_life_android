@@ -61,7 +61,7 @@ public class GroupBuyFragment extends BaseBackFragment implements
 
     @Override
     public int getFragmentLayout() {
-        return R.layout.fragment_group_buy;
+        return R.layout.fragment_common_refresh_list;
     }
 
     @Override
@@ -71,8 +71,8 @@ public class GroupBuyFragment extends BaseBackFragment implements
 
     @Override
     protected void initView() {
-        recyclerView = getViewById(R.id.group_buy_list);
-        refreshLayout = getViewById(R.id.group_buy_refresh_layout);
+        recyclerView = getViewById(R.id.common_refresh_list);
+        refreshLayout = getViewById(R.id.common_list_refresh_layout);
     }
 
     @Override
