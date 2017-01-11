@@ -81,7 +81,7 @@ public class BindPhoneFragment extends BaseBackFragment {
 
     @Override
     public void initToolbar(Toolbar toolbar, TextView toolbar_title) {
-        toolbar_title.setText(""+key);
+        toolbar_title.setText("修改登录手机号");
     }
 
     @Override
@@ -126,13 +126,13 @@ public class BindPhoneFragment extends BaseBackFragment {
                     startActivity(intent);
                 } else {
                     setSnackBar(callService,
-                            "应用无拨打电话权限,请设置应用权限后尝试",
-                            100000, R.layout.snackbar_icon, new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
+                        "应用无拨打电话权限,请设置应用权限后尝试",
+                        100000, R.layout.snackbar_icon, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
 
-                                }
-                            });
+                            }
+                        });
                 }
                 break;
             case R.id.get_code_btn:

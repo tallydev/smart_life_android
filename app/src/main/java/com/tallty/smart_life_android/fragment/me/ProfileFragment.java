@@ -160,7 +160,7 @@ public class ProfileFragment extends BaseBackFragment {
                         processSignOut();
                         break;
                     case "绑定社区":
-                        bindCommunity();
+                        startForResult(BindCommunityFragment.newInstance(i), REQ_CODE);
                         break;
                     default:
                         // 跳转修改页面(昵称、个性签名、身份证号、小区名称)
@@ -169,13 +169,6 @@ public class ProfileFragment extends BaseBackFragment {
                 }
             }
         });
-    }
-
-    /**
-     * 绑定社区
-     */
-    private void bindCommunity() {
-
     }
 
     /**
