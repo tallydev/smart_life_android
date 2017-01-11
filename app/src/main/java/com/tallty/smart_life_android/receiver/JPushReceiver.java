@@ -77,6 +77,16 @@ public class JPushReceiver extends BroadcastReceiver {
         Log.d(TAG, "用户点击打开了通知");
         // 通知首页, 打开通知显示页面
         EventBus.getDefault().post(new TransferDataEvent(bundle, Const.JPUSH));
+// TODO: 2017/1/11 封装成bundle ,展示详情
+//        String[] images = {
+//                "http://wx.igridtotalsolution.com:8080/smartring/uploads/sign/20170103093102_6518_20170103093059016/20170103093057736.jpg",
+//                "http://wx.igridtotalsolution.com:8080/smartring/uploads/sign/20170103093102_6518_20170103093059016/20170103093058376.jpg",
+//                "http://wx.igridtotalsolution.com:8080/smartring/uploads/sign/20170103093102_6518_20170103093059016/20170103093059016.jpg"
+//        };
+//        Bundle bundle = new Bundle();
+//        bundle.putString(Const.PUSH_TITLE, "门铃告警");
+//        bundle.putString(Const.PUSH_TIME, "2016-08-01T17:29:22.000+08:00");
+//        bundle.putStringArray(Const.PUSH_IMAGES, images);
     }
 
     private void handleExtraMessage(Bundle bundle) {

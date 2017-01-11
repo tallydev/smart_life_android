@@ -152,18 +152,7 @@ public class ProfileFragment extends BaseBackFragment {
                         processSex(i);
                         break;
                     case "收货地址":
-                        String[] images = {
-                                "http://wx.igridtotalsolution.com:8080/smartring/uploads/sign/20170103093102_6518_20170103093059016/20170103093057736.jpg",
-                                "http://wx.igridtotalsolution.com:8080/smartring/uploads/sign/20170103093102_6518_20170103093059016/20170103093058376.jpg",
-                                "http://wx.igridtotalsolution.com:8080/smartring/uploads/sign/20170103093102_6518_20170103093059016/20170103093059016.jpg"
-                        };
-                        Bundle bundle = new Bundle();
-                        bundle.putString(Const.PUSH_TITLE, "门铃告警");
-                        bundle.putString(Const.PUSH_TIME, "2016-08-01T17:29:22.000+08:00");
-                        bundle.putStringArray(Const.PUSH_IMAGES, images);
-
-//                        EventBus.getDefault().post(new StartBrotherEvent(ManageAddresses.newInstance()));
-                        EventBus.getDefault().post(new StartBrotherEvent(ReceivePushFragment.newInstance(bundle)));
+                        EventBus.getDefault().post(new StartBrotherEvent(ManageAddresses.newInstance()));
                         break;
                     case "版本更新":
                         updateVersion();
