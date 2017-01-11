@@ -74,11 +74,11 @@ public class ProfileFragment extends BaseBackFragment {
     // 数据
     private User user = new User();
     private ArrayList<Profile> profiles = new ArrayList<>();
-    //                        {  0,      1,       2,          3,        4,       5,         6,         7,         8,         9};
-    private String[] titles = {"头像", "昵称", "登录手机号", "出生日期", "性别", "个性签名", "身份证号", "收货地址", "版本更新", "切换账号"};
-    private boolean[] hasGaps = {true, false,  true,       false,      false,  false,    false,     true,      false,     false};
+    private String[] titles = {"头像", "昵称", "登录手机号", "绑定社区", "小区名称", "出生日期", "性别", "个性签名", "身份证号", "收货地址", "版本更新", "切换账号"};
+    private boolean[] hasGaps = {true, false,  true,       false,     true,      false,      false,  false,    false,     true,      false,     false};
     private int[] itemTypes = {Profile.IMG, Profile.TEXT, Profile.TEXT, Profile.TEXT, Profile.TEXT,
-                                Profile.TEXT, Profile.TEXT, Profile.TEXT, Profile.TEXT, Profile.TEXT};
+                                Profile.TEXT, Profile.TEXT, Profile.TEXT, Profile.TEXT, Profile.TEXT,
+                                Profile.TEXT, Profile.TEXT};
 
     public static ProfileFragment newInstance() {
         Bundle args = new Bundle();
@@ -137,37 +137,33 @@ public class ProfileFragment extends BaseBackFragment {
         recyclerView.addOnItemTouchListener(new OnItemClickListener() {
             @Override
             public void onSimpleItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
-                switch (i) {
-                    case 0:
-                        // 修改头像
+                switch (profiles.get(i).getTitle()) {
+                    case "头像":
                         processPhoto();
                         break;
-                    case 2:
-                        // 绑定新手机号
+                    case "登录手机号":
                         startForResult(BindPhoneFragment.newInstance(profiles.get(i), i), REQ_CODE);
                         break;
-                    case 3:
-                        // 修改生日
+                    case "出生日期":
                         processBirth(i);
                         break;
-                    case 4:
-                        // 修改性别
+                    case "性别":
                         processSex(i);
                         break;
-                    case 7:
-                        // 收货地址
+                    case "收货地址":
                         EventBus.getDefault().post(new StartBrotherEvent(ManageAddresses.newInstance()));
                         break;
-                    case 8:
-                        // 检查版本
+                    case "版本更新":
                         updateVersion();
                         break;
-                    case 9:
-                        // 注销
+                    case "切换账号":
                         processSignOut();
                         break;
+                    case "绑定社区":
+                        bindCommunity();
+                        break;
                     default:
-                        // 跳转修改页面(昵称、个性签名、身份证号)
+                        // 跳转修改页面(昵称、个性签名、身份证号、小区名称)
                         startForResult(ChangeProfileFragment.newInstance(profiles.get(i), i), REQ_CODE);
                         break;
                 }
@@ -175,6 +171,12 @@ public class ProfileFragment extends BaseBackFragment {
         });
     }
 
+    /**
+     * 绑定社区
+     */
+    private void bindCommunity() {
+
+    }
 
     /**
      * 获取用户信息,并显示
@@ -189,11 +191,13 @@ public class ProfileFragment extends BaseBackFragment {
                     profiles.get(0).setValue(user.getAvatar());
                     profiles.get(1).setValue(user.getNickname());
                     profiles.get(2).setValue(user.getPhone());
-                    profiles.get(3).setValue(user.getBirth());
-                    profiles.get(4).setValue(user.getSex());
-                    profiles.get(5).setValue(user.getSlogan());
-                    profiles.get(6).setValue(user.getIdCard());
-                    profiles.get(8).setValue(getVersion());
+                    profiles.get(3).setValue(user.getCommunity());
+                    profiles.get(4).setValue(user.getVillage());
+                    profiles.get(5).setValue(user.getBirth());
+                    profiles.get(6).setValue(user.getSex());
+                    profiles.get(7).setValue(user.getSlogan());
+                    profiles.get(8).setValue(user.getIdCard());
+                    profiles.get(10).setValue(getVersion());
                     adapter.notifyDataSetChanged();
                     setVersionInfo();
                 } else {
@@ -475,7 +479,7 @@ public class ProfileFragment extends BaseBackFragment {
     }
 
     /**
-     * 修改用户信息:
+     * 修改用户信息模态框:
      * 出生日期、性别
      */
     private void updateUserInfoDialog(final String value, final int position, String tag) {
@@ -489,28 +493,26 @@ public class ProfileFragment extends BaseBackFragment {
             fields.put("user_info[sex]", parse_sex);
         }
 
-        Engine.noAuthService().updateUser(
-                sharedPre.getString("user_token", Const.EMPTY_STRING),
-                sharedPre.getString("user_phone", Const.EMPTY_STRING),
-                fields
-        ).enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                if (response.code() == 200) {
-                    profiles.get(position).setValue(value);
-                    adapter.notifyItemChanged(position);
-                    hideProgress();
-                } else {
-                    showToast("修改失败,请重试");
-                    hideProgress();
-                }
-            }
 
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                hideProgress();
-                showToast(_mActivity.getString(R.string.network_error));
-            }
+        Engine.noAuthService().updateUser(shared_token, shared_phone, fields)
+            .enqueue(new Callback<User>() {
+                @Override
+                public void onResponse(Call<User> call, Response<User> response) {
+                    if (response.code() == 200) {
+                        profiles.get(position).setValue(value);
+                        adapter.notifyItemChanged(position);
+                        hideProgress();
+                    } else {
+                        showToast("修改失败,请重试");
+                        hideProgress();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<User> call, Throwable t) {
+                    hideProgress();
+                    showToast(_mActivity.getString(R.string.network_error));
+                }
         });
     }
 

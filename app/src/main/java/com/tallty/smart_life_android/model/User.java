@@ -70,13 +70,20 @@ public class User implements Serializable{
     @Expose
     private String idCard;
 
-    @SerializedName("bind_phone")
+    // 小区名称
+    @SerializedName("community")
     @Expose
-    private String bindPhone;
+    private String village;
 
-    @SerializedName("pay_password")
+    // 绑定社区名称
+    @SerializedName("subdistrict")
     @Expose
-    private String payPassword;
+    private String community;
+
+    // 绑定社区ID
+    @SerializedName("subdistrict_id")
+    @Expose
+    private int communityId;
 
     // 业务相关参数(登录、注册错误信息)
     @SerializedName("error")
@@ -203,22 +210,6 @@ public class User implements Serializable{
         this. idCard = idCard;
     }
 
-    public String getBindPhone() {
-        return bindPhone;
-    }
-
-    public void setBindPhone(String bindPhone) {
-        this.bindPhone = bindPhone;
-    }
-
-    public String getPayPassword() {
-        return payPassword;
-    }
-
-    public void setPayPassword(String payPassword) {
-        this.payPassword = payPassword;
-    }
-
     public String getError() {
         return error;
     }
@@ -241,5 +232,29 @@ public class User implements Serializable{
 
     public void setErrors(Errors errors) {
         this.errors = errors;
+    }
+
+    public String getCommunity() {
+        return community;
+    }
+
+    public void setCommunity(String community) {
+        this.community = community;
+    }
+
+    public String getVillage() {
+        return village;
+    }
+
+    public void setVillage(String village) {
+        this.village = village;
+    }
+
+    public int getCommunityId() {
+        return communityId;
+    }
+
+    public void setCommunityId(int communityId) {
+        this.communityId = communityId;
     }
 }

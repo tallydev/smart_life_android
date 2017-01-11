@@ -189,7 +189,7 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
         // 进入页面, 延时3秒, 先上传一次步数, 然后再获取首页信息(优化首页信息的实时性)
         delayUploadStep();
         // 检查更新
-        PgyUpdateManager.register(getActivity());
+        PgyUpdateManager.register(_mActivity);
         // 获取购物车数量
         getCartCount();
         // 绑定用户到【电子猫眼】服务, 以获取监控推送

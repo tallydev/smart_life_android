@@ -125,6 +125,10 @@ public class ChangeProfileFragment extends BaseBackFragment {
         }
     }
 
+    /**
+     * 修改个人信息
+     * @param text
+     */
     private void updateUser(final String text) {
         change_btn.setClickable(false);
         showProgress("修改中...");
@@ -139,6 +143,8 @@ public class ChangeProfileFragment extends BaseBackFragment {
             fields.put("user_info[slogan]", text);
         } else if ("设置支付密码".equals(key)) {
             fields.put("user_info[pay_password]", text);
+        } else if ("小区名称".equals(key)) {
+            fields.put("user_info[community]", text);
         }
 
         Engine.noAuthService().updateUser(
