@@ -25,7 +25,6 @@ import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.google.gson.JsonElement;
-import com.google.gson.stream.JsonReader;
 import com.pgyersdk.update.PgyUpdateManager;
 import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.Const;
@@ -55,7 +54,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -695,7 +693,7 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
             confirmDialog("电子猫眼发现可疑迹象!", "查看详情", "忽略", new BaseBackFragment.OnConfirmDialogListener() {
                 @Override
                 public void onConfirm(DialogInterface dialog, int which) {
-                    EventBus.getDefault().post(new StartBrotherEvent(ReceivePushFragment.newInstance(event.bundle)));
+                    EventBus.getDefault().post(new StartBrotherEvent(NotificationDetailFragment.newInstance(event.bundle)));
                 }
 
                 @Override

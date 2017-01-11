@@ -3,7 +3,6 @@ package com.tallty.smart_life_android.fragment.home;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -15,22 +14,20 @@ import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.NotificationAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * 电子猫眼告警详情展示页面
  */
-public class ReceivePushFragment extends BaseBackFragment {
+public class NotificationDetailFragment extends BaseBackFragment {
     private RecyclerView recyclerView;
     private NotificationAdapter adapter;
     private String title= "";
     private String time = "";
     private String[] images;
 
-    public static ReceivePushFragment newInstance(Bundle bundle) {
-        ReceivePushFragment fragment = new ReceivePushFragment();
+    public static NotificationDetailFragment newInstance(Bundle bundle) {
+        NotificationDetailFragment fragment = new NotificationDetailFragment();
         fragment.setArguments(bundle);
         return fragment;
     }

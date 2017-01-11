@@ -51,9 +51,12 @@ public class LoadingActivity extends BaseActivity {
                 .skipMemoryCache(true)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .into(loadingImage);
+        // 获取社区列表数据
+        fetchCommunities();
 
         // 检查是否为新的一天, 并处理步数
         checkStepWithDate();
+
         // 3秒进入应用
         timer = new CountDownTimer(3000, 1000) {
             @Override
@@ -66,6 +69,13 @@ public class LoadingActivity extends BaseActivity {
             }
         };
         timer.start();
+    }
+
+    /**
+     * 获取社区地址列表
+     */
+    private void fetchCommunities() {
+
     }
 
     /**

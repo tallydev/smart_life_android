@@ -3,6 +3,7 @@ package com.tallty.smart_life_android.fragment.Pop;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -35,107 +36,9 @@ public class AddressDialogFragment extends DialogFragment implements View.OnClic
     private WheelView<String> areaWheel;
     private WheelView<String> streetWheel;
     private WheelView<String> communityWheel;
+    private Context context;
     // tag
     private String caller;
-
-    public static AddressDialogFragment newInstance(String caller) {
-        Bundle args = new Bundle();
-        args.putString("调用者", caller);
-        AddressDialogFragment fragment = new AddressDialogFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Bundle args = getArguments();
-        if (args != null) {
-            caller = args.getString("调用者");
-        }
-    }
-
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        // 窗体大小,动画,弹出方向
-        WindowManager.LayoutParams layoutParams = getDialog().getWindow().getAttributes();
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
-        layoutParams.gravity = Gravity.BOTTOM;
-        layoutParams.windowAnimations = R.style.dialogStyle;
-        getDialog().getWindow().setAttributes(layoutParams);
-    }
-
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        // 使用不带theme的构造器，获得的dialog边框距离屏幕仍有几毫米的缝隙。
-        // Dialog dialog = new Dialog(getActivity()); // still has a little space between dialog and screen.
-        Dialog dialog = new Dialog(getActivity(), R.style.CustomDatePickerDialog);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // must be called before set content
-        dialog.setContentView(R.layout.fragment_address_dialog);
-        dialog.setCanceledOnTouchOutside(true);
-
-        return dialog;
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_address_dialog, container, false);
-        initView(view);
-        setListener();
-        processLogic();
-
-        return view;
-    }
-
-    private void initView(View view) {
-        cancel_btn = (TextView) view.findViewById(R.id.cancel_btn);
-        confirm_btn = (TextView) view.findViewById(R.id.confirm_btn);
-        areaWheel = (WheelView<String>) view.findViewById(R.id.wheel_view_community);
-        streetWheel = (WheelView<String>) view.findViewById(R.id.wheel_view_street);
-        communityWheel = (WheelView<String>) view.findViewById(R.id.wheel_view_area);
-    }
-
-    private void setListener() {
-        cancel_btn.setOnClickListener(this);
-        confirm_btn.setOnClickListener(this);
-    }
-
-    private void processLogic() {
-        // 样式
-        WheelView.WheelViewStyle style = new WheelView.WheelViewStyle();
-        style.selectedTextSize = 16;
-        style.textSize = 14;
-        style.holoBorderColor = Color.parseColor("#E7E7E7");
-        // 社区
-        areaWheel.setWheelAdapter(new MyWheelViewAdapter(getActivity().getApplicationContext()));
-        areaWheel.setSkin(WheelView.Skin.Holo);
-        areaWheel.setWheelData(communityDatas());
-        areaWheel.setStyle(style);
-        // 街道
-        streetWheel.setWheelAdapter(new MyWheelViewAdapter(getActivity().getApplicationContext()));
-        streetWheel.setSkin(WheelView.Skin.Holo);
-        streetWheel.setWheelData(streetDatas().get(communityDatas().get(areaWheel.getSelection())));
-        streetWheel.setStyle(style);
-        areaWheel.join(streetWheel);
-        areaWheel.joinDatas(streetDatas());
-        // 小区
-        communityWheel.setWheelAdapter(new MyWheelViewAdapter(getActivity().getApplicationContext()));
-        communityWheel.setSkin(WheelView.Skin.Holo);
-        communityWheel.setWheelData(
-            areaDatas().get(
-                streetDatas().get(communityDatas().get(areaWheel.getSelection())).get(streetWheel.getSelection())
-            )
-        );
-        communityWheel.setStyle(style);
-        streetWheel.join(communityWheel);
-        streetWheel.joinDatas(areaDatas());
-    }
 
     // 整理联动数据
     private List<String> communityDatas() {
@@ -176,6 +79,120 @@ public class AddressDialogFragment extends DialogFragment implements View.OnClic
         return map;
     }
 
+    public static AddressDialogFragment newInstance(String caller) {
+        Bundle args = new Bundle();
+        args.putString("调用者", caller);
+        AddressDialogFragment fragment = new AddressDialogFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle args = getArguments();
+        if (args != null) {
+            caller = args.getString("调用者");
+        }
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // 窗体大小,动画,弹出方向
+        if (getDialog().getWindow() != null) {
+            WindowManager.LayoutParams layoutParams = getDialog().getWindow().getAttributes();
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+            layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            layoutParams.gravity = Gravity.BOTTOM;
+            layoutParams.windowAnimations = R.style.dialogStyle;
+            getDialog().getWindow().setAttributes(layoutParams);
+        }
+    }
+
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        // 使用不带theme的构造器，获得的dialog边框距离屏幕仍有几毫米的缝隙。
+        // Dialog dialog = new Dialog(getActivity()); // still has a little space between dialog and screen.
+        Dialog dialog = new Dialog(getActivity(), R.style.CustomDatePickerDialog);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // must be called before set content
+        dialog.setContentView(R.layout.fragment_address_dialog);
+        dialog.setCanceledOnTouchOutside(true);
+
+        return dialog;
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        context = getActivity();
+        View view = inflater.inflate(R.layout.fragment_address_dialog, container, false);
+        initView(view);
+        setListener();
+        processLogic();
+
+        return view;
+    }
+
+    private void initView(View view) {
+        cancel_btn = (TextView) view.findViewById(R.id.cancel_btn);
+        confirm_btn = (TextView) view.findViewById(R.id.confirm_btn);
+        areaWheel = (WheelView<String>) view.findViewById(R.id.wheel_view_community);
+        streetWheel = (WheelView<String>) view.findViewById(R.id.wheel_view_street);
+        communityWheel = (WheelView<String>) view.findViewById(R.id.wheel_view_area);
+    }
+
+    private void setListener() {
+        cancel_btn.setOnClickListener(this);
+        confirm_btn.setOnClickListener(this);
+    }
+
+    private void processLogic() {
+        // 设置样式
+        setWheelViewStyle();
+        // 关联数据
+        bindDataToWheelView();
+    }
+
+    private void setWheelViewStyle() {
+        // 样式
+        WheelView.WheelViewStyle style = new WheelView.WheelViewStyle();
+        style.selectedTextSize = 16;
+        style.textSize = 14;
+        style.holoBorderColor = Color.parseColor("#E7E7E7");
+        // 区
+        areaWheel.setWheelAdapter(new MyWheelViewAdapter(context));
+        areaWheel.setSkin(WheelView.Skin.Holo);
+        areaWheel.setStyle(style);
+        // 街道
+        streetWheel.setStyle(style);
+        streetWheel.setWheelAdapter(new MyWheelViewAdapter(context));
+        streetWheel.setSkin(WheelView.Skin.Holo);
+        // 小区
+        communityWheel.setWheelAdapter(new MyWheelViewAdapter(context));
+        communityWheel.setSkin(WheelView.Skin.Holo);
+        communityWheel.setStyle(style);
+    }
+
+    private void bindDataToWheelView() {
+        // 区
+        areaWheel.setWheelData(communityDatas());
+        // 街道
+        streetWheel.setWheelData(streetDatas().get(communityDatas().get(areaWheel.getSelection())));
+        areaWheel.join(streetWheel);
+        areaWheel.joinDatas(streetDatas());
+        // 小区
+        communityWheel.setWheelData(
+                areaDatas().get(
+                        streetDatas().get(communityDatas().get(areaWheel.getSelection())).get(streetWheel.getSelection())
+                )
+        );
+        streetWheel.join(communityWheel);
+        streetWheel.joinDatas(areaDatas());
+    }
 
     @Override
     public void onClick(View v) {

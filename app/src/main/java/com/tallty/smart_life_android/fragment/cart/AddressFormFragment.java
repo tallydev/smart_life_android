@@ -142,7 +142,7 @@ public class AddressFormFragment extends BaseBackFragment {
             focusView = edit_detail;
             edit_detail.setError("请填写详细地址");
         }
-        if (area.isEmpty()) {
+        if (area.isEmpty() || "请选择所在物业小区".equals(area)) {
             cancel = true;
             focusView = edit_area;
             edit_area.setError("请填写小区");

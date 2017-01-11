@@ -37,7 +37,6 @@ import com.tallty.smart_life_android.adapter.ProfileListAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.event.TransferDataEvent;
-import com.tallty.smart_life_android.fragment.home.ReceivePushFragment;
 import com.tallty.smart_life_android.model.Profile;
 import com.tallty.smart_life_android.model.User;
 import com.tallty.smart_life_android.utils.ImageUtils;

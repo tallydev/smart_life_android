@@ -9,6 +9,7 @@ import com.tallty.smart_life_android.model.CartItem;
 import com.tallty.smart_life_android.model.CartList;
 import com.tallty.smart_life_android.model.Categories;
 import com.tallty.smart_life_android.model.Category;
+import com.tallty.smart_life_android.model.Communities;
 import com.tallty.smart_life_android.model.Contact;
 import com.tallty.smart_life_android.model.ContactList;
 import com.tallty.smart_life_android.model.Home;
@@ -92,6 +93,12 @@ public interface DataAPI {
     // 查询用户信息
     @GET("user_info")
     Call<User> getUser();
+
+    // *********************************************************************************************
+    // 获取所有社区列表
+
+    @GET("subdistricts")
+    Call<Communities> getMapDistrits();
 
     // *********************************************************************************************
     // 用户绑定推送服务

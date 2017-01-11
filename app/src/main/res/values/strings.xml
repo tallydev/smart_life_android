@@ -33,6 +33,7 @@
     <string name="edit_string">编辑</string>
     <string name="address_set_default">设为默认地址</string>
     <string name="save">保存</string>
+    <string name="bind">绑定</string>
     <string name="pay_now">立即支付</string>
     <string name="pay_text">实付金额:</string>
     <!--订单相关-->
