@@ -1,87 +1,51 @@
 package com.tallty.smart_life_android.fragment.Pop;
 
 
-import android.app.Dialog;
-import android.app.DialogFragment;
-import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.R;
+import com.tallty.smart_life_android.activity.MainActivity;
 import com.tallty.smart_life_android.adapter.MyWheelViewAdapter;
+import com.tallty.smart_life_android.base.BaseDialogFragment;
 import com.tallty.smart_life_android.event.ConfirmDialogEvent;
+import com.tallty.smart_life_android.model.CommunityObject;
+import com.tallty.smart_life_android.model.CommunityVillage;
+import com.tallty.smart_life_android.utils.ToastUtil;
 import com.wx.wheelview.widget.WheelView;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 /**
  * 新建收货地址
  */
-public class AddressDialogFragment extends DialogFragment implements View.OnClickListener {
+public class AddressDialogFragment extends BaseDialogFragment {
     private TextView cancel_btn;
     private TextView confirm_btn;
-    private WheelView<String> areaWheel;
     private WheelView<String> streetWheel;
-    private WheelView<String> communityWheel;
-    private Context context;
+    private WheelView<String> villageWheel;
     // tag
-    private String caller;
+    private String tag;
+    private String area;
+
+    // 保存社区id
+    private List<Integer> streetIds = new ArrayList<>();
 
     // 整理联动数据
-    private List<String> communityDatas() {
-        String[] strings = {"五华区", "西山区"};
-        return Arrays.asList(strings);
-    }
+    private List<String> streetData = new ArrayList<>();
+    private HashMap<String, List<String>> villageData = new HashMap<>();
 
-    private HashMap<String, List<String>> streetDatas() {
-        HashMap<String, List<String>> map = new HashMap<String, List<String>>();
-        String[] strings = {"五华区", "西山区"};
-        String[] s1 = {"大观街道", "丰宁街道", "红云街道", "黑林铺街道", "华山街道", "护国街道", "莲华街道", "龙翔街道", "普吉街道", "西翥街道"};
-        String[] s2 = {"前卫街道"};
-        String[][] ss = {s1, s2};
-        for (int i = 0; i < strings.length; i++) {
-            map.put(strings[i], Arrays.asList(ss[i]));
-        }
-        return map;
-    }
-
-    private HashMap<String, List<String>> areaDatas() {
-        HashMap<String, List<String>> map = new HashMap<String, List<String>>();
-        String[] strings = {"大观街道", "丰宁街道", "红云街道", "黑林铺街道", "华山街道", "护国街道", "莲华街道", "龙翔街道", "普吉街道", "西翥街道" , "前卫街道"};
-        String[] s1 = {""};
-        String[] s2 = {""};
-        String[] s3 = {"安康园", "彩信园", "红云小区", "金域蓝湾", "文明花园", "远洋风景"};
-        String[] s4 = {""};
-        String[] s5 = {""};
-        String[] s6 = {""};
-        String[] s7 = {""};
-        String[] s8 = {""};
-        String[] s9 = {""};
-        String[] s10 = {""};
-        String[] s11 = {"广福城"};
-        String[][] ss = {s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11};
-        for (int i = 0; i < strings.length; i++) {
-            map.put(strings[i], Arrays.asList(ss[i]));
-        }
-        return map;
-    }
-
-    public static AddressDialogFragment newInstance(String caller) {
+    public static AddressDialogFragment newInstance(String tag, String area) {
         Bundle args = new Bundle();
-        args.putString("调用者", caller);
+        args.putString("调用者", tag);
+        args.putString("市级区", area);
         AddressDialogFragment fragment = new AddressDialogFragment();
         fragment.setArguments(args);
         return fragment;
@@ -92,69 +56,94 @@ public class AddressDialogFragment extends DialogFragment implements View.OnClic
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
-            caller = args.getString("调用者");
-        }
-    }
-
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        // 窗体大小,动画,弹出方向
-        if (getDialog().getWindow() != null) {
-            WindowManager.LayoutParams layoutParams = getDialog().getWindow().getAttributes();
-            DisplayMetrics displayMetrics = new DisplayMetrics();
-            getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-            layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
-            layoutParams.gravity = Gravity.BOTTOM;
-            layoutParams.windowAnimations = R.style.dialogStyle;
-            getDialog().getWindow().setAttributes(layoutParams);
+            tag = args.getString("调用者");
+            area = args.getString("市级区");
         }
     }
 
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        // 使用不带theme的构造器，获得的dialog边框距离屏幕仍有几毫米的缝隙。
-        // Dialog dialog = new Dialog(getActivity()); // still has a little space between dialog and screen.
-        Dialog dialog = new Dialog(getActivity(), R.style.CustomDatePickerDialog);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // must be called before set content
-        dialog.setContentView(R.layout.fragment_address_dialog);
-        dialog.setCanceledOnTouchOutside(true);
-
-        return dialog;
+    protected int getLayout() {
+        return R.layout.fragment_address_dialog;
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        context = getActivity();
-        View view = inflater.inflate(R.layout.fragment_address_dialog, container, false);
-        initView(view);
-        setListener();
-        processLogic();
-
-        return view;
-    }
-
-    private void initView(View view) {
+    protected void initView(View view) {
         cancel_btn = (TextView) view.findViewById(R.id.cancel_btn);
         confirm_btn = (TextView) view.findViewById(R.id.confirm_btn);
-        areaWheel = (WheelView<String>) view.findViewById(R.id.wheel_view_community);
-        streetWheel = (WheelView<String>) view.findViewById(R.id.wheel_view_street);
-        communityWheel = (WheelView<String>) view.findViewById(R.id.wheel_view_area);
+        streetWheel = (WheelView<String>) view.findViewById(R.id.wheel_street);
+        villageWheel = (WheelView<String>) view.findViewById(R.id.wheel_village);
     }
 
-    private void setListener() {
+    protected void setListener() {
         cancel_btn.setOnClickListener(this);
         confirm_btn.setOnClickListener(this);
     }
 
-    private void processLogic() {
-        // 设置样式
-        setWheelViewStyle();
-        // 关联数据
-        bindDataToWheelView();
+    protected void processLogic() {
+        if (area == null) {
+            dismiss();
+            ToastUtil.show("请先选择省市区");
+        } else {
+            // 设置样式
+            setWheelViewStyle();
+            // 整理数据
+            tidyData();
+        }
+    }
+
+    private void tidyData() {
+        // 情况1: 街道列表为空
+        if (MainActivity.streets == null) {
+            dismiss();
+            ToastUtil.show("社区列表为空");
+        } else {
+            // 小区hash
+            List<String> streets = MainActivity.streets.get(area);
+            if (streets.isEmpty()) {
+                dismiss();
+                ToastUtil.show("还未开通"+area+"的街道");
+            } else {
+                makeWheelData(streets);
+                // 关联数据
+                bindDataToWheelView();
+            }
+        }
+    }
+
+    /**
+     * @param streets 已选地区的所有街道
+     * 结果:
+     *      1、封装【街道选择器】的数据 ==> List<String>
+     *      2、封装【小区选择器】的数据 ==> HashMap<街道, 小区列表>
+     *      3、封装【街道选择器】的街道id ==> List<int>
+     *
+     */
+    private void makeWheelData(List<String> streets) {
+        for (String street : streets) {
+            // 获取街道的名称 & 社区的id
+            street = street.replace("@*@", ",");
+            String[] arr = street.split(",");
+            int streetId = Integer.valueOf(arr[1]);
+            String streetName = arr[0];
+            // 保存街道
+            streetData.add(streetName);
+            streetIds.add(streetId);
+            // 获取街道对应的小区列表
+            for (CommunityObject object : MainActivity.communities) {
+                if (object.getId() != streetId) continue;
+                // 保存社区中的所有小区
+                List<String> villageNames = new ArrayList<>();
+                for (CommunityVillage village : object.getVillages()) {
+                    villageNames.add(village.getName());
+                }
+                // 街道包含的小区可能为空, wheelView 的数据不能为空
+                if (villageNames.isEmpty()) {
+                    villageNames.add("");
+                    villageData.put(streetName, villageNames);
+                } else {
+                    villageData.put(streetName, villageNames);
+                }
+            }
+        }
     }
 
     private void setWheelViewStyle() {
@@ -163,35 +152,24 @@ public class AddressDialogFragment extends DialogFragment implements View.OnClic
         style.selectedTextSize = 16;
         style.textSize = 14;
         style.holoBorderColor = Color.parseColor("#E7E7E7");
-        // 区
-        areaWheel.setWheelAdapter(new MyWheelViewAdapter(context));
-        areaWheel.setSkin(WheelView.Skin.Holo);
-        areaWheel.setStyle(style);
         // 街道
         streetWheel.setStyle(style);
         streetWheel.setWheelAdapter(new MyWheelViewAdapter(context));
         streetWheel.setSkin(WheelView.Skin.Holo);
         // 小区
-        communityWheel.setWheelAdapter(new MyWheelViewAdapter(context));
-        communityWheel.setSkin(WheelView.Skin.Holo);
-        communityWheel.setStyle(style);
+        villageWheel.setWheelAdapter(new MyWheelViewAdapter(context));
+        villageWheel.setSkin(WheelView.Skin.Holo);
+        villageWheel.setStyle(style);
     }
 
     private void bindDataToWheelView() {
-        // 区
-        areaWheel.setWheelData(communityDatas());
         // 街道
-        streetWheel.setWheelData(streetDatas().get(communityDatas().get(areaWheel.getSelection())));
-        areaWheel.join(streetWheel);
-        areaWheel.joinDatas(streetDatas());
+        streetWheel.setWheelData(streetData);
         // 小区
-        communityWheel.setWheelData(
-                areaDatas().get(
-                        streetDatas().get(communityDatas().get(areaWheel.getSelection())).get(streetWheel.getSelection())
-                )
-        );
-        streetWheel.join(communityWheel);
-        streetWheel.joinDatas(areaDatas());
+        villageWheel.setWheelData(villageData.get(streetData.get(streetWheel.getSelection())));
+        // 关联数据
+        streetWheel.join(villageWheel);
+        streetWheel.joinDatas(villageData);
     }
 
     @Override
@@ -202,15 +180,15 @@ public class AddressDialogFragment extends DialogFragment implements View.OnClic
                 break;
             case R.id.confirm_btn:
                 Bundle bundle = new Bundle();
-                bundle.putString("小区",
-                        areaWheel.getSelectionItem() + " " +
-                        streetWheel.getSelectionItem() + " " +
-                        communityWheel.getSelectionItem()
-                );
-                bundle.putString(Const.CONTACT_AREA, areaWheel.getSelectionItem());
-                bundle.putString(Const.CONTACT_STREET, streetWheel.getSelectionItem());
-                bundle.putString(Const.CONTACT_COMMUNITY, communityWheel.getSelectionItem());
-                EventBus.getDefault().post(new ConfirmDialogEvent(getDialog(), caller, bundle));
+                if (villageWheel.getSelectionItem().isEmpty()) {
+                    ToastUtil.show("本社区没有可选的小区");
+                } else {
+                    String[] select_items = {streetWheel.getSelectionItem(), villageWheel.getSelectionItem()};
+                    int select_street_id = streetIds.get(streetWheel.getSelection());
+                    bundle.putStringArray(Const.ARRAY, select_items);
+                    bundle.putInt(Const.INT, select_street_id);
+                    EventBus.getDefault().post(new ConfirmDialogEvent(getDialog(), tag, bundle));
+                }
                 break;
         }
     }

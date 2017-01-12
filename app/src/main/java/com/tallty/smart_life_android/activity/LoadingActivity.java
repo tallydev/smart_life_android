@@ -12,14 +12,21 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.Const;
+import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseActivity;
+import com.tallty.smart_life_android.model.Communities;
+import com.tallty.smart_life_android.model.CommunitiesResponse;
 import com.tallty.smart_life_android.model.Step;
 import com.tallty.smart_life_android.utils.DbUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LoadingActivity extends BaseActivity {
     private ImageView loadingImage;
@@ -75,7 +82,31 @@ public class LoadingActivity extends BaseActivity {
      * 获取社区地址列表
      */
     private void fetchCommunities() {
+        Engine.noAuthService().getCommunities().enqueue(new Callback<CommunitiesResponse>() {
+            @Override
+            public void onResponse(Call<CommunitiesResponse> call, Response<CommunitiesResponse> response) {
+                if (response.isSuccessful()) {
+                    Log.i(App.TAG, response.body().getList2().getProvinces().toString());
+                    Communities communities = response.body().getList2();
+                    // 保存到MainActivity的静态变量中
+                    MainActivity.communities.clear();
+                    MainActivity.communities.addAll(response.body().getSubdistricts());
+                    MainActivity.provinces.clear();
+                    MainActivity.provinces.addAll(communities.getProvinces());
+                    MainActivity.cities = communities.getCities();
+                    MainActivity.areas = communities.getAreas();
+                    MainActivity.streets = communities.getStreets();
+                    Log.i(App.TAG, "》》》》》》》》》》》》》》》获取所有社区成功了");
+                } else {
+                    Log.i(App.TAG, "》》》》》》》》》》》》》》》获取所有社区失败了");
+                }
+            }
 
+            @Override
+            public void onFailure(Call<CommunitiesResponse> call, Throwable t) {
+                Log.i(App.TAG, "》》》》》》》》》》》》》》》》获取所有社区错误了");
+            }
+        });
     }
 
     /**

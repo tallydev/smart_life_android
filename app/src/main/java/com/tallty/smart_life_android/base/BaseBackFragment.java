@@ -50,6 +50,8 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
     protected static final int REQ_CODE = 0;
     protected static final String RESULT_DATA = "data";
     protected static final String RESULT_POSITION = "position";
+    protected static final String RESULT_DATA_OTHER = "data_other";
+    protected static final String RESULT_POSITION_OTHER = "position_OTHER";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

@@ -10,12 +10,12 @@ import android.os.Bundle;
 
 public class ConfirmDialogEvent {
     public Dialog dialog;
-    public String caller;
+    public String tag;
     public Bundle data;
 
-    public ConfirmDialogEvent(Dialog dialog, String caller, Bundle data) {
+    public ConfirmDialogEvent(Dialog dialog, String tag, Bundle data) {
         this.dialog = dialog;
-        this.caller = caller;
+        this.tag = tag;
         this.data = data;
     }
 }

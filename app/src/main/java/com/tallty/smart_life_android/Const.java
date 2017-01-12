@@ -18,6 +18,7 @@ public class Const {
     public static final String OBJECT_List = "object_list";
     public static final String INT = "int";
     public static final String STRING = "string";
+    public static final String ARRAY = "array";
 
     /**
      * 计步服务消息传递控制常量
@@ -83,6 +84,15 @@ public class Const {
     public static final String DELETE_ADDRESS = "delete_address";
     public static final String EDIT_ADDRESS = "edit_address";
     public static final String SET_ADDRESS_DEFAULT = "set_address_default";
+
+    /**
+     * 社区相关
+     */
+    public static final String PROVINCES = "community_provinces";
+    public static final String CITIES = "community_cities";
+    public static final String AREAS = "community_areas";
+    public static final String COMMUNITIES = "community_communities";
+    public static final String VILLAGES = "community_villages";
 
     /**
      * 订单相关

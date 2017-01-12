@@ -2,7 +2,6 @@ package com.tallty.smart_life_android.fragment.me;
 
 
 import android.os.Bundle;
-import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -15,14 +14,13 @@ import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.event.ConfirmDialogEvent;
 import com.tallty.smart_life_android.fragment.Pop.AddressDialogFragment;
+import com.tallty.smart_life_android.fragment.Pop.AreaDialogFragment;
 import com.tallty.smart_life_android.model.User;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -34,14 +32,22 @@ import retrofit2.Response;
  */
 public class BindCommunityFragment extends BaseBackFragment {
     private int position;
+    private int otherPosition;
     // UI
     private EditText area_edit;
     private EditText detail_edit;
     private TextView save_text;
+    // 临时变量
+    private String selectArea = null;
+    // 表单数据
+    private String streetName = "";
+    private String villageName = "";
+    private int streetId;
 
-    public static BindCommunityFragment newInstance(int position) {
+    public static BindCommunityFragment newInstance(int position, int otherPosition) {
         Bundle args = new Bundle();
         args.putInt(Const.INT, position);
+        args.putInt("other", otherPosition);
         BindCommunityFragment fragment = new BindCommunityFragment();
         fragment.setArguments(args);
         return fragment;
@@ -53,6 +59,7 @@ public class BindCommunityFragment extends BaseBackFragment {
         Bundle args = getArguments();
         if (args != null) {
             position = args.getInt(Const.INT);
+            otherPosition = args.getInt("other");
         }
     }
 
@@ -93,12 +100,18 @@ public class BindCommunityFragment extends BaseBackFragment {
                 beginSave();
                 break;
             case R.id.community_area:
-                AddressDialogFragment fragment = AddressDialogFragment.newInstance("新建收货地址");
+                AreaDialogFragment fragment = AreaDialogFragment.newInstance("选择地区", "确认");
                 fragment.show(getActivity().getFragmentManager(), "HintDialog");
                 break;
             case R.id.community_detail:
-                AddressDialogFragment fragment_one = AddressDialogFragment.newInstance("新建收货地址");
-                fragment_one.show(getActivity().getFragmentManager(), "HintDialog");
+                if (selectArea != null) {
+                    AddressDialogFragment fragment_one = AddressDialogFragment.newInstance("选择小区", selectArea);
+                    fragment_one.show(getActivity().getFragmentManager(), "HintDialog");
+                } else {
+                    area_edit.setError("请先选择地区");
+                    area_edit.requestFocus();
+                    showToast("请先选择地区");
+                }
                 break;
         }
     }
@@ -129,7 +142,8 @@ public class BindCommunityFragment extends BaseBackFragment {
         } else {
             // 表单数据
             Map<String, String> fields = new HashMap<>();
-            fields.put("user_info[community]", detail);
+            fields.put("user_info[community]", villageName);
+            fields.put("user[subdistrict_id]", String.valueOf(streetId));
             // 更新用户信息
             updateUserCommunity(fields);
         }
@@ -144,8 +158,10 @@ public class BindCommunityFragment extends BaseBackFragment {
                     hideProgress();
                     if (response.isSuccessful()) {
                         Bundle bundle = new Bundle();
-                        bundle.putString(RESULT_DATA, "修改了地区和地址");
+                        bundle.putString(RESULT_DATA, area_edit.getText() + streetName);
+                        bundle.putString(RESULT_DATA_OTHER, villageName);
                         bundle.putInt(RESULT_POSITION, position);
+                        bundle.putInt(RESULT_POSITION_OTHER, otherPosition);
                         setFragmentResult(RESULT_OK, bundle);
                         // 隐藏软键盘
                         hideSoftInput();
@@ -172,15 +188,26 @@ public class BindCommunityFragment extends BaseBackFragment {
 
 
     /**
-     * 接收事件: 选择小区地址
+     * 接收事件: 选择社区和小区地址
      * @param event
      */
     @Subscribe
     public void onConfirmDialogEvnet(ConfirmDialogEvent event) {
         event.dialog.dismiss();
-//        edit_area.setText(event.data.getString("小区"));
-//        contact.setArea(event.data.getString(Const.CONTACT_AREA));
-//        contact.setStreet(event.data.getString(Const.CONTACT_STREET));
-//        contact.setCommunity(event.data.getString(Const.CONTACT_COMMUNITY));
+        if ("选择地区".equals(event.tag)) {
+            String[] areas = event.data.getStringArray(Const.ARRAY);
+            if (areas != null) {
+                selectArea = areas[2];
+                area_edit.setText(areas[0]+areas[1]+areas[2]);
+            }
+        } else if ("选择小区".equals(event.tag)) {
+            streetId = (int) event.data.get(Const.INT);
+            String[] select_items = event.data.getStringArray(Const.ARRAY);
+            if (select_items != null) {
+                streetName = select_items[0];
+                villageName = select_items[1];
+                detail_edit.setText(select_items[0]+select_items[1]);
+            }
+        }
     }
 }

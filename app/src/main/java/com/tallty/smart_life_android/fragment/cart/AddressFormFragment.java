@@ -16,6 +16,7 @@ import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.event.ConfirmDialogEvent;
 import com.tallty.smart_life_android.fragment.Pop.AddressDialogFragment;
+import com.tallty.smart_life_android.fragment.Pop.AreaDialogFragment;
 import com.tallty.smart_life_android.model.Contact;
 import com.tallty.smart_life_android.model.ContactList;
 
@@ -43,6 +44,8 @@ public class AddressFormFragment extends BaseBackFragment {
     private TextView save_address;
     // 新建或更新维护的同一对象
     private Contact contact = new Contact();
+    // 地址数据
+    private String area = "";
 
     public static AddressFormFragment newInstance(Contact contact) {
         Bundle args = new Bundle();
@@ -113,7 +116,7 @@ public class AddressFormFragment extends BaseBackFragment {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.address_area:
-                AddressDialogFragment fragment = AddressDialogFragment.newInstance("新建收货地址");
+                AreaDialogFragment fragment = AreaDialogFragment.newInstance("选择地区", "下一步");
                 fragment.show(getActivity().getFragmentManager(), "HintDialog");
                 break;
             case R.id.save_address:
@@ -260,11 +263,22 @@ public class AddressFormFragment extends BaseBackFragment {
      */
     @Subscribe
     public void onConfirmDialogEvnet(ConfirmDialogEvent event) {
-        event.dialog.dismiss();
-        edit_area.setText(event.data.getString("小区"));
-        contact.setArea(event.data.getString(Const.CONTACT_AREA));
-        contact.setStreet(event.data.getString(Const.CONTACT_STREET));
-        contact.setCommunity(event.data.getString(Const.CONTACT_COMMUNITY));
+        if ("选择地区".equals(event.tag)) {
+            event.dialog.dismiss();
+            String[] select_items = event.data.getStringArray(Const.ARRAY);
+            area = select_items != null ? select_items[2] : "";
+            AddressDialogFragment fragment = AddressDialogFragment.newInstance("选择小区地址", area);
+            fragment.show(getActivity().getFragmentManager(), "HintDialog");
+        } else if ("选择小区地址".equals(event.tag)) {
+            event.dialog.dismiss();
+            String[] select_items = event.data.getStringArray(Const.ARRAY);
+            if (select_items != null) {
+                edit_area.setText(area + " " + select_items[0] + " " + select_items[1]);
+                contact.setArea(area);
+                contact.setStreet(select_items[0]);
+                contact.setCommunity(select_items[1]);
+            }
+        }
     }
 
     /**

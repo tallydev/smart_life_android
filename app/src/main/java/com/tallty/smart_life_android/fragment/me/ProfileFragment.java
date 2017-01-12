@@ -37,6 +37,8 @@ import com.tallty.smart_life_android.adapter.ProfileListAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.event.TransferDataEvent;
+import com.tallty.smart_life_android.fragment.Pop.AddressDialogFragment;
+import com.tallty.smart_life_android.fragment.Pop.AreaDialogFragment;
 import com.tallty.smart_life_android.model.Profile;
 import com.tallty.smart_life_android.model.User;
 import com.tallty.smart_life_android.utils.ImageUtils;
@@ -160,7 +162,7 @@ public class ProfileFragment extends BaseBackFragment {
                         processSignOut();
                         break;
                     case "绑定社区":
-                        startForResult(BindCommunityFragment.newInstance(i), REQ_CODE);
+                        startForResult(BindCommunityFragment.newInstance(i, i+1), REQ_CODE);
                         break;
                     default:
                         // 跳转修改页面(昵称、个性签名、身份证号、小区名称)
@@ -521,6 +523,13 @@ public class ProfileFragment extends BaseBackFragment {
             int position = data.getInt(RESULT_POSITION);
             profiles.get(position).setValue(text);
             adapter.notifyItemChanged(position);
+            // 更新小区名称
+            String village = data.getString(RESULT_DATA_OTHER);
+            int village_position = data.getInt(RESULT_POSITION_OTHER);
+            if (village != null) {
+                profiles.get(village_position).setValue(village);
+                adapter.notifyItemChanged(village_position);
+            }
         }
     }
 

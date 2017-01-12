@@ -21,6 +21,7 @@ import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.event.ConfirmDialogEvent;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.fragment.Pop.AddressDialogFragment;
+import com.tallty.smart_life_android.fragment.Pop.AreaDialogFragment;
 import com.tallty.smart_life_android.model.Errors;
 import com.tallty.smart_life_android.model.User;
 
@@ -52,6 +53,7 @@ public class RegisterFragment extends BaseBackFragment {
     private Button registerBtn;
     // 用户信息
     private User user_edit = new User();
+    private String area = "";
     // 验证码相关
     private CountDownTimer timer;
     private boolean hasGot = false;
@@ -130,7 +132,7 @@ public class RegisterFragment extends BaseBackFragment {
                 getSmsTask();
                 break;
             case R.id.register_address:
-                AddressDialogFragment fragment = AddressDialogFragment.newInstance("注册");
+                AreaDialogFragment fragment = AreaDialogFragment.newInstance("选择地区", "下一步");
                 fragment.show(getActivity().getFragmentManager(), "HintDialog");
                 break;
             case R.id.register_btn:
@@ -395,5 +397,20 @@ public class RegisterFragment extends BaseBackFragment {
     public void onConfirmDialogEvnet(ConfirmDialogEvent event) {
         event.dialog.dismiss();
         addressEdit.setText(event.data.getString("小区"));
+
+        if ("选择地区".equals(event.tag)) {
+            event.dialog.dismiss();
+            String[] select_items = event.data.getStringArray(Const.ARRAY);
+            area = select_items != null ? select_items[2] : "";
+            AddressDialogFragment fragment = AddressDialogFragment.newInstance("选择小区地址", area);
+            fragment.show(getActivity().getFragmentManager(), "HintDialog");
+        } else if ("选择小区地址".equals(event.tag)) {
+            event.dialog.dismiss();
+            String[] select_items = event.data.getStringArray(Const.ARRAY);
+            if (select_items != null) {
+                addressEdit.setText(area + " " + select_items[0] + " " + select_items[1]);
+                // TODO: 2017/1/12 需要更新用户信息
+            }
+        }
     }
 }

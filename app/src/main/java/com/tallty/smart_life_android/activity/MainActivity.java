@@ -13,8 +13,14 @@ import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.event.PayEvent;
 import com.tallty.smart_life_android.fragment.MainFragment;
+import com.tallty.smart_life_android.model.CommunitiesResponse;
+import com.tallty.smart_life_android.model.CommunityObject;
 
 import org.greenrobot.eventbus.EventBus;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import me.yokeyword.fragmentation.SupportActivity;
 import me.yokeyword.fragmentation.anim.DefaultHorizontalAnimator;
@@ -22,6 +28,11 @@ import me.yokeyword.fragmentation.anim.FragmentAnimator;
 
 public class MainActivity extends SupportActivity {
     public static boolean isForeground = false;
+    public static ArrayList<CommunityObject> communities = new ArrayList<>();
+    public static List<String> provinces = new ArrayList<>();
+    public static HashMap<String, List<String>> cities = new HashMap<>();
+    public static HashMap<String, List<String>> areas = new HashMap<>();
+    public static HashMap<String, List<String>> streets = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
