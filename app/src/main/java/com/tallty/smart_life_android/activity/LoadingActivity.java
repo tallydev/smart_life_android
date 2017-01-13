@@ -17,12 +17,15 @@ import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseActivity;
 import com.tallty.smart_life_android.model.Communities;
 import com.tallty.smart_life_android.model.CommunitiesResponse;
+import com.tallty.smart_life_android.model.CommunityObject;
+import com.tallty.smart_life_android.model.CommunityVillage;
 import com.tallty.smart_life_android.model.Step;
 import com.tallty.smart_life_android.utils.DbUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;

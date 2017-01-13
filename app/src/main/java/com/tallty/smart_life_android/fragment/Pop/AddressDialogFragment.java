@@ -179,12 +179,13 @@ public class AddressDialogFragment extends BaseDialogFragment {
                 dismiss();
                 break;
             case R.id.confirm_btn:
-                Bundle bundle = new Bundle();
                 if (villageWheel.getSelectionItem().isEmpty()) {
                     ToastUtil.show("本社区没有可选的小区");
                 } else {
                     String[] select_items = {streetWheel.getSelectionItem(), villageWheel.getSelectionItem()};
                     int select_street_id = streetIds.get(streetWheel.getSelection());
+
+                    Bundle bundle = new Bundle();
                     bundle.putStringArray(Const.ARRAY, select_items);
                     bundle.putInt(Const.INT, select_street_id);
                     EventBus.getDefault().post(new ConfirmDialogEvent(getDialog(), tag, bundle));

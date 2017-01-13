@@ -24,6 +24,7 @@ import com.tallty.smart_life_android.fragment.Pop.AddressDialogFragment;
 import com.tallty.smart_life_android.fragment.Pop.AreaDialogFragment;
 import com.tallty.smart_life_android.model.Errors;
 import com.tallty.smart_life_android.model.User;
+import com.tallty.smart_life_android.utils.ToastUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -53,7 +54,9 @@ public class RegisterFragment extends BaseBackFragment {
     private Button registerBtn;
     // 用户信息
     private User user_edit = new User();
-    private String area = "";
+    private String[] province_city_area;
+    private String[] street_village;
+    private int street_id;
     // 验证码相关
     private CountDownTimer timer;
     private boolean hasGot = false;
@@ -70,9 +73,6 @@ public class RegisterFragment extends BaseBackFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
-        if (args != null) {
-
-        }
     }
 
     @Override
@@ -337,6 +337,8 @@ public class RegisterFragment extends BaseBackFragment {
         // user: phone,token,email
         Map<String, String> fields = new HashMap<>();
         fields.put("user_info[nickname]", user_edit.getNickname());
+        fields.put("user_info[community]", street_village[1]);
+        fields.put("user[subdistrict_id]", String.valueOf(street_id));
 
         Engine.noAuthService().updateUser(
                 user.getToken(),
@@ -400,16 +402,26 @@ public class RegisterFragment extends BaseBackFragment {
 
         if ("选择地区".equals(event.tag)) {
             event.dialog.dismiss();
-            String[] select_items = event.data.getStringArray(Const.ARRAY);
-            area = select_items != null ? select_items[2] : "";
-            AddressDialogFragment fragment = AddressDialogFragment.newInstance("选择小区地址", area);
-            fragment.show(getActivity().getFragmentManager(), "HintDialog");
-        } else if ("选择小区地址".equals(event.tag)) {
+            province_city_area = event.data.getStringArray(Const.ARRAY);
+            if (province_city_area == null) {
+                showToast("请选择省市区");
+            } else {
+                AddressDialogFragment fragment = AddressDialogFragment.newInstance("选择小区", province_city_area[2]);
+                fragment.show(getActivity().getFragmentManager(), "HintDialog");
+            }
+        } else if ("选择小区".equals(event.tag)) {
             event.dialog.dismiss();
-            String[] select_items = event.data.getStringArray(Const.ARRAY);
-            if (select_items != null) {
-                addressEdit.setText(area + " " + select_items[0] + " " + select_items[1]);
-                // TODO: 2017/1/12 需要更新用户信息
+            street_village = event.data.getStringArray(Const.ARRAY);
+            if (street_village == null) {
+                showToast("请选择社区");
+            } else {
+                street_id = (int) event.data.get(Const.INT);
+                addressEdit.setText(
+                        province_city_area[0] +
+                        province_city_area[1] +
+                        province_city_area[2] + " " +
+                        street_village[0] + " " +
+                        street_village[1]);
             }
         }
     }

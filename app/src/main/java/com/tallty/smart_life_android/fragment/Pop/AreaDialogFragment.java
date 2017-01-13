@@ -200,8 +200,10 @@ public class AreaDialogFragment extends BaseDialogFragment {
                     areaDatas = communities.getAreas();
                     // 关联数据
                     if (provinceDatas.isEmpty()) {
-                        dismiss();
-                        ToastUtil.show("社区列表为空");
+                        if (isAdded()) {
+                            dismiss();
+                            ToastUtil.show("社区列表为空");
+                        }
                     } else {
                         bindDataToWheelView();
                     }
