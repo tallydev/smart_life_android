@@ -32,7 +32,11 @@ public class JPushReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Bundle bundle = intent.getExtras();
         Log.d(TAG, "[MyReceiver] onReceive - " + intent.getAction() + ", extras: " + printBundle(bundle));
+        Log.d(TAG, "-----------------------------------------------------------");
         Log.d(TAG, "接收到推送下来的自定义消息: " + bundle.getString(JPushInterface.EXTRA_MESSAGE));
+        Log.d(TAG, "-----------------------------------------------------------");
+        Log.d(TAG, "接收到推送下来的Extra: " + bundle.getString(JPushInterface.EXTRA_EXTRA));
+        Log.d(TAG, "============================================================");
 
         // 获取推送 Registration Id
         if (JPushInterface.ACTION_REGISTRATION_ID.equals(intent.getAction())) {

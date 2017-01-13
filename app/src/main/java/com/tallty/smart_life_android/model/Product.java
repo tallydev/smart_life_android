@@ -61,14 +61,13 @@ public class Product implements Serializable {
     private ArrayList<ProductBanner> productBanners;
 
     // 限量销售
-    @SerializedName("end_time")
+    @SerializedName("expiration_time")
     @Expose
-    private long endTime;
-
-    @SerializedName("count_down")
+    private String endTime;
+    // 限量销售商品状态
+    @SerializedName("promotion_state")
     @Expose
-    private long countDown;
-
+    private boolean promotionEnable;
 
     public int getId() {
         return id;
@@ -158,19 +157,19 @@ public class Product implements Serializable {
         this.sales = sales;
     }
 
-    public long getEndTime() {
+    public String getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(long endTime) {
+    public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
 
-    public long getCountDown() {
-        return countDown;
+    public boolean isPromotionEnable() {
+        return promotionEnable;
     }
 
-    public void setCountDown(long countDown) {
-        this.countDown = countDown;
+    public void setPromotionEnable(boolean promotionEnable) {
+        this.promotionEnable = promotionEnable;
     }
 }

@@ -128,6 +128,11 @@ public interface DataAPI {
     @GET("products/{id}")
     Call<Product> getProduct(@Path("id") int id);
 
+    // 限量销售列表
+    @GET("promotions")
+    Call<ProductList> getPromotions(@Query("page") int page,
+                                     @Query("per_page") int per_page);
+
     // *********************************************************************************************
 
     // 获取购物车列表

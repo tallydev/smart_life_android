@@ -14,11 +14,9 @@ import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StrikethroughSpan;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -115,7 +113,8 @@ public class ProductShowFragment extends BaseBackFragment implements OnItemClick
 
     @Override
     public void initToolbar(Toolbar toolbar, TextView toolbar_title) {
-        toolbar_title.setText("商品详情");
+        String title = product.getEndTime() != null ? "团购商品详情" : "商品详情";
+        toolbar_title.setText(title);
         // 点击事件
         productCartBtn = getViewById(R.id.product_cart_btn);
         productCartBtn.setOnClickListener(new View.OnClickListener() {

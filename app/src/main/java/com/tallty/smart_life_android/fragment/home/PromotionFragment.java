@@ -13,15 +13,23 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
+import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
-import com.tallty.smart_life_android.adapter.GroupBuyAdapter;
+import com.tallty.smart_life_android.adapter.PromotionAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.custom.CustomLoadMoreView;
+import com.tallty.smart_life_android.event.TransferDataEvent;
 import com.tallty.smart_life_android.model.Product;
 import com.tallty.smart_life_android.model.ProductList;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -30,26 +38,25 @@ import retrofit2.Response;
 /**
  * 限量销售商品列表
  */
-public class GroupBuyFragment extends BaseBackFragment implements
+public class PromotionFragment extends BaseBackFragment implements
         BaseQuickAdapter.RequestLoadMoreListener,
         SwipeRefreshLayout.OnRefreshListener {
     // 组件 & 适配器
     private RecyclerView recyclerView;
     private SwipeRefreshLayout refreshLayout;
-    private GroupBuyAdapter adapter;
+    private PromotionAdapter adapter;
     // 数据
     private ArrayList<Product> products = new ArrayList<>();
     // 加载更多
     private int current_page = 1;
     private int total_pages = 1;
-    private int per_page = 5;
+    private int per_page = 10;
     // 刷新
     private boolean isRefresh = false;
 
-    public static GroupBuyFragment newInstance() {
+    public static PromotionFragment newInstance() {
         Bundle args = new Bundle();
-
-        GroupBuyFragment fragment = new GroupBuyFragment();
+        PromotionFragment fragment = new PromotionFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -71,6 +78,7 @@ public class GroupBuyFragment extends BaseBackFragment implements
 
     @Override
     protected void initView() {
+        EventBus.getDefault().register(this);
         recyclerView = getViewById(R.id.common_refresh_list);
         refreshLayout = getViewById(R.id.common_list_refresh_layout);
     }
@@ -105,7 +113,7 @@ public class GroupBuyFragment extends BaseBackFragment implements
 
     private void initList() {
         recyclerView.setLayoutManager(new LinearLayoutManager(_mActivity));
-        adapter = new GroupBuyAdapter(R.layout.item_group_buy, products);
+        adapter = new PromotionAdapter(R.layout.item_group_buy, products);
         adapter.setLoadMoreView(new CustomLoadMoreView());
         recyclerView.setAdapter(adapter);
         // 加载更多
@@ -113,13 +121,14 @@ public class GroupBuyFragment extends BaseBackFragment implements
         recyclerView.addOnItemTouchListener(new OnItemClickListener() {
             @Override
             public void onSimpleItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
-                showToast(i+"");
+                if (products.get(i).isPromotionEnable())
+                    start(ProductShowFragment.newInstance(products.get(i)));
             }
         });
     }
 
     public void getGroupBuyProducts() {
-        Engine.noAuthService().getProductList(current_page, per_page)
+        Engine.noAuthService().getPromotions(current_page, per_page)
             .enqueue(new Callback<ProductList>() {
                 @Override
                 public void onResponse(Call<ProductList> call, Response<ProductList> response) {
@@ -128,12 +137,10 @@ public class GroupBuyFragment extends BaseBackFragment implements
                         total_pages = response.body().getTotalPages();
                         // 商品列表
                         products.clear();
-                        products.addAll(response.body().getProducts());
-                        // todo 添加end_time
-                        int i = 10;
-                        for (Product product : products) {
-                            product.setCountDown(995550000);
-                            i++;
+                        for (Product product : response.body().getProducts()) {
+                            boolean isEnable = getCountDownMills(product.getEndTime()) > 0;
+                            product.setPromotionEnable(isEnable);
+                            products.add(product);
                         }
                         adapter.notifyDataSetChanged();
                         // 刷新逻辑
@@ -153,6 +160,19 @@ public class GroupBuyFragment extends BaseBackFragment implements
             });
     }
 
+    // 获取截止日期距现在的时间间隔毫秒数
+    private long getCountDownMills(String time) {
+        if (time == null) return 0;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss'.000+08:00'");
+        try {
+            Date date = format.parse(time);
+            return date.getTime() - System.currentTimeMillis();
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
     @Override
     public void onClick(View v) {
 
@@ -167,7 +187,7 @@ public class GroupBuyFragment extends BaseBackFragment implements
                 adapter.loadMoreEnd();
             } else {
                 current_page++;
-                Engine.noAuthService().getProductList(current_page, per_page)
+                Engine.noAuthService().getPromotions(current_page, per_page)
                     .enqueue(new Callback<ProductList>() {
                         @Override
                         public void onResponse(Call<ProductList> call, Response<ProductList> response) {
@@ -217,8 +237,20 @@ public class GroupBuyFragment extends BaseBackFragment implements
     @Override
     public void onDestroy() {
         super.onDestroy();
+        EventBus.getDefault().unregister(this);
         if (null != adapter) {
             adapter.cancelRefreshTime();
+        }
+    }
+
+    @Subscribe
+    public void onPromotionEnd(TransferDataEvent event) {
+        if ("团购结束".equals(event.tag)) {
+            int endPosition = event.bundle.getInt(Const.INT);
+            Product product = products.get(endPosition);
+            product.setPromotionEnable(false);
+            products.set(endPosition, product);
+            adapter.notifyItemChanged(endPosition);
         }
     }
 }

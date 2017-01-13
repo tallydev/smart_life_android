@@ -350,6 +350,7 @@ public class RegisterFragment extends BaseBackFragment {
                         // 更新信息成功与否,都跳转登录(注册页处理不了修改信息失败的问题, profile也可处理)
                         hideProgress();
                         pop();
+                        showToast("注册成功");
                     }
 
                     @Override

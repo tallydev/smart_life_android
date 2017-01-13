@@ -331,26 +331,28 @@ public class ProfileFragment extends BaseBackFragment {
         }
     }
 
+    // TODO: 2017/1/13 选择图片失效
     /**
      * 裁剪图片方法实现
      */
     private void startPhotoZoom(Uri uri) {
         if (uri == null) {
             Log.i(App.TAG, "The uri is not exist.");
+        } else {
+            tempUri = uri;
+            Intent intent = new Intent("com.android.camera.action.CROP");
+            intent.setDataAndType(uri, "image/*");
+            // 设置裁剪
+            intent.putExtra("crop", "true");
+            // aspectX aspectY 是宽高的比例
+            intent.putExtra("aspectX", 1);
+            intent.putExtra("aspectY", 1);
+            // outputX outputY 是裁剪图片宽高
+            intent.putExtra("outputX", 150);
+            intent.putExtra("outputY", 150);
+            intent.putExtra("return-data", true);
+            startActivityForResult(intent, CROP_SMALL_PICTURE);
         }
-        tempUri = uri;
-        Intent intent = new Intent("com.android.camera.action.CROP");
-        intent.setDataAndType(uri, "image/*");
-        // 设置裁剪
-        intent.putExtra("crop", "true");
-        // aspectX aspectY 是宽高的比例
-        intent.putExtra("aspectX", 1);
-        intent.putExtra("aspectY", 1);
-        // outputX outputY 是裁剪图片宽高
-        intent.putExtra("outputX", 150);
-        intent.putExtra("outputY", 150);
-        intent.putExtra("return-data", true);
-        startActivityForResult(intent, CROP_SMALL_PICTURE);
     }
 
     /**

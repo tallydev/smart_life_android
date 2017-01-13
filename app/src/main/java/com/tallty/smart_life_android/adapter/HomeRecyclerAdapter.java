@@ -16,11 +16,10 @@ import com.tallty.smart_life_android.event.ShowSnackbarEvent;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.fragment.Common.GlobalAppointFragment;
 import com.tallty.smart_life_android.fragment.home.CommunityActivityFragment;
-import com.tallty.smart_life_android.fragment.home.GroupBuyFragment;
+import com.tallty.smart_life_android.fragment.home.PromotionFragment;
 import com.tallty.smart_life_android.fragment.home.HealthyCheckReport;
 import com.tallty.smart_life_android.fragment.home.HomeFragment;
 import com.tallty.smart_life_android.fragment.home.ProductCategoryFragment;
-import com.tallty.smart_life_android.fragment.home.ProductFragment;
 import com.tallty.smart_life_android.fragment.home.SportFragment;
 import com.tallty.smart_life_android.holder.HomeViewHolder;
 
@@ -162,7 +161,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
         }
         // 限量发售
         else if (position == 6) {
-            EventBus.getDefault().post(new StartBrotherEvent(GroupBuyFragment.newInstance()));
+            EventBus.getDefault().post(new StartBrotherEvent(PromotionFragment.newInstance()));
         }
         // 精品超市
         else if (position == 7) {
@@ -177,9 +176,6 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
         try {
             Date date = format.parse(time);
             countDownSecond = date.getTime() - System.currentTimeMillis();
-//            Log.d(App.TAG, "限量发售: 时间"+date.getCreated_time() +"");
-//            Log.d(App.TAG, "限量发售: 当前"+System.currentTimeMillis() +"");
-//            Log.d(App.TAG, "限量发售: 差值"+countDownSecond +"");
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -264,7 +260,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
                 // 限量发售
                 else if (tag == 6) {
                     if (position == 0)
-                        EventBus.getDefault().post(new StartBrotherEvent(GroupBuyFragment.newInstance()));
+                        EventBus.getDefault().post(new StartBrotherEvent(PromotionFragment.newInstance()));
                 }
                 // 精品超市
                 else if (tag == 7) {

@@ -56,8 +56,10 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import cn.jpush.android.api.JPushInterface;
+import cn.jpush.android.api.TagAliasCallback;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -200,11 +202,19 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
      */
     private void bindUserToNotification() {
         String registrationID = JPushInterface.getRegistrationID(_mActivity);
+        JPushInterface.setAlias(_mActivity, shared_phone, new TagAliasCallback() {
+            @Override
+            public void gotResult(int i, String s, Set<String> set) {
+                
+            }
+        });
         if (registrationID.isEmpty()) {
             showToast("推送服务启动失败");
             JPushInterface.init(_mActivity);
             return;
         }
+
+        Log.d(App.TAG, shared_phone + "___" + registrationID);
         Engine.noAuthService().bindNotification(shared_phone, registrationID)
             .enqueue(new Callback<JsonElement>() {
                 @Override
@@ -425,8 +435,6 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
                         banners.clear();
                         banners.addAll(response.body().get("banners"));
                         setBanner();
-                    } else {
-
                     }
                 }
 

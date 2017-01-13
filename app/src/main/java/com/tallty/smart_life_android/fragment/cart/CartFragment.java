@@ -251,6 +251,7 @@ public class CartFragment extends BaseMainFragment implements
                         // 通知列表变化
                         adapter.notifyItemRemoved(position);
                         adapter.notifyItemRangeChanged(position, cartItems.size()-position);
+                        HomeFragment.cartCount--;
                         // 重新计算总价
                         setCartListState(cartItems);
                     } else {

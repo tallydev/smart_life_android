@@ -49,6 +49,8 @@ public class ProfileListAdapter extends BaseMultiItemQuickAdapter<Profile, BaseV
             case Profile.IMG:
                 Glide.with(mContext)
                     .load(profile.getValue())
+                    .placeholder(R.drawable.user_default)
+                    .error(R.drawable.user_default)
                     .transform(new GlideCircleTransform(mContext))
                     .into((ImageView) baseViewHolder.getView(R.id.item_profile_photo));
                 break;
