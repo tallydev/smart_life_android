@@ -96,7 +96,7 @@ public class ProductFragment extends BaseBackFragment implements BaseQuickAdapte
         recyclerView.addOnItemTouchListener(new OnItemClickListener() {
             @Override
             public void onSimpleItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
-                start(ProductShowFragment.newInstance(products.get(i)));
+                start(PromotionShowFragment.newInstance(products.get(i)));
             }
         });
         // 加载更多

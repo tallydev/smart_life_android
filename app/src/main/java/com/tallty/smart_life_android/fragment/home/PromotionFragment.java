@@ -122,7 +122,7 @@ public class PromotionFragment extends BaseBackFragment implements
             @Override
             public void onSimpleItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
                 if (products.get(i).isPromotionEnable())
-                    start(ProductShowFragment.newInstance(products.get(i)));
+                    start(PromotionShowFragment.newInstance(products.get(i)));
             }
         });
     }
@@ -195,7 +195,13 @@ public class PromotionFragment extends BaseBackFragment implements
                                 current_page = response.body().getCurrentPage();
                                 total_pages = response.body().getTotalPages();
                                 // 商品列表
-                                adapter.addData(response.body().getProducts());
+                                ArrayList<Product> list = new ArrayList<>();
+                                for (Product product : response.body().getProducts()) {
+                                    boolean isEnable = getCountDownMills(product.getEndTime()) > 0;
+                                    product.setPromotionEnable(isEnable);
+                                    list.add(product);
+                                }
+                                adapter.addData(list);
                                 adapter.loadMoreComplete();
                             } else {
                                 adapter.loadMoreFail();

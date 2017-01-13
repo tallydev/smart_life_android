@@ -65,6 +65,10 @@ public class PromotionAdapter extends BaseQuickAdapter<Product, BaseViewHolder> 
                 .into((ImageView) baseViewHolder.getView(R.id.promotion_image));
         // 设置倒计时
         if (product.isPromotionEnable()) {
+            baseViewHolder
+                    .setVisible(R.id.promotion_state, false)
+                    .setVisible(R.id.promotion_text, true)
+                    .setVisible(R.id.group_buy_timer, true);
             countdownView.start(getCountDownMills(product.getEndTime()));
             countdownView.setOnCountdownEndListener(new CountdownView.OnCountdownEndListener() {
                 @Override
@@ -76,6 +80,8 @@ public class PromotionAdapter extends BaseQuickAdapter<Product, BaseViewHolder> 
                 }
             });
         } else {
+            if (countdownView.isActivated())
+                countdownView.stop();
             baseViewHolder
                 .setVisible(R.id.promotion_state, true)
                 .setVisible(R.id.promotion_text, false)

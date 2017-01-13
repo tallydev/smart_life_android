@@ -101,6 +101,8 @@ public class Const {
     public static final String DELETE_ORDER = "delete_order";
     public static final String SERVICE_ORDER = "service_order";
     public static final String PAY_ORDER = "pay_order";
+    public static final String TYPE_NORMAL = "type_normal";
+    public static final String TYPE_PROMOTION = "type_promotion";
 
     /**
      * 推送相关

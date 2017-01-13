@@ -133,6 +133,10 @@ public interface DataAPI {
     Call<ProductList> getPromotions(@Query("page") int page,
                                      @Query("per_page") int per_page);
 
+    // 限量销售详情
+    @GET("promotions/{id}")
+    Call<Product> getPromotion(@Path("id") int id);
+
     // *********************************************************************************************
 
     // 获取购物车列表
@@ -157,11 +161,18 @@ public interface DataAPI {
                                        @Field("cart_item[count]") int count);
 
     // *********************************************************************************************
-    // 创建订单
+    // 创建【普通】订单
     @FormUrlEncoded
     @POST("orders")
     Call<Order> createOrder(@Field("cart_item_ids[]") List<Integer> cart_ids,
                             @Field("order[contact_id]") int contact_id);
+
+    // 创建【团购】订单
+    @FormUrlEncoded
+    @POST("orders/create_by_promotion")
+    Call<Order> createPromotionOrder(@Field("promotion_id") int promotion_id,
+                                     @Field("promotion_count") int promotion_count,
+                                     @Field("order[contact_id]") int contact_id);
 
     // 获取订单列表
     @GET("orders")

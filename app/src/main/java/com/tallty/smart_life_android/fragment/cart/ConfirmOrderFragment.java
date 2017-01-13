@@ -7,12 +7,10 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
@@ -24,7 +22,6 @@ import com.tallty.smart_life_android.model.ContactList;
 import com.tallty.smart_life_android.model.Order;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import retrofit2.Call;
@@ -34,7 +31,9 @@ import retrofit2.Response;
 /**
  * 购物车-确认订单
  */
-public class ConfirmOrder extends BaseBackFragment {
+public class ConfirmOrderFragment extends BaseBackFragment {
+    // 订单的类型
+    private String type = Const.TYPE_NORMAL;
     // 数据
     private ArrayList<CartItem> selected_cart_items = new ArrayList<>();
     private float total_price = 0.0f;
@@ -49,11 +48,15 @@ public class ConfirmOrder extends BaseBackFragment {
     private RecyclerView recyclerView;
     private TextView total_price_text;
 
-    public static ConfirmOrder newInstance(ArrayList<CartItem> selected_commodities, float total_price) {
+    public static ConfirmOrderFragment newInstance(
+            ArrayList<CartItem> selected_commodities,
+            float total_price,
+            String type) {
         Bundle args = new Bundle();
         args.putSerializable(Const.OBJECT_List, selected_commodities);
         args.putFloat(Const.TOTAL_PRICE, total_price);
-        ConfirmOrder fragment = new ConfirmOrder();
+        args.putString(Const.STRING, type);
+        ConfirmOrderFragment fragment = new ConfirmOrderFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -65,6 +68,7 @@ public class ConfirmOrder extends BaseBackFragment {
         if (args != null) {
             selected_cart_items = (ArrayList<CartItem>) args.getSerializable(Const.OBJECT_List);
             total_price = args.getFloat(Const.TOTAL_PRICE);
+            type  = args.getString(Const.STRING);
         }
     }
 
@@ -174,7 +178,11 @@ public class ConfirmOrder extends BaseBackFragment {
                 break;
             case R.id.submit_order:
                 if (has_address) {
-                    submitOrderAndPay();
+                    // 根据类型, 使用不同的接口创建订单
+                    if (Const.TYPE_NORMAL.equals(type))
+                        submitOrderAndPay();
+                    else if (Const.TYPE_PROMOTION.equals(type))
+                        submitPromotionOrder(selected_cart_items.get(0));
                 } else {
                     showToast(EMPTY_ADDRESS);
                 }
@@ -182,7 +190,7 @@ public class ConfirmOrder extends BaseBackFragment {
         }
     }
 
-    // 提交订单 && 支付
+    // 提交【普通】商品订单 && 支付
     private void submitOrderAndPay() {
         showProgress("正在创建订单...");
         List<Integer> cart_ids = new ArrayList<>();
@@ -209,6 +217,31 @@ public class ConfirmOrder extends BaseBackFragment {
                     showToast(showString(R.string.network_error));
                 }
         });
+    }
+
+    // 提交【团购】商品订单 && 支付
+    private void submitPromotionOrder(CartItem cartItem) {
+        showProgress("正在创建订单...");
+
+        Engine.authService(shared_token, shared_phone)
+            .createPromotionOrder(cartItem.getId(), cartItem.getCount(), order_contact.getId())
+                .enqueue(new Callback<Order>() {
+                    @Override
+                    public void onResponse(Call<Order> call, Response<Order> response) {
+                        hideProgress();
+                        if (response.isSuccessful()) {
+                            start(PayOrder.newInstance(response.body()));
+                        } else {
+                            showToast("创建失败");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Order> call, Throwable t) {
+                        hideProgress();
+                        showToast(showString(R.string.network_error));
+                    }
+                });
     }
 
     @Override
