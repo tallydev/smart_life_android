@@ -34,6 +34,7 @@ import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
+import com.tallty.smart_life_android.event.TransferDataEvent;
 import com.tallty.smart_life_android.fragment.cart.ConfirmOrderFragment;
 import com.tallty.smart_life_android.holder.NetworkImageBannerHolder;
 import com.tallty.smart_life_android.model.CartItem;
@@ -44,9 +45,13 @@ import com.tallty.smart_life_android.utils.ArithUtils;
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import cn.iwgang.countdownview.CountdownView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -79,6 +84,7 @@ public class PromotionShowFragment  extends BaseBackFragment implements OnItemCl
     private ConvenientBanner<String> banner;
     private SubsamplingScaleImageView detail_image;
     private ImageView small_detail_image;
+    private CountdownView countdownView;
 
     public static PromotionShowFragment newInstance(Product product) {
         Bundle args = new Bundle();
@@ -131,6 +137,7 @@ public class PromotionShowFragment  extends BaseBackFragment implements OnItemCl
         banner = getViewById(R.id.product_detail_banner);
         detail_image = getViewById(R.id.product_detail_image);
         small_detail_image = getViewById(R.id.small_product_detail_image);
+        countdownView = getViewById(R.id.promotion_show_timer);
     }
 
     @Override
@@ -244,17 +251,37 @@ public class PromotionShowFragment  extends BaseBackFragment implements OnItemCl
     }
 
     private void showProduct() {
+        // 商品信息
         product_title.setText(product.getTitle());
         product_price.setText("￥ "+product.getPrice());
         product_description.setText(product.getDetail());
         inventory_and_sales.setText("库存量："+product.getCount()+"    销量："+product.getSales());
-
+        // 原价
         String original_price_str = "￥ " + product.getOriginalPrice();
         SpannableString spannableString = new SpannableString(original_price_str);
         spannableString.setSpan(new StrikethroughSpan(), 0, original_price_str.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannableString.setSpan(new ForegroundColorSpan(ContextCompat.getColor(_mActivity, R.color.gray_text)), 0, original_price_str.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         product_original_price.setText(spannableString);
-
+        // 倒计时
+        long interval = getCountDownMills(product.getEndTime());
+        if (interval > 0) {
+            countdownView.start(getCountDownMills(product.getEndTime()));
+            countdownView.setOnCountdownEndListener(new CountdownView.OnCountdownEndListener() {
+                @Override
+                public void onEnd(CountdownView cv) {
+                    cv.stop();
+                    buy_now.setClickable(false);
+                    buy_now.setText("已结束");
+                    buy_now.setBackgroundColor(showColor(R.color.disable_orange));
+                    buy_now.setText(showColor(R.color.gray));
+                }
+            });
+        } else {
+            buy_now.setClickable(false);
+            buy_now.setText("已结束");
+            buy_now.setBackgroundColor(showColor(R.color.disable_orange));
+            buy_now.setText(showColor(R.color.gray));
+        }
         // 加载详情图
         detail_image.setZoomEnabled(false);
         detail_image.setMinimumScaleType(SCALE_TYPE_CENTER_CROP);
@@ -274,6 +301,19 @@ public class PromotionShowFragment  extends BaseBackFragment implements OnItemCl
                         showToast("加载商品详情失败");
                     }
                 });
+    }
+
+    // 获取截止日期距现在的时间间隔毫秒数
+    private long getCountDownMills(String time) {
+        if (time == null) return 0;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss'.000+08:00'");
+        try {
+            Date date = format.parse(time);
+            return date.getTime() - System.currentTimeMillis();
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return 0;
+        }
     }
 
     private void setBanner() {

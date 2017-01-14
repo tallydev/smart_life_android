@@ -121,8 +121,7 @@ public class PromotionFragment extends BaseBackFragment implements
         recyclerView.addOnItemTouchListener(new OnItemClickListener() {
             @Override
             public void onSimpleItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
-                if (products.get(i).isPromotionEnable())
-                    start(PromotionShowFragment.newInstance(products.get(i)));
+                start(PromotionShowFragment.newInstance(products.get(i)));
             }
         });
     }

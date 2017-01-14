@@ -205,7 +205,7 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
         JPushInterface.setAlias(_mActivity, shared_phone, new TagAliasCallback() {
             @Override
             public void gotResult(int i, String s, Set<String> set) {
-                
+                // TODO: 2017/1/14 推送别名处理≠
             }
         });
         if (registrationID.isEmpty()) {

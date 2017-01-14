@@ -47,7 +47,7 @@ public class PromotionAdapter extends BaseQuickAdapter<Product, BaseViewHolder> 
 
     @Override
     protected void convert(final BaseViewHolder baseViewHolder, Product product) {
-        final CountdownView countdownView = baseViewHolder.getView(R.id.group_buy_timer);
+        final CountdownView countdownView = baseViewHolder.getView(R.id.promotion_timer);
         // 富文本显示
         int str_length = String.valueOf(product.getSales()).length();
         SpannableString spannableString = new SpannableString(product.getSales()+"件已付款");
@@ -68,7 +68,7 @@ public class PromotionAdapter extends BaseQuickAdapter<Product, BaseViewHolder> 
             baseViewHolder
                     .setVisible(R.id.promotion_state, false)
                     .setVisible(R.id.promotion_text, true)
-                    .setVisible(R.id.group_buy_timer, true);
+                    .setVisible(R.id.promotion_timer, true);
             countdownView.start(getCountDownMills(product.getEndTime()));
             countdownView.setOnCountdownEndListener(new CountdownView.OnCountdownEndListener() {
                 @Override
@@ -85,7 +85,7 @@ public class PromotionAdapter extends BaseQuickAdapter<Product, BaseViewHolder> 
             baseViewHolder
                 .setVisible(R.id.promotion_state, true)
                 .setVisible(R.id.promotion_text, false)
-                .setVisible(R.id.group_buy_timer, false);
+                .setVisible(R.id.promotion_timer, false);
         }
 
     }

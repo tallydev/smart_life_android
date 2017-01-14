@@ -8,6 +8,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="200dp"
+        android:scaleType="centerCrop"
         android:src="@drawable/community_two"
         android:id="@+id/promotion_image"/>
     <RelativeLayout
@@ -25,7 +26,7 @@
             android:textColor="@color/global_text"
             android:textSize="@dimen/sp_14"/>
         <cn.iwgang.countdownview.CountdownView
-            android:id="@+id/group_buy_timer"
+            android:id="@+id/promotion_timer"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
@@ -57,7 +58,7 @@
             android:id="@+id/promotion_text"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_toLeftOf="@id/group_buy_timer"
+            android:layout_toLeftOf="@id/promotion_timer"
             android:gravity="center_vertical"
             android:textSize="@dimen/sp_14"
             android:textColor="@color/global_text"

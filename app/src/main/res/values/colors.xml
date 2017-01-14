@@ -27,7 +27,7 @@
     <color name="black">#000000</color>
     <color name="orange">#ff8000</color>
     <color name="disable_orange">#f4993d</color>
-    <color name="light_orange">#F3C4A6</color>
+    <color name="light_orange">#f7a876</color>
     <color name="yellow">#F8EA42</color>
     <color name="gray">#cccccc</color>
     <color name="gray_text">#aaaaaa</color>
@@ -40,4 +40,7 @@
     <color name="home_steps_text">#fedd34</color>
     <color name="timer_color">#FD8023</color>
     <color name="angle_right_color">#CCCCCC</color>
+    <!--团购计时器-->
+    <color name="timer_bg">#FFE55C</color>
+    <color name="clock_bg">#6F0809</color>
 </resources>
