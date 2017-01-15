@@ -124,7 +124,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
             viewHolder.countdownView.setOnCountdownEndListener(new CountdownView.OnCountdownEndListener() {
                 @Override
                 public void onEnd(CountdownView cv) {
-                    cv.restart();
+                    cv.stop();
                 }
             });
         }
@@ -177,6 +177,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
             Date date = format.parse(time);
             countDownSecond = date.getTime() - System.currentTimeMillis();
         } catch (ParseException e) {
+            countDownSecond = 0;
             e.printStackTrace();
         }
     }
