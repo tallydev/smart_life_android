@@ -51,6 +51,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
+import cn.jpush.android.api.JPushInterface;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -461,6 +462,8 @@ public class ProfileFragment extends BaseBackFragment {
                 SharedPreferences.Editor editor = sharedPre.edit();
                 editor.putString(Const.USER_TOKEN, Const.EMPTY_STRING);
                 editor.apply();
+                // 停止结束电子猫眼推送
+                JPushInterface.stopPush(getActivity().getApplicationContext());
                 // 重置网络请求, 否则退出账号,authService 还保留着上一账号的phone 和 token
                 Engine.resetEngine();
                 Intent intent = new Intent(getActivity(), LoginActivity.class);

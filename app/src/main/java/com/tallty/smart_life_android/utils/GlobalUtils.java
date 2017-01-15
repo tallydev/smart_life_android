@@ -1,5 +1,7 @@
 package com.tallty.smart_life_android.utils;
 
+import android.app.ActivityManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -17,7 +19,10 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
+
+import static android.content.Context.ACTIVITY_SERVICE;
 
 /**
  * Created by kang on 2016/10/27.
@@ -61,5 +66,37 @@ public class GlobalUtils {
             e.printStackTrace();
             return 0;
         }
+    }
+
+    // APP 是否在运行
+    public static boolean isAppRunning(Context context) {
+        ActivityManager activityManager = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
+        List<ActivityManager.RunningAppProcessInfo> procInfos = activityManager.getRunningAppProcesses();
+        for (int i = 0; i < procInfos.size(); i++) {
+            if (procInfos.get(i).processName.equals(context.getPackageName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // APP 是否是在前台显示
+    public static boolean isAppForeground(Context context) {
+        // Get the Activity Manager
+        ActivityManager manager = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
+
+        // Get a list of running tasks, we are only interested in the last one,
+        // the top most so we give a 1 as parameter so we only get the topmost.
+        List<ActivityManager.RunningAppProcessInfo> task = manager.getRunningAppProcesses();
+
+        // Get the info we need for comparison.
+        ComponentName componentInfo = task.get(0).importanceReasonComponent;
+
+        // Check if it matches our package name.
+        if(componentInfo.getPackageName().equals(context.getPackageName()))
+            return true;
+
+        // If not then our app is not on the foreground.
+        return false;
     }
 }

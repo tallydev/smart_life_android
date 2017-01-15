@@ -10,8 +10,10 @@ import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import com.pingplusplus.android.Pingpp;
 import com.pingplusplus.android.PingppLog;
 import com.tallty.smart_life_android.App;
+import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.event.PayEvent;
+import com.tallty.smart_life_android.event.TransferDataEvent;
 import com.tallty.smart_life_android.fragment.MainFragment;
 import com.tallty.smart_life_android.model.CommunitiesResponse;
 import com.tallty.smart_life_android.model.CommunityObject;
@@ -46,6 +48,12 @@ public class MainActivity extends SupportActivity {
         // 加载图标
         Iconify.with(new FontAwesomeModule());
         PingppLog.DEBUG = true;
+
+        // 显示推送
+        Bundle bundle = getIntent().getBundleExtra(Const.HOME_BUNDLE);
+        if (bundle != null) {
+            EventBus.getDefault().post(new TransferDataEvent(bundle, Const.JPUSH));
+        }
     }
 
     @Override

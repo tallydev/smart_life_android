@@ -7,7 +7,6 @@ import android.content.Context;
 
 import com.pgyersdk.crash.PgyCrashManager;
 import com.squareup.leakcanary.LeakCanary;
-import com.tallty.smart_life_android.activity.MainActivity;
 
 import java.util.List;
 

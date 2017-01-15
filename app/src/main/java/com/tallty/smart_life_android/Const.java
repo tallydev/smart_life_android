@@ -108,7 +108,9 @@ public class Const {
      * 推送相关
      */
     public static final String JPUSH = "jpush_notification";
+    public static final String NOTIFICATION_ID = "notification_id";
     public static final String PUSH_TITLE = "jpush_title";
     public static final String PUSH_TIME = "jpush_time";
     public static final String PUSH_IMAGES = "jpush_images";
+    public static final String HOME_BUNDLE = "home_bundle";
 }

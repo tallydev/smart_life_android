@@ -8,15 +8,13 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.squareup.haha.perflib.Main;
 import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.activity.MainActivity;
-import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.event.TransferDataEvent;
-import com.tallty.smart_life_android.fragment.home.NotificationDetailFragment;
 import com.tallty.smart_life_android.model.Push;
 import com.tallty.smart_life_android.model.PushExtra;
+import com.tallty.smart_life_android.utils.GlobalUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
@@ -25,7 +23,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 
 import cn.jpush.android.api.JPushInterface;
 
@@ -52,7 +49,6 @@ public class JPushReceiver extends BroadcastReceiver {
         // 接收自定义消息
         else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent.getAction())) {
             handleExtraMessage(bundle);
-            processCustomMessage(context, bundle);
         }
         // 接收到推送下来的通知
         else if (JPushInterface.ACTION_NOTIFICATION_RECEIVED.equals(intent.getAction())) {
@@ -80,7 +76,9 @@ public class JPushReceiver extends BroadcastReceiver {
         int notificationId = bundle.getInt(JPushInterface.EXTRA_NOTIFICATION_ID);
         Log.d(TAG, "接收到推送下来的通知的ID: " + notificationId);
         if (MainActivity.isForeground) {
+            Log.d(TAG, "首页 =》 接收到推送下来的通知的ID: " + notificationId);
             Bundle data = getPushData(bundle);
+            data.putInt(Const.NOTIFICATION_ID, notificationId);
             EventBus.getDefault().post(new TransferDataEvent(data, Const.JPUSH));
         }
     }
@@ -89,7 +87,31 @@ public class JPushReceiver extends BroadcastReceiver {
         Log.d(TAG, "用户点击打开了通知");
         // 通知首页, 打开通知显示页面
         Bundle data = getPushData(bundle);
-        EventBus.getDefault().post(new TransferDataEvent(data, Const.JPUSH));
+        // APP在前台
+        if (MainActivity.isForeground) {
+            EventBus.getDefault().post(new TransferDataEvent(data, Const.JPUSH));
+        } else {
+            if (GlobalUtils.isAppRunning(context)) {
+                // APP 后台运行
+                Intent mainIntent = new Intent(context, MainActivity.class);
+                // 将MainAtivity的launchMode设置成SingleTask, 或者在下面flag中加上Intent.FLAG_CLEAR_TOP,
+                // 如果Task栈中有MainActivity的实例，就会把它移到栈顶，把在它之上的Activity都清理出栈，
+                // 如果Task栈不存在MainActivity实例，则在栈顶创建
+                mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                mainIntent.putExtra(Const.HOME_BUNDLE, data);
+                context.startActivity(mainIntent);
+            } else {
+                // APP 已结束
+                // 如果app进程已经被杀死，先重新启动app，将DetailActivity的启动参数传入Intent中，参数经过
+                // SplashActivity传入MainActivity，此时app的初始化已经完成，在MainActivity中就可以根据传入
+                // 参数跳转到DetailActivity中去了
+                Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
+                launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+                launchIntent.putExtra(Const.HOME_BUNDLE, data);
+                context.startActivity(launchIntent);
+            }
+        }
+
     }
 
     private void handleExtraMessage(Bundle bundle) {
@@ -167,15 +189,5 @@ public class JPushReceiver extends BroadcastReceiver {
             }
         }
         return sb.toString();
-    }
-
-    //send msg to MainActivity
-    private void processCustomMessage(Context context, Bundle bundle) {
-        if (MainActivity.isForeground) {
-            String message = bundle.getString(JPushInterface.EXTRA_MESSAGE);
-            String extras = bundle.getString(JPushInterface.EXTRA_EXTRA);
-            Log.i(App.TAG, "============================>"+message);
-            Log.i(App.TAG, "============================>"+extras);
-        }
     }
 }

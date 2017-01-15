@@ -1,5 +1,6 @@
 package com.tallty.smart_life_android.fragment.home;
 
+import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -68,6 +69,8 @@ import cn.jpush.android.api.TagAliasCallback;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static android.content.Context.NOTIFICATION_SERVICE;
 
 /**
  * Created by kang on 16/6/20.
@@ -181,6 +184,12 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
         shared_phone = sharedPre.getString(Const.USER_PHONE, Const.EMPTY_STRING);
         // 计步器相关
         delayHandler = new Handler(this);
+
+        // 显示推送
+        Bundle bundle = _mActivity.getIntent().getBundleExtra(Const.HOME_BUNDLE);
+        if (bundle != null) {
+            EventBus.getDefault().post(new StartBrotherEvent(NotificationDetailFragment.newInstance(bundle)));
+        }
     }
 
     @Override
@@ -197,6 +206,8 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
         getCartCount();
         // 绑定用户到【电子猫眼】服务, 以获取监控推送
         bindUserToNotification();
+        // 恢复推送 (切换账户会暂停推送服务)
+        JPushInterface.resumePush(_mActivity.getApplicationContext());
     }
 
     /**
@@ -772,10 +783,15 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
     @Subscribe
     public void onShowNotification(final TransferDataEvent event) {
         if (Const.JPUSH.equals(event.tag)) {
-            confirmDialog("电子猫眼发现可疑迹象!", "查看详情", "忽略", new BaseBackFragment.OnConfirmDialogListener() {
+            confirmDialog("收到门铃告警!", "查看详情", "忽略", new BaseBackFragment.OnConfirmDialogListener() {
                 @Override
                 public void onConfirm(DialogInterface dialog, int which) {
+                    // 显示详情页面
                     EventBus.getDefault().post(new StartBrotherEvent(NotificationDetailFragment.newInstance(event.bundle)));
+                    // 消费掉本次通知
+                    int notificationId = event.bundle.getInt(Const.NOTIFICATION_ID);
+                    NotificationManager nm = (NotificationManager) _mActivity.getSystemService(NOTIFICATION_SERVICE);
+                    nm.cancel(notificationId);
                 }
 
                 @Override
