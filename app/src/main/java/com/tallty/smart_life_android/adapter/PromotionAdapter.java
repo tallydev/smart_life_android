@@ -58,8 +58,9 @@ public class PromotionAdapter extends BaseQuickAdapter<Product, BaseViewHolder> 
                 .setText(R.id.promotion_text, state)
                 .setText(R.id.promotion_people_count, spannableString);
         // 显示详情图
+        String url = product.getProductBanners().size() == 0 ? "" : product.getProductBanners().get(0).getUrl();
         Glide.with(mContext)
-                .load(product.getProductBanners().get(0).getUrl())
+                .load(url)
                 .placeholder(R.drawable.product_placeholder)
                 .error(R.drawable.image_error)
                 .into((ImageView) baseViewHolder.getView(R.id.promotion_image));

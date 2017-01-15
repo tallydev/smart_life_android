@@ -7,16 +7,25 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.squareup.haha.perflib.Main;
 import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.activity.MainActivity;
+import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.event.TransferDataEvent;
+import com.tallty.smart_life_android.fragment.home.NotificationDetailFragment;
+import com.tallty.smart_life_android.model.Push;
+import com.tallty.smart_life_android.model.PushExtra;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import cn.jpush.android.api.JPushInterface;
 
@@ -31,9 +40,7 @@ public class JPushReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Bundle bundle = intent.getExtras();
-        Log.d(TAG, "[MyReceiver] onReceive - " + intent.getAction() + ", extras: " + printBundle(bundle));
-        Log.d(TAG, "-----------------------------------------------------------");
-        Log.d(TAG, "接收到推送下来的自定义消息: " + bundle.getString(JPushInterface.EXTRA_MESSAGE));
+        Log.d(TAG, "收到的所有数据 - " + intent.getAction() + ", extras: " + printBundle(bundle));
         Log.d(TAG, "-----------------------------------------------------------");
         Log.d(TAG, "接收到推送下来的Extra: " + bundle.getString(JPushInterface.EXTRA_EXTRA));
         Log.d(TAG, "============================================================");
@@ -53,7 +60,7 @@ public class JPushReceiver extends BroadcastReceiver {
         }
         // 用户点击打开了通知
         else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {
-            handleUserClick(bundle);
+            handleUserClick(context, bundle);
         }
         // 接收到【消息命令】
         else if (JPushInterface.ACTION_RICHPUSH_CALLBACK.equals(intent.getAction())) {
@@ -73,24 +80,16 @@ public class JPushReceiver extends BroadcastReceiver {
         int notificationId = bundle.getInt(JPushInterface.EXTRA_NOTIFICATION_ID);
         Log.d(TAG, "接收到推送下来的通知的ID: " + notificationId);
         if (MainActivity.isForeground) {
-            EventBus.getDefault().post(new TransferDataEvent(bundle, Const.JPUSH));
+            Bundle data = getPushData(bundle);
+            EventBus.getDefault().post(new TransferDataEvent(data, Const.JPUSH));
         }
     }
 
-    private void handleUserClick(Bundle bundle) {
+    private void handleUserClick(Context context, Bundle bundle) {
         Log.d(TAG, "用户点击打开了通知");
         // 通知首页, 打开通知显示页面
-        EventBus.getDefault().post(new TransferDataEvent(bundle, Const.JPUSH));
-// TODO: 2017/1/11 封装成bundle ,展示详情
-//        String[] images = {
-//                "http://wx.igridtotalsolution.com:8080/smartring/uploads/sign/20170103093102_6518_20170103093059016/20170103093057736.jpg",
-//                "http://wx.igridtotalsolution.com:8080/smartring/uploads/sign/20170103093102_6518_20170103093059016/20170103093058376.jpg",
-//                "http://wx.igridtotalsolution.com:8080/smartring/uploads/sign/20170103093102_6518_20170103093059016/20170103093059016.jpg"
-//        };
-//        Bundle bundle = new Bundle();
-//        bundle.putString(Const.PUSH_TITLE, "门铃告警");
-//        bundle.putString(Const.PUSH_TIME, "2016-08-01T17:29:22.000+08:00");
-//        bundle.putStringArray(Const.PUSH_IMAGES, images);
+        Bundle data = getPushData(bundle);
+        EventBus.getDefault().post(new TransferDataEvent(data, Const.JPUSH));
     }
 
     private void handleExtraMessage(Bundle bundle) {
@@ -107,35 +106,64 @@ public class JPushReceiver extends BroadcastReceiver {
         Log.w(TAG, intent.getAction() +" connected state change to "+connected);
     }
 
+
+    /**
+     * 封装收到的推送数据
+     * @param bundle 推送返回的 bundle 数据
+     * @return
+     */
+    private Bundle getPushData(Bundle bundle) {
+        // 接收 => 推送数据包
+        String extra = bundle.getString(JPushInterface.EXTRA_EXTRA);
+        // 解析 => 获取告警数据
+        Gson gson = new Gson();
+        PushExtra pushExtra = gson.fromJson(extra, PushExtra.class);
+        String data = pushExtra.getMessage();
+        // 解析 => Push 对象
+        Push message = gson.fromJson(data, Push.class);
+        Log.i(TAG, message.getTitle() + message.getTime());
+        // 提取 => 图片
+        ArrayList<String> images = new ArrayList<>();
+        for (HashMap<String, String> cache : message.getPics()) {
+            images.add(cache.get("url"));
+        }
+        // 封装为数据包
+        Bundle args = new Bundle();
+        args.putString(Const.PUSH_TITLE, message.getTitle());
+        args.putString(Const.PUSH_TIME, message.getTime());
+        args.putStringArrayList(Const.PUSH_IMAGES, images);
+
+        Log.d(TAG, args.toString());
+        return args;
+    }
+
     // 打印所有的 intent extra 数据
     private static String printBundle(Bundle bundle) {
         StringBuilder sb = new StringBuilder();
         for (String key : bundle.keySet()) {
             if (key.equals(JPushInterface.EXTRA_NOTIFICATION_ID)) {
-                sb.append("\nkey:" + key + ", value:" + bundle.getInt(key));
+                sb.append("\nkey:").append(key).append(", value:").append(bundle.getInt(key));
             }else if(key.equals(JPushInterface.EXTRA_CONNECTION_CHANGE)){
-                sb.append("\nkey:" + key + ", value:" + bundle.getBoolean(key));
+                sb.append("\nkey:").append(key).append(", value:").append(bundle.getBoolean(key));
             } else if (key.equals(JPushInterface.EXTRA_EXTRA)) {
                 if (TextUtils.isEmpty(bundle.getString(JPushInterface.EXTRA_EXTRA))) {
                     Log.i(TAG, "This message has no Extra data");
                     continue;
                 }
-
                 try {
                     JSONObject json = new JSONObject(bundle.getString(JPushInterface.EXTRA_EXTRA));
                     Iterator<String> it =  json.keys();
 
                     while (it.hasNext()) {
-                        String myKey = it.next().toString();
-                        sb.append("\nkey:" + key + ", value: [" +
-                                myKey + " - " +json.optString(myKey) + "]");
+                        String myKey = it.next();
+                        sb.append("\nkey:").append(key).append(", value: [").append(myKey).append(" - ").append(json.optString(myKey)).append("]");
                     }
                 } catch (JSONException e) {
                     Log.e(TAG, "Get message extra JSON error!");
                 }
 
             } else {
-                sb.append("\nkey:" + key + ", value:" + bundle.getString(key));
+                sb.append("\nkey:").append(key).append(", value:").append(bundle.getString(key));
             }
         }
         return sb.toString();

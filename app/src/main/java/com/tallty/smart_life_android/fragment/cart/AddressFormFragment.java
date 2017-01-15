@@ -176,6 +176,8 @@ public class AddressFormFragment extends BaseBackFragment {
             Map<String, String> fields = new HashMap<>();
             fields.put("contact[name]", contact.getName());
             fields.put("contact[phone]", contact.getPhone());
+            fields.put("contact[province]", contact.getProvince());
+            fields.put("contact[city]", contact.getCity());
             fields.put("contact[area]", contact.getArea());
             fields.put("contact[street]", contact.getStreet());
             fields.put("contact[community]", contact.getCommunity());
@@ -267,6 +269,11 @@ public class AddressFormFragment extends BaseBackFragment {
             event.dialog.dismiss();
             String[] select_items = event.data.getStringArray(Const.ARRAY);
             area = select_items != null ? select_items[2] : "";
+            if (!area.isEmpty()) {
+                assert select_items != null;
+                contact.setProvince(select_items[0]);
+                contact.setCity(select_items[1]);
+            }
             AddressDialogFragment fragment = AddressDialogFragment.newInstance("选择小区地址", area);
             fragment.show(getActivity().getFragmentManager(), "HintDialog");
         } else if ("选择小区地址".equals(event.tag)) {

@@ -36,12 +36,17 @@ import com.tallty.smart_life_android.base.BaseMainFragment;
 import com.tallty.smart_life_android.custom.MyRecyclerView;
 import com.tallty.smart_life_android.event.ShowSnackbarEvent;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
+import com.tallty.smart_life_android.event.SwitchTabFragment;
 import com.tallty.smart_life_android.event.TabReselectedEvent;
 import com.tallty.smart_life_android.event.TransferDataEvent;
 import com.tallty.smart_life_android.fragment.Common.GlobalAppointFragment;
 import com.tallty.smart_life_android.fragment.MainFragment;
+import com.tallty.smart_life_android.fragment.community.CommunityFragment;
+import com.tallty.smart_life_android.fragment.me.MyOrders;
 import com.tallty.smart_life_android.holder.HomeViewHolder;
 import com.tallty.smart_life_android.holder.NetworkImageBannerHolder;
+import com.tallty.smart_life_android.model.Activities;
+import com.tallty.smart_life_android.model.Activity;
 import com.tallty.smart_life_android.model.Banner;
 import com.tallty.smart_life_android.model.CartList;
 import com.tallty.smart_life_android.model.Home;
@@ -181,7 +186,6 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
     @Override
     public void onLazyInitView(@Nullable Bundle savedInstanceState) {
         super.onLazyInitView(savedInstanceState);
-        getHomeBanners();
         setList();
         // 设置计步服务
         setupService();
@@ -189,8 +193,6 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
         setUploadStepTimer();
         // 进入页面, 延时3秒, 先上传一次步数, 然后再获取首页信息(优化首页信息的实时性)
         delayUploadStep();
-        // 检查更新
-        PgyUpdateManager.register(_mActivity);
         // 获取购物车数量
         getCartCount();
         // 绑定用户到【电子猫眼】服务, 以获取监控推送
@@ -201,34 +203,34 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
      * 绑定电子猫眼监控服务
      */
     private void bindUserToNotification() {
-        String registrationID = JPushInterface.getRegistrationID(_mActivity);
-        JPushInterface.setAlias(_mActivity, shared_phone, new TagAliasCallback() {
-            @Override
-            public void gotResult(int i, String s, Set<String> set) {
-                // TODO: 2017/1/14 推送别名处理≠
-            }
-        });
+        final String registrationID = JPushInterface.getRegistrationID(_mActivity);
+        // 注册id 为空, 重新注册
         if (registrationID.isEmpty()) {
-            showToast("推送服务启动失败");
             JPushInterface.init(_mActivity);
             return;
         }
+        // 设置别名
+        JPushInterface.setAlias(_mActivity, shared_phone, new TagAliasCallback() {
+            @Override
+            public void gotResult(int i, String s, Set<String> set) {
+                if (i != 0) return;
+                Engine.noAuthService().bindNotification(shared_phone, registrationID)
+                        .enqueue(new Callback<JsonElement>() {
+                            @Override
+                            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
+                                if (response.isSuccessful()) {
+                                    Log.i(App.TAG, "绑定电子猫眼成功");
+                                    Log.d(App.TAG, "别名:" + shared_phone + " , " + "registrationID" + registrationID);
+                                } else
+                                    Log.i(App.TAG, "绑定电子猫眼失败");
+                            }
 
-        Log.d(App.TAG, shared_phone + "___" + registrationID);
-        Engine.noAuthService().bindNotification(shared_phone, registrationID)
-            .enqueue(new Callback<JsonElement>() {
-                @Override
-                public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
-                    if (response.isSuccessful()) {
-                        Log.i(App.TAG, "绑定电子猫眼成功");
-                    } else
-                        Log.i(App.TAG, "绑定电子猫眼失败");
-                }
-
-                @Override
-                public void onFailure(Call<JsonElement> call, Throwable t) {
-                    Log.i(App.TAG, "绑定电子猫眼错误");
-                }
+                            @Override
+                            public void onFailure(Call<JsonElement> call, Throwable t) {
+                                Log.i(App.TAG, "绑定电子猫眼错误");
+                            }
+                        });
+            }
         });
     }
 
@@ -242,11 +244,12 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
         delayTimer = new CountDownTimer(3000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                Log.d(App.TAG, "首次进入首页,先上传step,再获取HomeData, 倒计时"+ millisUntilFinished / 1000);
+
             }
 
             @Override
             public void onFinish() {
+                delayTimer = null;
                 String current_date = GlobalUtils.getTodayDate();
                 Log.d(App.TAG, "首次进入页面,上传步数任务,并获取首页数据"+current_date+","+step);
                 Engine
@@ -602,7 +605,6 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
                 // 更新首页视图
                 if (homeViewHolder == null) {
                     homeViewHolder = (HomeViewHolder) recyclerView.findViewHolderForAdapterPosition(1);
-                    Log.d(App.TAG, "获取到了【健步达人】item: "+homeViewHolder+"");
                 } else {
                     homeViewHolder.steps.setText("" + step);
                     homeViewHolder.rank.setText(rank);
@@ -636,17 +638,89 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
      */
     @Override
     public void onItemClick(int position) {
-        String title = banners.get(position).getTitle();
-        String detailImageUrl = banners.get(position).getBannerDetailImage();
-        if (!detailImageUrl.isEmpty()) {
-            EventBus.getDefault().post(new StartBrotherEvent(GlobalAppointFragment.newInstance(title, detailImageUrl)));
+        Banner banner = banners.get(position);
+        String detailImageUrl = banner.getBannerDetailImage();
+        int contentId = banner.getTypeId();
+
+        switch (banner.getBannerType()) {
+            case "图片详情":
+                if (banner.getBannerDetailImage().isEmpty()) return;
+                EventBus.getDefault().post(new StartBrotherEvent(GlobalAppointFragment.newInstance(banner.getTitle(), detailImageUrl)));
+                break;
+            case "精品超市":
+                if (banner.getTypeId() == 0) return;
+                EventBus.getDefault().post(new StartBrotherEvent(ProductShowFragment.newInstance(contentId)));
+                break;
+            case "限量销售":
+                if (banner.getTypeId() == 0) return;
+                EventBus.getDefault().post(new StartBrotherEvent(PromotionShowFragment.newInstance(contentId)));
+                break;
+            case "社区活动":
+                if (banner.getTypeId() == 0) return;
+                getActivities(contentId);
+                break;
         }
+    }
+
+    // 获取社区活动详情
+    private void getActivities(final int activity_id) {
+        showProgress("载入中...");
+        Engine.authService(shared_token, shared_phone).getActivities().enqueue(new Callback<Activities>() {
+            @Override
+            public void onResponse(Call<Activities> call, Response<Activities> response) {
+                if (response.isSuccessful()) {
+                    for (Activity activity : response.body().getActivities()) {
+                        if (activity.getId() == activity_id) {
+                            EventBus.getDefault().post(new StartBrotherEvent(
+                                    GlobalAppointFragment.newInstance("活动详情", activity.getDetail_image(), activity.getId(), "我要报名", false)
+                            ));
+                            break;
+                        }
+                    }
+                } else {
+                    showToast("载入失败");
+                }
+                hideProgress();
+            }
+
+            @Override
+            public void onFailure(Call<Activities> call, Throwable t) {
+                hideProgress();
+                showToast("载入失败, 请检查手机网络");
+            }
+        });
+    }
+
+    // 推送init 为异步任务, 延时三秒绑定用户
+    private void delayBindUserToNotification() {
+        delayTimer = new CountDownTimer(3000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+            }
+
+            @Override
+            public void onFinish() {
+                delayTimer = null;
+                bindUserToNotification();
+            }
+        };
+        delayTimer.start();
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        // 获取banner
+        getHomeBanners();
         banner.startTurning(5000);
+        // 检查更新
+        PgyUpdateManager.register(_mActivity);
+        // 检测推送注册情况
+        if (JPushInterface.getRegistrationID(_mActivity) == null) {
+            JPushInterface.init(App.getInstance());
+            // init 为异步任务, 延时三秒绑定用户
+            delayBindUserToNotification();
+        }
     }
 
     @Override

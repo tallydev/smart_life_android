@@ -12,10 +12,6 @@ import java.io.Serializable;
 
 public class Contact implements Serializable {
 
-    public Contact(){
-
-    }
-
     @SerializedName("id")
     @Expose
     private int id = 0;
@@ -28,6 +24,16 @@ public class Contact implements Serializable {
     @SerializedName("phone")
     @Expose
     private String phone;
+
+    // 省
+    @SerializedName("province")
+    @Expose
+    private String province;
+
+    // 市
+    @SerializedName("city")
+    @Expose
+    private String city;
 
     // 区
     @SerializedName("area")
@@ -135,5 +141,21 @@ public class Contact implements Serializable {
 
     public void setOrder(int order) {
         this.order = order;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 }

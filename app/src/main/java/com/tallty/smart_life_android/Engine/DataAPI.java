@@ -115,7 +115,7 @@ public interface DataAPI {
 
     // 根据类别查看商品
     @GET("products/sort")
-    Call<ProductList> getProductsBycategory(@Query("page") int page,
+    Call<ProductList> getProductsByCategory(@Query("page") int page,
                                             @Query("per_page") int per_page,
                                             @Query("product_sort_id") int category_id);
 

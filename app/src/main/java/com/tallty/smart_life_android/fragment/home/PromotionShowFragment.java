@@ -280,7 +280,7 @@ public class PromotionShowFragment  extends BaseBackFragment implements OnItemCl
             buy_now.setClickable(false);
             buy_now.setText("已结束");
             buy_now.setBackgroundColor(showColor(R.color.disable_orange));
-            buy_now.setText(showColor(R.color.gray));
+            buy_now.setTextColor(showColor(R.color.gray));
         }
         // 加载详情图
         detail_image.setZoomEnabled(false);

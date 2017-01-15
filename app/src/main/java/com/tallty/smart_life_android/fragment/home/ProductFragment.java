@@ -96,7 +96,7 @@ public class ProductFragment extends BaseBackFragment implements BaseQuickAdapte
         recyclerView.addOnItemTouchListener(new OnItemClickListener() {
             @Override
             public void onSimpleItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
-                start(PromotionShowFragment.newInstance(products.get(i)));
+                start(ProductShowFragment.newInstance(products.get(i)));
             }
         });
         // 加载更多
@@ -105,7 +105,7 @@ public class ProductFragment extends BaseBackFragment implements BaseQuickAdapte
 
     private void fetchProducts() {
         showProgress("正在加载...");
-        Engine.noAuthService().getProductsBycategory(current_page, per_page, categoryId)
+        Engine.noAuthService().getProductsByCategory(current_page, per_page, categoryId)
                 .enqueue(new Callback<ProductList>() {
             @Override
             public void onResponse(Call<ProductList> call, Response<ProductList> response) {
@@ -139,7 +139,7 @@ public class ProductFragment extends BaseBackFragment implements BaseQuickAdapte
                     adapter.loadMoreEnd();
                 } else {
                     current_page++;
-                    Engine.noAuthService().getProductsBycategory(current_page, per_page, categoryId)
+                    Engine.noAuthService().getProductsByCategory(current_page, per_page, categoryId)
                             .enqueue(new Callback<ProductList>() {
                         @Override
                         public void onResponse(Call<ProductList> call, Response<ProductList> response) {

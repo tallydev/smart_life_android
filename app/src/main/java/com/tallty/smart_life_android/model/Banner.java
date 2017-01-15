@@ -20,6 +20,18 @@ public class Banner implements Serializable {
     @Expose
     private String title;
 
+    @SerializedName("position")
+    @Expose
+    private int position;
+
+    @SerializedName("banner_type")
+    @Expose
+    private String bannerType;
+
+    @SerializedName("type_id")
+    @Expose
+    private int typeId;
+
     @SerializedName("banner_cover")
     @Expose
     private String bannerImage;
@@ -59,5 +71,29 @@ public class Banner implements Serializable {
 
     public void setBannerDetailImage(String bannerDetailImage) {
         this.bannerDetailImage = bannerDetailImage;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public String getBannerType() {
+        return bannerType;
+    }
+
+    public void setBannerType(String bannerType) {
+        this.bannerType = bannerType;
+    }
+
+    public int getTypeId() {
+        return typeId;
+    }
+
+    public void setTypeId(int typeId) {
+        this.typeId = typeId;
     }
 }

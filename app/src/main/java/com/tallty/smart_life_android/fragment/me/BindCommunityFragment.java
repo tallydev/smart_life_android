@@ -198,6 +198,7 @@ public class BindCommunityFragment extends BaseBackFragment {
             String[] areas = event.data.getStringArray(Const.ARRAY);
             if (areas != null) {
                 selectArea = areas[2];
+                area_edit.setError(null);
                 area_edit.setText(areas[0]+areas[1]+areas[2]);
             }
         } else if ("选择小区".equals(event.tag)) {
@@ -206,6 +207,7 @@ public class BindCommunityFragment extends BaseBackFragment {
             if (select_items != null) {
                 streetName = select_items[0];
                 villageName = select_items[1];
+                detail_edit.setError(null);
                 detail_edit.setText(select_items[0]+select_items[1]);
             }
         }

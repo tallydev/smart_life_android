@@ -31,9 +31,12 @@ public class ManageAddressesAdapter extends BaseQuickAdapter<Contact, BaseViewHo
                 .setText(R.id.item_manage_address_name, contact.getName())
                 .setText(R.id.item_manage_address_phone, contact.getPhone())
                 .setChecked(R.id.item_manage_address_set_default, contact.isDefault())
-                .setText(R.id.item_manage_address_detail, contact.getArea() +
-                        contact.getStreet() +
-                        contact.getCommunity() +
+                .setText(R.id.item_manage_address_detail,
+                        contact.getProvince() + " " +
+                        contact.getCity() + " " +
+                        contact.getArea() + " " +
+                        contact.getStreet() + " " +
+                        contact.getCommunity() + " " +
                         contact.getAddress());
         // 事件
         Button editBtn = baseViewHolder.getView(R.id.item_manage_address_edit);

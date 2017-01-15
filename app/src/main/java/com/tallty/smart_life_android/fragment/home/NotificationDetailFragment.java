@@ -24,7 +24,7 @@ public class NotificationDetailFragment extends BaseBackFragment {
     private NotificationAdapter adapter;
     private String title= "";
     private String time = "";
-    private String[] images;
+    private ArrayList<String> images;
 
     public static NotificationDetailFragment newInstance(Bundle bundle) {
         NotificationDetailFragment fragment = new NotificationDetailFragment();
@@ -39,7 +39,7 @@ public class NotificationDetailFragment extends BaseBackFragment {
         if (args != null) {
             title = args.getString(Const.PUSH_TITLE);
             time = args.getString(Const.PUSH_TIME);
-            images = args.getStringArray(Const.PUSH_IMAGES);
+            images = args.getStringArrayList(Const.PUSH_IMAGES);
         }
     }
 
