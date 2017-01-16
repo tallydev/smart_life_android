@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -120,16 +121,16 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
             add("精品超市");
         }
     };
-    private List<Integer> images = new ArrayList<Integer>() {
+    private List<String> images = new ArrayList<String>() {
         {
-            add(R.drawable.smart_healthy);
-            add(R.drawable.fitness_people);
-            add(R.drawable.community_activity);
-            add(R.drawable.smart_home);
-            add(R.drawable.come_service);
-            add(R.drawable.community_it);
-            add(R.drawable.on_sail);
-            add(R.drawable.supermarket);
+            add(getDrawablePath(R.drawable.smart_healthy));
+            add(getDrawablePath(R.drawable.fitness_people));
+            add(getDrawablePath(R.drawable.community_activity));
+            add(getDrawablePath(R.drawable.smart_home));
+            add(getDrawablePath(R.drawable.come_service));
+            add(getDrawablePath(R.drawable.community_it));
+            add(getDrawablePath(R.drawable.image_placeholder));
+            add(getDrawablePath(R.drawable.supermarket));
         }
     };
     private String[][] itemButtons = {
@@ -416,13 +417,8 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
                             homeViewHolder.date.setText(server_today);
                         }
                     }
-                    // 更新新品上市倒计时
-                    homeRecyclerAdapter.setCountDownTimer(response.body().getNewer().get("end_time"));
-                    homeRecyclerAdapter.notifyItemChanged(6);
-
                     Log.i(App.TAG, "获取首页信息成功");
                     Log.i(App.TAG, "浮窗排名: "+rank);
-                    Log.i(App.TAG, "更新限量发售倒计时");
                 } else {
                     Log.w(App.TAG, "获取首页信息失败");
                 }
@@ -440,18 +436,23 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
     private void getHomeBanners() {
         Engine.authService(shared_token, shared_phone)
             .getHomeBanners()
-            .enqueue(new Callback<HashMap<String, ArrayList<Banner>>>() {
+            .enqueue(new Callback<Home>() {
                 @Override
-                public void onResponse(Call<HashMap<String, ArrayList<Banner>>> call, Response<HashMap<String, ArrayList<Banner>>> response) {
+                public void onResponse(Call<Home> call, Response<Home> response) {
                     if (response.isSuccessful()) {
                         banners.clear();
-                        banners.addAll(response.body().get("banners"));
+                        banners.addAll(response.body().getBanners());
                         setBanner();
+
+                        // 更新新品上市倒计时
+                        homeRecyclerAdapter.setCountDownTimer(response.body().getNewer().get("end_time"));
+                        images.set(6, response.body().getNewer().get("url"));
+                        homeRecyclerAdapter.notifyItemChanged(6);
                     }
                 }
 
                 @Override
-                public void onFailure(Call<HashMap<String, ArrayList<Banner>>> call, Throwable t) {
+                public void onFailure(Call<Home> call, Throwable t) {
 
                 }
         });

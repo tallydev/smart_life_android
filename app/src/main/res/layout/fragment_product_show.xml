@@ -148,6 +148,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/description_layout"
                     android:visibility="gone"
+                    android:adjustViewBounds="true"
                     android:scaleType="fitXY"/>
             </RelativeLayout>
         </ScrollView>

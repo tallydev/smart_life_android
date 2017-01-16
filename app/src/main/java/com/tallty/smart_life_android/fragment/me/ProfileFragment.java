@@ -557,7 +557,7 @@ public class ProfileFragment extends BaseBackFragment {
     public String getVersion() {
         try {
             PackageManager manager = _mActivity.getPackageManager();
-            PackageInfo info = manager.getPackageInfo(_mActivity.getPackageName(), 0);
+            PackageInfo info = manager.getPackageInfo("com.tallty.smart_life_android", 0);
             return info.versionName;
         } catch (Exception e) {
             e.printStackTrace();

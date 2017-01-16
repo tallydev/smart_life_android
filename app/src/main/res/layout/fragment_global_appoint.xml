@@ -56,6 +56,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:scrollbars="none"
+                android:src="@drawable/image_placeholder"
+                android:adjustViewBounds="true"
                 android:scaleType="fitXY"/>
         </ScrollView>
         <!--重新加载-->

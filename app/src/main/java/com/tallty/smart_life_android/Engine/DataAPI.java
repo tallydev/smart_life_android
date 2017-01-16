@@ -270,7 +270,7 @@ public interface DataAPI {
 
     // 获取首页Banner
     @GET("home_info")
-    Call<HashMap<String, ArrayList<Banner>>> getHomeBanners();
+    Call<Home> getHomeBanners();
 
     // *********************************************************************************************
     // 社区活动列表

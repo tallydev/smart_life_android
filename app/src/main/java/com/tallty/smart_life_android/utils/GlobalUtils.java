@@ -47,7 +47,7 @@ public class GlobalUtils {
     public static String getVersion(Context context)
     {
         try {
-            PackageInfo pi=context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            PackageInfo pi=context.getPackageManager().getPackageInfo("com.tallty.smart_life_android", 0);
             return pi.versionName;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
@@ -60,7 +60,7 @@ public class GlobalUtils {
     public static int getVersionCode(Context context)
     {
         try {
-            PackageInfo pi = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            PackageInfo pi = context.getPackageManager().getPackageInfo("com.tallty.smart_life_android", 0);
             return pi.versionCode;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
@@ -93,7 +93,7 @@ public class GlobalUtils {
         ComponentName componentInfo = task.get(0).importanceReasonComponent;
 
         // Check if it matches our package name.
-        if(componentInfo.getPackageName().equals(context.getPackageName()))
+        if(componentInfo.getPackageName().equals("com.tallty.smart_life_android"))
             return true;
 
         // If not then our app is not on the foreground.

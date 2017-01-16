@@ -63,8 +63,6 @@ public class HomeItemGridViewAdapter extends BaseAdapter {
                 Glide
                     .with(context)
                     .load(icons[position])
-                    .placeholder(R.drawable.image_placeholder)
-                    .error(R.drawable.image_error)
                     .centerCrop().into(icon);
             } else {
                 icon.setVisibility(View.GONE);

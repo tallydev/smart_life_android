@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -23,6 +24,10 @@ public class Home implements Serializable {
     @SerializedName("product")
     @Expose
     private HashMap<String, String> product = new HashMap<>();
+
+    @SerializedName("banners")
+    @Expose
+    private ArrayList<Banner> banners = new ArrayList<>();
 
     public HashMap<String, String> getFitness() {
         return fitness;
@@ -46,5 +51,13 @@ public class Home implements Serializable {
 
     public void setProduct(HashMap<String, String> product) {
         this.product = product;
+    }
+
+    public ArrayList<Banner> getBanners() {
+        return banners;
+    }
+
+    public void setBanners(ArrayList<Banner> banners) {
+        this.banners = banners;
     }
 }

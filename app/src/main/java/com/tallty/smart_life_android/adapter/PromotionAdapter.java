@@ -50,17 +50,16 @@ public class PromotionAdapter extends BaseQuickAdapter<Product, BaseViewHolder> 
         final CountdownView countdownView = baseViewHolder.getView(R.id.promotion_timer);
         // 富文本显示
         int str_length = String.valueOf(product.getSales()).length();
-        SpannableString spannableString = new SpannableString(product.getSales()+"件已付款");
+        SpannableString spannableString = new SpannableString(product.getSales()+" 件已付款");
         spannableString.setSpan(new AbsoluteSizeSpan(16, true), 0, str_length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannableString.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.orange)), 0, str_length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.white)), 0, str_length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         String state = product.isPromotionEnable() ? "还剩：" : "已结束";
         baseViewHolder
                 .setText(R.id.promotion_text, state)
                 .setText(R.id.promotion_people_count, spannableString);
         // 显示详情图
-        String url = product.getProductBanners().size() == 0 ? "" : product.getProductBanners().get(0).getUrl();
         Glide.with(mContext)
-                .load(url)
+                .load(product.getThumb())
                 .placeholder(R.drawable.product_placeholder)
                 .error(R.drawable.image_error)
                 .into((ImageView) baseViewHolder.getView(R.id.promotion_image));

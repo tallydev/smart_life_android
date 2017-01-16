@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.IdRes;
@@ -92,6 +93,13 @@ public abstract class BaseMainFragment extends BaseFragment implements View.OnCl
      */
     public void showToast(String text) {
         ToastUtil.show(text);
+    }
+
+    /**
+     * 获取资源路径
+     */
+    protected String getDrawablePath(int drawableId) {
+        return Uri.parse("android.resource://com.tallty.smart_life_android/" + drawableId).toString();
     }
 
     /**

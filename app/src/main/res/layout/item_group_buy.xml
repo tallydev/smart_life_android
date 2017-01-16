@@ -4,26 +4,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="4dp">
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:scaleType="centerCrop"
+        android:layout_height="220dp"
+        android:scaleType="fitXY"
         android:src="@drawable/community_two"
         android:id="@+id/promotion_image"/>
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="32dp"
-        android:orientation="horizontal"
-        android:paddingLeft="12dp"
+        android:layout_height="38dp"
         android:paddingRight="12dp"
-        android:background="@color/white">
+        android:orientation="horizontal"
+        android:background="@color/timer_bg">
         <TextView
             android:id="@+id/promotion_people_count"
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:textColor="@color/global_text"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:background="@color/red"
             android:textSize="@dimen/sp_14"/>
         <cn.iwgang.countdownview.CountdownView
             android:id="@+id/promotion_timer"
@@ -32,18 +34,19 @@
             android:layout_gravity="center_vertical"
             android:layout_alignParentRight="true"
             app:isHideTimeBackground="false"
+            android:background="@color/timer_bg"
             app:timeBgSize="22dp"
-            app:timeBgColor="@color/white"
+            app:timeBgColor="@color/clock_bg"
             app:isShowTimeBgDivisionLine="true"
             app:isShowDay="true"
             app:isShowHour="true"
             app:isShowMinute="true"
             app:isShowSecond="true"
-            app:timeTextColor="@color/timer_color"
+            app:timeTextColor="@color/white"
             app:timeTextSize="@dimen/text_14"
             app:isTimeTextBold="false"
             app:suffixGravity="center"
-            android:textColor="@color/global_text"
+            android:textColor="@color/white"
             app:suffixTextSize="@dimen/text_12"
             app:isSuffixTextBold="false"
             app:suffixDay="天"
@@ -51,7 +54,7 @@
             app:suffixMinute="分"
             app:suffixSecond="秒"
             app:isShowTimeBgBorder="true"
-            app:timeBgBorderColor="@color/app_bg"
+            app:timeBgBorderColor="@color/clock_bg"
             app:timeBgBorderSize="1dp"
             app:timeBgBorderRadius="3dp"/>
         <TextView
@@ -74,8 +77,4 @@
             android:textColor="@color/global_text"
             android:text="已结束"/>
     </RelativeLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="8dp"
-        android:background="@color/app_bg"/>
 </LinearLayout>

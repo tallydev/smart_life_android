@@ -40,7 +40,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
     private Context context;
     // 数据源
     private List<String> titles;
-    private List<Integer> images;
+    private List<String> images;
     private String[][] buttons;
     private Integer[][] icons;
     private long countDownSecond;
@@ -57,7 +57,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
      * @param buttons
      * @param icons
      */
-    public HomeRecyclerAdapter(Context context, List<String> titles, List<Integer> images,
+    public HomeRecyclerAdapter(Context context, List<String> titles, List<String> images,
                                String[][] buttons, Integer[][] icons) {
         this.context = context;
         this.titles = titles;
@@ -178,9 +178,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
     }
 
     public void setCountDownTimer(String time) {
-        Log.d(App.TAG, "设置倒计时时间为: "+time);
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss'.000+08:00'");
         try {
             Date date = format.parse(time);
             countDownSecond = date.getTime() - System.currentTimeMillis();
