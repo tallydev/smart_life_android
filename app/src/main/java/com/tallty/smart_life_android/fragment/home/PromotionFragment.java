@@ -8,11 +8,13 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
+import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
@@ -140,6 +142,7 @@ public class PromotionFragment extends BaseBackFragment implements
                             boolean isEnable = getCountDownMills(product.getEndTime()) > 0;
                             product.setPromotionEnable(isEnable);
                             products.add(product);
+                            Log.i(App.TAG, product.getTitle());
                         }
                         adapter.notifyDataSetChanged();
                         // 刷新逻辑

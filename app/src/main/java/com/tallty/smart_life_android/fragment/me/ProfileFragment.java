@@ -147,7 +147,8 @@ public class ProfileFragment extends BaseBackFragment {
                         processPhoto();
                         break;
                     case "登录手机号":
-                        startForResult(BindPhoneFragment.newInstance(profiles.get(i), i), REQ_CODE);
+                        showToast("暂不支持修改登录手机号");
+//                        startForResult(BindPhoneFragment.newInstance(profiles.get(i), i), REQ_CODE);
                         break;
                     case "出生日期":
                         processBirth(i);
