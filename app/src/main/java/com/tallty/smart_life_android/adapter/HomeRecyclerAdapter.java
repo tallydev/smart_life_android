@@ -96,7 +96,11 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
     public void onBindViewHolder(HomeViewHolder viewHolder, final int position) {
         // 公用布局: 标题图片按钮
         viewHolder.textView.setText("— "+titles.get(position)+" —");
-        Glide.with(context).load(images.get(position)).into(viewHolder.imageView);
+        Glide.with(context)
+            .load(images.get(position))
+            .error(R.drawable.image_error)
+            .placeholder(R.drawable.product_placeholder)
+            .into(viewHolder.imageView);
         viewHolder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,7 +117,11 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
 
         // "健步达人"布局
         if (viewHolder.viewType == IS_STEPS) {
-            Glide.with(context).load(R.drawable.step_weather).into(viewHolder.weather);
+            Glide.with(context)
+                    .load(R.drawable.step_weather)
+                    .error(R.drawable.image_error)
+                    .placeholder(R.drawable.image_placeholder)
+                    .into(viewHolder.weather);
             viewHolder.rank.setText("1");
             viewHolder.steps.setText("0");
         }

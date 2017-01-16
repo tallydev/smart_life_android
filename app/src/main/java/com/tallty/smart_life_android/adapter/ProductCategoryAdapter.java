@@ -34,6 +34,7 @@ public class ProductCategoryAdapter extends BaseQuickAdapter<Category, BaseViewH
         Glide.with(mContext)
                 .load(category.getThumb())
                 .error(R.drawable.image_error)
+                .placeholder(R.drawable.image_placeholder)
                 .into(imageView);
     }
 }

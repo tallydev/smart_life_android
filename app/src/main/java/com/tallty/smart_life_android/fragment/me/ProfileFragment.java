@@ -50,8 +50,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import cn.jpush.android.api.JPushInterface;
+import cn.jpush.android.api.TagAliasCallback;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -302,6 +304,7 @@ public class ProfileFragment extends BaseBackFragment {
             Intent OpenLocalIntent = new Intent(Intent.ACTION_GET_CONTENT);
             OpenLocalIntent.setType("image/*");
             startActivityForResult(OpenLocalIntent, CHOOSE_PICTURE);
+            Log.i(App.TAG, "1、选择了相册图片");
         } else {
             // 拍照
             Intent openCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -316,15 +319,18 @@ public class ProfileFragment extends BaseBackFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) { // 如果返回码是可以用的
+
             switch (requestCode) {
                 case TAKE_PICTURE:
                     startPhotoZoom(tempUri); // 开始对图片进行裁剪处理
                     break;
                 case CHOOSE_PICTURE:
+                    Log.i(App.TAG, "2、接收了相册图片, 开始裁剪" + data.getDataString());
                     startPhotoZoom(data.getData()); // 开始对图片进行裁剪处理
                     break;
                 case CROP_SMALL_PICTURE:
                     if (data != null) {
+                        Log.i(App.TAG, "3、裁剪完成, 开始显示");
                         setImageToView(data); // 让刚才选择裁剪得到的图片显示在界面上
                     }
                     break;
@@ -332,7 +338,7 @@ public class ProfileFragment extends BaseBackFragment {
         }
     }
 
-    // TODO: 2017/1/13 选择图片失效
+    // TODO: 2017/1/16 图片选择问题
     /**
      * 裁剪图片方法实现
      */
@@ -463,7 +469,12 @@ public class ProfileFragment extends BaseBackFragment {
                 editor.putString(Const.USER_TOKEN, Const.EMPTY_STRING);
                 editor.apply();
                 // 停止结束电子猫眼推送
-                JPushInterface.stopPush(getActivity().getApplicationContext());
+                JPushInterface.setAlias(_mActivity, "", new TagAliasCallback() {
+                    @Override
+                    public void gotResult(int i, String s, Set<String> set) {
+
+                    }
+                });
                 // 重置网络请求, 否则退出账号,authService 还保留着上一账号的phone 和 token
                 Engine.resetEngine();
                 Intent intent = new Intent(getActivity(), LoginActivity.class);

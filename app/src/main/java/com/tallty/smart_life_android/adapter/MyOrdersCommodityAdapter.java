@@ -34,7 +34,10 @@ public class MyOrdersCommodityAdapter extends BaseQuickAdapter<CartItem, BaseVie
 
     @Override
     protected void convert(BaseViewHolder baseViewHolder, final CartItem cartItem) {
-        Glide.with(mContext).load(cartItem.getThumb())
+        Glide.with(mContext)
+                .load(cartItem.getThumb())
+                .placeholder(R.drawable.image_placeholder)
+                .error(R.drawable.image_error)
                 .into((ImageView) baseViewHolder.getView(R.id.order_commodity_image));
 
         String delete_str = "￥ "+cartItem.getOriginalPrice();

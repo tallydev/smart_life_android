@@ -3,6 +3,7 @@ package com.tallty.smart_life_android.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.joanzapata.iconify.Iconify;
@@ -30,6 +31,10 @@ import me.yokeyword.fragmentation.anim.FragmentAnimator;
 
 public class MainActivity extends SupportActivity {
     public static boolean isForeground = false;
+    // 设备相关
+    public static int windowWidth = 0;
+    public static int windowHeight = 0;
+    // 社区地址相关
     public static ArrayList<CommunityObject> communities = new ArrayList<>();
     public static List<String> provinces = new ArrayList<>();
     public static HashMap<String, List<String>> cities = new HashMap<>();
@@ -54,7 +59,18 @@ public class MainActivity extends SupportActivity {
         if (bundle != null) {
             EventBus.getDefault().post(new TransferDataEvent(bundle, Const.JPUSH));
         }
+
+        // 设备数据
+        setDeviceData();
     }
+
+    private void setDeviceData() {
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        windowHeight = dm.heightPixels;
+        windowWidth = dm.widthPixels;
+    }
+
 
     @Override
     public void onBackPressedSupport() {

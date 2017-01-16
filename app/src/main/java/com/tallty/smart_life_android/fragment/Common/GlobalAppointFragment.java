@@ -2,12 +2,15 @@ package com.tallty.smart_life_android.fragment.Common;
 
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -22,13 +25,17 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.ImageViewState;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+import com.squareup.haha.perflib.Main;
 import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
+import com.tallty.smart_life_android.activity.MainActivity;
 import com.tallty.smart_life_android.base.BaseBackFragment;
+import com.tallty.smart_life_android.fragment.MainFragment;
 import com.tallty.smart_life_android.fragment.Pop.HintDialogFragment;
 import com.tallty.smart_life_android.model.Appointment;
+import com.tallty.smart_life_android.utils.ImageUtils;
 
 import java.io.File;
 
@@ -164,8 +171,19 @@ public class GlobalAppointFragment extends BaseBackFragment {
             .downloadOnly(new SimpleTarget<File>() {
                 @Override
                 public void onResourceReady(File resource, GlideAnimation<? super File> glideAnimation) {
-                    detail_image.setImage(ImageSource.uri(Uri.fromFile(resource)), new ImageViewState(1.0f, new PointF(0, 0), 0));
-                    onImageLoadListener(resource);
+                    Bitmap bitmap = BitmapFactory.decodeFile(resource.getAbsolutePath(), ImageUtils.getBitmapOption(10));
+                    int imageWidth = bitmap.getWidth() * 8;
+                    int imageHeight = bitmap.getHeight() * 8;
+                    Log.d(App.TAG, MainActivity.windowWidth+"获取设备宽度");
+                    Log.d(App.TAG, MainActivity.windowHeight+"获取设备宽度");
+                    Log.d(App.TAG, imageWidth+"获取图片的宽度");
+                    Log.d(App.TAG, imageHeight+"获取图片的高度");
+                    float scale = (float) (MainActivity.windowWidth * 1.0 / imageWidth);
+                    Log.d(App.TAG, scale+"获取缩放");
+                    // 长图展示
+                    detail_image.setImage(ImageSource.uri(Uri.fromFile(resource)), new ImageViewState(scale, new PointF(0, 0), 0));
+                    // 监听: 如果图片高度小于设备高度, 使用普通加载方式
+                    onImageLoadListener(resource, imageHeight);
                 }
 
                 @Override
@@ -178,7 +196,7 @@ public class GlobalAppointFragment extends BaseBackFragment {
     }
 
     // 图片载入监听
-    private void onImageLoadListener(final File resource) {
+    private void onImageLoadListener(final File resource, final int imageHeight) {
         detail_image.setOnImageEventListener(new SubsamplingScaleImageView.OnImageEventListener() {
             @Override
             public void onReady() {
@@ -193,23 +211,16 @@ public class GlobalAppointFragment extends BaseBackFragment {
                     }
                 }
 
-                WindowManager wm = (WindowManager) _mActivity.getSystemService(Context.WINDOW_SERVICE);
-                // 屏幕宽度
-                int width = wm.getDefaultDisplay().getWidth();
-                // 图片宽度
-                int image_w = detail_image.getSWidth();
-                // 比例
-                float width_ratio = (float) (width * 1.0 / image_w);
-
-                Log.d(App.TAG, detail_image.getScale()+"缩放比例");
-                Log.d(App.TAG, width_ratio+"宽度比例");
-
-                if (detail_image.getScale() > width_ratio) {
+                if (imageHeight < MainActivity.windowHeight) {
                     Log.d(App.TAG, "使用普通ImageView加载宽图");
                     detail_image.recycle();
                     detail_image.setVisibility(View.GONE);
                     scrollView.setVisibility(View.VISIBLE);
-                    Glide.with(_mActivity).load(resource).into(small_detail_image);
+                    Glide.with(_mActivity)
+                            .load(resource)
+                            .error(R.drawable.image_error)
+                            .placeholder(R.drawable.image_placeholder)
+                            .into(small_detail_image);
                 }
                 hideProgress();
             }

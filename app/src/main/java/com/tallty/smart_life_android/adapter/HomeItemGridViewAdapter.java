@@ -60,7 +60,12 @@ public class HomeItemGridViewAdapter extends BaseAdapter {
         if (position <= texts.length - 1) {
             text.setText("更多".equals(texts[position]) ? "• • •" : texts[position]);
             if (position <= icons.length - 1 ) {
-                Glide.with(context).load(icons[position]).centerCrop().into(icon);
+                Glide
+                    .with(context)
+                    .load(icons[position])
+                    .placeholder(R.drawable.image_placeholder)
+                    .error(R.drawable.image_error)
+                    .centerCrop().into(icon);
             } else {
                 icon.setVisibility(View.GONE);
             }

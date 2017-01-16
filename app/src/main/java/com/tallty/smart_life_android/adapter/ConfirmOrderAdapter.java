@@ -41,6 +41,8 @@ public class ConfirmOrderAdapter extends BaseQuickAdapter<CartItem, BaseViewHold
         Glide
             .with(mContext)
             .load(cartItem.getThumb())
+            .error(R.drawable.image_error)
+            .placeholder(R.drawable.image_placeholder)
             .into((ImageView) baseViewHolder.getView(R.id.cart_item_photo));
     }
 }

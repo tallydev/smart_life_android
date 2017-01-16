@@ -1,6 +1,7 @@
 package com.tallty.smart_life_android.utils;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Environment;
 
 import java.io.File;
@@ -52,5 +53,18 @@ public class ImageUtils {
             }
         }
         return file;
+    }
+
+    /**
+     * 修改 inSampleSize
+     * @param inSampleSize
+     * @return
+     */
+    public static BitmapFactory.Options getBitmapOption(int inSampleSize){
+        System.gc();
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inPurgeable = true;
+        options.inSampleSize = inSampleSize;
+        return options;
     }
 }

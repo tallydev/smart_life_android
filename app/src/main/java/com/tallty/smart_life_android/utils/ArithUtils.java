@@ -17,6 +17,13 @@ public class ArithUtils {
         return bd.floatValue();
     }
 
+    // 自定义舍入模式
+    public static float customRound(float value, int scale, int mode) {
+        BigDecimal bd  = BigDecimal.valueOf(value);
+        bd = bd.setScale(scale, mode);
+        return bd.floatValue();
+    }
+
     /**
      * 提供精确加法计算的add方法
      * @param value1 被加数

@@ -156,6 +156,8 @@ public class ConfirmOrderFragment extends BaseBackFragment {
     private void setOrderAddress(Contact contact) {
         has_address = true;
         order_address_text.setText(
+            contact.getProvince() +
+            contact.getCity() +
             contact.getArea() +
             contact.getStreet() +
             contact.getCommunity() +

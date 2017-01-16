@@ -1,6 +1,8 @@
 package com.tallty.smart_life_android.fragment.home;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -32,6 +34,7 @@ import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
+import com.tallty.smart_life_android.activity.MainActivity;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.event.TransferDataEvent;
@@ -41,6 +44,7 @@ import com.tallty.smart_life_android.model.CartItem;
 import com.tallty.smart_life_android.model.Product;
 import com.tallty.smart_life_android.model.ProductBanner;
 import com.tallty.smart_life_android.utils.ArithUtils;
+import com.tallty.smart_life_android.utils.ImageUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -290,8 +294,19 @@ public class PromotionShowFragment  extends BaseBackFragment implements OnItemCl
                 .downloadOnly(new SimpleTarget<File>() {
                     @Override
                     public void onResourceReady(File resource, GlideAnimation<? super File> glideAnimation) {
-                        detail_image.setImage(ImageSource.uri(Uri.fromFile(resource)), new ImageViewState(1.0f, new PointF(0, 0), 0));
-                        onImageLoadListener(resource);
+                        Bitmap bitmap = BitmapFactory.decodeFile(resource.getAbsolutePath(), ImageUtils.getBitmapOption(10));
+                        int imageWidth = bitmap.getWidth() * 8;
+                        int imageHeight = bitmap.getHeight() * 8;
+                        Log.d(App.TAG, MainActivity.windowWidth+"获取设备宽度");
+                        Log.d(App.TAG, MainActivity.windowHeight+"获取设备宽度");
+                        Log.d(App.TAG, imageWidth+"获取图片的宽度");
+                        Log.d(App.TAG, imageHeight+"获取图片的高度");
+                        float scale = (float) (MainActivity.windowWidth * 1.0 / imageWidth);
+                        Log.d(App.TAG, scale+"获取缩放");
+                        // 长图展示
+                        detail_image.setImage(ImageSource.uri(Uri.fromFile(resource)), new ImageViewState(scale, new PointF(0, 0), 0));
+                        // 监听: 如果图片高度小于设备高度, 使用普通加载方式
+                        onImageLoadListener(resource, imageHeight);
                     }
 
                     @Override
@@ -350,27 +365,20 @@ public class PromotionShowFragment  extends BaseBackFragment implements OnItemCl
     }
 
     // 图片载入监听
-    private void onImageLoadListener(final File resource) {
+    private void onImageLoadListener(final File resource, final int imageHeight) {
         detail_image.setOnImageEventListener(new SubsamplingScaleImageView.OnImageEventListener() {
             @Override
             public void onReady() {
-                WindowManager wm = (WindowManager) _mActivity.getSystemService(Context.WINDOW_SERVICE);
-                // 屏幕宽度
-                int width = wm.getDefaultDisplay().getWidth();
-                // 图片宽度
-                int image_w = detail_image.getSWidth();
-                // 比例
-                float width_ratio = (float) (width * 1.0 / image_w);
-
-                Log.d(App.TAG, detail_image.getScale()+"缩放比例");
-                Log.d(App.TAG, width_ratio+"宽度比例");
-
-                if (detail_image.getScale() > width_ratio) {
+                if (imageHeight < MainActivity.windowHeight) {
                     Log.d(App.TAG, "使用普通ImageView加载宽图");
                     detail_image.recycle();
                     detail_image.setVisibility(View.GONE);
                     small_detail_image.setVisibility(View.VISIBLE);
-                    Glide.with(_mActivity).load(resource).into(small_detail_image);
+                    Glide.with(_mActivity)
+                            .load(resource)
+                            .error(R.drawable.image_error)
+                            .placeholder(R.drawable.image_placeholder)
+                            .into(small_detail_image);
                 }
                 hideProgress();
             }

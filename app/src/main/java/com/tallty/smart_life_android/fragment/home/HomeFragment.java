@@ -185,7 +185,7 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
         // 计步器相关
         delayHandler = new Handler(this);
 
-        // 显示推送
+        // 应用不在前台运行, 如果是点击通知栏, 显示推送
         Bundle bundle = _mActivity.getIntent().getBundleExtra(Const.HOME_BUNDLE);
         if (bundle != null) {
             EventBus.getDefault().post(new StartBrotherEvent(NotificationDetailFragment.newInstance(bundle)));
@@ -206,8 +206,6 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
         getCartCount();
         // 绑定用户到【电子猫眼】服务, 以获取监控推送
         bindUserToNotification();
-        // 恢复推送 (切换账户会暂停推送服务)
-        JPushInterface.resumePush(_mActivity.getApplicationContext());
     }
 
     /**
