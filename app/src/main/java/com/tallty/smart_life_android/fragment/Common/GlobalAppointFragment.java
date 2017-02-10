@@ -1,7 +1,6 @@
 package com.tallty.smart_life_android.fragment.Common;
 
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PointF;
@@ -10,10 +9,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ScrollView;
@@ -25,14 +22,12 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.ImageViewState;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
-import com.squareup.haha.perflib.Main;
 import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.activity.MainActivity;
 import com.tallty.smart_life_android.base.BaseBackFragment;
-import com.tallty.smart_life_android.fragment.MainFragment;
 import com.tallty.smart_life_android.fragment.Pop.HintDialogFragment;
 import com.tallty.smart_life_android.model.Appointment;
 import com.tallty.smart_life_android.utils.ImageUtils;

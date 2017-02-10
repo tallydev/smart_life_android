@@ -20,6 +20,7 @@ import com.tallty.smart_life_android.model.Product;
 import com.tallty.smart_life_android.model.ProductList;
 import com.tallty.smart_life_android.model.ReportList;
 import com.tallty.smart_life_android.model.ReportShowList;
+import com.tallty.smart_life_android.model.ServiceTel;
 import com.tallty.smart_life_android.model.SportData;
 import com.tallty.smart_life_android.model.SportRank;
 import com.tallty.smart_life_android.model.Step;
@@ -271,6 +272,10 @@ public interface DataAPI {
     // 获取首页Banner
     @GET("home_info")
     Call<Home> getHomeBanners();
+
+    // 获取客服电话列表
+    @GET("customer_services")
+    Call<ServiceTel> getTels();
 
     // *********************************************************************************************
     // 社区活动列表

@@ -1,10 +1,12 @@
 package com.tallty.smart_life_android.fragment.me;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -31,6 +33,9 @@ import com.tallty.smart_life_android.model.User;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -213,23 +218,49 @@ public class MeFragment extends BaseMainFragment {
                 EventBus.getDefault().post(new StartBrotherEvent(MyAppointments.newInstance()));
                 break;
             case R.id.contact_service:
-                PackageManager pm = _mActivity.getPackageManager();
-                boolean permission = (PackageManager.PERMISSION_GRANTED == pm.checkPermission("android.permission.CALL_PHONE","com.tallty.smart_life_android"));
-                if (permission) {
-                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+"087164589208"));
-                    startActivity(intent);
-                } else {
-                    setSnackBar(service,
-                            "应用无拨打电话权限,请设置应用权限后尝试",
-                            100000, R.layout.snackbar_icon, new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-
-                                }
-                            });
-                }
-
+                contactService();
                 break;
+        }
+    }
+
+    // 联系客服
+    private void contactService() {
+        if (HomeFragment.tels.isEmpty()) {
+            showToast("未能获取到客服电话, 请售后重试");
+            return;
+        }
+        final String[] tels = new String[HomeFragment.tels.size()];
+        for (int i = 0; i < HomeFragment.tels.size(); i++) {
+            tels[i] = HomeFragment.tels.get(i).get("name") + "：" + HomeFragment.tels.get(i).get("phone");
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog alert = builder.setTitle("联系客服")
+                .setItems(tels, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        callPhone(tels[which]);
+                    }
+                }).create();
+        alert.show();
+    }
+
+    // 拨打电话
+    private void callPhone(String phone) {
+        PackageManager pm = _mActivity.getPackageManager();
+        boolean permission = (PackageManager.PERMISSION_GRANTED == pm.checkPermission("android.permission.CALL_PHONE","com.tallty.smart_life_android"));
+        if (permission) {
+            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phone));
+            startActivity(intent);
+        } else {
+            setSnackBar(service,
+                    "应用无拨打电话权限,请设置应用权限后尝试",
+                    100000, R.layout.snackbar_icon, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                        }
+                    });
         }
     }
 

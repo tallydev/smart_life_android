@@ -8,9 +8,11 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
@@ -203,7 +205,7 @@ public class ManageAddresses extends BaseBackFragment {
         if (requestCode == REQ_CODE && resultCode == RESULT_OK) {
             Contact new_contact = (Contact) data.getSerializable(Const.OBJECT);
             if (new_contact != null) {
-                if (updatePosition > 0) {
+                if (updatePosition >= 0) {
                     // 更新
                     contacts.set(updatePosition, new_contact);
                     adapter.notifyItemChanged(updatePosition);

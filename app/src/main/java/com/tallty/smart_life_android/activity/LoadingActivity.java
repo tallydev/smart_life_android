@@ -67,6 +67,9 @@ public class LoadingActivity extends BaseActivity {
         // 检查是否为新的一天, 并处理步数
         checkStepWithDate();
 
+        // 清楚一天的异常数据, 一般是更新造成,当前的步数重置,保存每小时数据时,会计算差值,出现负数
+        deleteWrongStepByHour();
+
         // 3秒进入应用
         timer = new CountDownTimer(3000, 1000) {
             @Override
@@ -110,6 +113,21 @@ public class LoadingActivity extends BaseActivity {
                 Log.i(App.TAG, "》》》》》》》》》》》》》》》》获取所有社区错误了");
             }
         });
+    }
+
+    private void deleteWrongStepByHour() {
+        String hour_str;
+        float last_hour_step = 0.0f;
+        // 找到之前最近一次不为0的记录
+        SharedPreferences.Editor editor = sharedPre.edit();
+        for (int h = 23; h >= 0; h--) {
+            hour_str = h < 10 ? "0"+h : String.valueOf(h);
+            last_hour_step = sharedPre.getFloat(hour_str, 0.0f);
+            if (last_hour_step < 0) {
+                editor.putFloat(hour_str, 0.0f);
+            }
+        }
+        editor.apply();
     }
 
     /**

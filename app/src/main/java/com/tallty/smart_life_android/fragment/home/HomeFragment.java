@@ -52,6 +52,7 @@ import com.tallty.smart_life_android.model.Activity;
 import com.tallty.smart_life_android.model.Banner;
 import com.tallty.smart_life_android.model.CartList;
 import com.tallty.smart_life_android.model.Home;
+import com.tallty.smart_life_android.model.ServiceTel;
 import com.tallty.smart_life_android.model.Step;
 import com.tallty.smart_life_android.service.StepService;
 import com.tallty.smart_life_android.utils.DbUtils;
@@ -83,9 +84,10 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
     private CountDownTimer delayTimer;
     private int versionCode;
     /**
-     * 购物车数量
+     * 静态变量
      **/
     public static int cartCount = 0;
+    public static ArrayList<HashMap<String, String>> tels = new ArrayList<>();
     // 计步器相关
     private ServiceConnection conn;
     private static final int TIME_INTERVAL = 1000;
@@ -207,6 +209,8 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
         getCartCount();
         // 绑定用户到【电子猫眼】服务, 以获取监控推送
         bindUserToNotification();
+        // 获取客服电话
+        getServiceTels();
     }
 
     /**
@@ -362,10 +366,12 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
             }
         }
         // 保存差值
+        float interval = step - last_hour_step;
+        interval = interval >= 0.0f ? interval : 0.0f;
         SharedPreferences.Editor editor = sharedPre.edit();
-        editor.putFloat(hour, step - last_hour_step);
+        editor.putFloat(hour, interval);
         editor.apply();
-        Log.i(App.TAG, hour + "点的步数以保存: " + (step - last_hour_step));
+        Log.i(App.TAG, hour + "点的步数以保存: " + interval);
     }
 
     // 清除当前小时以后的步数以及不是今天的步数 (保证当前是最新的)
@@ -455,6 +461,23 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
                 public void onFailure(Call<Home> call, Throwable t) {
 
                 }
+        });
+    }
+
+    // 获取客服电话列表
+    private void getServiceTels() {
+        Engine.authService(shared_token, shared_phone).getTels().enqueue(new Callback<ServiceTel>() {
+            @Override
+            public void onResponse(Call<ServiceTel> call, Response<ServiceTel> response) {
+                if (response.isSuccessful()) {
+                    tels = response.body().getTels();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ServiceTel> call, Throwable t) {
+
+            }
         });
     }
 

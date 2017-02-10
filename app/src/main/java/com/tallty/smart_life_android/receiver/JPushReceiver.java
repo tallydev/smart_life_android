@@ -143,19 +143,23 @@ public class JPushReceiver extends BroadcastReceiver {
         String data = pushExtra.getMessage();
         // 解析 => Push 对象
         Push message = gson.fromJson(data, Push.class);
-        Log.i(TAG, message.getTitle() + message.getTime());
-        // 提取 => 图片
+        // 封装 => 数据
         ArrayList<String> images = new ArrayList<>();
-        for (HashMap<String, String> cache : message.getPics()) {
-            images.add(cache.get("url"));
-        }
-        // 封装为数据包
         Bundle args = new Bundle();
-        args.putString(Const.PUSH_TITLE, message.getTitle());
-        args.putString(Const.PUSH_TIME, message.getTime());
-        args.putStringArrayList(Const.PUSH_IMAGES, images);
-
-        Log.d(TAG, args.toString());
+        if (message != null) {
+            // 提取 => 图片
+            for (HashMap<String, String> cache : message.getPics()) {
+                images.add(cache.get("url"));
+            }
+            // 封装为数据包
+            args.putString(Const.PUSH_TITLE, message.getTitle());
+            args.putString(Const.PUSH_TIME, message.getTime());
+            args.putStringArrayList(Const.PUSH_IMAGES, images);
+        } else {
+            args.putString(Const.PUSH_TITLE, "数据错误");
+            args.putString(Const.PUSH_TIME, "");
+            args.putStringArrayList(Const.PUSH_IMAGES, images);
+        }
         return args;
     }
 

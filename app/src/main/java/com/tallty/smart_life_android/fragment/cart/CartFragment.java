@@ -3,6 +3,7 @@ package com.tallty.smart_life_android.fragment.cart;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.BoolRes;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -54,6 +55,7 @@ public class CartFragment extends BaseMainFragment implements
         SwipeRefreshLayout.OnRefreshListener {
     private String shared_token;
     private String shared_phone;
+    private Boolean firstIn = false;
     // 下拉刷新控制
     private boolean isRefresh = false;
     // UI
@@ -104,6 +106,7 @@ public class CartFragment extends BaseMainFragment implements
     @Override
     public void onLazyInitView(@Nullable Bundle savedInstanceState) {
         super.onLazyInitView(savedInstanceState);
+        firstIn = true;
         pay.setOnClickListener(this);
         select_all_btn.setChecked(isSelectAll);
         select_all_btn.setOnClickListener(this);
@@ -429,7 +432,9 @@ public class CartFragment extends BaseMainFragment implements
     @Subscribe
     public void onTabSelectedEvent(TabSelectedEvent event) {
         if (event.getPosition() == 3) {
-
+            if (!firstIn) return;
+            Log.d(App.TAG, "购物车被点击了");
+            initList();
         }
     }
 
