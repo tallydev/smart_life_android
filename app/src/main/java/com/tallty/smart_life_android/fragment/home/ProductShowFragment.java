@@ -36,9 +36,11 @@ import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.activity.MainActivity;
 import com.tallty.smart_life_android.base.BaseBackFragment;
+import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.event.SwitchTabFragment;
 import com.tallty.smart_life_android.event.TabSelectedEvent;
 import com.tallty.smart_life_android.fragment.MainFragment;
+import com.tallty.smart_life_android.fragment.cart.CartWithBackFragment;
 import com.tallty.smart_life_android.holder.NetworkImageBannerHolder;
 import com.tallty.smart_life_android.model.CartItem;
 import com.tallty.smart_life_android.model.Product;
@@ -122,16 +124,7 @@ public class ProductShowFragment extends BaseBackFragment implements OnItemClick
         productCartBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 调到MainFragment
-                popTo(MainFragment.class, false, new Runnable() {
-                    @Override
-                    public void run() {
-                        // 通知MainFragment切换CartFragment
-                        EventBus.getDefault().post(new SwitchTabFragment(3));
-                        // 通知更新
-                        EventBus.getDefault().post(new TabSelectedEvent(3));
-                    }
-                });
+                start(CartWithBackFragment.newInstance());
             }
         });
         // 购物车数量
