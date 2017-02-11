@@ -229,7 +229,7 @@ public class PromotionShowFragment  extends BaseBackFragment implements OnItemCl
 
     // 获取商品详情
     private void getPromotionById() {
-        Engine.noAuthService().getPromotion(productId)
+        Engine.authService(shared_token, shared_phone).getPromotion(productId)
                 .enqueue(new Callback<Product>() {
                     @Override
                     public void onResponse(Call<Product> call, Response<Product> response) {

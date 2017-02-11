@@ -129,7 +129,7 @@ public class PromotionFragment extends BaseBackFragment implements
     }
 
     public void getGroupBuyProducts() {
-        Engine.noAuthService().getPromotions(current_page, per_page)
+        Engine.authService(shared_token, shared_phone).getPromotions(current_page, per_page)
             .enqueue(new Callback<ProductList>() {
                 @Override
                 public void onResponse(Call<ProductList> call, Response<ProductList> response) {
@@ -190,7 +190,7 @@ public class PromotionFragment extends BaseBackFragment implements
                 adapter.loadMoreEnd();
             } else {
                 current_page++;
-                Engine.noAuthService().getPromotions(current_page, per_page)
+                Engine.authService(shared_token, shared_phone).getPromotions(current_page, per_page)
                     .enqueue(new Callback<ProductList>() {
                         @Override
                         public void onResponse(Call<ProductList> call, Response<ProductList> response) {

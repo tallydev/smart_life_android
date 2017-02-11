@@ -434,7 +434,7 @@ public class CartFragment extends BaseMainFragment implements
         if (event.getPosition() == 3) {
             if (!firstIn) return;
             Log.d(App.TAG, "购物车被点击了");
-            initList();
+            getCartList();
         }
     }
 

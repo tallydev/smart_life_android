@@ -105,7 +105,7 @@ public class ProductFragment extends BaseBackFragment implements BaseQuickAdapte
 
     private void fetchProducts() {
         showProgress("正在加载...");
-        Engine.noAuthService().getProductsByCategory(current_page, per_page, categoryId)
+        Engine.authService(shared_token, shared_phone).getProductsByCategory(current_page, per_page, categoryId)
                 .enqueue(new Callback<ProductList>() {
             @Override
             public void onResponse(Call<ProductList> call, Response<ProductList> response) {
@@ -139,7 +139,7 @@ public class ProductFragment extends BaseBackFragment implements BaseQuickAdapte
                     adapter.loadMoreEnd();
                 } else {
                     current_page++;
-                    Engine.noAuthService().getProductsByCategory(current_page, per_page, categoryId)
+                    Engine.authService(shared_token, shared_phone).getProductsByCategory(current_page, per_page, categoryId)
                             .enqueue(new Callback<ProductList>() {
                         @Override
                         public void onResponse(Call<ProductList> call, Response<ProductList> response) {

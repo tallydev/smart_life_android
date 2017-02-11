@@ -37,6 +37,7 @@ import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.activity.MainActivity;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.event.SwitchTabFragment;
+import com.tallty.smart_life_android.event.TabSelectedEvent;
 import com.tallty.smart_life_android.fragment.MainFragment;
 import com.tallty.smart_life_android.holder.NetworkImageBannerHolder;
 import com.tallty.smart_life_android.model.CartItem;
@@ -127,6 +128,8 @@ public class ProductShowFragment extends BaseBackFragment implements OnItemClick
                     public void run() {
                         // 通知MainFragment切换CartFragment
                         EventBus.getDefault().post(new SwitchTabFragment(3));
+                        // 通知更新
+                        EventBus.getDefault().post(new TabSelectedEvent(3));
                     }
                 });
             }
@@ -251,7 +254,7 @@ public class ProductShowFragment extends BaseBackFragment implements OnItemClick
 
     // 获取商品详情
     private void getProductById() {
-        Engine.noAuthService().getProduct(productId)
+        Engine.authService(shared_token, shared_phone).getProduct(productId)
             .enqueue(new Callback<Product>() {
                 @Override
                 public void onResponse(Call<Product> call, Response<Product> response) {

@@ -260,7 +260,7 @@ public class MyOrders extends BaseBackFragment implements BaseQuickAdapter.Reque
         }
         final String[] tels = new String[HomeFragment.tels.size()];
         for (int i = 0; i < HomeFragment.tels.size(); i++) {
-            tels[i] = HomeFragment.tels.get(i).get("name") + "：" + HomeFragment.tels.get(i).get("phone");
+            tels[i] = HomeFragment.tels.get(i).get("phone");
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

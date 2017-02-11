@@ -92,7 +92,7 @@ public class ProductCategoryFragment extends BaseBackFragment {
 
     private void getActivities() {
         showProgress("正在加载...");
-        Engine.noAuthService().getProductCategories().enqueue(new Callback<Categories>() {
+        Engine.authService(shared_token, shared_phone).getProductCategories().enqueue(new Callback<Categories>() {
             @Override
             public void onResponse(Call<Categories> call, Response<Categories> response) {
                 if (response.isSuccessful()) {
