@@ -14,15 +14,21 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.tallty.smart_life_android.Const;
+import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.SelectAddressAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.fragment.me.ManageAddresses;
 import com.tallty.smart_life_android.model.Contact;
+import com.tallty.smart_life_android.model.ContactList;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * 购物车-确认订单-收货地址
@@ -35,9 +41,8 @@ public class SelectAddress extends BaseBackFragment {
     private List<Contact> contacts = new ArrayList<>();
     private int prePosition;
 
-    public static SelectAddress newInstance(ArrayList<Contact> contacts) {
+    public static SelectAddress newInstance() {
         Bundle args = new Bundle();
-        args.putSerializable(Const.OBJECT_List, contacts);
         SelectAddress fragment = new SelectAddress();
         fragment.setArguments(args);
         return fragment;
@@ -48,8 +53,7 @@ public class SelectAddress extends BaseBackFragment {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
-            contacts.clear();
-            contacts.addAll((Collection<? extends Contact>) args.getSerializable(Const.OBJECT_List));
+
         }
     }
 
@@ -67,7 +71,7 @@ public class SelectAddress extends BaseBackFragment {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.toolbar_addresses_manager:
-                        start(ManageAddresses.newInstance());
+                        startForResult(ManageAddresses.newInstance(), REQ_CODE);
                         break;
                 }
                 return true;
@@ -89,6 +93,7 @@ public class SelectAddress extends BaseBackFragment {
     @Override
     protected void afterAnimationLogic() {
         initList();
+        refreshContacts();
     }
 
     private void initList() {
@@ -137,18 +142,46 @@ public class SelectAddress extends BaseBackFragment {
         }
     }
 
+    private void refreshContacts() {
+        showProgress(showString(R.string.progress_normal));
+        Engine.authService(shared_token, shared_phone).getContacts().enqueue(new Callback<ContactList>() {
+            @Override
+            public void onResponse(Call<ContactList> call, Response<ContactList> response) {
+                hideProgress();
+                if (response.isSuccessful()) {
+                    contacts.clear();
+                    contacts.addAll(response.body().getContacts());
+                    adapter.notifyDataSetChanged();
+                } else {
+                    showToast(showString(R.string.response_error));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ContactList> call, Throwable t) {
+                hideProgress();
+                showToast(showString(R.string.network_error));
+            }
+        });
+    }
+
     /**
      * startForResult:
-     * 响应NewAddressFragment的返回数据
+     * 响应Fragment的返回数据
      */
     @Override
     protected void onFragmentResult(int requestCode, int resultCode, Bundle data) {
         super.onFragmentResult(requestCode, resultCode, data);
         if (requestCode == REQ_CODE && resultCode == RESULT_OK) {
             Contact new_contact = (Contact) data.getSerializable(Const.OBJECT);
+            String tag = data.getString(Const.STRING);
             if (new_contact != null) {
+                // 新建地址
                 contacts.add(new_contact);
                 adapter.notifyItemInserted(contacts.size()-1);
+            } else if ("manage".equals(tag)){
+                // 管理地址
+                refreshContacts();
             }
         }
     }

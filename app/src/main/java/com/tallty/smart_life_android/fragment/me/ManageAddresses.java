@@ -219,6 +219,15 @@ public class ManageAddresses extends BaseBackFragment {
         }
     }
 
+    // 通知地址选择页面更新列表
+    @Override
+    protected void onFragmentPop() {
+        super.onFragmentPop();
+        Bundle bundle = new Bundle();
+        bundle.putString(Const.STRING, "manage");
+        setFragmentResult(RESULT_OK, bundle);
+    }
+
     // 编辑地址、删除地址、设置默认地址
     @Subscribe
     public void onManageAddressEvent(final ManageAddressEvent event) {

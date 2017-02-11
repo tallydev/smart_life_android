@@ -176,7 +176,7 @@ public class ConfirmOrderFragment extends BaseBackFragment {
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.link_to_addresses:
-                startForResult(SelectAddress.newInstance(contacts), REQ_CODE);
+                startForResult(SelectAddress.newInstance(), REQ_CODE);
                 break;
             case R.id.submit_order:
                 if (has_address) {
