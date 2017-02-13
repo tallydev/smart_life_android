@@ -37,6 +37,7 @@ import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.activity.MainActivity;
+import com.tallty.smart_life_android.utils.GlobalUtils;
 import com.tallty.smart_life_android.utils.ImageUtils;
 import com.tallty.smart_life_android.utils.SnackbarUtil;
 import com.tallty.smart_life_android.utils.ToastUtil;
@@ -361,14 +362,12 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
                         SHARE_MEDIA.SMS, SHARE_MEDIA.MORE
                 )
                 .addButton("umeng_sharebutton_copy", "umeng_sharebutton_copy", "umeng_socialize_copy", "umeng_socialize_copy")
-                .addButton("umeng_sharebutton_copyurl", "umeng_sharebutton_copyurl", "umeng_socialize_copyurl", "umeng_socialize_copyurl")
                 .setShareboardclickCallback(new ShareBoardlistener() {
                     @Override
                     public void onclick(SnsPlatform snsPlatform, SHARE_MEDIA share_media) {
                         if (snsPlatform.mShowWord.equals("umeng_sharebutton_copy")) {
-                            showToast("复制文本按钮");
-                        } else if (snsPlatform.mShowWord.equals("umeng_sharebutton_copyurl")) {
-                            showToast("复制链接按钮");
+                            GlobalUtils.setClipboardData(_mActivity, body);
+                            showToast("复制成功");
                         } else {
                             new ShareAction(_mActivity).withText(body)
                                     .setPlatform(share_media)

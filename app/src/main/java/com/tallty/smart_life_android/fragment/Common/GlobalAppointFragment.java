@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -31,6 +32,8 @@ import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.fragment.Pop.HintDialogFragment;
 import com.tallty.smart_life_android.model.Appointment;
 import com.tallty.smart_life_android.utils.ImageUtils;
+import com.umeng.socialize.UMShareListener;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import java.io.File;
 
@@ -51,7 +54,7 @@ public class GlobalAppointFragment extends BaseBackFragment {
     private Boolean isSingle;
     private String btn_text;
     private Boolean hasButton;
-    private int activityId;
+    private int activityId = 0;
     // 详情图
     private SubsamplingScaleImageView detail_image;
     private ImageView small_detail_image;
@@ -129,6 +132,36 @@ public class GlobalAppointFragment extends BaseBackFragment {
     @Override
     public void initToolbar(Toolbar toolbar, TextView toolbar_title) {
         toolbar_title.setText(fragmentTitle);
+        if (activityId == 0) return;
+        toolbar.inflateMenu(R.menu.share_menu);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                // TODO: 2017/2/13 设置社区活动分享内容
+                String shareBody = "复制整段信息，打开\uD83D\uDC49慧生活APP\uD83D\uDC48，即可查看此活动:【" + fragmentTitle + "】(未安装App点这里：https://www.pgyer.com/smart_life )";
+                switch (item.getItemId()) {
+                    case R.id.toolbar_share:
+                        goToShare(shareBody, new UMShareListener() {
+                            @Override
+                            public void onResult(SHARE_MEDIA share_media) {
+                                showToast("分享成功");
+                            }
+
+                            @Override
+                            public void onError(SHARE_MEDIA share_media, Throwable throwable) {
+                                showToast("分享错误");
+                            }
+
+                            @Override
+                            public void onCancel(SHARE_MEDIA share_media) {
+                                showToast("分享取消");
+                            }
+                        });
+                        break;
+                }
+                return true;
+            }
+        });
     }
 
     @Override

@@ -42,10 +42,10 @@ public class App extends Application{
     }
 
     {
-        PlatformConfig.setWeixin("wx967daebe835fbeac", "5bb696d9ccd75a38c8a0bfe0675559b3");
+        PlatformConfig.setWeixin("wx6b4eca5cff4b85ef", "264f0c37bc639a39c844a4a66776612e");
+        PlatformConfig.setAlipay("2016012901129132");
         PlatformConfig.setSinaWeibo("3921700954", "04b48b094faeb16683c32669824ebdad");
         PlatformConfig.setQQZone("100424468", "c7394704798a158208a74ab60104f0ba");
-        PlatformConfig.setAlipay("2015111700822536");
     }
 
     public static App getInstance() {

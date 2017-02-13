@@ -140,6 +140,7 @@ public class PromotionShowFragment  extends BaseBackFragment implements OnItemCl
                             @Override
                             public void onError(SHARE_MEDIA share_media, Throwable throwable) {
                                 showToast("分享错误");
+                                Log.d(App.TAG, throwable.getMessage());
                             }
 
                             @Override

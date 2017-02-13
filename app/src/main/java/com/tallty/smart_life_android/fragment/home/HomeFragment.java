@@ -36,6 +36,7 @@ import com.tallty.smart_life_android.adapter.HomeRecyclerAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.base.BaseMainFragment;
 import com.tallty.smart_life_android.custom.MyRecyclerView;
+import com.tallty.smart_life_android.event.PayEvent;
 import com.tallty.smart_life_android.event.ShowSnackbarEvent;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.event.SwitchTabFragment;
@@ -822,5 +823,13 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
                 }
             });
         }
+    }
+
+    /**
+     * 显示分享详情
+     */
+    @Subscribe
+    public void onDisplayShareDetail(final TransferDataEvent event) {
+
     }
 }

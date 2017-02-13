@@ -1,6 +1,8 @@
 package com.tallty.smart_life_android.activity;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -18,6 +20,7 @@ import com.tallty.smart_life_android.event.TransferDataEvent;
 import com.tallty.smart_life_android.fragment.MainFragment;
 import com.tallty.smart_life_android.model.CommunitiesResponse;
 import com.tallty.smart_life_android.model.CommunityObject;
+import com.tallty.smart_life_android.utils.GlobalUtils;
 import com.umeng.socialize.UMShareAPI;
 
 import org.greenrobot.eventbus.EventBus;
@@ -87,14 +90,16 @@ public class MainActivity extends SupportActivity {
 
     @Override
     protected void onResume() {
-        isForeground = true;
         super.onResume();
+        isForeground = true;
+        // 获取剪切板里面的数据
+        processClipboardData();
     }
 
     @Override
     protected void onPause() {
-        isForeground = false;
         super.onPause();
+        isForeground = false;
     }
 
     @Override
@@ -121,5 +126,16 @@ public class MainActivity extends SupportActivity {
                 Log.i(App.TAG, "额外:===》"+data.getExtras().getString("extra_msg"));
             }
         }
+    }
+
+    /**
+     * 判断并处理剪切板信息
+     */
+    private void processClipboardData() {
+        // TODO: 2017/2/13 处理剪切板信息
+        Log.i(App.TAG, GlobalUtils.getClipboardData(this));
+
+        // TODO: 2017/2/13 使用后, 需要清除剪切板信息
+        GlobalUtils.setClipboardData(this, "");
     }
 }

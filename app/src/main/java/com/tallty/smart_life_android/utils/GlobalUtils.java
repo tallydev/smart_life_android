@@ -1,6 +1,8 @@
 package com.tallty.smart_life_android.utils;
 
 import android.app.ActivityManager;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -23,6 +25,7 @@ import java.util.List;
 import java.util.Locale;
 
 import static android.content.Context.ACTIVITY_SERVICE;
+import static android.content.Context.CLIPBOARD_SERVICE;
 
 /**
  * Created by kang on 2016/10/27.
@@ -98,5 +101,19 @@ public class GlobalUtils {
 
         // If not then our app is not on the foreground.
         return false;
+    }
+
+    // 获取剪切板信息
+    public static String getClipboardData(Context context) {
+        ClipboardManager cm = (ClipboardManager)context.getSystemService(CLIPBOARD_SERVICE);
+        ClipData cd = cm.getPrimaryClip();
+        return cd.getItemAt(0).getText().toString();
+    }
+
+    // 清空剪切板
+    public static void setClipboardData(Context context, String string) {
+        ClipboardManager cm = (ClipboardManager)context.getSystemService(CLIPBOARD_SERVICE);
+        ClipData clipData = ClipData.newPlainText("label", string); //文本型数据 clipData 的构造方法。
+        cm.setPrimaryClip(clipData); // 将 字符串 str 保存 到剪贴板。
     }
 }
