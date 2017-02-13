@@ -1,6 +1,7 @@
 package com.tallty.smart_life_android.fragment.home;
 
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PointF;
@@ -243,6 +244,16 @@ public class ProductShowFragment extends BaseBackFragment implements OnItemClick
                         showToast("网络链接错误");
                     }
                 });
+    }
+
+    // TODO: 2017/2/11 开发分享功能, http://220.163.125.158:8989/smart_life, 实现分享的跳转
+    // 分享
+    private void shareTo(String subject, String body, String chooserTitle) {
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, body);
+        startActivity(Intent.createChooser(sharingIntent, chooserTitle));
     }
 
     // 获取商品详情

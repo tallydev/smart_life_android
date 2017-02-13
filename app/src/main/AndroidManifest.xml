@@ -121,6 +121,17 @@
             </intent-filter>
         </receiver>
 
+        <!--通过连接打开APP-->
+        <intent-filter>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data
+                android:host="smart_life"
+                android:path="/"
+                android:scheme="smart_life" />
+        </intent-filter>
+
         <!-- =============================极光推送配置============================================ -->
         <!-- User defined. 用户自定义的广播接收器-->
         <receiver
