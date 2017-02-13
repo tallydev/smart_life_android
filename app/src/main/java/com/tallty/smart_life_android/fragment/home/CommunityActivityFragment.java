@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -20,6 +21,8 @@ import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.fragment.Common.GlobalAppointFragment;
 import com.tallty.smart_life_android.model.Activities;
 import com.tallty.smart_life_android.model.Activity;
+import com.umeng.socialize.UMShareListener;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -63,6 +66,34 @@ public class CommunityActivityFragment extends BaseBackFragment {
     @Override
     public void initToolbar(Toolbar toolbar, TextView toolbar_title) {
         toolbar_title.setText(title);
+        toolbar.inflateMenu(R.menu.share_menu);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                // TODO: 2017/2/13 设置社区活动分享内容
+                switch (item.getItemId()) {
+                    case R.id.toolbar_share:
+                        goToShare("慧生活社区活动", new UMShareListener() {
+                            @Override
+                            public void onResult(SHARE_MEDIA share_media) {
+                                showToast("分享成功");
+                            }
+
+                            @Override
+                            public void onError(SHARE_MEDIA share_media, Throwable throwable) {
+                                showToast("分享错误");
+                            }
+
+                            @Override
+                            public void onCancel(SHARE_MEDIA share_media) {
+                                showToast("分享取消");
+                            }
+                        });
+                        break;
+                }
+                return true;
+            }
+        });
     }
 
     @Override

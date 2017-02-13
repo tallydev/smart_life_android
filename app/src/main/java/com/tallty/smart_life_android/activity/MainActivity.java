@@ -18,6 +18,7 @@ import com.tallty.smart_life_android.event.TransferDataEvent;
 import com.tallty.smart_life_android.fragment.MainFragment;
 import com.tallty.smart_life_android.model.CommunitiesResponse;
 import com.tallty.smart_life_android.model.CommunityObject;
+import com.umeng.socialize.UMShareAPI;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -104,6 +105,8 @@ public class MainActivity extends SupportActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        // 处理分享
+        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
         //支付页面返回处理
         if (requestCode == Pingpp.REQUEST_CODE_PAYMENT) {
             if (resultCode == Activity.RESULT_OK) {

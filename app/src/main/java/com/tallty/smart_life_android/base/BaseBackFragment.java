@@ -25,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -39,6 +40,11 @@ import com.tallty.smart_life_android.activity.MainActivity;
 import com.tallty.smart_life_android.utils.ImageUtils;
 import com.tallty.smart_life_android.utils.SnackbarUtil;
 import com.tallty.smart_life_android.utils.ToastUtil;
+import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.UMShareListener;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.shareboard.SnsPlatform;
+import com.umeng.socialize.utils.ShareBoardlistener;
 
 import java.io.File;
 
@@ -342,6 +348,35 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
         }
 
         snackbar.show();
+    }
+
+    /**
+     * 处理分享
+     */
+    public void goToShare(final String body, final UMShareListener umShareListener) {
+        new ShareAction(_mActivity)
+                .setDisplayList(
+                        SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE, SHARE_MEDIA.WEIXIN_FAVORITE,
+                        SHARE_MEDIA.SINA, SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE, SHARE_MEDIA.ALIPAY,
+                        SHARE_MEDIA.SMS, SHARE_MEDIA.MORE
+                )
+                .addButton("umeng_sharebutton_copy", "umeng_sharebutton_copy", "umeng_socialize_copy", "umeng_socialize_copy")
+                .addButton("umeng_sharebutton_copyurl", "umeng_sharebutton_copyurl", "umeng_socialize_copyurl", "umeng_socialize_copyurl")
+                .setShareboardclickCallback(new ShareBoardlistener() {
+                    @Override
+                    public void onclick(SnsPlatform snsPlatform, SHARE_MEDIA share_media) {
+                        if (snsPlatform.mShowWord.equals("umeng_sharebutton_copy")) {
+                            showToast("复制文本按钮");
+                        } else if (snsPlatform.mShowWord.equals("umeng_sharebutton_copyurl")) {
+                            showToast("复制链接按钮");
+                        } else {
+                            new ShareAction(_mActivity).withText(body)
+                                    .setPlatform(share_media)
+                                    .setCallback(umShareListener)
+                                    .share();
+                        }
+                    }
+                }).open();
     }
 
     // 手动回收ImageView

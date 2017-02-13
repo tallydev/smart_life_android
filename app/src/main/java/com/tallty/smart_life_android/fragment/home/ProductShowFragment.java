@@ -47,6 +47,8 @@ import com.tallty.smart_life_android.model.CartItem;
 import com.tallty.smart_life_android.model.Product;
 import com.tallty.smart_life_android.model.ProductBanner;
 import com.tallty.smart_life_android.utils.ImageUtils;
+import com.umeng.socialize.UMShareListener;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -84,6 +86,7 @@ public class ProductShowFragment extends BaseBackFragment implements OnItemClick
     private ImageView small_detail_image;
     // toolbar
     private ImageButton productCartBtn;
+    private ImageButton productShareBtn;
     private TextView cartCountText;
 
     public static ProductShowFragment newInstance(Product product) {
@@ -120,18 +123,48 @@ public class ProductShowFragment extends BaseBackFragment implements OnItemClick
     @Override
     public void initToolbar(Toolbar toolbar, TextView toolbar_title) {
         toolbar_title.setText("商品详情");
-        // 点击事件
         productCartBtn = getViewById(R.id.product_cart_btn);
+        productShareBtn = getViewById(R.id.product_share_btn);
+        // 【购物车】点击事件
         productCartBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 start(CartWithBackFragment.newInstance());
             }
         });
+        // 分享按钮点击事件
+        shareProduct();
         // 购物车数量
         cartCountText = getViewById(R.id.product_cart_count);
         setToolbarBadge();
     }
+
+    // 商品分享
+    private void shareProduct() {
+        productShareBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO: 2017/2/13 设置商品详情分享内容
+                goToShare("商品", new UMShareListener() {
+                    @Override
+                    public void onResult(SHARE_MEDIA share_media) {
+                        showToast("分享成功");
+                    }
+
+                    @Override
+                    public void onError(SHARE_MEDIA share_media, Throwable throwable) {
+                        showToast("分享失败");
+                    }
+
+                    @Override
+                    public void onCancel(SHARE_MEDIA share_media) {
+                        showToast("分享取消");
+                    }
+                });
+            }
+        });
+    }
+
 
     /**
      * 显示购物车badge
@@ -139,7 +172,7 @@ public class ProductShowFragment extends BaseBackFragment implements OnItemClick
     private void setToolbarBadge() {
         if (HomeFragment.cartCount > 9)
             cartCountText.setText("9+");
-        else if (HomeFragment.cartCount == 0)
+        else if (HomeFragment.cartCount <= 0)
             cartCountText.setVisibility(View.GONE);
         else
             cartCountText.setText(HomeFragment.cartCount+"");

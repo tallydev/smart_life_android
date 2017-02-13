@@ -1,6 +1,5 @@
 package com.tallty.smart_life_android.fragment.home;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PointF;
@@ -15,8 +14,8 @@ import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StrikethroughSpan;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -37,7 +36,6 @@ import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.activity.MainActivity;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
-import com.tallty.smart_life_android.event.TransferDataEvent;
 import com.tallty.smart_life_android.fragment.cart.ConfirmOrderFragment;
 import com.tallty.smart_life_android.holder.NetworkImageBannerHolder;
 import com.tallty.smart_life_android.model.CartItem;
@@ -45,6 +43,8 @@ import com.tallty.smart_life_android.model.Product;
 import com.tallty.smart_life_android.model.ProductBanner;
 import com.tallty.smart_life_android.utils.ArithUtils;
 import com.tallty.smart_life_android.utils.ImageUtils;
+import com.umeng.socialize.UMShareListener;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -124,6 +124,34 @@ public class PromotionShowFragment  extends BaseBackFragment implements OnItemCl
     @Override
     public void initToolbar(Toolbar toolbar, TextView toolbar_title) {
         toolbar_title.setText("团购商品详情");
+        toolbar.inflateMenu(R.menu.share_menu);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                // TODO: 2017/2/13 设置限量销售分享内容和回调
+                switch (item.getItemId()) {
+                    case R.id.toolbar_share:
+                        goToShare("慧生活限量销售", new UMShareListener() {
+                            @Override
+                            public void onResult(SHARE_MEDIA share_media) {
+                                showToast("分享成功");
+                            }
+
+                            @Override
+                            public void onError(SHARE_MEDIA share_media, Throwable throwable) {
+                                showToast("分享错误");
+                            }
+
+                            @Override
+                            public void onCancel(SHARE_MEDIA share_media) {
+                                showToast("分享取消");
+                            }
+                        });
+                        break;
+                }
+                return true;
+            }
+        });
     }
 
     @Override
@@ -203,6 +231,11 @@ public class PromotionShowFragment  extends BaseBackFragment implements OnItemCl
                 break;
         }
     }
+
+    /**
+     * 设置分享
+     */
+
 
     /**
      * 我要参团
