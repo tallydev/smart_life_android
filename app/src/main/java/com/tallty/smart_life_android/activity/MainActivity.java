@@ -28,6 +28,8 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import me.yokeyword.fragmentation.SupportActivity;
 import me.yokeyword.fragmentation.anim.DefaultHorizontalAnimator;
@@ -130,12 +132,57 @@ public class MainActivity extends SupportActivity {
 
     /**
      * 判断并处理剪切板信息
+     * 标志位:
+     * a: 社区活动
+     * p: 超市商品
+     * g: 团购商品
      */
     private void processClipboardData() {
-        // TODO: 2017/2/13 处理剪切板信息
-        Log.i(App.TAG, GlobalUtils.getClipboardData(this));
+        String body = GlobalUtils.getClipboardData(this);
+        Log.i(App.TAG, body);
+        List<String> urls = extractUrls(body);
+        // 获取链接失败
+        if (urls.size() <= 0) return;
 
-        // TODO: 2017/2/13 使用后, 需要清除剪切板信息
-        GlobalUtils.setClipboardData(this, "");
+        String url = urls.get(0);
+        if (!url.isEmpty()) {
+            Log.i(App.TAG, "提取的链接" + url);
+            String[] cache = url.split("sl=");
+            // 拆分字符串失败
+            if (cache.length <= 1) return;
+
+            String tag = cache[1].substring(0, 1);
+            String id =  cache[1].substring(1, cache[1].length());
+            try {
+                int id_int = Integer.parseInt(id);
+            } catch (Exception e) {
+                // id 不是数值类型
+                return;
+            }
+            Bundle bundle = new Bundle();
+            bundle.putString("tag", tag);
+            bundle.putString("id", id);
+            EventBus.getDefault().post(new TransferDataEvent(bundle, Const.SHARE));
+            // 使用后,清空
+            GlobalUtils.setClipboardData(this, "");
+        }
+    }
+
+    /**
+     * Returns a list with all links contained in the input
+     */
+    public static List<String> extractUrls(String text)
+    {
+        List<String> containedUrls = new ArrayList<>();
+        String urlRegex = "((https?|ftp|gopher|telnet|file):((//)|(\\\\))+[\\w\\d:#@%/;$()~_?\\+-=\\\\\\.&]*)";
+        Pattern pattern = Pattern.compile(urlRegex, Pattern.CASE_INSENSITIVE);
+        Matcher urlMatcher = pattern.matcher(text);
+
+        while (urlMatcher.find())
+        {
+            containedUrls.add(text.substring(urlMatcher.start(0), urlMatcher.end(0)));
+        }
+
+        return containedUrls;
     }
 }

@@ -128,10 +128,10 @@ public class PromotionShowFragment  extends BaseBackFragment implements OnItemCl
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                // TODO: 2017/2/13 设置限量销售分享内容和回调
+                String body = "复制整段信息，打开\uD83D\uDC49慧生活APP\uD83D\uDC48，即可查看此团购:【"+ product.getTitle() +"】( 未安装App点这里：http://elive.clfsj.com:8989/smart_life?sl=g"+ product.getId() +" )";
                 switch (item.getItemId()) {
                     case R.id.toolbar_share:
-                        goToShare("慧生活限量销售", new UMShareListener() {
+                        goToShare(body, new UMShareListener() {
                             @Override
                             public void onResult(SHARE_MEDIA share_media) {
                                 showToast("分享成功");

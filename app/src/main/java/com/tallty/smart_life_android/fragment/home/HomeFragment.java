@@ -53,6 +53,7 @@ import com.tallty.smart_life_android.model.Activity;
 import com.tallty.smart_life_android.model.Banner;
 import com.tallty.smart_life_android.model.CartList;
 import com.tallty.smart_life_android.model.Home;
+import com.tallty.smart_life_android.model.Product;
 import com.tallty.smart_life_android.model.ServiceTel;
 import com.tallty.smart_life_android.model.Step;
 import com.tallty.smart_life_android.service.StepService;
@@ -73,6 +74,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.content.Context.CONNECTIVITY_SERVICE;
 import static android.content.Context.NOTIFICATION_SERVICE;
 
 /**
@@ -706,7 +708,7 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
                     for (Activity activity : response.body().getActivities()) {
                         if (activity.getId() == activity_id) {
                             EventBus.getDefault().post(new StartBrotherEvent(
-                                    GlobalAppointFragment.newInstance("活动详情", activity.getDetail_image(), activity.getId(), "我要报名", false)
+                                    GlobalAppointFragment.newInstance(activity, "我要报名", false)
                             ));
                             break;
                         }
@@ -806,7 +808,7 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
     @Subscribe
     public void onShowNotification(final TransferDataEvent event) {
         if (Const.JPUSH.equals(event.tag)) {
-            confirmDialog("收到门铃告警!", "查看详情", "忽略", new BaseBackFragment.OnConfirmDialogListener() {
+            confirmDialog("门铃告警", "电子猫眼发现异常!", "查看详情", "忽略", new BaseBackFragment.OnConfirmDialogListener() {
                 @Override
                 public void onConfirm(DialogInterface dialog, int which) {
                     // 显示详情页面
@@ -830,6 +832,110 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
      */
     @Subscribe
     public void onDisplayShareDetail(final TransferDataEvent event) {
+        if (Const.SHARE.equals(event.tag)) {
+            String tag = event.bundle.getString("tag");
+            int id = Integer.parseInt(event.bundle.getString("id"));
+            if (tag == null) return;
+            switch (tag) {
+                case "p":
+                    getShareProduct(id);
+                    break;
+                case "g":
+                    getSharePromotion(id);
+                    break;
+                case "a":
+                    getShareActivity(id);
+                    break;
+            }
+        }
+    }
 
+    // 分享 - 社区活动
+    private void getShareActivity(final int id) {
+        Engine.authService(shared_token, shared_phone).getActivities().enqueue(new Callback<Activities>() {
+            @Override
+            public void onResponse(Call<Activities> call, Response<Activities> response) {
+                if (response.isSuccessful()) {
+                    for (final Activity activity : response.body().getActivities()) {
+                        if (activity.getId() == id) {
+                            confirmDialog("分享", activity.getTitle(), "立即查看", "忽略", new BaseBackFragment.OnConfirmDialogListener() {
+                                @Override
+                                public void onConfirm(DialogInterface dialog, int which) {
+                                    EventBus.getDefault().post(new StartBrotherEvent(
+                                            GlobalAppointFragment.newInstance(activity, "我要报名", false)
+                                    ));
+                                }
+
+                                @Override
+                                public void onCancel(DialogInterface dialog, int which) {
+
+                                }
+                            });
+                            break;
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Activities> call, Throwable t) {
+            }
+        });
+    }
+
+    // 分享 - 商品详情
+    private void getShareProduct(int id) {
+        Engine.authService(shared_token, shared_phone).getProduct(id).enqueue(new Callback<Product>() {
+            @Override
+            public void onResponse(Call<Product> call, Response<Product> response) {
+                if (response.isSuccessful()) {
+                    final Product product = response.body();
+                    confirmDialog("分享", product.getTitle(), "立即查看", "忽略", new BaseBackFragment.OnConfirmDialogListener() {
+                        @Override
+                        public void onConfirm(DialogInterface dialog, int which) {
+                            EventBus.getDefault().post(new StartBrotherEvent(ProductShowFragment.newInstance(product)));
+                        }
+
+                        @Override
+                        public void onCancel(DialogInterface dialog, int which) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Product> call, Throwable t) {
+
+            }
+        });
+    }
+
+    // 分享 - 团购详情
+    private void getSharePromotion(int id) {
+        Engine.authService(shared_token, shared_phone).getPromotion(id).enqueue(new Callback<Product>() {
+            @Override
+            public void onResponse(Call<Product> call, Response<Product> response) {
+                if (response.isSuccessful()) {
+                    final Product product = response.body();
+                    confirmDialog("分享", product.getTitle(), "立即查看", "忽略", new BaseBackFragment.OnConfirmDialogListener() {
+                        @Override
+                        public void onConfirm(DialogInterface dialog, int which) {
+                            EventBus.getDefault().post(new StartBrotherEvent(PromotionShowFragment.newInstance(product)));
+                        }
+
+                        @Override
+                        public void onCancel(DialogInterface dialog, int which) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Product> call, Throwable t) {
+
+            }
+        });
     }
 }

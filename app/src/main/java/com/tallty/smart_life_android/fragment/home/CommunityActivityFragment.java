@@ -93,7 +93,7 @@ public class CommunityActivityFragment extends BaseBackFragment {
             public void onSimpleItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
                 Activity activity = activities.get(i);
                 EventBus.getDefault().post(new StartBrotherEvent(
-                        GlobalAppointFragment.newInstance("活动详情", activity.getDetail_image(), activity.getId(), "我要报名", false)
+                        GlobalAppointFragment.newInstance(activity, "我要报名", false)
                 ));
             }
         });

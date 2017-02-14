@@ -144,8 +144,8 @@ public class ProductShowFragment extends BaseBackFragment implements OnItemClick
         productShareBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: 2017/2/13 设置商品详情分享内容
-                goToShare("商品", new UMShareListener() {
+                String body = "复制整段信息，打开\uD83D\uDC49慧生活APP\uD83D\uDC48，即可查看此商品:【"+ product.getTitle() + "】( 未安装App点这里：http://elive.clfsj.com:8989/smart_life?sl=p"+ product.getId() +" )";
+                goToShare(body, new UMShareListener() {
                     @Override
                     public void onResult(SHARE_MEDIA share_media) {
                         showToast("分享成功");

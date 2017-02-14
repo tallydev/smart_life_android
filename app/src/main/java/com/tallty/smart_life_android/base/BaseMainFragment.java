@@ -201,9 +201,10 @@ public abstract class BaseMainFragment extends BaseFragment implements View.OnCl
         void onConfirm(DialogInterface dialog, int which);
         void onCancel(DialogInterface dialog, int which);
     }
-    protected void confirmDialog(String body, String confirm_str, String cancel_str, final BaseBackFragment.OnConfirmDialogListener listener) {
+    protected void confirmDialog(String title, String body, String confirm_str, String cancel_str, final BaseBackFragment.OnConfirmDialogListener listener) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(_mActivity, R.style.CustomAlertDialogTheme);
         builder.setMessage(body)
+                .setTitle(title)
                 .setPositiveButton(confirm_str, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

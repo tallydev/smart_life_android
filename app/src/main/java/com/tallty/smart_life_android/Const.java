@@ -113,4 +113,9 @@ public class Const {
     public static final String PUSH_TIME = "jpush_time";
     public static final String PUSH_IMAGES = "jpush_images";
     public static final String HOME_BUNDLE = "home_bundle";
+
+    /**
+     * 分享相关
+     */
+    public static final String SHARE = "app_share";
 }

@@ -30,6 +30,7 @@ import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.activity.MainActivity;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.fragment.Pop.HintDialogFragment;
+import com.tallty.smart_life_android.model.Activity;
 import com.tallty.smart_life_android.model.Appointment;
 import com.tallty.smart_life_android.utils.ImageUtils;
 import com.umeng.socialize.UMShareListener;
@@ -55,6 +56,7 @@ public class GlobalAppointFragment extends BaseBackFragment {
     private String btn_text;
     private Boolean hasButton;
     private int activityId = 0;
+    private String activityTitle = "";
     // 详情图
     private SubsamplingScaleImageView detail_image;
     private ImageView small_detail_image;
@@ -86,11 +88,12 @@ public class GlobalAppointFragment extends BaseBackFragment {
         return fragment;
     }
     // (2) 社区活动的详情
-    public static GlobalAppointFragment newInstance(String title, String imageUrl, int activityId, String btn_text, Boolean isSingle) {
+    public static GlobalAppointFragment newInstance(Activity activity, String btn_text, Boolean isSingle) {
         Bundle args = new Bundle();
-        args.putString(Const.FRAGMENT_NAME, title);
-        args.putString("detail_image", imageUrl);
-        args.putInt("activity_id", activityId);
+        args.putString(Const.FRAGMENT_NAME, "活动详情");
+        args.putString("activity_title", activity.getTitle());
+        args.putString("detail_image", activity.getDetail_image());
+        args.putInt("activity_id", activity.getId());
         args.putBoolean("is_single", isSingle);
         args.putString("button_text", btn_text);
         args.putBoolean("has_button", true);
@@ -121,6 +124,7 @@ public class GlobalAppointFragment extends BaseBackFragment {
             activityId = args.getInt("activity_id");
             isSingle = args.getBoolean("is_single");
             btn_text = args.getString("button_text");
+            activityTitle = args.getString("activity_title");
         }
     }
 
@@ -132,13 +136,12 @@ public class GlobalAppointFragment extends BaseBackFragment {
     @Override
     public void initToolbar(Toolbar toolbar, TextView toolbar_title) {
         toolbar_title.setText(fragmentTitle);
-        if (activityId == 0) return;
+        if (activityTitle == null) return;
         toolbar.inflateMenu(R.menu.share_menu);
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                // TODO: 2017/2/13 设置社区活动分享内容
-                String shareBody = "复制整段信息，打开\uD83D\uDC49慧生活APP\uD83D\uDC48，即可查看此活动:【" + fragmentTitle + "】(未安装App点这里：https://www.pgyer.com/smart_life )";
+                String shareBody = "复制整段信息，打开\uD83D\uDC49慧生活APP\uD83D\uDC48，即可查看此活动:【"+ activityTitle +"】( 未安装App点这里：http://elive.clfsj.com:8989/smart_life?sl=a"+ activityId +" )";
                 switch (item.getItemId()) {
                     case R.id.toolbar_share:
                         goToShare(shareBody, new UMShareListener() {
