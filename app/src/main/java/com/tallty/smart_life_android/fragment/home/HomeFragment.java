@@ -781,7 +781,6 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
             delayTimer.onFinish();
     }
 
-
     //  ====================== 订阅事件 ========================
     @Subscribe
     public void onTabSelectedEvent(TabReselectedEvent event) {

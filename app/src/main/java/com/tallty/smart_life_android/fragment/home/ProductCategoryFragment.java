@@ -92,6 +92,7 @@ public class ProductCategoryFragment extends BaseBackFragment {
 
     private void getActivities() {
         showProgress("正在加载...");
+        // TODO: 2017/3/6 这是 1.1.3版本, 超市分类鉴权和分享使用一个版本
         Engine.authService(shared_token, shared_phone).getProductCategories().enqueue(new Callback<Categories>() {
             @Override
             public void onResponse(Call<Categories> call, Response<Categories> response) {

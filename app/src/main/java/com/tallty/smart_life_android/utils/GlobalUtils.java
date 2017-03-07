@@ -107,6 +107,7 @@ public class GlobalUtils {
     public static String getClipboardData(Context context) {
         ClipboardManager cm = (ClipboardManager)context.getSystemService(CLIPBOARD_SERVICE);
         ClipData cd = cm.getPrimaryClip();
+        if (cd == null) return "";
         return cd.getItemAt(0).getText().toString();
     }
 

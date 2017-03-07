@@ -163,7 +163,7 @@ public class MainActivity extends SupportActivity {
             bundle.putString("tag", tag);
             bundle.putString("id", id);
             EventBus.getDefault().post(new TransferDataEvent(bundle, Const.SHARE));
-            // 使用后,清空
+            // 使用后, 清空剪切板
             GlobalUtils.setClipboardData(this, "");
         }
     }
