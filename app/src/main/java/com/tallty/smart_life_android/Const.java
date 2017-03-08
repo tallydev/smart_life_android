@@ -1,6 +1,10 @@
 package com.tallty.smart_life_android;
 
+import com.tallty.smart_life_android.model.HomeBlock;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by kang on 16/8/3.
@@ -118,4 +122,40 @@ public class Const {
      * 分享相关
      */
     public static final String SHARE = "app_share";
+
+    /**
+     * 首页模块
+     */
+    private List<String> titles = new ArrayList<String>() {
+        {
+            add("智慧健康");
+            add("健步达人");
+            add("社区活动");
+            add("智慧家居");
+            add("上门服务");
+            add("社区IT");
+            add("限量发售");
+            add("精品超市");
+        }
+    };
+    private String[][] itemButtons = {
+            {"预约体检", "健康报告", "预约专家"},       // 智慧健康
+            {"更多数据"},                             // 健步达人
+            {"活动详情"},                             // 社区活动
+            {"远程控制", "电子猫眼"},                  // 智慧家居
+            {"上门服务"},                             // 上门服务
+            {"IT学堂", "在线冲印", "IT服务"},          // 社区IT
+            {"我要参团"},                             // 限量销售
+            {"更多臻品"}                              // 精品超市
+    };
+    private Integer[][] itemIcons = {
+            {R.mipmap.smart_healthy_one, R.mipmap.smart_healthy_two, R.mipmap.smart_healthy_three},
+            {R.mipmap.fitness_people_one},
+            {R.mipmap.community_activity_one},
+            {R.mipmap.smart_home_one, R.mipmap.smart_home_two},
+            {R.mipmap.service_one},
+            {R.mipmap.community_it_one, R.mipmap.community_it_two, R.mipmap.community_it_three},
+            {R.mipmap.supermarket_one},
+            {R.mipmap.more_icon}
+    };
 }

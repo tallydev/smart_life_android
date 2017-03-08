@@ -355,11 +355,11 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
      * 处理分享
      */
     public void goToShare(final String body, final UMShareListener umShareListener) {
+        // SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE, SHARE_MEDIA.SINA,
         new ShareAction(_mActivity)
                 .setDisplayList(
                         SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE, SHARE_MEDIA.WEIXIN_FAVORITE,
-                        SHARE_MEDIA.SINA, SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE, SHARE_MEDIA.ALIPAY,
-                        SHARE_MEDIA.SMS, SHARE_MEDIA.MORE
+                        SHARE_MEDIA.ALIPAY, SHARE_MEDIA.SMS, SHARE_MEDIA.MORE
                 )
                 .addButton("umeng_sharebutton_copy", "umeng_sharebutton_copy", "umeng_socialize_copy", "umeng_socialize_copy")
                 .setShareboardclickCallback(new ShareBoardlistener() {

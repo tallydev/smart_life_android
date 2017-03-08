@@ -145,7 +145,7 @@ public class ProductShowFragment extends BaseBackFragment implements OnItemClick
             @Override
             public void onClick(View v) {
                 String body = "复制整段信息，打开\uD83D\uDC49慧生活APP\uD83D\uDC48，即可查看此商品:【"+ product.getTitle() + "】( 未安装App点这里：http://elive.clfsj.com:8989/smart_life?sl=p"+ product.getId() +" )";
-                goToShare(body, new UMShareListener() {
+                    goToShare(body, new UMShareListener() {
                     @Override
                     public void onResult(SHARE_MEDIA share_media) {
                         showToast("分享成功");
