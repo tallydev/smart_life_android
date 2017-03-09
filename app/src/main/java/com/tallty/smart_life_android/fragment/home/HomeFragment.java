@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -36,16 +35,12 @@ import com.tallty.smart_life_android.adapter.HomeRecyclerAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.base.BaseMainFragment;
 import com.tallty.smart_life_android.custom.MyRecyclerView;
-import com.tallty.smart_life_android.event.PayEvent;
 import com.tallty.smart_life_android.event.ShowSnackbarEvent;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
-import com.tallty.smart_life_android.event.SwitchTabFragment;
 import com.tallty.smart_life_android.event.TabReselectedEvent;
 import com.tallty.smart_life_android.event.TransferDataEvent;
 import com.tallty.smart_life_android.fragment.Common.GlobalAppointFragment;
 import com.tallty.smart_life_android.fragment.MainFragment;
-import com.tallty.smart_life_android.fragment.community.CommunityFragment;
-import com.tallty.smart_life_android.fragment.me.MyOrders;
 import com.tallty.smart_life_android.holder.HomeViewHolder;
 import com.tallty.smart_life_android.holder.NetworkImageBannerHolder;
 import com.tallty.smart_life_android.model.Activities;
@@ -53,6 +48,7 @@ import com.tallty.smart_life_android.model.Activity;
 import com.tallty.smart_life_android.model.Banner;
 import com.tallty.smart_life_android.model.CartList;
 import com.tallty.smart_life_android.model.Home;
+import com.tallty.smart_life_android.model.HomeBlock;
 import com.tallty.smart_life_android.model.Product;
 import com.tallty.smart_life_android.model.ServiceTel;
 import com.tallty.smart_life_android.model.Step;
@@ -74,7 +70,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.content.Context.CONNECTIVITY_SERVICE;
 import static android.content.Context.NOTIFICATION_SERVICE;
 
 /**
@@ -113,51 +108,10 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
     private HomeViewHolder homeViewHolder = null;
     // banner图数据
     private ArrayList<Banner> banners = new ArrayList<>();
-    // 列表数据
-    private List<String> titles = new ArrayList<String>() {
-        {
-            add("智慧健康");
-            add("健步达人");
-            add("社区活动");
-            add("智慧家居");
-            add("上门服务");
-            add("社区IT");
-            add("限量发售");
-            add("精品超市");
-        }
-    };
-    private List<String> images = new ArrayList<String>() {
-        {
-            add(getDrawablePath(R.drawable.smart_healthy));
-            add(getDrawablePath(R.drawable.fitness_people));
-            add(getDrawablePath(R.drawable.community_activity));
-            add(getDrawablePath(R.drawable.smart_home));
-            add(getDrawablePath(R.drawable.come_service));
-            add(getDrawablePath(R.drawable.community_it));
-            add(getDrawablePath(R.drawable.image_placeholder));
-            add(getDrawablePath(R.drawable.supermarket));
-        }
-    };
-    private String[][] itemButtons = {
-        {"预约体检", "健康报告", "预约专家"},
-        {"更多数据"},
-        {"活动详情"},
-        {"远程控制", "电子猫眼"},
-        {"上门服务"},
-        {"IT学堂", "在线冲印", "IT服务"},
-        {"我要参团"},
-        {"更多臻品"}
-    };
-    private Integer[][] itemIcons = {
-        {R.mipmap.smart_healthy_one, R.mipmap.smart_healthy_two, R.mipmap.smart_healthy_three},
-        {R.mipmap.fitness_people_one},
-        {R.mipmap.community_activity_one},
-        {R.mipmap.smart_home_one, R.mipmap.smart_home_two},
-        {R.mipmap.service_one},
-        {R.mipmap.community_it_one, R.mipmap.community_it_two, R.mipmap.community_it_three},
-        {R.mipmap.supermarket_one},
-        {R.mipmap.more_icon}
-    };
+    // 当前社区包含的所有模块
+    private ArrayList<HomeBlock> nowCommunityBlocks = new ArrayList<>();
+    // 健步达人模块position
+    private int sportBlockPosition = -1;
 
 
     public static HomeFragment newInstance() {
@@ -201,13 +155,9 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
     @Override
     public void onLazyInitView(@Nullable Bundle savedInstanceState) {
         super.onLazyInitView(savedInstanceState);
-        setList();
-        // 设置计步服务
-        setupService();
-        // 设置步数上传计时器(15分钟倒计时: 每分钟判断整点并获取首页数据, 结束上传步数)
-        setUploadStepTimer();
-        // 进入页面, 延时3秒, 先上传一次步数, 然后再获取首页信息(优化首页信息的实时性)
-        delayUploadStep();
+        initList();
+        // 获取banner
+        getHomeBannersAndBlocks();
         // 获取购物车数量
         getCartCount();
         // 绑定用户到【电子猫眼】服务, 以获取监控推送
@@ -278,7 +228,7 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
                             if (response.isSuccessful()) {
                                 Log.d(App.TAG, "首次进入页面,上传步数成功");
                                 // 获取首页信息,更新列表
-                                getHomeData();
+                                getSportData();
                             } else {
                                 Log.d(App.TAG, "上传步数失败");
                             }
@@ -310,7 +260,7 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
             // 到达整点, 保存
             processClockStep();
             // 每分钟获取一次首页数据
-            getHomeData();
+//            getSportData();
         }
 
         @Override
@@ -410,7 +360,7 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
     }
 
     // 获取首页信息
-    private void getHomeData() {
+    private void getSportData() {
         Engine.authService(shared_token, shared_phone).getHomeData().enqueue(new Callback<Home>() {
             @Override
             public void onResponse(Call<Home> call, Response<Home> response) {
@@ -419,8 +369,9 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
                     if (response.body().getFitness() != null) {
                         rank = response.body().getFitness().get("rank");
                         server_today = response.body().getFitness().get("today");
+                        if (sportBlockPosition == -1) return;
                         if (homeViewHolder == null) {
-                            homeViewHolder = (HomeViewHolder) recyclerView.findViewHolderForAdapterPosition(1);
+                            homeViewHolder = (HomeViewHolder) recyclerView.findViewHolderForAdapterPosition(sportBlockPosition);
                         } else {
                             homeViewHolder.rank.setText(rank);
                             homeViewHolder.date.setText(server_today);
@@ -441,22 +392,33 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
         });
     }
 
-    // 获取首页Banners
-    private void getHomeBanners() {
+    // 获取首页Banners 和 blocks
+    private void getHomeBannersAndBlocks() {
         Engine.authService(shared_token, shared_phone)
-            .getHomeBanners()
+            .getHomeBannersAndBlocks()
             .enqueue(new Callback<Home>() {
                 @Override
                 public void onResponse(Call<Home> call, Response<Home> response) {
                     if (response.isSuccessful()) {
+                        // 更新banners
                         banners.clear();
                         banners.addAll(response.body().getBanners());
-                        setBanner();
-
-                        // 更新新品上市倒计时
+                        initBanners();
+                        // 更新首页模块
+                        nowCommunityBlocks = response.body().getBlocks();
                         homeRecyclerAdapter.setCountDownTimer(response.body().getNewer().get("end_time"));
-                        images.set(6, response.body().getNewer().get("url"));
-                        homeRecyclerAdapter.notifyItemChanged(6);
+                        initList();
+
+                        // 如果不包含【运动达人】模块, 不添加运动服务
+                        sportBlockPosition = getBlockPosition(Const.BLOCK_SPORT);
+                        if (sportBlockPosition != -1) {
+                            // 设置计步服务
+                            setupService();
+                            // 设置步数上传计时器(15分钟倒计时: 每分钟判断整点并获取首页数据, 结束上传步数)
+                            setUploadStepTimer();
+                            // 进入页面, 延时3秒, 先上传一次步数, 然后再获取首页信息(优化首页信息的实时性)
+                            delayUploadStep();
+                        }
                     }
                 }
 
@@ -465,6 +427,18 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
 
                 }
         });
+    }
+
+    // 是否包含指定模块
+    private int getBlockPosition(String title) {
+        int b = -1;
+        for (int i = 0; i < nowCommunityBlocks.size(); i++) {
+            if (title.equals(nowCommunityBlocks.get(i).getTitle())) {
+                return i;
+            }
+
+        }
+        return b;
     }
 
     // 获取客服电话列表
@@ -505,7 +479,7 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
             });
     }
 
-    private void setBanner() {
+    private void initBanners() {
         List<String> networkImages = new ArrayList<>();
         for (Banner banner : banners) {
             networkImages.add(banner.getBannerImage());
@@ -520,9 +494,10 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
         .setOnItemClickListener(this);
     }
 
-    private void setList() {
+    private void initList() {
+        // 显示列表
         recyclerView.setLayoutManager(layoutManager);
-        homeRecyclerAdapter = new HomeRecyclerAdapter(_mActivity, titles, images, itemButtons, itemIcons);
+        homeRecyclerAdapter = new HomeRecyclerAdapter(_mActivity, nowCommunityBlocks);
         recyclerView.setAdapter(homeRecyclerAdapter);
         // ScrollView嵌套RecyclerView,设置屏幕从顶部开始
         recyclerView.setFocusable(false);
@@ -639,15 +614,17 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
                 // 保存步数
                 step = msg.getData().getInt("step");
                 // 更新首页视图
-                if (homeViewHolder == null) {
-                    homeViewHolder = (HomeViewHolder) recyclerView.findViewHolderForAdapterPosition(1);
-                } else {
-                    homeViewHolder.steps.setText("" + step);
-                    homeViewHolder.rank.setText(rank);
-                    homeViewHolder.date.setText(server_today);
+                if (sportBlockPosition != -1) {
+                    if (homeViewHolder == null) {
+                        homeViewHolder = (HomeViewHolder) recyclerView.findViewHolderForAdapterPosition(sportBlockPosition);
+                    } else {
+                        homeViewHolder.steps.setText("" + step);
+                        homeViewHolder.rank.setText(rank);
+                        homeViewHolder.date.setText(server_today);
+                    }
+                    // 延时1s 发送 REQUEST_SERVER 消息
+                    delayHandler.sendEmptyMessageDelayed(Const.REQUEST_SERVER, TIME_INTERVAL);
                 }
-                // 延时1s 发送 REQUEST_SERVER 消息
-                delayHandler.sendEmptyMessageDelayed(Const.REQUEST_SERVER, TIME_INTERVAL);
                 break;
             case Const.REQUEST_SERVER:
                 try {
@@ -746,8 +723,6 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
     @Override
     public void onResume() {
         super.onResume();
-        // 获取banner
-        getHomeBanners();
         banner.startTurning(5000);
         // 检查更新
         PgyUpdateManager.register(_mActivity);
@@ -801,6 +776,16 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
     }
 
     /**
+     * 重载首页 banners 和 blocks
+     */
+    @Subscribe
+    public void onReloadHomeData(TransferDataEvent event) {
+        if ("重载首页模块".equals(event.tag)) {
+            getHomeBannersAndBlocks();
+        }
+    }
+
+    /**
      * 显示推送详情
      * @param event
      */
@@ -848,6 +833,7 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
             }
         }
     }
+
 
     // 分享 - 社区活动
     private void getShareActivity(final int id) {

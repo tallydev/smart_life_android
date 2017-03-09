@@ -271,7 +271,7 @@ public interface DataAPI {
 
     // 获取首页Banner
     @GET("home_info")
-    Call<Home> getHomeBanners();
+    Call<Home> getHomeBannersAndBlocks();
 
     // 获取客服电话列表
     @GET("customer_services")

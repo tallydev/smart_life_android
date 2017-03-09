@@ -1,7 +1,5 @@
 package com.tallty.smart_life_android;
 
-import com.tallty.smart_life_android.model.HomeBlock;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -126,36 +124,51 @@ public class Const {
     /**
      * 首页模块
      */
-    private List<String> titles = new ArrayList<String>() {
+    public static String BLOCK_HEALTHY = "智慧健康";
+    public static String BLOCK_SPORT = "健步达人";
+    public static String BLOCK_ACTIVITY = "社区活动";
+    public static String BLOCK_HOME = "智慧家居";
+    public static String BLOCK_SERVICE = "上门服务";
+    public static String BLOCK_IT = "社区IT";
+    public static String BLOCK_LIMIT = "限量发售";
+    public static String BLOCK_MARKET = "精品超市";
+
+    public static List<String> HOME_BLOCK_TITLES = new ArrayList<String>() {
         {
-            add("智慧健康");
-            add("健步达人");
-            add("社区活动");
-            add("智慧家居");
-            add("上门服务");
-            add("社区IT");
-            add("限量发售");
-            add("精品超市");
+            add(BLOCK_HEALTHY);
+            add(BLOCK_SPORT);
+            add(BLOCK_ACTIVITY);
+            add(BLOCK_HOME);
+            add(BLOCK_SERVICE);
+            add(BLOCK_IT);
+            add(BLOCK_LIMIT);
+            add(BLOCK_MARKET);
         }
     };
-    private String[][] itemButtons = {
-            {"预约体检", "健康报告", "预约专家"},       // 智慧健康
-            {"更多数据"},                             // 健步达人
-            {"活动详情"},                             // 社区活动
-            {"远程控制", "电子猫眼"},                  // 智慧家居
-            {"上门服务"},                             // 上门服务
-            {"IT学堂", "在线冲印", "IT服务"},          // 社区IT
-            {"我要参团"},                             // 限量销售
-            {"更多臻品"}                              // 精品超市
+
+    public static HashMap<String, ArrayList<String>> HOME_BLOCK_SUBTITLES = new HashMap<String, ArrayList<String>>() {
+        {
+            put("智慧健康", new ArrayList<String>(){{ add("预约体检"); add("健康报告"); add("预约专家"); }});
+            put(BLOCK_SPORT, new ArrayList<String>(){{ add("更多数据"); }});
+            put(BLOCK_ACTIVITY, new ArrayList<String>(){{ add("活动详情"); }});
+            put(BLOCK_HOME, new ArrayList<String>(){{ add("远程控制"); add("电子猫眼"); }});
+            put(BLOCK_SERVICE, new ArrayList<String>(){{ add("上门服务"); }});
+            put(BLOCK_IT, new ArrayList<String>(){{ add("IT学堂"); add("在线冲印"); add("IT服务"); }});
+            put(BLOCK_LIMIT, new ArrayList<String>(){{ add("我要参团"); }});
+            put(BLOCK_MARKET, new ArrayList<String>(){{ add("更多臻品"); }});
+        }
     };
-    private Integer[][] itemIcons = {
-            {R.mipmap.smart_healthy_one, R.mipmap.smart_healthy_two, R.mipmap.smart_healthy_three},
-            {R.mipmap.fitness_people_one},
-            {R.mipmap.community_activity_one},
-            {R.mipmap.smart_home_one, R.mipmap.smart_home_two},
-            {R.mipmap.service_one},
-            {R.mipmap.community_it_one, R.mipmap.community_it_two, R.mipmap.community_it_three},
-            {R.mipmap.supermarket_one},
-            {R.mipmap.more_icon}
+
+    public static HashMap<String, ArrayList<Integer>> HOME_BLOCK_SUBICONS = new HashMap<String, ArrayList<Integer>>() {
+        {
+            put("智慧健康", new ArrayList<Integer>(){{ add(R.mipmap.smart_healthy_one); add(R.mipmap.smart_healthy_two); add(R.mipmap.smart_healthy_three); }});
+            put(BLOCK_SPORT, new ArrayList<Integer>(){{ add(R.mipmap.fitness_people_one); }});
+            put(BLOCK_ACTIVITY, new ArrayList<Integer>(){{ add(R.mipmap.community_activity_one); }});
+            put(BLOCK_HOME, new ArrayList<Integer>(){{ add(R.mipmap.smart_home_one); add(R.mipmap.smart_home_two); }});
+            put(BLOCK_SERVICE, new ArrayList<Integer>(){{ add(R.mipmap.service_one); }});
+            put(BLOCK_IT, new ArrayList<Integer>(){{ add(R.mipmap.community_it_one); add(R.mipmap.community_it_two); add(R.mipmap.community_it_three); }});
+            put(BLOCK_LIMIT, new ArrayList<Integer>(){{ add(R.mipmap.supermarket_one); }});
+            put(BLOCK_MARKET, new ArrayList<Integer>(){{ add(R.mipmap.more_icon); }});
+        }
     };
 }

@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by kang on 2017/3/8.
@@ -12,6 +13,18 @@ import java.util.ArrayList;
  */
 
 public class HomeBlock implements Serializable {
+
+    public HomeBlock(String title, String image, ArrayList<String> subTitles, ArrayList<Integer> subIcons) {
+        this.title = title;
+        this.image = image;
+        this.subTitles = subTitles;
+        this.subIcons = subIcons;
+    }
+
+    public HomeBlock(String title, String image) {
+        this.title = title;
+        this.image = image;
+    }
 
     @SerializedName ("id")
     @Expose
@@ -21,7 +34,7 @@ public class HomeBlock implements Serializable {
     @Expose
     private String title;
 
-    @SerializedName ("image")
+    @SerializedName ("home_block_cover")
     @Expose
     private String image;
 
@@ -31,7 +44,7 @@ public class HomeBlock implements Serializable {
 
     @SerializedName ("sub_icons")
     @Expose
-    private ArrayList<String> subIcons = new ArrayList<>();
+    private ArrayList<Integer> subIcons = new ArrayList<>();
 
     public int getId() {
         return id;
@@ -65,11 +78,11 @@ public class HomeBlock implements Serializable {
         this.subTitles = subTitles;
     }
 
-    public ArrayList<String> getSubIcons() {
+    public ArrayList<Integer> getSubIcons() {
         return subIcons;
     }
 
-    public void setSubIcons(ArrayList<String> subIcons) {
+    public void setSubIcons(ArrayList<Integer> subIcons) {
         this.subIcons = subIcons;
     }
 }

@@ -29,6 +29,11 @@ public class Home implements Serializable {
     @Expose
     private ArrayList<Banner> banners = new ArrayList<>();
 
+    @SerializedName("home_blocks")
+    @Expose
+    private ArrayList<HomeBlock> blocks = new ArrayList<>();
+
+
     public HashMap<String, String> getFitness() {
         return fitness;
     }
@@ -60,4 +65,13 @@ public class Home implements Serializable {
     public void setBanners(ArrayList<Banner> banners) {
         this.banners = banners;
     }
+
+    public ArrayList<HomeBlock> getBlocks() {
+        return blocks;
+    }
+
+    public void setBlocks(ArrayList<HomeBlock> blocks) {
+        this.blocks = blocks;
+    }
 }
+

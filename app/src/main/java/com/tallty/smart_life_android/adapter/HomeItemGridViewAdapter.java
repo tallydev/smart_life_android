@@ -12,6 +12,8 @@ import com.bumptech.glide.Glide;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.custom.MyGridView;
 import com.tallty.smart_life_android.holder.BaseViewHolder;
+import com.tallty.smart_life_android.model.Home;
+import com.tallty.smart_life_android.model.HomeBlock;
 
 /**
  * Created by kang on 16/6/23.
@@ -19,18 +21,17 @@ import com.tallty.smart_life_android.holder.BaseViewHolder;
  */
 public class HomeItemGridViewAdapter extends BaseAdapter {
     private Context context;
-    private Integer[] icons;
-    private String[] texts;
-    private MyGridView gridView;
+    private HomeBlock block;
 
-    public HomeItemGridViewAdapter(Context context, Integer[] icons, String[] texts) {
+    public HomeItemGridViewAdapter(Context context, HomeBlock block) {
         this.context = context;
-        this.icons = icons;
-        this.texts = texts;
+        this.block = block;
     }
+
     @Override
     public int getCount() {
-        int count = texts.length;
+        if (block.getSubIcons() == null) return 0;
+        int count = block.getSubTitles().size();
         if (count % 2 == 0) {
             return count;
         } else {
@@ -56,14 +57,14 @@ public class HomeItemGridViewAdapter extends BaseAdapter {
         // 找到组件
         ImageView icon = BaseViewHolder.get(convertView, R.id.home_item_girdView_icon);
         TextView text = BaseViewHolder.get(convertView, R.id.home_item_girdView_text);
-        // 赋值
-        if (position <= texts.length - 1) {
-            text.setText("更多".equals(texts[position]) ? "• • •" : texts[position]);
-            if (position <= icons.length - 1 ) {
+
+        if (position < block.getSubTitles().size()) {
+            text.setText(block.getSubTitles().get(position));
+            if ( position < block.getSubIcons().size() ) {
                 Glide
-                    .with(context)
-                    .load(icons[position])
-                    .centerCrop().into(icon);
+                        .with(context)
+                        .load(block.getSubIcons().get(position))
+                        .centerCrop().into(icon);
             } else {
                 icon.setVisibility(View.GONE);
             }

@@ -13,6 +13,7 @@ import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.event.ConfirmDialogEvent;
+import com.tallty.smart_life_android.event.TransferDataEvent;
 import com.tallty.smart_life_android.fragment.Pop.AddressDialogFragment;
 import com.tallty.smart_life_android.fragment.Pop.AreaDialogFragment;
 import com.tallty.smart_life_android.model.User;
@@ -163,6 +164,8 @@ public class BindCommunityFragment extends BaseBackFragment {
                         bundle.putInt(RESULT_POSITION, position);
                         bundle.putInt(RESULT_POSITION_OTHER, otherPosition);
                         setFragmentResult(RESULT_OK, bundle);
+                        // 通知首页重载模块
+                        EventBus.getDefault().post(new TransferDataEvent(new Bundle(), "重载首页模块"));
                         // 隐藏软键盘
                         hideSoftInput();
                         pop();

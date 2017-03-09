@@ -17,9 +17,9 @@ import cn.iwgang.countdownview.CountdownView;
  */
 public class HomeViewHolder extends RecyclerView.ViewHolder {
     // 模板类型
-    private static final int IS_NORMAL = 0;
-    private static final int IS_STEPS = 1;
-    private static final int IS_PRODUCT = 2;
+    public static final int IS_NORMAL = 0;
+    public static final int IS_STEPS = 1;
+    public static final int IS_PRODUCT = 2;
     // 正常布局
     public TextView textView;
     public ImageView imageView;
@@ -38,6 +38,7 @@ public class HomeViewHolder extends RecyclerView.ViewHolder {
     public HomeViewHolder(View itemView, int viewType) {
         super(itemView);
         this.viewType = viewType;
+        // IS_NORMAL
         textView = (TextView) itemView.findViewById(R.id.item_home_main_title);
         imageView = (ImageView) itemView.findViewById(R.id.item_home_main_image);
         gridView = (MyGridView) itemView.findViewById(R.id.item_home_main_gridView);
