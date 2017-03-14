@@ -15,7 +15,6 @@ public class Const {
     /**
      * 通用数据
      */
-    public static final String BUNDLE = "bundle";
     public static final String OBJECT = "object";
     public static final String OBJECT_List = "object_list";
     public static final String INT = "int";
@@ -46,12 +45,6 @@ public class Const {
     public static final String PHONE_PATTEN = "^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$";
     // Contact
     public static final String CONTACT_ID = "contact_ID";
-    public static final String CONTACT_AREA = "contact_area";
-    public static final String CONTACT_STREET = "contact_street";
-    public static final String CONTACT_COMMUNITY = "contact_community";
-    public static final String CONTACT_ADDRESS = "contact_address";
-    public static final String CONTACT_PHONE = "contact_phone";
-    public static final String CONTACT_NAME = "contact_name";
 
     /**
      * 创建Fragment
@@ -88,15 +81,6 @@ public class Const {
     public static final String SET_ADDRESS_DEFAULT = "set_address_default";
 
     /**
-     * 社区相关
-     */
-    public static final String PROVINCES = "community_provinces";
-    public static final String CITIES = "community_cities";
-    public static final String AREAS = "community_areas";
-    public static final String COMMUNITIES = "community_communities";
-    public static final String VILLAGES = "community_villages";
-
-    /**
      * 订单相关
      */
     public static final String CANCEL_ORDER = "cancel_order";
@@ -124,15 +108,16 @@ public class Const {
     /**
      * 首页模块
      */
+    // 类别
     public static String BLOCK_HEALTHY = "智慧健康";
     public static String BLOCK_SPORT = "健步达人";
     public static String BLOCK_ACTIVITY = "社区活动";
     public static String BLOCK_HOME = "智慧家居";
     public static String BLOCK_SERVICE = "上门服务";
-    public static String BLOCK_IT = "社区IT";
+    public static String BLOCK_GOVERNMENT = "政府直通车";
     public static String BLOCK_LIMIT = "限量发售";
     public static String BLOCK_MARKET = "精品超市";
-
+    // 模块
     public static List<String> HOME_BLOCK_TITLES = new ArrayList<String>() {
         {
             add(BLOCK_HEALTHY);
@@ -140,7 +125,7 @@ public class Const {
             add(BLOCK_ACTIVITY);
             add(BLOCK_HOME);
             add(BLOCK_SERVICE);
-            add(BLOCK_IT);
+            add(BLOCK_GOVERNMENT);
             add(BLOCK_LIMIT);
             add(BLOCK_MARKET);
         }
@@ -153,7 +138,7 @@ public class Const {
             put(BLOCK_ACTIVITY, new ArrayList<String>(){{ add("活动详情"); }});
             put(BLOCK_HOME, new ArrayList<String>(){{ add("远程控制"); add("电子猫眼"); }});
             put(BLOCK_SERVICE, new ArrayList<String>(){{ add("上门服务"); }});
-            put(BLOCK_IT, new ArrayList<String>(){{ add("IT学堂"); add("在线冲印"); add("IT服务"); }});
+            put(BLOCK_GOVERNMENT, new ArrayList<String>(){{ add("更多内容"); }});
             put(BLOCK_LIMIT, new ArrayList<String>(){{ add("我要参团"); }});
             put(BLOCK_MARKET, new ArrayList<String>(){{ add("更多臻品"); }});
         }
@@ -166,7 +151,7 @@ public class Const {
             put(BLOCK_ACTIVITY, new ArrayList<Integer>(){{ add(R.mipmap.community_activity_one); }});
             put(BLOCK_HOME, new ArrayList<Integer>(){{ add(R.mipmap.smart_home_one); add(R.mipmap.smart_home_two); }});
             put(BLOCK_SERVICE, new ArrayList<Integer>(){{ add(R.mipmap.service_one); }});
-            put(BLOCK_IT, new ArrayList<Integer>(){{ add(R.mipmap.community_it_one); add(R.mipmap.community_it_two); add(R.mipmap.community_it_three); }});
+            put(BLOCK_GOVERNMENT, new ArrayList<Integer>(){{ add(R.mipmap.more_icon); }});
             put(BLOCK_LIMIT, new ArrayList<Integer>(){{ add(R.mipmap.supermarket_one); }});
             put(BLOCK_MARKET, new ArrayList<Integer>(){{ add(R.mipmap.more_icon); }});
         }

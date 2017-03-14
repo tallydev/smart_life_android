@@ -14,7 +14,6 @@ import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
-import com.tallty.smart_life_android.adapter.CommunityActivityAdapter;
 import com.tallty.smart_life_android.adapter.ProductCategoryAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.model.Categories;
@@ -80,7 +79,7 @@ public class ProductCategoryFragment extends BaseBackFragment {
 
     private void initList() {
         recyclerView.setLayoutManager(new LinearLayoutManager(_mActivity));
-        adapter = new ProductCategoryAdapter(R.layout.item_community_activity, categories);
+        adapter = new ProductCategoryAdapter(R.layout.item_common_image, categories);
         recyclerView.setAdapter(adapter);
         recyclerView.addOnItemTouchListener(new OnItemClickListener() {
             @Override

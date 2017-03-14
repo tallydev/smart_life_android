@@ -13,6 +13,7 @@ import com.tallty.smart_life_android.model.Communities;
 import com.tallty.smart_life_android.model.CommunitiesResponse;
 import com.tallty.smart_life_android.model.Contact;
 import com.tallty.smart_life_android.model.ContactList;
+import com.tallty.smart_life_android.model.GovernmentSort;
 import com.tallty.smart_life_android.model.Home;
 import com.tallty.smart_life_android.model.Order;
 import com.tallty.smart_life_android.model.Orders;
@@ -287,4 +288,9 @@ public interface DataAPI {
     @POST("activity/sqhds/{id}/appoint")
     Call<Appointment> applyCommunityActivity(@Path("id") int activity_id,
                                              @Field("appointment[count]") int count);
+
+    // *********************************************************************************************
+    // 政府直通车列表
+    @GET("news_sorts")
+    Call<HashMap<String, ArrayList<GovernmentSort>>> getGovernmentSorts();
 }

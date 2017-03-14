@@ -16,12 +16,14 @@ import com.tallty.smart_life_android.event.ShowSnackbarEvent;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.fragment.Common.GlobalAppointFragment;
 import com.tallty.smart_life_android.fragment.home.CommunityActivityFragment;
+import com.tallty.smart_life_android.fragment.home.GovernmentFragment;
 import com.tallty.smart_life_android.fragment.home.HealthyCheckReport;
 import com.tallty.smart_life_android.fragment.home.HomeFragment;
 import com.tallty.smart_life_android.fragment.home.ProductCategoryFragment;
 import com.tallty.smart_life_android.fragment.home.PromotionFragment;
 import com.tallty.smart_life_android.fragment.home.SportFragment;
 import com.tallty.smart_life_android.holder.HomeViewHolder;
+import com.tallty.smart_life_android.model.GovernmentSort;
 import com.tallty.smart_life_android.model.HomeBlock;
 
 import org.greenrobot.eventbus.EventBus;
@@ -52,28 +54,30 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
      */
     public HomeRecyclerAdapter(Context context, ArrayList<HomeBlock> nowBlocks) {
         this.context = context;
-        this.allBlocks = getAllBlocks();
         this.nowBlocks = nowBlocks;
+        handleBlocks();
         this.countDownSecond = 648000;
 
     }
 
-    private HashMap<String, HomeBlock> getAllBlocks() {
+    private void handleBlocks() {
         // 保存所有的模块
         HashMap<String, HomeBlock> allBlocks = new HashMap<>();
         HomeBlock homeBlock;
-        String title;
+        String key;
         for (int i = 0; i < Const.HOME_BLOCK_TITLES.size(); i++) {
-            title = Const.HOME_BLOCK_TITLES.get(i);
-            homeBlock = new HomeBlock(
-                    title,
-                    "",
-                    Const.HOME_BLOCK_SUBTITLES.get(title),
-                    Const.HOME_BLOCK_SUBICONS.get(title)
-            );
-            allBlocks.put(title, homeBlock);
+            key = Const.HOME_BLOCK_TITLES.get(i);
+            homeBlock = new HomeBlock(key, "", Const.HOME_BLOCK_SUBTITLES.get(key), Const.HOME_BLOCK_SUBICONS.get(key));
+            allBlocks.put(key, homeBlock);
         }
-        return allBlocks;
+        this.allBlocks = allBlocks;
+
+        // 过滤 allBlocks 中 不存在的 nowBlock
+        for (int j = 0; j < nowBlocks.size(); j++) {
+            if (allBlocks.get(nowBlocks.get(j).getTitle()) == null) {
+                nowBlocks.remove(j);
+            }
+        }
     }
 
     @Override
@@ -121,14 +125,14 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
     @Override
     public void onBindViewHolder(HomeViewHolder viewHolder, final int position) {
         // 筛选: 显示包含title的模块
-        HomeBlock netData = nowBlocks.get(position);
-        HomeBlock block = allBlocks.get(netData.getTitle());
-        Log.i(App.TAG, block.getSubIcons()+"");
+        HomeBlock nowData = nowBlocks.get(position);
+        HomeBlock block = allBlocks.get(nowData.getTitle());
         if (block == null) return;
+
         // 公用布局: 标题图片按钮
         viewHolder.textView.setText("— "+ block.getTitle() +" —");
         Glide.with(context)
-            .load(netData.getImage())
+            .load(nowData.getImage())
             .error(R.drawable.image_error)
             .placeholder(R.drawable.product_placeholder)
             .into(viewHolder.imageView);
@@ -140,9 +144,8 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
         });
 
         // 设置item里面的GridView
-        if (block.getSubIcons().size() == 1) {
+        if (block.getSubIcons().size() == 1)
             viewHolder.gridView.setHorizontalSpacing(0);
-        }
         viewHolder.gridView.setAdapter(new HomeItemGridViewAdapter(context, block));
         // set tag
         viewHolder.gridView.setTag(block.getTitle());
@@ -173,7 +176,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
     }
 
     private void setImageClickListener(int position) {
-        String title = Const.HOME_BLOCK_TITLES.get(position);
+        String title = nowBlocks.get(position).getTitle();
         // 智慧健康
         if (Const.BLOCK_HEALTHY.equals(title)) {
             String url = "http://elive.clfsj.com:8989/images/healthy_description.jpg";
@@ -197,10 +200,9 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
             String url = "http://elive.clfsj.com:8989/images/come_service.jpg";
             EventBus.getDefault().post(new StartBrotherEvent(GlobalAppointFragment.newInstance("上门服务", url, "SMFW", "我要预约", true)));
         }
-        // 社区IT
-        else if (Const.BLOCK_IT.equals(title)) {
-            String url = "http://elive.clfsj.com:8989/images/community_it_class.jpg";
-            EventBus.getDefault().post(new StartBrotherEvent(GlobalAppointFragment.newInstance("IT学堂", url, "ITXT", "我要报名", true)));
+        // 政府直通车
+        else if (Const.BLOCK_GOVERNMENT.equals(title)) {
+            EventBus.getDefault().post(new StartBrotherEvent(GovernmentFragment.newInstance()));
         }
         // 限量发售
         else if (Const.BLOCK_LIMIT.equals(title)) {
@@ -270,17 +272,10 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
                         EventBus.getDefault().post(new StartBrotherEvent(GlobalAppointFragment.newInstance("上门服务", url, "SMFW", "我要预约", true)));
                     }
                 }
-                // 社区IT
-                else if (Const.BLOCK_IT.equals(tag)) {
+                // 政府直通车
+                else if (Const.BLOCK_GOVERNMENT.equals(tag)) {
                     if (position == 0) {
-                        String url = "http://elive.clfsj.com:8989/images/community_it_class.jpg";
-                        EventBus.getDefault().post(new StartBrotherEvent(GlobalAppointFragment.newInstance("IT学堂", url, "ITXT", "我要报名", true)));
-                    } else if (position == 1) {
-                        String url = "http://elive.clfsj.com:8989/images/community_it_print_online.jpg";
-                        EventBus.getDefault().post(new StartBrotherEvent(GlobalAppointFragment.newInstance("在线冲印", url, "ZXCY", "微我", true)));
-                    } else if (position == 2) {
-                        String url = "http://elive.clfsj.com:8989/images/community_it_service.jpg";
-                        EventBus.getDefault().post(new StartBrotherEvent(GlobalAppointFragment.newInstance("IT服务", url, "ITFW", "我要预约", true)));
+                        EventBus.getDefault().post(new StartBrotherEvent(GovernmentFragment.newInstance()));
                     }
                 }
                 // 限量发售

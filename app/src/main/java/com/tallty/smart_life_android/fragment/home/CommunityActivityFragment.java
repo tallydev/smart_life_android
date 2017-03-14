@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -21,8 +20,6 @@ import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.fragment.Common.GlobalAppointFragment;
 import com.tallty.smart_life_android.model.Activities;
 import com.tallty.smart_life_android.model.Activity;
-import com.umeng.socialize.UMShareListener;
-import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -86,7 +83,7 @@ public class CommunityActivityFragment extends BaseBackFragment {
 
     private void initList() {
         recyclerView.setLayoutManager(new LinearLayoutManager(_mActivity));
-        adapter = new CommunityActivityAdapter(R.layout.item_community_activity, activities);
+        adapter = new CommunityActivityAdapter(R.layout.item_common_image, activities);
         recyclerView.setAdapter(adapter);
         recyclerView.addOnItemTouchListener(new OnItemClickListener() {
             @Override

@@ -17,6 +17,7 @@ import cn.iwgang.countdownview.CountdownView;
  */
 public class HomeViewHolder extends RecyclerView.ViewHolder {
     // 模板类型
+    public static final int IS_NULL = -1;
     public static final int IS_NORMAL = 0;
     public static final int IS_STEPS = 1;
     public static final int IS_PRODUCT = 2;
