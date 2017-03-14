@@ -6,19 +6,18 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
-import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
-import com.tallty.smart_life_android.adapter.GovernmentAdapter;
+import com.tallty.smart_life_android.adapter.NewsSortAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.custom.CustomLoadMoreView;
-import com.tallty.smart_life_android.model.GovernmentSort;
+import com.tallty.smart_life_android.model.News;
+import com.tallty.smart_life_android.model.NewsSort;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,17 +29,17 @@ import retrofit2.Response;
 /**
  * 政府直通车
  */
-public class GovernmentFragment extends BaseBackFragment {
+public class NewsSortFragment extends BaseBackFragment {
 
     // 组件 & 适配器
     private RecyclerView recyclerView;
-    private GovernmentAdapter adapter;
+    private NewsSortAdapter adapter;
     // 数据
-    private ArrayList<GovernmentSort> sorts  = new ArrayList<>();
+    private ArrayList<NewsSort> sorts  = new ArrayList<>();
 
-    public static GovernmentFragment newInstance() {
+    public static NewsSortFragment newInstance() {
         Bundle args = new Bundle();
-        GovernmentFragment fragment = new GovernmentFragment();
+        NewsSortFragment fragment = new NewsSortFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -83,13 +82,13 @@ public class GovernmentFragment extends BaseBackFragment {
 
     private void initList() {
         recyclerView.setLayoutManager(new LinearLayoutManager(_mActivity));
-        adapter = new GovernmentAdapter(R.layout.item_common_image, sorts);
+        adapter = new NewsSortAdapter(R.layout.item_common_image, sorts);
         adapter.setLoadMoreView(new CustomLoadMoreView());
         recyclerView.setAdapter(adapter);
         recyclerView.addOnItemTouchListener(new OnItemClickListener() {
             @Override
             public void onSimpleItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
-
+                start(NewsListFragment.newInstance(sorts.get(i).getTitle(), sorts.get(i).getId()));
             }
         });
     }
@@ -99,10 +98,10 @@ public class GovernmentFragment extends BaseBackFragment {
         Engine
             .authService(shared_token, shared_phone)
             .getGovernmentSorts()
-            .enqueue(new Callback<HashMap<String, ArrayList<GovernmentSort>>>() {
+            .enqueue(new Callback<HashMap<String, ArrayList<NewsSort>>>() {
                 @Override
-                public void onResponse(Call<HashMap<String, ArrayList<GovernmentSort>>> call,
-                                       Response<HashMap<String, ArrayList<GovernmentSort>>> response) {
+                public void onResponse(Call<HashMap<String, ArrayList<NewsSort>>> call,
+                                       Response<HashMap<String, ArrayList<NewsSort>>> response) {
                     hideProgress();
                     if (response.isSuccessful()) {
                         sorts.clear();
@@ -114,7 +113,7 @@ public class GovernmentFragment extends BaseBackFragment {
                 }
 
                 @Override
-                public void onFailure(Call<HashMap<String, ArrayList<GovernmentSort>>> call, Throwable t) {
+                public void onFailure(Call<HashMap<String, ArrayList<NewsSort>>> call, Throwable t) {
                     hideProgress();
                     showToast("链接错误, 请检查手机网络");
                 }

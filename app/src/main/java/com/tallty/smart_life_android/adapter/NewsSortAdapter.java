@@ -6,7 +6,7 @@ import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.tallty.smart_life_android.R;
-import com.tallty.smart_life_android.model.GovernmentSort;
+import com.tallty.smart_life_android.model.NewsSort;
 import com.tallty.smart_life_android.utils.DpUtil;
 
 import java.util.List;
@@ -16,14 +16,14 @@ import java.util.List;
  * 政府直通车分类适配器
  */
 
-public class GovernmentAdapter extends BaseQuickAdapter<GovernmentSort, BaseViewHolder> {
+public class NewsSortAdapter extends BaseQuickAdapter<NewsSort, BaseViewHolder> {
 
-    public GovernmentAdapter(int layoutResId, List<GovernmentSort> data) {
+    public NewsSortAdapter(int layoutResId, List<NewsSort> data) {
         super(layoutResId, data);
     }
 
     @Override
-    protected void convert(BaseViewHolder baseViewHolder, GovernmentSort governmentSort) {
+    protected void convert(BaseViewHolder baseViewHolder, NewsSort governmentSort) {
         ImageView imageView = baseViewHolder.getView(R.id.image_list_item_image);
         if (governmentSort.getImage().isEmpty()) {
             imageView.setMaxHeight(DpUtil.dip2px(mContext, 160));

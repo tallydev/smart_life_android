@@ -2,28 +2,25 @@ package com.tallty.smart_life_android.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
 import com.bumptech.glide.Glide;
-import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.event.ShowSnackbarEvent;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.fragment.Common.GlobalAppointFragment;
 import com.tallty.smart_life_android.fragment.home.CommunityActivityFragment;
-import com.tallty.smart_life_android.fragment.home.GovernmentFragment;
+import com.tallty.smart_life_android.fragment.home.NewsSortFragment;
 import com.tallty.smart_life_android.fragment.home.HealthyCheckReport;
 import com.tallty.smart_life_android.fragment.home.HomeFragment;
 import com.tallty.smart_life_android.fragment.home.ProductCategoryFragment;
 import com.tallty.smart_life_android.fragment.home.PromotionFragment;
 import com.tallty.smart_life_android.fragment.home.SportFragment;
 import com.tallty.smart_life_android.holder.HomeViewHolder;
-import com.tallty.smart_life_android.model.GovernmentSort;
 import com.tallty.smart_life_android.model.HomeBlock;
 
 import org.greenrobot.eventbus.EventBus;
@@ -202,7 +199,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
         }
         // 政府直通车
         else if (Const.BLOCK_GOVERNMENT.equals(title)) {
-            EventBus.getDefault().post(new StartBrotherEvent(GovernmentFragment.newInstance()));
+            EventBus.getDefault().post(new StartBrotherEvent(NewsSortFragment.newInstance()));
         }
         // 限量发售
         else if (Const.BLOCK_LIMIT.equals(title)) {
@@ -275,7 +272,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
                 // 政府直通车
                 else if (Const.BLOCK_GOVERNMENT.equals(tag)) {
                     if (position == 0) {
-                        EventBus.getDefault().post(new StartBrotherEvent(GovernmentFragment.newInstance()));
+                        EventBus.getDefault().post(new StartBrotherEvent(NewsSortFragment.newInstance()));
                     }
                 }
                 // 限量发售

@@ -4,16 +4,15 @@ import com.google.gson.JsonElement;
 import com.tallty.smart_life_android.model.Activities;
 import com.tallty.smart_life_android.model.Appointment;
 import com.tallty.smart_life_android.model.AppointmentList;
-import com.tallty.smart_life_android.model.Banner;
 import com.tallty.smart_life_android.model.CartItem;
 import com.tallty.smart_life_android.model.CartList;
 import com.tallty.smart_life_android.model.Categories;
-import com.tallty.smart_life_android.model.Category;
-import com.tallty.smart_life_android.model.Communities;
 import com.tallty.smart_life_android.model.CommunitiesResponse;
 import com.tallty.smart_life_android.model.Contact;
 import com.tallty.smart_life_android.model.ContactList;
-import com.tallty.smart_life_android.model.GovernmentSort;
+import com.tallty.smart_life_android.model.News;
+import com.tallty.smart_life_android.model.NewsList;
+import com.tallty.smart_life_android.model.NewsSort;
 import com.tallty.smart_life_android.model.Home;
 import com.tallty.smart_life_android.model.Order;
 import com.tallty.smart_life_android.model.Orders;
@@ -27,14 +26,12 @@ import com.tallty.smart_life_android.model.SportRank;
 import com.tallty.smart_life_android.model.Step;
 import com.tallty.smart_life_android.model.User;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import okhttp3.MultipartBody;
-import okhttp3.Response;
 import retrofit2.Call;
 import retrofit2.http.DELETE;
 import retrofit2.http.Field;
@@ -290,7 +287,13 @@ public interface DataAPI {
                                              @Field("appointment[count]") int count);
 
     // *********************************************************************************************
-    // 政府直通车列表
+    // 政府直通车 - 新闻的类别
     @GET("news_sorts")
-    Call<HashMap<String, ArrayList<GovernmentSort>>> getGovernmentSorts();
+    Call<HashMap<String, ArrayList<NewsSort>>> getGovernmentSorts();
+
+    // 某类新闻列表
+    @GET("news_sorts/{id}/news")
+    Call<NewsList> getNewsBySortId(@Path("id") int sort_id,
+                                   @Query("page") int page,
+                                   @Query("per_page") int per_page);
 }

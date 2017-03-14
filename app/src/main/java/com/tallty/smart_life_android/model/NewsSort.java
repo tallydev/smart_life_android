@@ -7,10 +7,10 @@ import java.io.Serializable;
 
 /**
  * Created by kang on 2017/3/14.
- * 政府直通车 - 分类列表
+ * 政府直通车 - 新闻分类
  */
 
-public class GovernmentSort implements Serializable {
+public class NewsSort implements Serializable {
     @SerializedName("id")
     @Expose
     private int id;
