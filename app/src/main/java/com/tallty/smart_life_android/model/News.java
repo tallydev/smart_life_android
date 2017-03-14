@@ -23,6 +23,10 @@ public class News implements Serializable {
     @Expose
     private String title;
 
+    @SerializedName("content")
+    @Expose
+    private String content;
+
     @SerializedName("created_at")
     @Expose
     private String createdTime;
@@ -93,5 +97,13 @@ public class News implements Serializable {
 
     public void setNewsDetail(String newsDetail) {
         this.newsDetail = newsDetail;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 }

@@ -28,11 +28,15 @@ import retrofit2.Response;
 /**
  * 首页 - 精品超市 - 分类
  */
-public class ProductCategoryFragment extends BaseBackFragment {
+public class ProductCategoryFragment extends BaseBackFragment implements BaseQuickAdapter.RequestLoadMoreListener {
     private String title;
     private RecyclerView recyclerView;
     private ProductCategoryAdapter adapter;
     private ArrayList<Category> categories = new ArrayList<>();
+    // 加载更多
+    private int current_page = 1;
+    private int total_pages = 1;
+    private int per_page = 10;
 
     public static ProductCategoryFragment newInstance(String title) {
         Bundle args = new Bundle();
@@ -74,7 +78,7 @@ public class ProductCategoryFragment extends BaseBackFragment {
     @Override
     protected void afterAnimationLogic() {
         initList();
-        getActivities();
+        getCategories();
     }
 
     private void initList() {
@@ -87,34 +91,51 @@ public class ProductCategoryFragment extends BaseBackFragment {
                 start(ProductFragment.newInstance("商品列表", categories.get(i).getId()));
             }
         });
+        // 加载更多
+        adapter.setOnLoadMoreListener(this);
     }
 
-    private void getActivities() {
-        showProgress("正在加载...");
-        // TODO: 2017/3/6 这是 1.1.3版本, 超市分类鉴权和分享使用一个版本
-        Engine.authService(shared_token, shared_phone).getProductCategories().enqueue(new Callback<Categories>() {
-            @Override
-            public void onResponse(Call<Categories> call, Response<Categories> response) {
-                if (response.isSuccessful()) {
-                    categories.clear();
-                    categories.addAll(response.body().getCategories());
-                    adapter.notifyDataSetChanged();
-                } else {
-                    showToast("加载失败");
+    private void getCategories() {
+        Engine
+            .authService(shared_token, shared_phone)
+            .getProductCategories(current_page, per_page)
+            .enqueue(new Callback<Categories>() {
+                @Override
+                public void onResponse(Call<Categories> call, Response<Categories> response) {
+                    if (response.isSuccessful()) {
+                        current_page = response.body().getCurrentPage();
+                        total_pages = response.body().getTotalPages();
+                        adapter.addData(response.body().getCategories());
+                        adapter.loadMoreComplete();
+                    } else {
+                        adapter.loadMoreFail();
+                    }
                 }
-                hideProgress();
-            }
 
-            @Override
-            public void onFailure(Call<Categories> call, Throwable t) {
-                hideProgress();
-                showToast("链接错误, 请检查手机网络");
-            }
+                @Override
+                public void onFailure(Call<Categories> call, Throwable t) {
+                    adapter.loadMoreFail();
+                }
         });
     }
 
     @Override
     public void onClick(View v) {
 
+    }
+
+    @Override
+    public void onLoadMoreRequested() {
+        recyclerView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (current_page >= total_pages) {
+                    adapter.loadMoreEnd();
+                } else {
+                    current_page++;
+                    getCategories();
+                }
+            }
+        }, 1000);
     }
 }

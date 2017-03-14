@@ -12,6 +12,13 @@ import java.util.ArrayList;
  */
 
 public class Categories implements Serializable {
+    @SerializedName("total_pages")
+    @Expose
+    private int totalPages;
+
+    @SerializedName("current_page")
+    @Expose
+    private int currentPage;
 
     @SerializedName("product_sorts")
     @Expose
@@ -23,5 +30,21 @@ public class Categories implements Serializable {
 
     public void setCategories(ArrayList<Category> categories) {
         this.categories = categories;
+    }
+
+    public int getTotalPages() {
+        return totalPages;
+    }
+
+    public void setTotalPages(int totalPages) {
+        this.totalPages = totalPages;
+    }
+
+    public int getCurrentPage() {
+        return currentPage;
+    }
+
+    public void setCurrentPage(int currentPage) {
+        this.currentPage = currentPage;
     }
 }

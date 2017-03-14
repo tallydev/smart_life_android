@@ -24,14 +24,16 @@ import com.tallty.smart_life_android.base.BaseBackFragment;
  * 通用WebView Fragment
  */
 public class WebViewFragment extends BaseBackFragment {
-    private String url = "";
+    private String source = "";
     private String title = "";
+    private boolean isUrl = true;
     private WebView web_view;
 
-    public static WebViewFragment newInstance(String url, String title) {
+    public static WebViewFragment newInstance(String source, String title, boolean isUrl) {
         Bundle args = new Bundle();
-        args.putString(Const.STRING, url);
+        args.putString(Const.STRING, source);
         args.putString(Const.FRAGMENT_NAME, title);
+        args.putBoolean(Const.BOOLEAN, isUrl);
         WebViewFragment fragment = new WebViewFragment();
         fragment.setArguments(args);
         return fragment;
@@ -42,8 +44,9 @@ public class WebViewFragment extends BaseBackFragment {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
-            url = args.getString(Const.STRING);
+            source = args.getString(Const.STRING);
             title = args.getString(Const.FRAGMENT_NAME);
+            isUrl = args.getBoolean(Const.BOOLEAN);
         }
     }
 
@@ -59,7 +62,7 @@ public class WebViewFragment extends BaseBackFragment {
 
     @Override
     protected void initView() {
-        createWebView();
+        web_view = getViewById(R.id.web_view);
     }
 
     @Override
@@ -69,7 +72,7 @@ public class WebViewFragment extends BaseBackFragment {
 
     @Override
     protected void afterAnimationLogic() {
-        configWebView();
+        loadWebContent();
     }
 
     @Override
@@ -77,31 +80,30 @@ public class WebViewFragment extends BaseBackFragment {
 
     }
 
-    @Override
-    protected void onFragmentPop() {
-        super.onFragmentPop();
-        clearWebViewResource();
-    }
-
     /**
-     * 创建webView
+     * 通过连接加载页面
      */
-    @TargetApi (Build.VERSION_CODES.JELLY_BEAN)
-    private void createWebView() {
-        RelativeLayout webView_container = getViewById(R.id.web_view);
-        web_view = new WebView(App.getInstance());
-        web_view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT));
-        web_view.setScrollBarSize(0);
-        webView_container.addView(web_view);
-    }
-
-    /**
-     * 设置webView
-     */
-    private void configWebView() {
+    private void loadWebContent() {
         web_view.getSettings().setJavaScriptEnabled(true);
-        web_view.loadUrl(url);
+        if (isUrl) {
+            web_view.loadUrl(source);
+        } else {
+            String htmlText = "<!DOCTYPE html>\n" +
+                    "<html lang=\"zh-CN\">\n" +
+                    "  <head>\n" +
+                    "    <meta charset=\"utf-8\">\n" +
+                    "    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n" +
+                    "    <meta name=\"viewport\" content=\"width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no\">\n" +
+                    "    <title>新闻详情</title>\n" +
+                    "    <style>img { width: 100%; }</style>\n" +
+                    "  </head>\n" +
+                    "  <body>\n" +
+                        source +
+                    "  </body>\n" +
+                    "</html>" + "";
+
+            web_view.loadDataWithBaseURL(null, htmlText, "text/html", "UTF-8", null);
+        }
         // 进度
         showProgress("载入中...");
         // 设置webView进度
@@ -122,23 +124,5 @@ public class WebViewFragment extends BaseBackFragment {
                 return true;
             }
         });
-    }
-
-    /**
-     * 清除webView
-     */
-    public void clearWebViewResource() {
-        if (web_view != null) {
-            Log.d(App.TAG,"Clear webview's resources");
-            web_view.removeAllViews();
-            // in android 5.1(sdk:21) we should invoke this to avoid memory leak
-            // see (https://coolpers.github.io/webview/memory/leak/2015/07/16/
-            // android-5.1-webview-memory-leak.html)
-            ((ViewGroup) web_view.getParent()).removeView(web_view);
-            web_view.setTag(null);
-            web_view.clearHistory();
-            web_view.destroy();
-            web_view = null;
-        }
     }
 }

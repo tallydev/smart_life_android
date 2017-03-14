@@ -158,7 +158,6 @@ public class PromotionFragment extends BaseBackFragment implements
                 @Override
                 public void onFailure(Call<ProductList> call, Throwable t) {
                     showToast(showString(R.string.network_error));
-                    Log.d(App.TAG, t.getMessage());
                 }
             });
     }

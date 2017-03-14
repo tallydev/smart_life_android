@@ -110,7 +110,8 @@ public interface DataAPI {
     // *********************************************************************************************
     // 商品分类
     @GET("product_sorts")
-    Call<Categories> getProductCategories();
+    Call<Categories> getProductCategories(@Query("page") int page,
+                                          @Query("per_page") int per_page);
 
     // 根据类别查看商品
     @GET("products/sort")

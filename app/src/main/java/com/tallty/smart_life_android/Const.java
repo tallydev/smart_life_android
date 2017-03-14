@@ -19,6 +19,7 @@ public class Const {
     public static final String OBJECT_List = "object_list";
     public static final String INT = "int";
     public static final String STRING = "string";
+    public static final String BOOLEAN = "boolean";
     public static final String ARRAY = "array";
 
     /**

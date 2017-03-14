@@ -16,6 +16,7 @@ import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.NewsListAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.custom.CustomLoadMoreView;
+import com.tallty.smart_life_android.fragment.Common.WebViewFragment;
 import com.tallty.smart_life_android.model.News;
 import com.tallty.smart_life_android.model.NewsList;
 
@@ -103,7 +104,7 @@ public class NewsListFragment extends BaseBackFragment implements BaseQuickAdapt
         recyclerView.addOnItemTouchListener(new OnItemClickListener() {
             @Override
             public void onSimpleItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
-                // TODO: 2017/3/14 查看新闻详情
+                start(WebViewFragment.newInstance(newsList.get(i).getContent(), "新闻详情", false));
             }
         });
         // 加载更多

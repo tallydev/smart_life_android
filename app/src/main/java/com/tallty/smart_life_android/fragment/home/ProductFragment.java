@@ -104,30 +104,26 @@ public class ProductFragment extends BaseBackFragment implements BaseQuickAdapte
     }
 
     private void fetchProducts() {
-        showProgress("正在加载...");
         Engine.authService(shared_token, shared_phone).getProductsByCategory(current_page, per_page, categoryId)
                 .enqueue(new Callback<ProductList>() {
-            @Override
-            public void onResponse(Call<ProductList> call, Response<ProductList> response) {
-                hideProgress();
-                if (response.isSuccessful()) {
-                    current_page = response.body().getCurrentPage();
-                    total_pages = response.body().getTotalPages();
-                    // 商品列表
-                    products.clear();
-                    products.addAll(response.body().getProducts());
-                    adapter.notifyDataSetChanged();
-                } else {
-                    showToast(showString(R.string.response_error));
-                }
-            }
+                    @Override
+                    public void onResponse(Call<ProductList> call, Response<ProductList> response) {
+                        if (response.isSuccessful()) {
+                            current_page = response.body().getCurrentPage();
+                            total_pages = response.body().getTotalPages();
+                            // 商品列表
+                            adapter.addData(response.body().getProducts());
+                            adapter.loadMoreComplete();
+                        } else {
+                            adapter.loadMoreFail();
+                        }
+                    }
 
-            @Override
-            public void onFailure(Call<ProductList> call, Throwable t) {
-                hideProgress();
-                showToast(showString(R.string.network_error));
-            }
-        });
+                    @Override
+                    public void onFailure(Call<ProductList> call, Throwable t) {
+                        adapter.loadMoreFail();
+                    }
+                });
     }
 
     @Override
@@ -139,26 +135,7 @@ public class ProductFragment extends BaseBackFragment implements BaseQuickAdapte
                     adapter.loadMoreEnd();
                 } else {
                     current_page++;
-                    Engine.authService(shared_token, shared_phone).getProductsByCategory(current_page, per_page, categoryId)
-                            .enqueue(new Callback<ProductList>() {
-                        @Override
-                        public void onResponse(Call<ProductList> call, Response<ProductList> response) {
-                            if (response.isSuccessful()) {
-                                current_page = response.body().getCurrentPage();
-                                total_pages = response.body().getTotalPages();
-                                // 商品列表
-                                adapter.addData(response.body().getProducts());
-                                adapter.loadMoreComplete();
-                            } else {
-                                adapter.loadMoreFail();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<ProductList> call, Throwable t) {
-                            adapter.loadMoreFail();
-                        }
-                    });
+                    fetchProducts();
                 }
             }
         }, 1000);
