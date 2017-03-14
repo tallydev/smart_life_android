@@ -13,6 +13,7 @@ import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.event.ShowSnackbarEvent;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.fragment.Common.GlobalAppointFragment;
+import com.tallty.smart_life_android.fragment.home.AlarmsFragment;
 import com.tallty.smart_life_android.fragment.home.CommunityActivityFragment;
 import com.tallty.smart_life_android.fragment.home.NewsSortFragment;
 import com.tallty.smart_life_android.fragment.home.HealthyCheckReport;
@@ -172,6 +173,10 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
         }
     }
 
+    /**
+     * 封面图片点击的默认行为
+     * @param position
+     */
     private void setImageClickListener(int position) {
         String title = nowBlocks.get(position).getTitle();
         // 智慧健康
@@ -189,8 +194,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
         }
         // 智慧家居
         else if (Const.BLOCK_HOME.equals(title)) {
-            String url = "http://elive.clfsj.com:8989/images/smart_home_house.jpg";
-            EventBus.getDefault().post(new StartBrotherEvent(GlobalAppointFragment.newInstance("智能家居", url, "ZNJJ", "预约体验", true)));
+            EventBus.getDefault().post(new StartBrotherEvent(AlarmsFragment.newInstance()));
         }
         // 上门服务
         else if (Const.BLOCK_SERVICE.equals(title)) {
@@ -224,7 +228,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
     }
 
     /**
-     * 点击事件
+     * 子菜单的点击行为
      */
     private void gridItemClickListener(HomeViewHolder viewHolder) {
         viewHolder.gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -258,8 +262,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
                         String url = "http://elive.clfsj.com:8989/images/smart_home_house.jpg";
                         EventBus.getDefault().post(new StartBrotherEvent(GlobalAppointFragment.newInstance("智能家居", url, "ZNJJ", "预约体验", true)));
                     } else if (position == 1) {
-                        String url = "http://elive.clfsj.com:8989/images/smart_home_cat_eye.jpg";
-                        EventBus.getDefault().post(new StartBrotherEvent(GlobalAppointFragment.newInstance("电子猫眼", url, "DZMY", "预约体验", true)));
+                        EventBus.getDefault().post(new StartBrotherEvent(AlarmsFragment.newInstance()));
                     }
                 }
                 // 上门服务
