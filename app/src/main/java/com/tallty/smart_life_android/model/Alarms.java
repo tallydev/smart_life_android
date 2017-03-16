@@ -20,6 +20,14 @@ public class Alarms implements Serializable {
     @Expose
     private int currentPage;
 
+    @SerializedName("status")
+    @Expose
+    private boolean present;
+
+    @SerializedName("msg")
+    @Expose
+    private String msg;
+
     @SerializedName("result")
     @Expose
     private ArrayList<Alarm> alarms = new ArrayList<>();
@@ -38,6 +46,22 @@ public class Alarms implements Serializable {
 
     public void setCurrentPage(int currentPage) {
         this.currentPage = currentPage;
+    }
+
+    public boolean isPresent() {
+        return present;
+    }
+
+    public void setPresent(boolean present) {
+        this.present = present;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 
     public ArrayList<Alarm> getAlarms() {

@@ -3,7 +3,9 @@ package com.tallty.smart_life_android.base;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PointF;
@@ -37,6 +39,7 @@ import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.activity.MainActivity;
+import com.tallty.smart_life_android.fragment.home.HomeFragment;
 import com.tallty.smart_life_android.utils.GlobalUtils;
 import com.tallty.smart_life_android.utils.ImageUtils;
 import com.tallty.smart_life_android.utils.SnackbarUtil;
@@ -376,6 +379,49 @@ public abstract class BaseBackFragment extends SwipeBackFragment implements View
                         }
                     }
                 }).open();
+    }
+
+    /**
+     * 拨打电话
+     */
+    protected void callPhone(String phone) {
+        PackageManager pm = _mActivity.getPackageManager();
+        boolean permission = (PackageManager.PERMISSION_GRANTED == pm.checkPermission("android.permission.CALL_PHONE","com.tallty.smart_life_android"));
+        if (permission) {
+            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phone));
+            startActivity(intent);
+        } else {
+            setSnackBar(view,
+                    "应用无拨打电话权限,请设置应用权限后尝试",
+                    100000, R.layout.snackbar_icon, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                        }
+                    });
+        }
+    }
+
+    // 联系客服
+    protected void contactService() {
+        if (HomeFragment.tels.isEmpty()) {
+            showToast("未能获取到客服电话, 请稍后重试");
+            return;
+        }
+        final String[] tels = new String[HomeFragment.tels.size()];
+        for (int i = 0; i < HomeFragment.tels.size(); i++) {
+            tels[i] = HomeFragment.tels.get(i).get("phone");
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog alert = builder.setTitle("请选择客服电话")
+                .setItems(tels, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        callPhone(tels[which]);
+                    }
+                }).create();
+        alert.show();
     }
 
     // 手动回收ImageView

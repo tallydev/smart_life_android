@@ -2,12 +2,8 @@ package com.tallty.smart_life_android.fragment.me;
 
 
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -27,7 +23,6 @@ import com.tallty.smart_life_android.event.ManageOrderEvent;
 import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.event.TransferDataEvent;
 import com.tallty.smart_life_android.fragment.cart.PayOrder;
-import com.tallty.smart_life_android.fragment.home.HomeFragment;
 import com.tallty.smart_life_android.fragment.home.ProductShowFragment;
 import com.tallty.smart_life_android.model.Order;
 import com.tallty.smart_life_android.model.Orders;
@@ -250,40 +245,6 @@ public class MyOrders extends BaseBackFragment implements BaseQuickAdapter.Reque
     // 支付订单
     private void payOrder(Order order, int position) {
         start(PayOrder.newInstance(order));
-    }
-
-    // 联系客服
-    private void contactService() {
-        if (HomeFragment.tels.isEmpty()) {
-            showToast("未能获取到客服电话, 请售后重试");
-            return;
-        }
-        final String[] tels = new String[HomeFragment.tels.size()];
-        for (int i = 0; i < HomeFragment.tels.size(); i++) {
-            tels[i] = HomeFragment.tels.get(i).get("phone");
-        }
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        AlertDialog alert = builder.setTitle("联系客服")
-                .setItems(tels, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        callPhone(tels[which]);
-                    }
-                }).create();
-        alert.show();
-    }
-
-    // 拨打电话
-    private void callPhone(String phone) {
-        PackageManager pm = _mActivity.getPackageManager();
-        boolean permission = (PackageManager.PERMISSION_GRANTED == pm.checkPermission("android.permission.CALL_PHONE","com.tallty.smart_life_android"));
-        if (permission) {
-            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phone));
-            startActivity(intent);
-        } else {
-            showToast("应用无拨打电话权限,请设置应用权限后尝试");
-        }
     }
 
     // 查看商品详情

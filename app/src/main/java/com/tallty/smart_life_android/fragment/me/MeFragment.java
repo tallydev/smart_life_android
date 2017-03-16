@@ -223,47 +223,6 @@ public class MeFragment extends BaseMainFragment {
         }
     }
 
-    // 联系客服
-    private void contactService() {
-        if (HomeFragment.tels.isEmpty()) {
-            showToast("未能获取到客服电话, 请售后重试");
-            return;
-        }
-        final String[] tels = new String[HomeFragment.tels.size()];
-        for (int i = 0; i < HomeFragment.tels.size(); i++) {
-            tels[i] = HomeFragment.tels.get(i).get("phone");
-        }
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        AlertDialog alert = builder.setTitle("联系客服")
-                .setItems(tels, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        callPhone(tels[which]);
-                    }
-                }).create();
-        alert.show();
-    }
-
-    // 拨打电话
-    private void callPhone(String phone) {
-        PackageManager pm = _mActivity.getPackageManager();
-        boolean permission = (PackageManager.PERMISSION_GRANTED == pm.checkPermission("android.permission.CALL_PHONE","com.tallty.smart_life_android"));
-        if (permission) {
-            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phone));
-            startActivity(intent);
-        } else {
-            setSnackBar(service,
-                    "应用无拨打电话权限,请设置应用权限后尝试",
-                    100000, R.layout.snackbar_icon, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                        }
-                    });
-        }
-    }
-
     /**
      * 订阅事件: TabReselectedEvent
      * Tab Me 按钮被重复点击时执行的操作

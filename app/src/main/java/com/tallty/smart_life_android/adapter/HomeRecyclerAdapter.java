@@ -194,7 +194,8 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
         }
         // 智慧家居
         else if (Const.BLOCK_HOME.equals(title)) {
-            EventBus.getDefault().post(new StartBrotherEvent(AlarmsFragment.newInstance()));
+            String url = "http://elive.clfsj.com:8989/images/smart_home_cat_eye.jpg";
+            EventBus.getDefault().post(new StartBrotherEvent(GlobalAppointFragment.newInstance("电子猫眼", url, "DZMY", "查看监控记录", true)));
         }
         // 上门服务
         else if (Const.BLOCK_SERVICE.equals(title)) {
@@ -262,7 +263,8 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
                         String url = "http://elive.clfsj.com:8989/images/smart_home_house.jpg";
                         EventBus.getDefault().post(new StartBrotherEvent(GlobalAppointFragment.newInstance("智能家居", url, "ZNJJ", "预约体验", true)));
                     } else if (position == 1) {
-                        EventBus.getDefault().post(new StartBrotherEvent(AlarmsFragment.newInstance()));
+                        String url = "http://elive.clfsj.com:8989/images/smart_home_cat_eye.jpg";
+                        EventBus.getDefault().post(new StartBrotherEvent(GlobalAppointFragment.newInstance("电子猫眼", url, "DZMY", "查看监控记录", true)));
                     }
                 }
                 // 上门服务

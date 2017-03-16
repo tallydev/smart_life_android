@@ -15,6 +15,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <TextView
+            android:id="@+id/empty_message"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:visibility="invisible"
+            android:textColor="@color/gray_text"
+            android:text="暂无监控记录"/>
+        <TextView
             android:id="@+id/make_alarm_btn"
             android:layout_width="match_parent"
             android:layout_height="48dp"
@@ -22,7 +30,7 @@
             android:textSize="@dimen/text_16"
             android:textColor="@color/white"
             android:gravity="center"
-            android:text="我要出警"
+            android:visibility="invisible"
             android:layout_alignParentBottom="true"/>
         <android.support.v7.widget.RecyclerView
             android:id="@+id/alarms_list"

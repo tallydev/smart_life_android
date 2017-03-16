@@ -20,6 +20,7 @@ import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.AlarmsAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.custom.CustomLoadMoreView;
+import com.tallty.smart_life_android.fragment.Pop.HintDialogFragment;
 import com.tallty.smart_life_android.model.Alarm;
 import com.tallty.smart_life_android.model.Alarms;
 
@@ -35,6 +36,7 @@ import retrofit2.Response;
 public class AlarmsFragment extends BaseBackFragment implements BaseQuickAdapter.RequestLoadMoreListener {
     private RecyclerView recyclerView;
     private TextView makeAlarmText;
+    private TextView emptyMessage;
     private AlarmsAdapter adapter;
     private ArrayList<Alarm> alarms = new ArrayList<>();
     // 加载更多
@@ -68,6 +70,7 @@ public class AlarmsFragment extends BaseBackFragment implements BaseQuickAdapter
     protected void initView() {
         recyclerView = getViewById(R.id.alarms_list);
         makeAlarmText = getViewById(R.id.make_alarm_btn);
+        emptyMessage = getViewById(R.id.empty_message);
     }
 
     @Override
@@ -114,31 +117,51 @@ public class AlarmsFragment extends BaseBackFragment implements BaseQuickAdapter
     }
 
     private void fetchAlarms() {
+        // 18288240215
         Engine
             .noAuthService()
-            .getAlarmsHistory(current_page, per_page, "18288240215")
+            .getAlarmsHistory(current_page, per_page, shared_phone)
             .enqueue(new Callback<Alarms>() {
                 @Override
                 public void onResponse(Call<Alarms> call, Response<Alarms> response) {
                     if (response.isSuccessful()) {
+                        if (response.body().isPresent()) {
+                            emptyMessage.setVisibility(View.INVISIBLE);
+                            makeAlarmText.setText("我要出警");
+                            makeAlarmText.setVisibility(View.VISIBLE);
+                        }
                         total_pages++;
                         adapter.addData(response.body().getAlarms());
                         adapter.loadMoreComplete();
                     } else {
                         adapter.loadMoreFail();
+                        emptyMessage.setVisibility(View.VISIBLE);
                     }
                 }
 
                 @Override
                 public void onFailure(Call<Alarms> call, Throwable t) {
-                    hideProgress();
                     adapter.loadMoreFail();
+                    emptyMessage.setVisibility(View.VISIBLE);
                 }
         });
     }
 
     private void callThePolice() {
-        // TODO: 2017/3/15 我要出警功能
+        String text = "<慧生活>将为您接通客服电话, 点击确定立即拨打.";
+        final HintDialogFragment hintDialog = HintDialogFragment.newInstance(text);
+        hintDialog.show(getActivity().getFragmentManager(), "HintDialog");
+        hintDialog.setOnHintDialogEventListener(new HintDialogFragment.OnHintDialogEventListener() {
+            @Override
+            public void onOk(TextView confirm_btn) {
+                hintDialog.dismiss();
+                contactService();
+            }
+
+            @Override
+            public void onCancel() {
+            }
+        });
     }
 
     @Override

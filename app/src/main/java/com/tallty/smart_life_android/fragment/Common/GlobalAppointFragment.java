@@ -29,12 +29,16 @@ import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.activity.MainActivity;
 import com.tallty.smart_life_android.base.BaseBackFragment;
+import com.tallty.smart_life_android.event.StartBrotherEvent;
 import com.tallty.smart_life_android.fragment.Pop.HintDialogFragment;
+import com.tallty.smart_life_android.fragment.home.AlarmsFragment;
 import com.tallty.smart_life_android.model.Activity;
 import com.tallty.smart_life_android.model.Appointment;
 import com.tallty.smart_life_android.utils.ImageUtils;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 
@@ -296,7 +300,11 @@ public class GlobalAppointFragment extends BaseBackFragment {
                 handleButtonEvent();
                 break;
             case R.id.appoint_btn:
-                handleButtonEvent();
+                if ("DZMY".equals(appointType)) {
+                    EventBus.getDefault().post(new StartBrotherEvent(AlarmsFragment.newInstance()));
+                } else {
+                    handleButtonEvent();
+                }
                 break;
         }
     }
