@@ -4,6 +4,9 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by kang on 2017/3/15.
@@ -11,9 +14,6 @@ import java.io.Serializable;
  */
 
 public class Alarm implements Serializable {
-    @SerializedName("id")
-    @Expose
-    private int id;
 
     @SerializedName("title")
     @Expose
@@ -23,17 +23,10 @@ public class Alarm implements Serializable {
     @Expose
     private String time;
 
-    @SerializedName("thumb")
+    @SerializedName("pics")
     @Expose
-    private String thumb;
+    private ArrayList<HashMap<String, String>> images = new ArrayList<>();
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getTitle() {
         return title;
@@ -51,11 +44,11 @@ public class Alarm implements Serializable {
         this.time = time;
     }
 
-    public String getThumb() {
-        return thumb;
+    public ArrayList<HashMap<String, String>> getImages() {
+        return images;
     }
 
-    public void setThumb(String thumb) {
-        this.thumb = thumb;
+    public void setImages(ArrayList<HashMap<String, String>> images) {
+        this.images = images;
     }
 }

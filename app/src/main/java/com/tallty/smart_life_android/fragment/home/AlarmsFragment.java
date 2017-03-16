@@ -6,18 +6,28 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
+import com.google.gson.JsonElement;
+import com.tallty.smart_life_android.App;
+import com.tallty.smart_life_android.Const;
+import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.adapter.AlarmsAdapter;
 import com.tallty.smart_life_android.base.BaseBackFragment;
 import com.tallty.smart_life_android.custom.CustomLoadMoreView;
 import com.tallty.smart_life_android.model.Alarm;
+import com.tallty.smart_life_android.model.Alarms;
 
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * 电子猫眼,警报列表
@@ -85,19 +95,46 @@ public class AlarmsFragment extends BaseBackFragment implements BaseQuickAdapter
         adapter = new AlarmsAdapter(R.layout.item_home_alarm, alarms);
         adapter.setLoadMoreView(new CustomLoadMoreView());
         adapter.setOnLoadMoreListener(this);
+        recyclerView.setAdapter(adapter);
         recyclerView.addOnItemTouchListener(new OnItemClickListener() {
             @Override
             public void onSimpleItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
-                // TODO: 2017/3/15 查看告警详情
                 Bundle bundle = new Bundle();
+                Alarm alarm = alarms.get(i);
+                ArrayList<String> images = new ArrayList<>();
+                for (int j = 0; j < alarm.getImages().size(); j++) {
+                    images.add(alarm.getImages().get(j).get("url"));
+                }
+                bundle.putString(Const.PUSH_TITLE, alarm.getTitle());
+                bundle.putString(Const.PUSH_TIME, alarm.getTitle());
+                bundle.putStringArrayList(Const.PUSH_IMAGES, images);
                 start(NotificationDetailFragment.newInstance(bundle));
             }
         });
-
     }
 
     private void fetchAlarms() {
-        // TODO: 2017/3/15 后去所有告警信息
+        Engine
+            .noAuthService()
+            .getAlarmsHistory(current_page, per_page, "18288240215")
+            .enqueue(new Callback<Alarms>() {
+                @Override
+                public void onResponse(Call<Alarms> call, Response<Alarms> response) {
+                    if (response.isSuccessful()) {
+                        total_pages++;
+                        adapter.addData(response.body().getAlarms());
+                        adapter.loadMoreComplete();
+                    } else {
+                        adapter.loadMoreFail();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Alarms> call, Throwable t) {
+                    hideProgress();
+                    adapter.loadMoreFail();
+                }
+        });
     }
 
     private void callThePolice() {

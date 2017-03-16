@@ -2,6 +2,7 @@ package com.tallty.smart_life_android.Engine;
 
 import com.google.gson.JsonElement;
 import com.tallty.smart_life_android.model.Activities;
+import com.tallty.smart_life_android.model.Alarms;
 import com.tallty.smart_life_android.model.Appointment;
 import com.tallty.smart_life_android.model.AppointmentList;
 import com.tallty.smart_life_android.model.CartItem;
@@ -106,6 +107,12 @@ public interface DataAPI {
     @POST("http://wx.igridtotalsolution.com:8080/smartring/service/BaseService.ashx?action=SetRegID")
     Call<JsonElement> bindNotification(@Field("devid") String user_phone,
                                        @Field("regapk") String jpush_id);
+
+    // 获取用户电子猫眼历史记录
+    @GET("http://220.163.125.156:8088/service/BaseService.ashx?action=GetTotalMessageInfoByUser")
+    Call<Alarms> getAlarmsHistory(@Query("nowpage") int page,
+                                  @Query("pagesize") int per_page,
+                                  @Query("devid") String phone);
 
     // *********************************************************************************************
     // 商品分类

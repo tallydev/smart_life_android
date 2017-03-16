@@ -20,7 +20,7 @@ public class Alarms implements Serializable {
     @Expose
     private int currentPage;
 
-    @SerializedName("products")
+    @SerializedName("result")
     @Expose
     private ArrayList<Alarm> alarms = new ArrayList<>();
 

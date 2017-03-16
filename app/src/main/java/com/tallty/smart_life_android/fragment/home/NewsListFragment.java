@@ -104,7 +104,7 @@ public class NewsListFragment extends BaseBackFragment implements BaseQuickAdapt
         recyclerView.addOnItemTouchListener(new OnItemClickListener() {
             @Override
             public void onSimpleItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
-                start(WebViewFragment.newInstance(newsList.get(i).getContent(), "新闻详情", false));
+                start(WebViewFragment.newInstance(newsList.get(i), newsList.get(i).getTitle()));
             }
         });
         // 加载更多
