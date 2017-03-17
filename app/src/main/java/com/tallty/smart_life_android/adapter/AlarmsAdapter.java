@@ -24,8 +24,10 @@ public class AlarmsAdapter extends BaseQuickAdapter<Alarm, BaseViewHolder> {
     @Override
     protected void convert(BaseViewHolder baseViewHolder, Alarm alarm) {
         baseViewHolder
+                .setVisible(R.id.alarm_dot, alarm.isUnread())
                 .setText(R.id.alarm_title, alarm.getTitle())
                 .setText(R.id.alarm_time, alarm.getTime());
+
         String imageUrl = alarm.getImages().get(0) == null ? "" : alarm.getImages().get(0).get("url");
         Glide
             .with(mContext)

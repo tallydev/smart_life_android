@@ -1,6 +1,7 @@
 package com.tallty.smart_life_android.fragment.home;
 
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,7 +13,6 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
-import com.google.gson.JsonElement;
 import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.Engine.Engine;
@@ -24,7 +24,10 @@ import com.tallty.smart_life_android.fragment.Pop.HintDialogFragment;
 import com.tallty.smart_life_android.model.Alarm;
 import com.tallty.smart_life_android.model.Alarms;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -39,6 +42,7 @@ public class AlarmsFragment extends BaseBackFragment implements BaseQuickAdapter
     private TextView emptyMessage;
     private AlarmsAdapter adapter;
     private ArrayList<Alarm> alarms = new ArrayList<>();
+    private ArrayList<String> unreadAlarms = new ArrayList<>();
     // 加载更多
     private int current_page = 1;
     private int total_pages = 1;
@@ -71,6 +75,11 @@ public class AlarmsFragment extends BaseBackFragment implements BaseQuickAdapter
         recyclerView = getViewById(R.id.alarms_list);
         makeAlarmText = getViewById(R.id.make_alarm_btn);
         emptyMessage = getViewById(R.id.empty_message);
+        // 获取本地缓存的未读消息队列
+        String string = sharedPre.getString(Const.UNREAD_ALARMS, Const.EMPTY_STRING);
+        unreadAlarms = new ArrayList<>(Arrays.asList(string.split("@")));
+        unreadAlarms.add("2017/2/24 13:34:22");
+        unreadAlarms.add("2017/2/24 13:32:51");
     }
 
     @Override
@@ -102,25 +111,50 @@ public class AlarmsFragment extends BaseBackFragment implements BaseQuickAdapter
         recyclerView.addOnItemTouchListener(new OnItemClickListener() {
             @Override
             public void onSimpleItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
-                Bundle bundle = new Bundle();
-                Alarm alarm = alarms.get(i);
-                ArrayList<String> images = new ArrayList<>();
-                for (int j = 0; j < alarm.getImages().size(); j++) {
-                    images.add(alarm.getImages().get(j).get("url"));
-                }
-                bundle.putString(Const.PUSH_TITLE, alarm.getTitle());
-                bundle.putString(Const.PUSH_TIME, alarm.getTitle());
-                bundle.putStringArrayList(Const.PUSH_IMAGES, images);
-                start(NotificationDetailFragment.newInstance(bundle));
+                showAlarmDetail(i);
             }
         });
+    }
+
+    /**
+     * 查看详情
+     */
+    private void showAlarmDetail(int position) {
+        Bundle bundle = new Bundle();
+        Alarm alarm = alarms.get(position);
+        // 查看详情 - 改变点击消息的状态为【已读】, 并且更新本地缓存
+        if (alarm.isUnread()) {
+            alarm.setUnread(false);
+            adapter.notifyItemChanged(position);
+            unreadAlarms.remove(alarm.getTime());
+            String newString = "";
+            for (String s : unreadAlarms) {
+                if (!s.isEmpty())
+                    newString = newString + s + "@";
+            }
+            SharedPreferences.Editor editor = sharedPre.edit();
+            editor.putString(Const.UNREAD_ALARMS, newString);
+            editor.apply();
+        }
+
+        // 传递详情数据
+        ArrayList<String> images = new ArrayList<>();
+        for (int j = 0; j < alarm.getImages().size(); j++) {
+            images.add(alarm.getImages().get(j).get("url"));
+        }
+        bundle.putString(Const.PUSH_TITLE, alarm.getTitle());
+        bundle.putString(Const.PUSH_TIME, alarm.getTitle());
+        bundle.putStringArrayList(Const.PUSH_IMAGES, images);
+
+        // 显示详情页面
+        start(NotificationDetailFragment.newInstance(bundle));
     }
 
     private void fetchAlarms() {
         // 18288240215
         Engine
             .noAuthService()
-            .getAlarmsHistory(current_page, per_page, shared_phone)
+            .getAlarmsHistory(current_page, per_page, "18288240215")
             .enqueue(new Callback<Alarms>() {
                 @Override
                 public void onResponse(Call<Alarms> call, Response<Alarms> response) {
@@ -130,8 +164,10 @@ public class AlarmsFragment extends BaseBackFragment implements BaseQuickAdapter
                             makeAlarmText.setText("我要出警");
                             makeAlarmText.setVisibility(View.VISIBLE);
                         }
-                        total_pages++;
-                        adapter.addData(response.body().getAlarms());
+                        total_pages = response.body().getTotalPages();
+                        // 设置消息的已读未读状态, 并返回列表
+                        ArrayList<Alarm> data = getReadStatusAlarms(response.body().getAlarms());
+                        adapter.addData(data);
                         adapter.loadMoreComplete();
                     } else {
                         adapter.loadMoreFail();
@@ -145,6 +181,15 @@ public class AlarmsFragment extends BaseBackFragment implements BaseQuickAdapter
                     emptyMessage.setVisibility(View.VISIBLE);
                 }
         });
+    }
+
+    // 充值历史记录的已读状态
+    private ArrayList<Alarm> getReadStatusAlarms(ArrayList<Alarm> alarms) {
+        if (unreadAlarms.size() == 0) return alarms;
+        for (Alarm alarm : alarms) {
+            if (unreadAlarms.contains(alarm.getTime())) alarm.setUnread(true);
+        }
+        return alarms;
     }
 
     private void callThePolice() {

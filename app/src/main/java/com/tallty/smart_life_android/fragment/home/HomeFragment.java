@@ -805,7 +805,13 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
 
                 @Override
                 public void onCancel(DialogInterface dialog, int which) {
-
+                    // 标记本条消息为未读
+                    // 把本条消息加入未读队列
+                    String unreadAlarms = sharedPre.getString(Const.UNREAD_ALARMS, Const.EMPTY_STRING);
+                    unreadAlarms = unreadAlarms + event.bundle.getString(Const.PUSH_TIME) + "@";
+                    SharedPreferences.Editor editor = sharedPre.edit();
+                    editor.putString(Const.UNREAD_ALARMS, unreadAlarms);
+                    editor.apply();
                 }
             });
         }

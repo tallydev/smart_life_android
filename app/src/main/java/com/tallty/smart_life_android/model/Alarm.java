@@ -23,6 +23,8 @@ public class Alarm implements Serializable {
     @Expose
     private String time;
 
+    private boolean unread = false;
+
     @SerializedName("pics")
     @Expose
     private ArrayList<HashMap<String, String>> images = new ArrayList<>();
@@ -50,5 +52,13 @@ public class Alarm implements Serializable {
 
     public void setImages(ArrayList<HashMap<String, String>> images) {
         this.images = images;
+    }
+
+    public boolean isUnread() {
+        return unread;
+    }
+
+    public void setUnread(boolean unread) {
+        this.unread = unread;
     }
 }

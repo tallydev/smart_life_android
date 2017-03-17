@@ -46,6 +46,8 @@ public class Const {
     public static final String PHONE_PATTEN = "^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}$";
     // Contact
     public static final String CONTACT_ID = "contact_ID";
+    // Alarms
+    public static final String UNREAD_ALARMS = "unread_alarms";
 
     /**
      * 创建Fragment

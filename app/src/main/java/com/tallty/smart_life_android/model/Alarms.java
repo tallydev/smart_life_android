@@ -12,13 +12,9 @@ import java.util.ArrayList;
  */
 
 public class Alarms implements Serializable {
-    @SerializedName ("total_pages")
+    @SerializedName ("total")
     @Expose
     private int totalPages;
-
-    @SerializedName("current_page")
-    @Expose
-    private int currentPage;
 
     @SerializedName("status")
     @Expose
@@ -38,14 +34,6 @@ public class Alarms implements Serializable {
 
     public void setTotalPages(int totalPages) {
         this.totalPages = totalPages;
-    }
-
-    public int getCurrentPage() {
-        return currentPage;
-    }
-
-    public void setCurrentPage(int currentPage) {
-        this.currentPage = currentPage;
     }
 
     public boolean isPresent() {

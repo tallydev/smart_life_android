@@ -148,17 +148,13 @@ public class MainActivity extends SupportActivity {
         if (!url.isEmpty()) {
             Log.i(App.TAG, "提取的链接" + url);
             String[] cache = url.split("sl=");
-            // 拆分字符串失败
+            // 拆分字符串, 返回失败
             if (cache.length <= 1) return;
-
             String tag = cache[1].substring(0, 1);
             String id =  cache[1].substring(1, cache[1].length());
-            try {
-                int id_int = Integer.parseInt(id);
-            } catch (Exception e) {
-                // id 不是数值类型
-                return;
-            }
+            // 标签或id为空, 返回失败
+            if (tag.isEmpty() || id.isEmpty()) return ;
+            // 封装数据
             Bundle bundle = new Bundle();
             bundle.putString("tag", tag);
             bundle.putString("id", id);
