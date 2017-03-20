@@ -23,6 +23,7 @@ import com.tallty.smart_life_android.fragment.home.PromotionFragment;
 import com.tallty.smart_life_android.fragment.home.SportFragment;
 import com.tallty.smart_life_android.holder.HomeViewHolder;
 import com.tallty.smart_life_android.model.HomeBlock;
+import com.tallty.smart_life_android.utils.GlobalUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -156,8 +157,9 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<HomeViewHolder> {
                 .error(R.drawable.image_error)
                 .placeholder(R.drawable.image_placeholder)
                 .into(viewHolder.weather);
-            viewHolder.rank.setText("1");
-            viewHolder.steps.setText("0");
+            viewHolder.rank.setText("——");
+            viewHolder.steps.setText("——");
+            viewHolder.date.setText(GlobalUtils.getTodayDate());
         }
 
         // 限量发售布局

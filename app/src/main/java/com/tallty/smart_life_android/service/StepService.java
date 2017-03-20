@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -305,36 +306,58 @@ public class StepService extends Service implements SensorEventListener {
         getLock(this);
         // 获取传感器管理器的实例
         sensorManager = (SensorManager) this.getSystemService(SENSOR_SERVICE);
-        //android4.4以后可以使用计步传感器
+        // android4.4以后可以使用计步传感器
         int VERSION_CODES = android.os.Build.VERSION.SDK_INT;
         Log.i(App.TAG, "系统版本号: "+VERSION_CODES);
-
-        // 系统自带计步器,会出现静止状态下计步的问题,(机型: 华为H60), 暂时统一使用BasePedometer
-//        if (VERSION_CODES >= 19) {
-//            addCountStepListener();
-//        } else {
-//            addBasePedoListener();
-//        }
-        addBasePedoListener();
+        // 判断手机有没有传感器
+        boolean hasSystemDetector = getPackageManager().hasSystemFeature(PackageManager.FEATURE_SENSOR_STEP_DETECTOR);
+        boolean hasSystemCounter = getPackageManager().hasSystemFeature(PackageManager.FEATURE_SENSOR_STEP_COUNTER);
+        // 使用 Counter 系统计步器
+        if (hasSystemCounter) {
+            Log.d(App.TAG, "手机有counter传感器");
+            addCounterSensorListener();
+            return;
+        }
+        // 使用 Detector 系统步数探测器
+        if (hasSystemDetector) {
+            Log.d(App.TAG, "手机有Detector传感器");
+            addDetectorSensorListener();
+        }
     }
 
-    // 使用系统计步器
-    private void addCountStepListener() {
-        Sensor detectorSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
+    /**
+     * 使用 Counter 系统计步器
+     */
+    private void addCounterSensorListener() {
         Sensor countSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
         if (countSensor != null) {
             stepSensor = 0;
             Log.d(App.TAG, "使用了countSensor");
             sensorManager.registerListener(StepService.this, countSensor, SensorManager.SENSOR_DELAY_UI);
-        } else if (detectorSensor != null) {
+        }
+    }
+
+    /**
+     * 使用 Detector 系统步数探测器
+     */
+    private void addDetectorSensorListener() {
+        Sensor detectorSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
+        if (detectorSensor != null) {
             stepSensor = 1;
             Log.d(App.TAG, "使用了detector");
             sensorManager.registerListener(StepService.this, detectorSensor, SensorManager.SENSOR_DELAY_UI);
-        } else {
-            Log.d(App.TAG, "系统计步服务获取失败, 使用BasePedo计步器");
-            addBasePedoListener();
         }
     }
+
+    /**
+     * 系统计步器监听, 步数发生变化调用接口
+     * @param event
+     */
+    public void onSensorChanged(SensorEvent event) {
+        StepCreator.CURRENT_STEP++;
+        updateNotification("今日步数：" + StepCreator.CURRENT_STEP + " 步");
+    }
+
 
     // 使用BasePedo计步器
     private void addBasePedoListener() {
@@ -351,18 +374,6 @@ public class StepService extends Service implements SensorEventListener {
                         Log.i(App.TAG, "BasePedo计步器改变" + StepCreator.CURRENT_STEP);
                     }
                 });
-    }
-
-
-    /**
-     * 系统计步器监听, 步数发生变化调用接口
-     * @param event
-     */
-    public void onSensorChanged(SensorEvent event) {
-        // 变化一次算作两步, 弥补误差
-        StepCreator.CURRENT_STEP ++;
-        updateNotification("今日步数：" + StepCreator.CURRENT_STEP + " 步");
-        Log.i(App.TAG, "系统计步器改变" + StepCreator.CURRENT_STEP);
     }
 
     /**

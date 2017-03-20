@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -81,6 +82,7 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
     private String shared_phone;
     private CountDownTimer delayTimer;
     private int versionCode;
+    private boolean isSupportStepService = false;
     /**
      * 静态变量
      **/
@@ -134,6 +136,11 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
 
     @Override
     protected void initView() {
+        // 是否含有支持运动的传感器
+        boolean hasSystemCounter = _mActivity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_SENSOR_STEP_COUNTER);
+        boolean hasSystemDetector = _mActivity.getPackageManager().hasSystemFeature(PackageManager.FEATURE_SENSOR_STEP_DETECTOR);
+        isSupportStepService = (hasSystemCounter || hasSystemDetector);
+        // 版本
         versionCode = GlobalUtils.getVersionCode(_mActivity);
         Log.i(App.TAG, "APP 版本码: "+versionCode);
         EventBus.getDefault().register(this);
@@ -409,9 +416,13 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
                         homeRecyclerAdapter.setCountDownTimer(response.body().getNewer().get("end_time"));
                         initList();
 
-                        // 如果不包含【运动达人】模块, 不添加运动服务
+                        /**
+                         * 开通计步服务条件:
+                         * 1、如果不包含【运动达人】模块, 不添加运动服务
+                         * 2、如没有相应的传感器支持, 不添加运动服务
+                         */
                         sportBlockPosition = getBlockPosition(Const.BLOCK_SPORT);
-                        if (sportBlockPosition != -1) {
+                        if ((sportBlockPosition != -1) && isSupportStepService) {
                             // 设置计步服务
                             setupService();
                             // 设置步数上传计时器(15分钟倒计时: 每分钟判断整点并获取首页数据, 结束上传步数)

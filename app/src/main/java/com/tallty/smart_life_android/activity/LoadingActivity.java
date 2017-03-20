@@ -110,7 +110,7 @@ public class LoadingActivity extends BaseActivity {
 
             @Override
             public void onFailure(Call<CommunitiesResponse> call, Throwable t) {
-                Log.i(App.TAG, "》》》》》》》》》》》》》》》》获取所有社区错误了");
+                Log.i(App.TAG, "》》》》》》》》》》》》》》》》获取所有社区错误了" + t.getLocalizedMessage());
             }
         });
     }
