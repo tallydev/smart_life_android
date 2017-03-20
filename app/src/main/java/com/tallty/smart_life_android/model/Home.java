@@ -33,6 +33,10 @@ public class Home implements Serializable {
     @Expose
     private ArrayList<HomeBlock> blocks = new ArrayList<>();
 
+    @SerializedName("subdistrict")
+    @Expose
+    private HashMap<String, String> subDistrict = new HashMap<>();
+
 
     public HashMap<String, String> getFitness() {
         return fitness;
@@ -72,6 +76,14 @@ public class Home implements Serializable {
 
     public void setBlocks(ArrayList<HomeBlock> blocks) {
         this.blocks = blocks;
+    }
+
+    public HashMap<String, String> getSubDistrict() {
+        return subDistrict;
+    }
+
+    public void setSubDistrict(HashMap<String, String> subDistrict) {
+        this.subDistrict = subDistrict;
     }
 }
 

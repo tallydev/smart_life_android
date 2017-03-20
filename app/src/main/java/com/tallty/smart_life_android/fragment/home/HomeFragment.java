@@ -88,6 +88,7 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
      **/
     public static int cartCount = 0;
     public static ArrayList<HashMap<String, String>> tels = new ArrayList<>();
+    public static String alarmPhone = "";
     // 计步器相关
     private ServiceConnection conn;
     private static final int TIME_INTERVAL = 1000;
@@ -251,6 +252,20 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
         delayTimer.start();
     }
 
+    private void delayUpdateStepInfo() {
+        delayTimer = new CountDownTimer(3000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {}
+
+            @Override
+            public void onFinish() {
+                delayTimer = null;
+                getSportData();
+            }
+        };
+        delayTimer.start();
+    }
+
     /**
      * 自定义计时器
      * 每分钟判断一次时间, 是否是整点
@@ -379,6 +394,8 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
                         if (sportBlockPosition == -1) return;
                         if (homeViewHolder == null) {
                             homeViewHolder = (HomeViewHolder) recyclerView.findViewHolderForAdapterPosition(sportBlockPosition);
+                            homeViewHolder.rank.setText(rank);
+                            homeViewHolder.date.setText(server_today);
                         } else {
                             homeViewHolder.rank.setText(rank);
                             homeViewHolder.date.setText(server_today);
@@ -415,6 +432,8 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
                         nowCommunityBlocks = response.body().getBlocks();
                         homeRecyclerAdapter.setCountDownTimer(response.body().getNewer().get("end_time"));
                         initList();
+                        // 保存物业电话
+                        alarmPhone = response.body().getSubDistrict().get("property_phone");
 
                         /**
                          * 开通计步服务条件:
@@ -429,6 +448,8 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
                             setUploadStepTimer();
                             // 进入页面, 延时3秒, 先上传一次步数, 然后再获取首页信息(优化首页信息的实时性)
                             delayUploadStep();
+                        } else {
+                            delayUpdateStepInfo();
                         }
                     }
                 }

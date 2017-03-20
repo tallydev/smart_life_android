@@ -78,8 +78,6 @@ public class AlarmsFragment extends BaseBackFragment implements BaseQuickAdapter
         // 获取本地缓存的未读消息队列
         String string = sharedPre.getString(Const.UNREAD_ALARMS, Const.EMPTY_STRING);
         unreadAlarms = new ArrayList<>(Arrays.asList(string.split("@")));
-        unreadAlarms.add("2017/2/24 13:34:22");
-        unreadAlarms.add("2017/2/24 13:32:51");
     }
 
     @Override
@@ -151,18 +149,15 @@ public class AlarmsFragment extends BaseBackFragment implements BaseQuickAdapter
     }
 
     private void fetchAlarms() {
-        // 18288240215
         Engine
             .noAuthService()
-            .getAlarmsHistory(current_page, per_page, "18288240215")
+            .getAlarmsHistory(current_page, per_page, shared_phone)
             .enqueue(new Callback<Alarms>() {
                 @Override
                 public void onResponse(Call<Alarms> call, Response<Alarms> response) {
                     if (response.isSuccessful()) {
                         if (response.body().isPresent()) {
                             emptyMessage.setVisibility(View.INVISIBLE);
-                            makeAlarmText.setText("我要出警");
-                            makeAlarmText.setVisibility(View.VISIBLE);
                         }
                         total_pages = response.body().getTotalPages();
                         // 设置消息的已读未读状态, 并返回列表
@@ -193,14 +188,18 @@ public class AlarmsFragment extends BaseBackFragment implements BaseQuickAdapter
     }
 
     private void callThePolice() {
-        String text = "<慧生活>将为您接通客服电话, 点击确定立即拨打.";
+        String text = "<慧生活>将为您接通社区物业电话, 点击【确定】立即拨打.";
         final HintDialogFragment hintDialog = HintDialogFragment.newInstance(text);
         hintDialog.show(getActivity().getFragmentManager(), "HintDialog");
         hintDialog.setOnHintDialogEventListener(new HintDialogFragment.OnHintDialogEventListener() {
             @Override
             public void onOk(TextView confirm_btn) {
                 hintDialog.dismiss();
-                contactService();
+                if ("".equals(HomeFragment.alarmPhone)) {
+                    showToast("未能获取物业电话，请稍后重试");
+                } else {
+                    callPhone(HomeFragment.alarmPhone);
+                }
             }
 
             @Override
