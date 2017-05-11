@@ -216,7 +216,7 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
      * 解决: 延时三秒, 以确保已接受了step, 然后先上传步数, 再获取首页信息
      */
     private void delayUploadStep() {
-        delayTimer = new CountDownTimer(3000, 1000) {
+        delayTimer = new CountDownTimer(5000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
 
@@ -281,8 +281,6 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
         public void onTick(long millisUntilFinished) {
             // 到达整点, 保存
             processClockStep();
-            // 每分钟获取一次首页数据
-//            getSportData();
         }
 
         @Override
@@ -394,8 +392,10 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
                         if (sportBlockPosition == -1) return;
                         if (homeViewHolder == null) {
                             homeViewHolder = (HomeViewHolder) recyclerView.findViewHolderForAdapterPosition(sportBlockPosition);
-                            homeViewHolder.rank.setText(rank);
-                            homeViewHolder.date.setText(server_today);
+                            if (homeViewHolder.rank != null) {
+                                homeViewHolder.rank.setText(rank);
+                                homeViewHolder.date.setText(server_today);
+                            }
                         } else {
                             homeViewHolder.rank.setText(rank);
                             homeViewHolder.date.setText(server_today);
@@ -418,6 +418,7 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
 
     // 获取首页Banners 和 blocks
     private void getHomeBannersAndBlocks() {
+        sportBlockPosition = -1;
         Engine.authService(shared_token, shared_phone)
             .getHomeBannersAndBlocks()
             .enqueue(new Callback<Home>() {
@@ -480,12 +481,15 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
             public void onResponse(Call<ServiceTel> call, Response<ServiceTel> response) {
                 if (response.isSuccessful()) {
                     tels = response.body().getTels();
+                    Log.d(App.TAG, response.body().getTels().toString());
+                } else {
+                    Log.d(App.TAG, response.errorBody().toString());
                 }
             }
 
             @Override
             public void onFailure(Call<ServiceTel> call, Throwable t) {
-
+                Log.d(App.TAG, t.getLocalizedMessage());
             }
         });
     }
@@ -650,9 +654,11 @@ public class HomeFragment extends BaseMainFragment implements OnItemClickListene
                     if (homeViewHolder == null) {
                         homeViewHolder = (HomeViewHolder) recyclerView.findViewHolderForAdapterPosition(sportBlockPosition);
                     } else {
-                        homeViewHolder.steps.setText("" + step);
-                        homeViewHolder.rank.setText(rank);
-                        homeViewHolder.date.setText(server_today);
+                        if (homeViewHolder.rank != null) {
+                            homeViewHolder.steps.setText("" + step);
+                            homeViewHolder.rank.setText(rank);
+                            homeViewHolder.date.setText(server_today);
+                        }
                     }
                     // 延时1s 发送 REQUEST_SERVER 消息
                     delayHandler.sendEmptyMessageDelayed(Const.REQUEST_SERVER, TIME_INTERVAL);

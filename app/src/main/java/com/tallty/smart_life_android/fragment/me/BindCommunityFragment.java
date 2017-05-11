@@ -4,10 +4,12 @@ package com.tallty.smart_life_android.fragment.me;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.Engine.Engine;
 import com.tallty.smart_life_android.R;
@@ -151,6 +153,7 @@ public class BindCommunityFragment extends BaseBackFragment {
     }
 
     private void updateUserCommunity(Map<String, String> fields) {
+        Log.d(App.TAG, fields.toString());
         showProgress("正在绑定...");
         Engine.noAuthService().updateUser(shared_token, shared_phone, fields)
             .enqueue(new Callback<User>() {

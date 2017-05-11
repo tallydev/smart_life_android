@@ -6,12 +6,12 @@ def releaseTime() {
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "24.0.3"
+    buildToolsVersion '25.0.0'
 
     defaultConfig {
         applicationId "com.tallty.smart_life_android"
         minSdkVersion 14
-        targetSdkVersion 24
+        targetSdkVersion 25
         versionCode 26
         versionName "1.2.0"
         multiDexEnabled true

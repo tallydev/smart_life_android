@@ -3,9 +3,11 @@ package com.tallty.smart_life_android.fragment.Pop;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.tallty.smart_life_android.App;
 import com.tallty.smart_life_android.Const;
 import com.tallty.smart_life_android.R;
 import com.tallty.smart_life_android.activity.MainActivity;
@@ -183,7 +185,7 @@ public class AddressDialogFragment extends BaseDialogFragment {
                     ToastUtil.show("本社区没有可选的小区");
                 } else {
                     String[] select_items = {streetWheel.getSelectionItem(), villageWheel.getSelectionItem()};
-                    int select_street_id = streetIds.get(streetWheel.getSelection());
+                    int select_street_id = streetIds.get(streetWheel.getCurrentPosition());
 
                     Bundle bundle = new Bundle();
                     bundle.putStringArray(Const.ARRAY, select_items);
