@@ -221,8 +221,8 @@ public class ProfileFragment extends BaseBackFragment {
 
             @Override
             public void onUpdateAvailable(String s) {
-                profiles.get(8).setValue("发现新版本");
-                adapter.notifyItemChanged(8);
+                profiles.get(10).setValue("发现新版本");
+                adapter.notifyItemChanged(10);
             }
         });
     }
